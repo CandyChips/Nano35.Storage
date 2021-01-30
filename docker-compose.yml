@@ -1,0 +1,59 @@
+﻿version: '3.4'
+services:
+  nano35_storage_redis:
+    image: redis
+    restart: always
+    volumes:
+      - ./storage/redis/data:/data
+    logging:
+    driver: none
+    networks:
+      - nano35_network
+    
+  nano35_storage_nginx:
+    container_name: nano35_storage_nginx
+    image: nginx:latest
+    depends_on:
+      - nano35_storage_api
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - "5002:80"
+    environment:
+      - DOCKER_BUILDKIT=1
+    networks:
+      - nano35_network
+
+  nano35_storage_api:
+    container_name: nano35_storage_api
+    image: nano35_storage_api
+    build:
+      context: ./Nano35.Storage.Api
+      dockerfile: ./Dockerfile
+    networks:
+      - nano35_network
+    environment:
+      - DOCKER_BUILDKIT=1
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+    volumes:
+      - ~/.vsdbg:/remote_debugger:rw
+
+  nano35_storage_processor:
+    container_name: nano35_storage_processor
+    image: nano35_storage_processor
+    build:
+      context: ./Nano35.Storage.Processor
+      dockerfile: ./Dockerfile
+    networks:
+      - nano35_network
+    environment:
+      - DOCKER_BUILDKIT=1
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+    volumes:
+      - ~/.vsdbg:/remote_debugger:rw
+      
+networks:
+  nano35_network:
+    driver: bridge
