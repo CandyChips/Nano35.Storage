@@ -1,6 +1,8 @@
 ﻿using System;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Nano35.Contracts;
+using Nano35.Contracts.Storage.Models;
 
 namespace Nano35.Storage.Processor.Models
 {
@@ -34,6 +36,18 @@ namespace Nano35.Storage.Processor.Models
                 .IsRequired();
             
             //Forgein keys
+        }
+    }
+
+    public class ArticlesCategoryGroupAutoMapperProfile : Profile
+    {
+        public ArticlesCategoryGroupAutoMapperProfile()
+        {
+            CreateMap<CategoryGroup, ICategoryGroupViewModel>()
+                .ForMember(dest => dest.Id, source => source
+                    .MapFrom(source => source.Id))
+                .ForMember(dest => dest.Name, source => source
+                    .MapFrom(source => source.Name));
         }
     }
 }

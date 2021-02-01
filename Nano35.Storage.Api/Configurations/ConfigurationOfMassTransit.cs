@@ -36,6 +36,16 @@ namespace Nano35.Storage.Api.Configurations
                     new Uri($"{ContractBase.RabbitMqLocation}/IGetStorageItemByIdRequestContract"));
                 x.AddRequestClient<ICreateStorageItemRequestContract>(
                     new Uri($"{ContractBase.RabbitMqLocation}/ICreateStorageItemRequestContract"));
+                x.AddRequestClient<IGetAllArticlesBrandsSuccessResultContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/IGetAllArticlesBrandsSuccessResultContract"));
+                x.AddRequestClient<IGetAllArticlesModelsSuccessResultContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/IGetAllArticlesModelsSuccessResultContract"));
+                x.AddRequestClient<IGetAllArticlesCategoriesRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/IGetAllArticlesCategoriesRequestContract"));
+                x.AddRequestClient<IGetAllArticlesCategoryGroupsRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/IGetAllArticlesCategoryGroupsRequestContract"));
+                x.AddRequestClient<IGetAllArticleTypesRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/IGetAllArticleTypesRequestContract"));
             });
             services.AddMassTransitHostedService();
         }

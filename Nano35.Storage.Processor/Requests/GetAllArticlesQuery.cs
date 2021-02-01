@@ -52,7 +52,8 @@ namespace Nano35.Storage.Processor.Requests
             {
                 try
                 {
-                    var result = await _context.Articles
+                    var result = await _context
+                        .Articles
                         .Where(c => c.InstanceId == message.InstanceId)
                         .MapAllToAsync<IArticleViewModel>();
                     
