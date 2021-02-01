@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Nano35.Contracts.Instance.Artifacts;
+using Nano35.Contracts.Storage.Artifacts;
+using Nano35.Storage.Api.Requests;
 
 namespace Nano35.Storage.Api.Controllers
 {
@@ -10,18 +14,34 @@ namespace Nano35.Storage.Api.Controllers
     public class ArticlesController : ControllerBase
     {
         private readonly ILogger<ArticlesController> _logger;
+        private readonly IMediator _mediator;
 
         public ArticlesController(
-            ILogger<ArticlesController> logger)
+            ILogger<ArticlesController> logger, 
+            IMediator mediator)
         {
             _logger = logger;
+            _mediator = mediator;
         }
     
         [HttpGet]
         [Route("GetAllArticles")]
-        public async Task<IActionResult> GetAllArticles()
+        public async Task<IActionResult> GetAllArticles(
+            [FromQuery] Guid instanceId)
         {
-            return Ok();
+            var request = new GetAllArticlesQuery()
+            {
+                InstanceId = instanceId
+            };
+            
+            var result = await _mediator.Send(request);
+
+            return result switch
+            {
+                IGetAllArticlesSuccessResultContract success => Ok(success.Data),
+                IGetAllArticlesErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
         }
     
         [HttpGet]
@@ -61,9 +81,17 @@ namespace Nano35.Storage.Api.Controllers
 
         [HttpPost]
         [Route("CreateArticle")]
-        public async Task<IActionResult> CreateArticle()
+        public async Task<IActionResult> CreateArticle(
+            [FromBody] CreateArticleCommand command)
         {
-            return Ok();
+            var result = await _mediator.Send(command);
+
+            return result switch
+            {
+                ICreateArticleSuccessResultContract => Ok(),
+                ICreateArticleErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
         }
 
         [HttpPut]

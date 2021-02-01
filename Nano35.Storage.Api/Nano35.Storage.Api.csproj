@@ -15,15 +15,12 @@
     <PackageReference Include="MediatR" Version="9.0.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.2" />
-    <PackageReference Include="Nano35.Contracts" Version="1.1.7" />
+    <PackageReference Include="Nano35.Contracts" Version="1.2.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Configurations" />
     <Folder Include="Helpers" />
-    <Folder Include="Middlewares" />
-    <Folder Include="Requests" />
   </ItemGroup>
 
 </Project>

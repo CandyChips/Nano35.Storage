@@ -11,27 +11,30 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Nano35.Contracts;
+using Nano35.Storage.Api.Configurations;
+using Nano35.Storage.Api.Middlewares;
 
 namespace Nano35.Storage.Api
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
+        
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
-
-        public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
+        
         public void ConfigureServices(IServiceCollection services)
         {
-
-            services.AddControllers();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Nano35.Storage.Api", Version = "v1" });
-            });
+            //new Configurator(services, new AuthenticationConfiguration()).Configure();
+            //new Configurator(services, new ConfigurationOfAuthStateProvider()).Configure();
+            new Configurator(services, new CorsConfiguration()).Configure();
+            new Configurator(services, new SwaggerConfiguration()).Configure();
+            new Configurator(services, new MassTransitConfiguration()).Configure();
+            new Configurator(services, new MediatRConfiguration()).Configure();
+            new Configurator(services, new ConfigurationOfControllers()).Configure();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -52,7 +55,8 @@ namespace Nano35.Storage.Api
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                ConfigureCommon.Configure(app);
+                ConfigureEndpoints.Configure(app);
             });
         }
     }
