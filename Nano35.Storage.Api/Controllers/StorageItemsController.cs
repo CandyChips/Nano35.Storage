@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Nano35.Contracts.Storage.Artifacts;
+using Nano35.Storage.Api.Requests;
 
 namespace Nano35.Storage.Api.Controllers
 {
@@ -10,32 +13,69 @@ namespace Nano35.Storage.Api.Controllers
     public class StorageItemsController : ControllerBase
     {
         private readonly ILogger<StorageItemsController> _logger;
+        private readonly IMediator _mediator;
 
         public StorageItemsController(
-            ILogger<StorageItemsController> logger)
+            ILogger<StorageItemsController> logger,
+            IMediator mediator)
         {
             _logger = logger;
+            _mediator = mediator;
         }
     
         [HttpGet]
         [Route("GetAllStorageItems")]
-        public async Task<IActionResult> GetAllStorageItems()
+        public async Task<IActionResult> GetAllStorageItems(
+            [FromQuery] Guid instanceId)
         {
-            return Ok();
+            var request = new GetAllStorageItemsQuery()
+            {
+                InstanceId = instanceId
+            };
+            
+            var result = await _mediator.Send(request);
+
+            return result switch
+            {
+                IGetAllStorageItemsSuccessResultContract success => Ok(success.Data),
+                IGetAllStorageItemsErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
+        }
+    
+        [HttpGet]
+        [Route("GetStorageItemById")]
+        public async Task<IActionResult> GetStorageItemById(
+            [FromQuery] Guid id)
+        {
+            var request = new GetStorageItemByIdQuery()
+            {
+                Id = id
+            };
+            
+            var result = await _mediator.Send(request);
+
+            return result switch
+            {
+                IGetStorageItemByIdSuccessResultContract success => Ok(success.Data),
+                IGetStorageItemByIdErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
         }
 
         [HttpPost]
         [Route("CreateStorageItem")]
-        public async Task<IActionResult> CreateStorageItem()
+        public async Task<IActionResult> CreateStorageItem(
+            [FromBody] CreateStorageItemCommand command)
         {
-            return Ok();
-        }
+            var result = await _mediator.Send(command);
 
-        [HttpPut]
-        [Route("UpdateStorageItem")]
-        public async Task<IActionResult> UpdateStorageItem()
-        {
-            return Ok();
+            return result switch
+            {
+                ICreateStorageItemSuccessResultContract => Ok(),
+                ICreateStorageItemErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
         }
     }
 }

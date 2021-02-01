@@ -3,6 +3,7 @@ using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 using Nano35.Contracts;
 using Nano35.Contracts.Instance.Artifacts;
+using Nano35.Contracts.Storage.Artifacts;
 
 namespace Nano35.Storage.Api.Configurations
 {
@@ -23,30 +24,18 @@ namespace Nano35.Storage.Api.Configurations
                         h.Password(ContractBase.RabbitMqPassword);
                     });
                 }));
-                x.AddRequestClient<ICreateClientRequestContract>(
-                    new Uri($"{ContractBase.RabbitMqLocation}/ICreateClientRequestContract"));
-                x.AddRequestClient<IGetAllWorkersRequestContract>(
-                    new Uri($"{ContractBase.RabbitMqLocation}/IGetAllWorkersRequestContract"));
-                x.AddRequestClient<IGetAllUnitsRequestContract>(
-                    new Uri($"{ContractBase.RabbitMqLocation}/IGetAllUnitsRequestContract"));
-                x.AddRequestClient<IGetAllUnitTypesRequestContract>(
-                    new Uri($"{ContractBase.RabbitMqLocation}/IGetAllUnitTypesRequestContract"));
-                x.AddRequestClient<ICreateWorkerRequestContract>(
-                    new Uri($"{ContractBase.RabbitMqLocation}/ICreateWorkerRequestContract"));
-                x.AddRequestClient<IGetAllInstancesRequestContract>(
-                    new Uri($"{ContractBase.RabbitMqLocation}/IGetAllInstancesRequestContract"));
-                x.AddRequestClient<ICreateInstanceRequestContract>(
-                    new Uri($"{ContractBase.RabbitMqLocation}/ICreateInstanceRequestContract"));
-                x.AddRequestClient<ICreateUnitRequestContract>(
-                    new Uri($"{ContractBase.RabbitMqLocation}/ICreateUnitRequestContract"));
-                x.AddRequestClient<IGetInstanceByIdRequestContract>(
-                    new Uri($"{ContractBase.RabbitMqLocation}/IGetInstanceByIdRequestContract"));
-                x.AddRequestClient<IGetAllRegionsRequestContract>(
-                    new Uri($"{ContractBase.RabbitMqLocation}/IGetAllRegionsRequestContract"));
-                x.AddRequestClient<IGetAllInstanceTypesRequestContract>(
-                    new Uri($"{ContractBase.RabbitMqLocation}/IGetAllInstanceTypesRequestContract")); 
-                x.AddRequestClient<IGetAllWorkerRolesRequestContract>(
-                    new Uri($"{ContractBase.RabbitMqLocation}/IGetAllWorkerRolesRequestContract"));
+                x.AddRequestClient<IGetAllArticlesRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/IGetAllArticlesRequestContract"));
+                x.AddRequestClient<IGetArticleByIdRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/IGetArticleByIdRequestContract"));
+                x.AddRequestClient<ICreateArticleRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/ICreateArticleRequestContract"));
+                x.AddRequestClient<IGetAllStorageItemsRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/IGetAllStorageItemsRequestContract"));
+                x.AddRequestClient<IGetStorageItemByIdRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/IGetStorageItemByIdRequestContract"));
+                x.AddRequestClient<ICreateStorageItemRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/ICreateStorageItemRequestContract"));
             });
             services.AddMassTransitHostedService();
         }

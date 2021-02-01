@@ -46,37 +46,106 @@ namespace Nano35.Storage.Api.Controllers
     
         [HttpGet]
         [Route("GetAllArticleTypes")]
-        public async Task<IActionResult> GetAllClientTypes()
+        public async Task<IActionResult> GetAllArticleTypes()
         {
-            return Ok();
+            var request = new GetAllArticleTypesQuery();
+            
+            var result = await _mediator.Send(request);
+
+            return result switch
+            {
+                IGetAllArticleTypesSuccessResultContract success => Ok(success.Data),
+                IGetAllArticleTypesErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
         }
     
         [HttpGet]
         [Route("GetAllArticleModels")]
-        public async Task<IActionResult> GetAllArticleModels()
+        public async Task<IActionResult> GetAllArticleModels(
+            [FromQuery] Guid instanceId)
         {
-            return Ok();
+            var request = new GetAllArticlesModelsQuery() {InstanceId = instanceId};
+            
+            var result = await _mediator.Send(request);
+
+            return result switch
+            {
+                IGetAllArticlesModelsSuccessResultContract success => Ok(success.Data),
+                IGetAllArticlesModelsErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
         }
     
         [HttpGet]
         [Route("GetAllArticleBrands")]
-        public async Task<IActionResult> GetAllArticleBrands()
+        public async Task<IActionResult> GetAllArticleBrands(
+            [FromQuery] Guid instanceId)
         {
-            return Ok();
+            var request = new GetAllArticlesBrandsQuery() {InstanceId = instanceId};
+            
+            var result = await _mediator.Send(request);
+
+            return result switch
+            {
+                IGetAllArticlesBrandsSuccessResultContract success => Ok(success.Data),
+                IGetAllArticlesBrandsErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
         }
     
         [HttpGet]
         [Route("GetAllArticleCategories")]
-        public async Task<IActionResult> GetAllArticleCategories()
+        public async Task<IActionResult> GetAllArticleCategories(
+            [FromQuery] Guid instanceId)
         {
-            return Ok();
+            var request = new GetAllArticlesCategoriesQuery() {InstanceId = instanceId};
+            
+            var result = await _mediator.Send(request);
+
+            return result switch
+            {
+                IGetAllArticlesCategoriesSuccessResultContract success => Ok(success.Data),
+                IGetAllArticlesCategoriesErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
         }
     
         [HttpGet]
-        [Route("GetAllArticleCategoryGroups")]
-        public async Task<IActionResult> GetAllArticleCategoryGroups()
+        [Route("GetAllArticlesCategoryGroups")]
+        public async Task<IActionResult> GetAllArticlesCategoryGroups(
+            [FromQuery] Guid instanceId)
         {
-            return Ok();
+            var request = new GetAllArticlesCategoryGroupsQuery() {InstanceId = instanceId};
+            
+            var result = await _mediator.Send(request);
+
+            return result switch
+            {
+                IGetAllArticlesCategoryGroupsSuccessResultContract success => Ok(success.Data),
+                IGetAllArticlesCategoryGroupsErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
+        }
+    
+        [HttpGet]
+        [Route("GetArticleById")]
+        public async Task<IActionResult> GetArticleById(
+            [FromQuery] Guid id)
+        {
+            var request = new GetArticleByIdQuery()
+            {
+                Id = id
+            };
+            
+            var result = await _mediator.Send(request);
+
+            return result switch
+            {
+                IGetArticleByIdSuccessResultContract success => Ok(success.Data),
+                IGetArticleByIdErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
         }
 
         [HttpPost]
@@ -92,13 +161,6 @@ namespace Nano35.Storage.Api.Controllers
                 ICreateArticleErrorResultContract error => BadRequest(error.Message),
                 _ => BadRequest()
             };
-        }
-
-        [HttpPut]
-        [Route("UpdateArticle")]
-        public async Task<IActionResult> UpdateArticle()
-        {
-            return Ok();
         }
     }
 }
