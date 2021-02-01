@@ -5,10 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Configurations" />
     <Folder Include="Consumers" />
     <Folder Include="Requests" />
-    <Folder Include="Services" />
   </ItemGroup>
 
   <ItemGroup>

@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Nano35.Contracts;
+using Nano35.Storage.Processor.Configurations;
 
 namespace Nano35.Storage.Processor
 {
@@ -15,7 +17,9 @@ namespace Nano35.Storage.Processor
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
-        {
+        {            
+            new Configurator(services, new EntityFrameworkConfiguration("192.168.100.120", "Nano35.Storage.DB", "sa", "Cerber666")).Configure();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
