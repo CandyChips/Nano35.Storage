@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using MassTransit;
 using MediatR;
-using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Storage.Api.Requests.Behaviours;
 

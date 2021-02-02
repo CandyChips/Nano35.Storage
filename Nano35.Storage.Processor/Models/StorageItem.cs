@@ -1,6 +1,8 @@
 ﻿using System;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Nano35.Contracts;
+using Nano35.Contracts.Storage.Models;
 
 namespace Nano35.Storage.Processor.Models
 {
@@ -71,6 +73,16 @@ namespace Nano35.Storage.Processor.Models
                 .WithMany()
                 .OnDelete(DeleteBehavior.NoAction)
                 .HasForeignKey(p => p.ConditionId);
+        }
+    }
+
+    public class StorageItemAutoMapperProfile : Profile
+    {
+        public StorageItemAutoMapperProfile()
+        {
+            CreateMap<StorageItem, IStorageItemViewModel>()
+                .ForMember(dest => dest.Id, source => source
+                    .MapFrom(source => source.Id));
         }
     }
 }

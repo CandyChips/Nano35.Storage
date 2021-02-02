@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using MassTransit;
 using MediatR;
 using Nano35.Contracts;
-using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Storage.Processor.Models;
 using Nano35.Storage.Processor.Services;
@@ -41,21 +38,39 @@ namespace Nano35.Storage.Processor.Requests
             IRequestHandler<CreateStorageItemCommand, ICreateStorageItemResultContract>
         {
             private readonly ApplicationContext _context;
-            private readonly IBus _bus;
             
             public CreateStorageItemHandler(
-                ApplicationContext context, 
-                IBus bus)
+                ApplicationContext context)
             {
                 _context = context;
-                _bus = bus;
             }
         
             public async Task<ICreateStorageItemResultContract> Handle(
                 CreateStorageItemCommand message, 
                 CancellationToken cancellationToken)
             {
-                throw new NotImplementedException();
+                try
+                {
+                    var storageItem = new StorageItem()
+                    {
+                        Id = message.NewId,
+                        InstanceId = message.InstanceId,
+                        Comment = message.Comment,
+                        HiddenComment = message.HiddenComment,
+                        RetailPrice = message.RetailPrice,
+                        PurchasePrice = message.PurchasePrice,
+                        IsDeleted = false,
+                        ArticleId = message.ArticleId,
+                        ConditionId = message.ConditionId 
+                    };
+                    await _context.StorageItems.AddAsync(storageItem, cancellationToken);
+                    await _context.SaveChangesAsync(cancellationToken);
+                    return new CreateStorageItemSuccessResultContract();
+                }
+                catch
+                {
+                    return new CreateStorageItemErrorResultContract();
+                }
             }
         }
     }

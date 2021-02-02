@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 using MassTransit;
 using MediatR;
 using Nano35.Contracts;
-using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Contracts.Storage.Models;
-using Nano35.Storage.Processor.Models;
 using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.Requests
@@ -36,14 +34,11 @@ namespace Nano35.Storage.Processor.Requests
             IRequestHandler<GetAllStorageItemsQuery, IGetAllStorageItemsResultContract>
         {
             private readonly ApplicationContext _context;
-            private readonly IBus _bus;
             
             public GetAllStorageItemsHandler(
-                ApplicationContext context, 
-                IBus bus)
+                ApplicationContext context)
             {
                 _context = context;
-                _bus = bus;
             }
         
             public async Task<IGetAllStorageItemsResultContract> Handle(
@@ -59,7 +54,7 @@ namespace Nano35.Storage.Processor.Requests
                     
                     return new GetAllStorageItemsSuccessResultContract() { Data = result };
                 }
-                catch (Exception e)
+                catch
                 {
                     return new GetAllStorageItemsErrorResultContract() { Message = "!!!"};
                 }

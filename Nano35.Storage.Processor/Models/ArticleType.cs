@@ -2,7 +2,6 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Nano35.Contracts;
-using Nano35.Contracts.Identity.Models;
 using Nano35.Contracts.Storage.Models;
 
 namespace Nano35.Storage.Processor.Models
@@ -26,7 +25,7 @@ namespace Nano35.Storage.Processor.Models
         {
             //Primary key
             modelBuilder.Entity<ArticleType>()
-                .HasKey(u => u.Id);  
+                .HasKey(u => new {u.Id});  
             
             //Data
             modelBuilder.Entity<ArticleType>()

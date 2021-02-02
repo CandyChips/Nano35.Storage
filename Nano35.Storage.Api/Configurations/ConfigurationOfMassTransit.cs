@@ -2,7 +2,6 @@ using System;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 using Nano35.Contracts;
-using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Storage.Artifacts;
 
 namespace Nano35.Storage.Api.Configurations
@@ -46,6 +45,8 @@ namespace Nano35.Storage.Api.Configurations
                     new Uri($"{ContractBase.RabbitMqLocation}/IGetAllArticlesCategoryGroupsRequestContract"));
                 x.AddRequestClient<IGetAllArticleTypesRequestContract>(
                     new Uri($"{ContractBase.RabbitMqLocation}/IGetAllArticleTypesRequestContract"));
+                x.AddRequestClient<IGetAllStorageItemConditionsRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/IGetAllStorageItemConditionsRequestContract"));
             });
             services.AddMassTransitHostedService();
         }

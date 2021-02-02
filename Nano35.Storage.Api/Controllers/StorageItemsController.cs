@@ -44,6 +44,22 @@ namespace Nano35.Storage.Api.Controllers
         }
     
         [HttpGet]
+        [Route("GetAllStorageItemConditions")]
+        public async Task<IActionResult> GetAllStorageItemConditions()
+        {
+            var request = new GetAllStorageItemConditionsQuery();
+            
+            var result = await _mediator.Send(request);
+
+            return result switch
+            {
+                IGetAllStorageItemConditionsSuccessResultContract success => Ok(success.Data),
+                IGetAllStorageItemConditionsErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
+        }
+    
+        [HttpGet]
         [Route("GetStorageItemById")]
         public async Task<IActionResult> GetStorageItemById(
             [FromQuery] Guid id)

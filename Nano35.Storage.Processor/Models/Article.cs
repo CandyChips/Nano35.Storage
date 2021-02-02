@@ -1,7 +1,9 @@
 ﻿using System;
 using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Nano35.Contracts;
+using Nano35.Contracts.Storage.Models;
 
 namespace Nano35.Storage.Processor.Models
 {
@@ -50,31 +52,31 @@ namespace Nano35.Storage.Processor.Models
                 .HasOne(p => p.ArticleType)
                 .WithMany()
                 .OnDelete(DeleteBehavior.NoAction)
-                .HasForeignKey(p => p.ArticleTypeId);
+                .HasForeignKey(p => new {p.ArticleTypeId});
             
             modelBuilder.Entity<Article>()
                 .HasOne(p => p.CategoryGroup)
                 .WithMany()
                 .OnDelete(DeleteBehavior.NoAction)
-                .HasForeignKey(p => p.CategoryGroupId);
+                .HasForeignKey(p => new {p.CategoryGroupId});
             
             modelBuilder.Entity<Article>()
                 .HasOne(p => p.Category)
                 .WithMany()
                 .OnDelete(DeleteBehavior.NoAction)
-                .HasForeignKey(p => p.CategoryId);
+                .HasForeignKey(p => new {p.CategoryId});
             
             modelBuilder.Entity<Article>()
                 .HasOne(p => p.Brand)
                 .WithMany()
                 .OnDelete(DeleteBehavior.NoAction)
-                .HasForeignKey(p => p.BrandId);
+                .HasForeignKey(p => new {p.BrandId} );
             
             modelBuilder.Entity<Article>()
                 .HasOne(p => p.Model)
                 .WithMany()
                 .OnDelete(DeleteBehavior.NoAction)
-                .HasForeignKey(p => p.ModelId);
+                .HasForeignKey(p => new {p.ModelId});
         }
     }
 
@@ -82,7 +84,37 @@ namespace Nano35.Storage.Processor.Models
     {
         public ArticlesAutoMapperProfile()
         {
-            //CreateMap<>()
+            CreateMap<Article, IArticleViewModel>()
+                .ForMember(dest => dest.Id, source => source
+                    .MapFrom(source => source.Id))
+                .ForMember(dest => dest.Brand, source => source
+                    .MapFrom(source => source.Brand.Name))
+                .ForMember(dest => dest.Model, source => source
+                    .MapFrom(source => source.Model.Name))
+                .ForMember(dest => dest.Category, source => source
+                    .MapFrom(source => source.Category.Name))
+                .ForMember(dest => dest.CategoryGroup, source => source
+                    .MapFrom(source => source.CategoryGroup.Name));
+        }
+    }
+
+    public class ArticleAutoMapperProfile : Profile
+    {
+        public ArticleAutoMapperProfile()
+        {
+            CreateMap<Article, IArticleViewModel>()
+                .ForMember(dest => dest.Id, source => source
+                    .MapFrom(source => source.Id))
+                .ForMember(dest => dest.ArticleType, source => source
+                    .MapFrom(source => source.ArticleType.Name))
+                .ForMember(dest => dest.CategoryGroup, source => source
+                    .MapFrom(source => source.CategoryGroup.Name))
+                .ForMember(dest => dest.Category, source => source
+                    .MapFrom(source => source.Category.Name))
+                .ForMember(dest => dest.Brand, source => source
+                    .MapFrom(source => source.Brand.Name))
+                .ForMember(dest => dest.Model, source => source
+                    .MapFrom(source => source.Model.Name));
         }
     }
 }

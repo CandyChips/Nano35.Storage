@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using MassTransit;
-using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Storage.Processor.Requests;
 

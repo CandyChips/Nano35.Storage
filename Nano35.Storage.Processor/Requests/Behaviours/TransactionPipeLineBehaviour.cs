@@ -25,18 +25,22 @@ namespace Nano35.Storage.Processor.Requests.Behaviours
         public async Task<TOut> Handle(TIn request, CancellationToken cancellationToken, RequestHandlerDelegate<TOut> next)
         {
             
-            await using var transaction = _context.Database.BeginTransaction();
+            await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
+            
             var response = await next();
-            if (response is IError)
+            
+            switch (response)
             {
-                await transaction.RollbackAsync(cancellationToken).ConfigureAwait(false);
-                _logger.LogError("Transaction refused");
+                case IError:
+                    await transaction.RollbackAsync(cancellationToken).ConfigureAwait(false);
+                    _logger.LogError("Transaction refused");
+                    break;
+                case ISuccess:
+                    await _context.SaveChangesAsync(cancellationToken);
+                    await transaction.CommitAsync(cancellationToken);
+                    break;
             }
-            if (response is ISuccess)
-            {
-                await _context.SaveChangesAsync(cancellationToken);
-                await transaction.CommitAsync(cancellationToken);
-            }
+
             return response;
         }
     }

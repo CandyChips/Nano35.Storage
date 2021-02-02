@@ -95,6 +95,27 @@ namespace Nano35.Storage.Processor.Services
                     Id = Guid.NewGuid(),
                     IsDeleted = false
                 });
+
+                modelBuilder.StorageItemConditions.Add(new StorageItemCondition()
+                {
+                    Id = Guid.NewGuid(),
+                    IsDeleted = false,
+                    Name = "Новый"
+                });
+
+                modelBuilder.StorageItemConditions.Add(new StorageItemCondition()
+                {
+                    Id = Guid.NewGuid(),
+                    IsDeleted = false,
+                    Name = "С разбора"
+                });
+
+                modelBuilder.StorageItemConditions.Add(new StorageItemCondition()
+                {
+                    Id = Guid.NewGuid(),
+                    IsDeleted = false,
+                    Name = "Витринный образец"
+                });
                 
                 await modelBuilder
                     .SaveChangesAsync()

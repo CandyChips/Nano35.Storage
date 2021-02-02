@@ -19,8 +19,10 @@ namespace Nano35.Storage.Processor.Configurations
                 mc.AddProfile(new ArticlesCategoryGroupAutoMapperProfile());
                 mc.AddProfile(new ArticlesModelsAutoMapperProfile());
                 mc.AddProfile(new ArticleTypesAutoMapperProfile());
+                mc.AddProfile(new StorageItemConditionAutoMapperProfile());
+                mc.AddProfile(new ArticleAutoMapperProfile());
             });
-            IMapper mapper = mapperConfig.CreateMapper();
+            var mapper = mapperConfig.CreateMapper();
             MappingPipe.Mapper = mapper;
             services.AddSingleton(mapper);
         }

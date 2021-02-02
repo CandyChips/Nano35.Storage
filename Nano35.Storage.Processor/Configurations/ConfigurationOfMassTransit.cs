@@ -78,6 +78,11 @@ namespace Nano35.Storage.Processor.Configurations
                     {
                         e.Consumer<GetAllArticleTypesConsumer>(provider);
                     });
+
+                    cfg.ReceiveEndpoint("IGetAllStorageItemConditionsRequestContract", e =>
+                    {
+                        e.Consumer<GetAllStorageItemConditionsConsumer>(provider);
+                    });
                 }));
                 x.AddConsumer<CreateArticleConsumer>();
                 x.AddConsumer<CreateStorageItemConsumer>();
@@ -89,6 +94,7 @@ namespace Nano35.Storage.Processor.Configurations
                 x.AddConsumer<GetAllArticlesCategoriesConsumer>();
                 x.AddConsumer<GetAllArticlesCategoryGroupsConsumer>();
                 x.AddConsumer<GetAllArticlesModelsConsumer>();
+                x.AddConsumer<GetAllStorageItemConditionsConsumer>();
                 x.AddConsumer<GetAllArticleTypesConsumer>();
                 
                 x.AddRequestClient<IGetUserByIdRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IGetUserByIdRequestContract"));

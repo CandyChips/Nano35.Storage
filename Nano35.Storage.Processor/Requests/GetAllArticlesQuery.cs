@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 using MassTransit;
 using MediatR;
 using Nano35.Contracts;
-using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Contracts.Storage.Models;
-using Nano35.Storage.Processor.Models;
 using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.Requests
