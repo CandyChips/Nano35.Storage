@@ -20,7 +20,6 @@ namespace Nano35.Storage.Processor
                 try
                 {
                     ApplicationContext context = services.GetRequiredService<ApplicationContext>();
-                    Microsoft.AspNetCore.Hosting.IWebHostEnvironment environment = services.GetRequiredService<Microsoft.AspNetCore.Hosting.IWebHostEnvironment>();
                     await DataInitializer.InitializeRolesAsync(context);
                 }
                 catch (Exception ex)

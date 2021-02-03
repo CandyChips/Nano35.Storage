@@ -72,7 +72,7 @@ namespace Nano35.Storage.Processor.Models
                 .HasOne(p => p.Condition)
                 .WithMany()
                 .OnDelete(DeleteBehavior.NoAction)
-                .HasForeignKey(p => p.ConditionId);
+                .HasForeignKey(p => new {p.ConditionId});
         }
     }
 
@@ -82,7 +82,9 @@ namespace Nano35.Storage.Processor.Models
         {
             CreateMap<StorageItem, IStorageItemViewModel>()
                 .ForMember(dest => dest.Id, source => source
-                    .MapFrom(source => source.Id));
+                    .MapFrom(source => source.Id))
+                .ForMember(dest => dest.Condition, source => source
+                    .MapFrom(source => source.Condition.Name));
         }
     }
 }
