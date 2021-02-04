@@ -59,12 +59,12 @@ namespace Nano35.Storage.Processor.Requests
                         HiddenComment = message.HiddenComment,
                         RetailPrice = message.RetailPrice,
                         PurchasePrice = message.PurchasePrice,
-                        IsDeleted = false,
                         ArticleId = message.ArticleId,
-                        ConditionId = message.ConditionId 
+                        ConditionId = message.ConditionId,
+                        IsDeleted = false,
                     };
+                    
                     await _context.StorageItems.AddAsync(storageItem, cancellationToken);
-                    await _context.SaveChangesAsync(cancellationToken);
                     
                     return new CreateStorageItemSuccessResultContract();
                 }

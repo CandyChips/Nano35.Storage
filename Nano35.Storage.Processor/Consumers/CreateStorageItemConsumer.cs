@@ -23,9 +23,9 @@ namespace Nano35.Storage.Processor.Consumers
             var request = new CreateStorageItemCommand()
             {
                 NewId = message.NewId,
-                InstanceId = message.InstanceId,
                 ArticleId = message.ArticleId,
                 ConditionId = message.ConditionId,
+                InstanceId = message.InstanceId,
                 Comment = message.Comment,
                 HiddenComment = message.HiddenComment,
                 RetailPrice = message.RetailPrice,

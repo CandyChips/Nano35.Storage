@@ -36,14 +36,11 @@ namespace Nano35.Storage.Processor.Requests
             IRequestHandler<GetAllArticlesCategoriesQuery, IGetAllArticlesCategoriesResultContract>
         {
             private readonly ApplicationContext _context;
-            private readonly IBus _bus;
             
             public GetAllArticlesCategoriesHandler(
-                ApplicationContext context, 
-                IBus bus)
+                ApplicationContext context)
             {
                 _context = context;
-                _bus = bus;
             }
         
             public async Task<IGetAllArticlesCategoriesResultContract> Handle(

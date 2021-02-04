@@ -4,23 +4,6 @@ using Nano35.Contracts;
 
 namespace Nano35.Storage.Processor.Models
 {
-    public class ComingDetail :
-        ICastable
-    {
-        // Primary key
-        public Guid Id { get; set; }
-        
-        //Data
-        public double Price { get; set; }
-        public int Count { get; set; }
-        
-        //Forgein keys
-        public Guid ToWarehouseId { get; set; }
-        public WarehouseByItemOnStorage ToWarehouse { get; set; }
-        
-        public Guid ComingId { get; set; }
-        public Coming Coming { get; set; }
-    }
     public class Coming :
         ICastable
     {
@@ -30,8 +13,27 @@ namespace Nano35.Storage.Processor.Models
         //Data
         public string Number { get; set; }
         public DateTime Date { get; set; }
-        public Guid ToUnitId { get; set; }
         
         //Forgein keys
+    }
+
+    public class ComingFluentContext
+    {
+        public void Configure(ModelBuilder modelBuilder)
+        {
+            //Primary key
+            modelBuilder.Entity<Coming>()
+                .HasKey(u => new {u.Id});  
+            
+            //Data
+            modelBuilder.Entity<Coming>()
+                .Property(b => b.Number)
+                .IsRequired();
+            modelBuilder.Entity<Coming>()
+                .Property(b => b.Date)
+                .IsRequired();
+            
+            //Forgein keys
+        }
     }
 }

@@ -4,23 +4,6 @@ using Nano35.Contracts;
 
 namespace Nano35.Storage.Processor.Models
 {
-    public class SalleDetail :
-        ICastable
-    {
-        // Primary key
-        public Guid Id { get; set; }
-        
-        //Data
-        public double Price { get; set; }
-        public int Count { get; set; }
-        
-        //Forgein keys
-        public Guid FromWarehouseId { get; set; }
-        public WarehouseByItemOnStorage FromWarehouse { get; set; }
-        
-        public Guid SalleId { get; set; }
-        public Salle Salle { get; set; }
-    }
     public class Salle :
         ICastable
     {
@@ -30,8 +13,27 @@ namespace Nano35.Storage.Processor.Models
         //Data
         public string Number { get; set; }
         public DateTime Date { get; set; }
-        public Guid FromUnitId { get; set; }
         
         //Forgein keys
+    }
+
+    public class SalleFluentContext
+    {
+        public void Configure(ModelBuilder modelBuilder)
+        {
+            //Primary key
+            modelBuilder.Entity<Salle>()
+                .HasKey(u => new {u.Id});  
+            
+            //Data
+            modelBuilder.Entity<Salle>()
+                .Property(b => b.Number)
+                .IsRequired();
+            modelBuilder.Entity<Salle>()
+                .Property(b => b.Date)
+                .IsRequired();
+            
+            //Forgein keys
+        }
     }
 }

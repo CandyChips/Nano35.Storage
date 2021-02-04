@@ -53,18 +53,16 @@ namespace Nano35.Storage.Processor.Requests
             {
                 try
                 {
-                    var category = _context.Categorys.FirstOrDefault(f => f.Id == message.CategoryId);
-                    
                     var client = new Article(){
                         Id = message.NewId,
                         InstanceId = message.InstanceId,
                         IsDeleted = false,
                         Model = message.Model,
                         Brand = message.Brand,
-                        Category = category,
+                        CategoryId = message.CategoryId,
                     };
+                    
                     await _context.AddAsync(client, cancellationToken);
-                    await _context.SaveChangesAsync(cancellationToken);
                     
                     return new CreateArticleSuccessResultContract();
                 }

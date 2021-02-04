@@ -25,6 +25,16 @@ namespace Nano35.Storage.Api.Configurations
                 }));
                 x.AddRequestClient<IGetAllArticlesRequestContract>(
                     new Uri($"{ContractBase.RabbitMqLocation}/IGetAllArticlesRequestContract"));
+                x.AddRequestClient<ICreateCancelationRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/ICreateCancelationRequestContract"));
+                x.AddRequestClient<ICreateSalleRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/ICreateSalleRequestContract"));
+                x.AddRequestClient<ICreateComingRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/ICreateComingRequestContract"));
+                x.AddRequestClient<ICreateMoveRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/ICreateMoveRequestContract"));
+                x.AddRequestClient<ICreateCategoryRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/ICreateCategoryRequestContract"));
                 x.AddRequestClient<IGetArticleByIdRequestContract>(
                     new Uri($"{ContractBase.RabbitMqLocation}/IGetArticleByIdRequestContract"));
                 x.AddRequestClient<ICreateArticleRequestContract>(
@@ -35,12 +45,12 @@ namespace Nano35.Storage.Api.Configurations
                     new Uri($"{ContractBase.RabbitMqLocation}/IGetStorageItemByIdRequestContract"));
                 x.AddRequestClient<ICreateStorageItemRequestContract>(
                     new Uri($"{ContractBase.RabbitMqLocation}/ICreateStorageItemRequestContract"));
-                x.AddRequestClient<IGetAllArticlesBrandsSuccessResultContract>(
-                    new Uri($"{ContractBase.RabbitMqLocation}/IGetAllArticlesBrandsSuccessResultContract"));
-                x.AddRequestClient<IGetAllArticlesModelsSuccessResultContract>(
-                    new Uri($"{ContractBase.RabbitMqLocation}/IGetAllArticlesModelsSuccessResultContract"));
+                x.AddRequestClient<IGetAllArticlesBrandsRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/IGetAllArticlesBrandsRequestContract"));
                 x.AddRequestClient<IGetAllArticlesCategoriesRequestContract>(
                     new Uri($"{ContractBase.RabbitMqLocation}/IGetAllArticlesCategoriesRequestContract"));
+                x.AddRequestClient<IGetAllArticlesModelsRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/IGetAllArticlesModelsRequestContract"));
                 x.AddRequestClient<IGetAllStorageItemConditionsRequestContract>(
                     new Uri($"{ContractBase.RabbitMqLocation}/IGetAllStorageItemConditionsRequestContract"));
             });

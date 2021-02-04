@@ -42,6 +42,19 @@ namespace Nano35.Storage.Processor.Services
             new StorageItemEventsFluentContext().Configure(modelBuilder);
             new StorageItemEventDetailsFluentContext().Configure(modelBuilder);
             new WarehousesFluentContext().Configure(modelBuilder);
+
+            new CancelationFluentContext().Configure(modelBuilder);
+            new CancelationDetailFluentContext().Configure(modelBuilder);
+            
+            new ComingFluentContext().Configure(modelBuilder);
+            new ComingDetailFluentContext().Configure(modelBuilder);
+            
+            new MoveFluentContext().Configure(modelBuilder);
+            new MoveDetailFluentContext().Configure(modelBuilder);
+            
+            new SalleFluentContext().Configure(modelBuilder);
+            new SalleDetailFluentContext().Configure(modelBuilder);
+            
             base.OnModelCreating(modelBuilder);
         }
         public void Update()

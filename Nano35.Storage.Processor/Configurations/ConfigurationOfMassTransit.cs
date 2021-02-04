@@ -29,6 +29,31 @@ namespace Nano35.Storage.Processor.Configurations
                         e.Consumer<GetAllArticlesConsumer>(provider);
                     });
                     
+                    cfg.ReceiveEndpoint("ICreateCancelationRequestContract", e =>
+                    {
+                        e.Consumer<CreateCancelationConsumer>(provider);
+                    });
+                    
+                    cfg.ReceiveEndpoint("ICreateSalleRequestContract", e =>
+                    {
+                        e.Consumer<CreateSalleConsumer>(provider);
+                    });
+                    
+                    cfg.ReceiveEndpoint("ICreateComingRequestContract", e =>
+                    {
+                        e.Consumer<CreateComingConsumer>(provider);
+                    });
+                    
+                    cfg.ReceiveEndpoint("ICreateMoveRequestContract", e =>
+                    {
+                        e.Consumer<CreateMoveConsumer>(provider);
+                    });
+                    
+                    cfg.ReceiveEndpoint("ICreateCategoryRequestContract", e =>
+                    {
+                        e.Consumer<CreateCategoryConsumer>(provider);
+                    });
+                    
                     cfg.ReceiveEndpoint("IGetArticleByIdRequestContract", e =>
                     {
                         e.Consumer<GetArticleByIdConsumer>(provider);
@@ -84,6 +109,11 @@ namespace Nano35.Storage.Processor.Configurations
                 x.AddConsumer<GetAllArticlesCategoriesConsumer>();
                 x.AddConsumer<GetAllArticlesModelsConsumer>();
                 x.AddConsumer<GetAllStorageItemConditionsConsumer>();
+                x.AddConsumer<CreateCancelationConsumer>();
+                x.AddConsumer<CreateCategoryConsumer>();
+                x.AddConsumer<CreateComingConsumer>();
+                x.AddConsumer<CreateMoveConsumer>();
+                x.AddConsumer<CreateSalleConsumer>();
                 
                 x.AddRequestClient<IGetUserByIdRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IGetUserByIdRequestContract"));
             });
