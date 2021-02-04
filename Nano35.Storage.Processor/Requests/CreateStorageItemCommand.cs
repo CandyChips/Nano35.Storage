@@ -65,6 +65,7 @@ namespace Nano35.Storage.Processor.Requests
                     };
                     await _context.StorageItems.AddAsync(storageItem, cancellationToken);
                     await _context.SaveChangesAsync(cancellationToken);
+                    
                     return new CreateStorageItemSuccessResultContract();
                 }
                 catch

@@ -17,11 +17,9 @@ namespace Nano35.Storage.Processor.Requests
     {
         public Guid NewId { get; set; }
         public Guid InstanceId { get; set; }
-        public Guid ArticleTypeId { get; set; }
         public string Model { get; set; }
         public string Brand { get; set; }
-        public string Category { get; set; }
-        public string CategoryGroup { get; set; }
+        public Guid CategoryId { get; set; }
 
         private class CreateArticleSuccessResultContract : 
             ICreateArticleSuccessResultContract
@@ -55,34 +53,19 @@ namespace Nano35.Storage.Processor.Requests
             {
                 try
                 {
-                    var model = _context.Models.Where(c => c.IsDeleted == false).Select(a => a.Name).Contains(message.Model) ? 
-                        _context.Models.FirstOrDefault(a => a.Name == message.Model) : 
-                        new Model() { IsDeleted = false, Name = message.Model};
-                    
-                    var brand = _context.Brands.Where(c => c.IsDeleted == false).Select(a => a.Name).Contains(message.Brand) ? 
-                        _context.Brands.FirstOrDefault(a => a.Name == message.Brand) : 
-                        new Brand() { IsDeleted = false, Name = message.Brand};
-                    
-                    var category = _context.Categorys.Where(c => c.IsDeleted == false).Select(a => a.Name).Contains(message.Category) ? 
-                        _context.Categorys.FirstOrDefault(a => a.Name == message.Category) : 
-                        new Category() { IsDeleted = false, Name = message.Category};
-                    
-                    var categoryGroup = _context.CategoryGroups.Where(c => c.IsDeleted == false).Select(a => a.Name).Contains(message.CategoryGroup) ? 
-                        _context.CategoryGroups.FirstOrDefault(a => a.Name == message.CategoryGroup) : 
-                        new CategoryGroup() { IsDeleted = false, Name = message.CategoryGroup};
+                    var category = _context.Categorys.FirstOrDefault(f => f.Id == message.CategoryId);
                     
                     var client = new Article(){
                         Id = message.NewId,
                         InstanceId = message.InstanceId,
                         IsDeleted = false,
-                        Model = model,
-                        Brand = brand,
-                        ArticleTypeId = message.ArticleTypeId,
+                        Model = message.Model,
+                        Brand = message.Brand,
                         Category = category,
-                        CategoryGroup = categoryGroup, 
                     };
-                    await _context.AddAsync(client);
-                    _context.SaveChanges();
+                    await _context.AddAsync(client, cancellationToken);
+                    await _context.SaveChangesAsync(cancellationToken);
+                    
                     return new CreateArticleSuccessResultContract();
                 }
                 catch (Exception e)

@@ -53,9 +53,9 @@ namespace Nano35.Storage.Processor.Requests
                     var result = await _context
                         .Articles
                         .Where(c => c.InstanceId == message.InstanceId)
-                        .Select(a => a.Brand.Name)
+                        .Select(a => a.Brand)
                         .Distinct()
-                        .ToListAsync();
+                        .ToListAsync(cancellationToken: cancellationToken);
 
                     return new GetAllArticlesBrandsSuccessResultContract() { Data = result };
                 }

@@ -14,11 +14,9 @@ namespace Nano35.Storage.Api.Requests
     {
         public Guid NewId { get; set; }
         public Guid InstanceId { get; set; }
-        public Guid ArticleTypeId { get; set; }
         public string Model { get; set; }
         public string Brand { get; set; }
-        public string Category { get; set; }
-        public string CategoryGroup { get; set; }
+        public Guid CategoryId { get; set; }
     
         public class CreateArticleHandler : 
             IRequestHandler<CreateArticleCommand, ICreateArticleResultContract>

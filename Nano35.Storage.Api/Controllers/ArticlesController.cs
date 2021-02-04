@@ -44,22 +44,6 @@ namespace Nano35.Storage.Api.Controllers
         }
     
         [HttpGet]
-        [Route("GetAllArticleTypes")]
-        public async Task<IActionResult> GetAllArticleTypes()
-        {
-            var request = new GetAllArticleTypesQuery();
-            
-            var result = await _mediator.Send(request);
-
-            return result switch
-            {
-                IGetAllArticleTypesSuccessResultContract success => Ok(success.Data),
-                IGetAllArticleTypesErrorResultContract error => BadRequest(error.Message),
-                _ => BadRequest()
-            };
-        }
-    
-        [HttpGet]
         [Route("GetAllArticleModels")]
         public async Task<IActionResult> GetAllArticleModels(
             [FromQuery] Guid instanceId)
@@ -106,23 +90,6 @@ namespace Nano35.Storage.Api.Controllers
             {
                 IGetAllArticlesCategoriesSuccessResultContract success => Ok(success.Data),
                 IGetAllArticlesCategoriesErrorResultContract error => BadRequest(error.Message),
-                _ => BadRequest()
-            };
-        }
-    
-        [HttpGet]
-        [Route("GetAllArticlesCategoryGroups")]
-        public async Task<IActionResult> GetAllArticlesCategoryGroups(
-            [FromQuery] Guid instanceId)
-        {
-            var request = new GetAllArticlesCategoryGroupsQuery() {InstanceId = instanceId};
-            
-            var result = await _mediator.Send(request);
-
-            return result switch
-            {
-                IGetAllArticlesCategoryGroupsSuccessResultContract success => Ok(success.Data),
-                IGetAllArticlesCategoryGroupsErrorResultContract error => BadRequest(error.Message),
                 _ => BadRequest()
             };
         }

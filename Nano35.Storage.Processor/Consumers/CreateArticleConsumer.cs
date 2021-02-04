@@ -24,11 +24,9 @@ namespace Nano35.Storage.Processor.Consumers
             {
                 NewId = message.NewId,
                 InstanceId = message.InstanceId,
-                ArticleTypeId = message.ArticleTypeId,
                 Model = message.Model,
                 Brand = message.Brand,
-                Category = message.Category,
-                CategoryGroup = message.CategoryGroup
+                CategoryId = message.CategoryId,
             };
             
             var result = await _mediator.Send(request);

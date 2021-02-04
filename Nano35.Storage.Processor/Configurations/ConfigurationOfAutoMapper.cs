@@ -14,11 +14,7 @@ namespace Nano35.Storage.Processor.Configurations
         {
             var mapperConfig = new MapperConfiguration(mc =>
             {
-                mc.AddProfile(new ArticlesBrandAutoMapperProfile());
                 mc.AddProfile(new ArticlesCategoryAutoMapperProfile());
-                mc.AddProfile(new ArticlesCategoryGroupAutoMapperProfile());
-                mc.AddProfile(new ArticlesModelsAutoMapperProfile());
-                mc.AddProfile(new ArticleTypesAutoMapperProfile());
                 mc.AddProfile(new StorageItemConditionAutoMapperProfile());
                 mc.AddProfile(new ArticleAutoMapperProfile());
                 mc.AddProfile(new StorageItemAutoMapperProfile());

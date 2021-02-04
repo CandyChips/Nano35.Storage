@@ -1,41 +1,49 @@
 ﻿using System;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Nano35.Contracts;
 using Nano35.Contracts.Storage.Models;
 
 namespace Nano35.Storage.Processor.Models
 {
-    public class Category :
-        ICastable
+    public class Category
     {
-        // Primary key
         public Guid Id { get; set; }
-        
-        //Data
+        public Guid InstanceId { get; set; }
         public string Name { get; set; }
         public bool IsDeleted { get; set; }
+        
+        public Guid? ParentCategoryId { get; set; }
+        public Category ParentCategory { get; set; }
 
-        //Forgein keys
+        public override string ToString()
+        {
+            return ParentCategory != null ? $"{ParentCategory} {Name}" : Name;
+        }
     }
 
-    public class CategorysFluentContext
+    public class CategoriesFluentContext
     {
         public void Configure(ModelBuilder modelBuilder)
         {
             //Primary key
             modelBuilder.Entity<Category>()
-                .HasKey(u => u.Id);  
+                .HasKey(u => new {u.Id, u.InstanceId});  
             
             //Data
-            modelBuilder.Entity<Category>()
-                .Property(b => b.Name)
-                .IsRequired();
             modelBuilder.Entity<Category>()
                 .Property(b => b.IsDeleted)
                 .IsRequired();
             
+            modelBuilder.Entity<Category>()
+                .Property(b => b.Name)
+                .IsRequired();
+            
             //Forgein keys
+            modelBuilder.Entity<Category>()
+                .HasOne(p => p.ParentCategory)
+                .WithMany()
+                .OnDelete(DeleteBehavior.NoAction)
+                .HasForeignKey(p => new {p.ParentCategoryId, p.InstanceId});
         }
     }
 
@@ -47,7 +55,9 @@ namespace Nano35.Storage.Processor.Models
                 .ForMember(dest => dest.Id, source => source
                     .MapFrom(source => source.Id))
                 .ForMember(dest => dest.Name, source => source
-                    .MapFrom(source => source.Name));
+                    .MapFrom(source => source.Name))
+                .ForMember(dest => dest.ParentCategoryId, source => source
+                    .MapFrom(source => source.ParentCategoryId));
         }
     }
 }

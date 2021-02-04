@@ -8,6 +8,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Nano35.Contracts;
 using Nano35.Contracts.Storage.Artifacts;
+using Nano35.Contracts.Storage.Models;
 using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.Requests
@@ -17,11 +18,12 @@ namespace Nano35.Storage.Processor.Requests
         ICommandRequest<IGetAllArticlesCategoriesResultContract>
     {
         public Guid InstanceId { get; set; }
-        
+        public Guid ParentId { get; set; }
+
         private class GetAllArticlesCategoriesSuccessResultContract : 
             IGetAllArticlesCategoriesSuccessResultContract
         {
-            public IEnumerable<string> Data { get; set; }
+            public IEnumerable<ICategoryViewModel> Data { get; set; }
         }
 
         private class GetAllArticlesCategoriesErrorResultContract :
@@ -50,13 +52,12 @@ namespace Nano35.Storage.Processor.Requests
             {
                 try
                 {
-                    var result = await _context
-                        .Articles
-                        .Where(c => c.InstanceId == message.InstanceId)
-                        .Select(a => a.Category.Name)
-                        .Distinct()
-                        .ToListAsync();
-                    
+                    var result = message.ParentId == Guid.Empty
+                        ? await _context.Categorys.Where(c => c.InstanceId == message.InstanceId)
+                            .MapAllToAsync<ICategoryViewModel>()
+                        : await _context.Categorys.Where(c => c.InstanceId == message.InstanceId && c.ParentCategoryId == message.ParentId)
+                            .MapAllToAsync<ICategoryViewModel>();
+
                     return new GetAllArticlesCategoriesSuccessResultContract() { Data = result };
                 }
                 catch (Exception e)

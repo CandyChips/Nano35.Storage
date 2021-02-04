@@ -13,7 +13,8 @@ namespace Nano35.Storage.Api.Requests
         IQueryRequest<IGetAllArticlesCategoriesResultContract>
     {
         public Guid InstanceId { get; set; }
-        
+        public Guid ParentId { get; set; }
+
         public class GetAllArticlesCategoriesHandler 
             : IRequestHandler<GetAllArticlesCategoriesQuery, IGetAllArticlesCategoriesResultContract>
         {
