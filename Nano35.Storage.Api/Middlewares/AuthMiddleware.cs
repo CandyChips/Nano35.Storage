@@ -14,8 +14,8 @@ namespace Nano35.Storage.Api.Middlewares
             RequestDelegate next, 
             ILogger<UseAuthMiddleware> logger)
         {
-            this._next = next;
-            this._logger = logger;
+            _next = next;
+            _logger = logger;
         }
  
         public async Task InvokeAsync(HttpContext context)
@@ -23,11 +23,7 @@ namespace Nano35.Storage.Api.Middlewares
             var token = context.Request.Headers["Authorization"]!.ToString().Split(' ').Last();
             if (token != "")
             {
-                this._logger.Log(LogLevel.Information, token);
-            }
-            else
-            {
-                
+                _logger.Log(LogLevel.Information, token);
             }
             await _next.Invoke(context);
         }

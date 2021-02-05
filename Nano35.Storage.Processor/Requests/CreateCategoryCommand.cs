@@ -55,7 +55,7 @@ namespace Nano35.Storage.Processor.Requests
                     var category = new Category(){
                         Id = message.NewId,
                         InstanceId = message.InstanceId,
-                        ParentCategoryId = message.ParentCategoryId,
+                        ParentCategoryId = message.ParentCategoryId == Guid.Empty ? null : message.ParentCategoryId,
                         Name = message.Name,
                         IsDeleted = false
                     };

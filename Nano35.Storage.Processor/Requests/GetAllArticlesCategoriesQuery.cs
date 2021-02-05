@@ -50,7 +50,7 @@ namespace Nano35.Storage.Processor.Requests
                 try
                 {
                     var result = message.ParentId == Guid.Empty
-                        ? await _context.Categorys.Where(c => c.InstanceId == message.InstanceId)
+                        ? await _context.Categorys.Where(c => c.InstanceId == message.InstanceId && c.ParentCategoryId == null)
                             .MapAllToAsync<ICategoryViewModel>()
                         : await _context.Categorys.Where(c => c.InstanceId == message.InstanceId && c.ParentCategoryId == message.ParentId)
                             .MapAllToAsync<ICategoryViewModel>();

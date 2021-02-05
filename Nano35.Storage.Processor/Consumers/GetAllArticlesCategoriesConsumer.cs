@@ -22,7 +22,8 @@ namespace Nano35.Storage.Processor.Consumers
             
             var request = new GetAllArticlesCategoriesQuery()
             {
-                InstanceId = message.InstanceId
+                InstanceId = message.InstanceId,
+                ParentId = message.ParentId,
             };
             
             var result = await _mediator.Send(request);

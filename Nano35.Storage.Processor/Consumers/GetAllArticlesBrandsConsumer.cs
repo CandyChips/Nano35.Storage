@@ -22,6 +22,7 @@ namespace Nano35.Storage.Processor.Consumers
             
             var request = new GetAllArticlesBrandsQuery()
             {
+                CategoryId = message.CategoryId,
                 InstanceId = message.InstanceId
             };
             

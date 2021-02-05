@@ -5,6 +5,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Storage.Api.Requests;
+using Nano35.Storage.Api.Requests.CreateArticle;
+using Nano35.Storage.Api.Requests.CreateCategory;
+using Nano35.Storage.Api.Requests.GetAllArticleBrands;
+using Nano35.Storage.Api.Requests.GetAllArticleCategories;
+using Nano35.Storage.Api.Requests.GetAllArticleModels;
+using Nano35.Storage.Api.Requests.GetAllArticles;
+using Nano35.Storage.Api.Requests.GetArticleById;
 
 namespace Nano35.Storage.Api.Controllers
 {
@@ -65,7 +72,7 @@ namespace Nano35.Storage.Api.Controllers
         public async Task<IActionResult> GetAllArticleBrands(
             [FromQuery] Guid instanceId)
         {
-            var request = new GetAllArticlesBrandsQuery() {InstanceId = instanceId};
+            var request = new GetAllArticleBrandsQuery() {InstanceId = instanceId};
             
             var result = await _mediator.Send(request);
 
@@ -80,9 +87,10 @@ namespace Nano35.Storage.Api.Controllers
         [HttpGet]
         [Route("GetAllArticleCategories")]
         public async Task<IActionResult> GetAllArticleCategories(
-            [FromQuery] Guid instanceId)
+            [FromQuery] Guid instanceId,
+            [FromQuery] Guid parentId)
         {
-            var request = new GetAllArticlesCategoriesQuery() {InstanceId = instanceId};
+            var request = new GetAllArticlesCategoriesQuery() {InstanceId = instanceId, ParentId = parentId};
             
             var result = await _mediator.Send(request);
 
@@ -125,6 +133,21 @@ namespace Nano35.Storage.Api.Controllers
             {
                 ICreateArticleSuccessResultContract => Ok(),
                 ICreateArticleErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
+        }
+
+        [HttpPost]
+        [Route("CreateCategory")]
+        public async Task<IActionResult> CreateCategory(
+            [FromBody] CreateCategoryCommand command)
+        {
+            var result = await _mediator.Send(command);
+
+            return result switch
+            {
+                ICreateCategorySuccessResultContract => Ok(),
+                ICreateCategoryErrorResultContract error => BadRequest(error.Message),
                 _ => BadRequest()
             };
         }

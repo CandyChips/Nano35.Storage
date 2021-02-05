@@ -5,6 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Storage.Api.Requests;
+using Nano35.Storage.Api.Requests.CreateStorageItem;
+using Nano35.Storage.Api.Requests.GetAllStorageItemConditions;
+using Nano35.Storage.Api.Requests.GetAllStorageItems;
+using Nano35.Storage.Api.Requests.GetStorageItemById;
 
 namespace Nano35.Storage.Api.Controllers
 {

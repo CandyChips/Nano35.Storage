@@ -17,7 +17,8 @@ namespace Nano35.Storage.Processor.Requests
         ICommandRequest<IGetAllArticlesBrandsResultContract>
     {
         public Guid InstanceId { get; set; }
-        
+        public Guid CategoryId { get; set; }
+
         private class GetAllArticlesBrandsSuccessResultContract : 
             IGetAllArticlesBrandsSuccessResultContract
         {
@@ -52,7 +53,7 @@ namespace Nano35.Storage.Processor.Requests
                 {
                     var result = await _context
                         .Articles
-                        .Where(c => c.InstanceId == message.InstanceId)
+                        .Where(c => c.InstanceId == message.InstanceId && c.CategoryId == message.CategoryId)
                         .Select(a => a.Brand)
                         .Distinct()
                         .ToListAsync(cancellationToken: cancellationToken);

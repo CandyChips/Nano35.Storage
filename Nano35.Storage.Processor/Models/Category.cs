@@ -1,6 +1,7 @@
 ﻿using System;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Contracts.Storage.Models;
 
 namespace Nano35.Storage.Processor.Models
@@ -13,7 +14,7 @@ namespace Nano35.Storage.Processor.Models
         public bool IsDeleted { get; set; }
         
         public Guid? ParentCategoryId { get; set; }
-        public Category ParentCategory { get; set; }
+        public Category? ParentCategory { get; set; }
 
         public override string ToString()
         {
