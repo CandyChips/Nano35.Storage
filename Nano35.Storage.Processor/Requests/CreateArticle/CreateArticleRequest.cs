@@ -1,8 +1,6 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using MassTransit;
-using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Storage.Processor.Models;
 using Nano35.Storage.Processor.Services;
@@ -10,7 +8,9 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.Requests.CreateArticle
 {
     public class CreateArticleRequest :
-        IPipelineNode<ICreateArticleRequestContract, ICreateArticleResultContract>
+        IPipelineNode<
+            ICreateArticleRequestContract,
+            ICreateArticleResultContract>
     {
         private readonly ApplicationContext _context;
 
@@ -27,7 +27,8 @@ namespace Nano35.Storage.Processor.Requests.CreateArticle
         }
         
         public async Task<ICreateArticleResultContract> Ask(
-            ICreateArticleRequestContract input)
+            ICreateArticleRequestContract input,
+            CancellationToken cancellationToken)
         {
             var article = new Article(){
                 Id = input.NewId,
@@ -46,8 +47,8 @@ namespace Nano35.Storage.Processor.Requests.CreateArticle
                 Value = a.Value
             });
                     
-            await _context.AddAsync(article);
-            await _context.Specs.AddRangeAsync(specs);
+            await _context.AddAsync(article, cancellationToken);
+            await _context.Specs.AddRangeAsync(specs, cancellationToken);
                     
             return new CreateArticleSuccessResultContract();
         }

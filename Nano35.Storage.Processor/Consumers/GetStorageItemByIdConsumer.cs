@@ -1,32 +1,42 @@
+using System;
 using System.Threading.Tasks;
 using MassTransit;
+using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Storage.Artifacts;
-using Nano35.Storage.Processor.Requests;
+using Nano35.Storage.Processor.Requests.GetAllArticleBrands;
+using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.Consumers
 {
     public class GetStorageItemByIdConsumer : 
         IConsumer<IGetStorageItemByIdRequestContract>
     {
-        private readonly MediatR.IMediator _mediator;
+        private readonly IServiceProvider _services;
         
         public GetStorageItemByIdConsumer(
-            MediatR.IMediator mediator)
+            IServiceProvider services)
         {
-            _mediator = mediator;
+            _services = services;
         }
+        
         public async Task Consume(
             ConsumeContext<IGetStorageItemByIdRequestContract> context)
         {
+            // Setup configuration of pipeline
+            var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
+            var logger = (ILogger<GetStorageItemByIdLogger>) _services.GetService(typeof(ILogger<GetStorageItemByIdLogger>));
+
+            // Explore message of request
             var message = context.Message;
+
+            // Send request to pipeline
+            var result =
+                await new GetStorageItemByIdLogger(logger,
+                    new GetStorageItemByIdValidator(
+                        new GetStorageItemByIdRequest(dbContext))
+                ).Ask(message, context.CancellationToken);
             
-            var request = new GetStorageItemByIdQuery()
-            {
-                Id = message.Id
-            };
-            
-            var result = await _mediator.Send(request);
-            
+            // Check response of create article request
             switch (result)
             {
                 case IGetStorageItemByIdSuccessResultContract:

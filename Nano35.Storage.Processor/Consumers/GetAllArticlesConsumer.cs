@@ -1,32 +1,42 @@
+using System;
 using System.Threading.Tasks;
 using MassTransit;
+using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Storage.Artifacts;
-using Nano35.Storage.Processor.Requests;
+using Nano35.Storage.Processor.Requests.GetAllArticle;
+using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.Consumers
 {
     public class GetAllArticlesConsumer : 
         IConsumer<IGetAllArticlesRequestContract>
     {
-        private readonly MediatR.IMediator _mediator;
+        private readonly IServiceProvider _services;
         
         public GetAllArticlesConsumer(
-            MediatR.IMediator mediator)
+            IServiceProvider services)
         {
-            _mediator = mediator;
+            _services = services;
         }
+        
         public async Task Consume(
             ConsumeContext<IGetAllArticlesRequestContract> context)
         {
+            // Setup configuration of pipeline
+            var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
+            var logger = (ILogger<GetAllArticlesLogger>) _services.GetService(typeof(ILogger<GetAllArticlesLogger>));
+
+            // Explore message of request
             var message = context.Message;
+
+            // Send request to pipeline
+            var result =
+                await new GetAllArticlesLogger(logger,
+                    new GetAllArticlesValidator(
+                        new GetAllArticlesRequest(dbContext))
+                ).Ask(message, context.CancellationToken);
             
-            var request = new GetAllArticlesQuery()
-            {
-                InstanceId = message.InstanceId
-            };
-            
-            var result = await _mediator.Send(request);
-            
+            // Check response of create article request
             switch (result)
             {
                 case IGetAllArticlesSuccessResultContract:

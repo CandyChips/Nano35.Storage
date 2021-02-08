@@ -1,6 +1,5 @@
 ﻿using System;
 using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Nano35.Contracts;
 using Nano35.Contracts.Storage.Models;

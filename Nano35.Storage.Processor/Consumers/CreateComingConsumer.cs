@@ -1,38 +1,44 @@
+using System;
 using System.Threading.Tasks;
 using MassTransit;
+using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Storage.Artifacts;
-using Nano35.Storage.Processor.Requests;
+using Nano35.Storage.Processor.Requests.CreateComing;
+using Nano35.Storage.Processor.Requests.CreateMove;
+using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.Consumers
 {
     public class CreateComingConsumer : 
         IConsumer<ICreateComingRequestContract>
     {
-        private readonly MediatR.IMediator _mediator;
+        private readonly IServiceProvider _services;
         
         public CreateComingConsumer(
-            MediatR.IMediator mediator)
+            IServiceProvider services)
         {
-            _mediator = mediator;
+            _services = services;
         }
+        
         public async Task Consume(
             ConsumeContext<ICreateComingRequestContract> context)
         {
+            // Setup configuration of pipeline
+            var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
+            var logger = (ILogger<CreateComingLogger>) _services.GetService(typeof(ILogger<CreateComingLogger>));
+
+            // Explore message of request
             var message = context.Message;
+
+            // Send request to pipeline
+            var result =
+                await new CreateComingLogger(logger,
+                    new CreateComingValidator(
+                        new CreateComingTransaction(dbContext,
+                            new CreateComingRequest(dbContext)))
+                ).Ask(message, context.CancellationToken);
             
-            var request = new CreateComingCommand()
-            {
-                NewId = message.NewId,
-                IntsanceId = message.IntsanceId,
-                UnitId = message.UnitId,
-                Number = message.Number,
-                Comment = message.Comment,
-                ClientId = message.ClientId,
-                Details = message.Details,
-            };
-            
-            var result = await _mediator.Send(request);
-            
+            // Check response of create article request
             switch (result)
             {
                 case ICreateComingSuccessResultContract:

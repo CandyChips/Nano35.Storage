@@ -1,29 +1,42 @@
+using System;
 using System.Threading.Tasks;
 using MassTransit;
+using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Storage.Artifacts;
-using Nano35.Storage.Processor.Requests;
+using Nano35.Storage.Processor.Requests.GetAllArticle;
+using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.Consumers
 {
     public class GetAllStorageItemConditionsConsumer : 
         IConsumer<IGetAllStorageItemConditionsRequestContract>
     {
-        private readonly MediatR.IMediator _mediator;
+        private readonly IServiceProvider _services;
         
         public GetAllStorageItemConditionsConsumer(
-            MediatR.IMediator mediator)
+            IServiceProvider services)
         {
-            _mediator = mediator;
+            _services = services;
         }
+
         public async Task Consume(
             ConsumeContext<IGetAllStorageItemConditionsRequestContract> context)
         {
+            // Setup configuration of pipeline
+            var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
+            var logger = (ILogger<GetAllStorageItemConditionsLogger>) _services.GetService(typeof(ILogger<GetAllStorageItemConditionsLogger>));
+
+            // Explore message of request
             var message = context.Message;
 
-            var request = new GetAllStorageItemConditionsQuery();
+            // Send request to pipeline
+            var result =
+                await new GetAllStorageItemConditionsLogger(logger,
+                    new GetAllStorageItemConditionsValidator(
+                        new GetAllStorageItemConditionsRequest(dbContext))
+                ).Ask(message, context.CancellationToken);
             
-            var result = await _mediator.Send(request);
-            
+            // Check response of create article request
             switch (result)
             {
                 case IGetAllStorageItemConditionsSuccessResultContract:

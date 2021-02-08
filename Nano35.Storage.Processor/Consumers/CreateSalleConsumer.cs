@@ -1,37 +1,43 @@
+using System;
 using System.Threading.Tasks;
 using MassTransit;
+using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Storage.Artifacts;
-using Nano35.Storage.Processor.Requests;
+using Nano35.Storage.Processor.Requests.CreateSalle;
+using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.Consumers
 {
     public class CreateSalleConsumer : 
         IConsumer<ICreateSalleRequestContract>
     {
-        private readonly MediatR.IMediator _mediator;
+        private readonly IServiceProvider _services;
         
         public CreateSalleConsumer(
-            MediatR.IMediator mediator)
+            IServiceProvider services)
         {
-            _mediator = mediator;
+            _services = services;
         }
+        
         public async Task Consume(
             ConsumeContext<ICreateSalleRequestContract> context)
         {
+            // Setup configuration of pipeline
+            var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
+            var logger = (ILogger<CreateSalleLogger>) _services.GetService(typeof(ILogger<CreateSalleLogger>));
+
+            // Explore message of request
             var message = context.Message;
+
+            // Send request to pipeline
+            var result =
+                await new CreateSalleLogger(logger,
+                    new CreateSalleValidator(
+                        new CreateSalleTransaction(dbContext,
+                            new CreateSalleRequest(dbContext)))
+                ).Ask(message, context.CancellationToken);
             
-            var request = new CreateSalleCommand()
-            {
-                NewId = message.NewId,
-                IntsanceId = message.IntsanceId,
-                UnitId = message.UnitId,
-                Number = message.Number,
-                ClientId = message.ClientId,
-                Details = message.Details,
-            };
-            
-            var result = await _mediator.Send(request);
-            
+            // Check response of create article request
             switch (result)
             {
                 case ICreateSalleSuccessResultContract:

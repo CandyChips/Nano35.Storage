@@ -2,7 +2,6 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Nano35.Contracts;
-using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Contracts.Storage.Models;
 
 namespace Nano35.Storage.Processor.Models

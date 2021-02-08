@@ -1,33 +1,42 @@
+using System;
 using System.Threading.Tasks;
 using MassTransit;
+using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Storage.Artifacts;
-using Nano35.Storage.Processor.Requests;
+using Nano35.Storage.Processor.Requests.GetAllArticleModels;
+using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.Consumers
 {
     public class GetAllArticlesModelsConsumer : 
         IConsumer<IGetAllArticlesModelsRequestContract>
     {
-        private readonly MediatR.IMediator _mediator;
+        private readonly IServiceProvider _services;
         
         public GetAllArticlesModelsConsumer(
-            MediatR.IMediator mediator)
+            IServiceProvider services)
         {
-            _mediator = mediator;
+            _services = services;
         }
+        
         public async Task Consume(
             ConsumeContext<IGetAllArticlesModelsRequestContract> context)
         {
+            // Setup configuration of pipeline
+            var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
+            var logger = (ILogger<GetAllArticlesModelsLogger>) _services.GetService(typeof(ILogger<GetAllArticlesModelsLogger>));
+
+            // Explore message of request
             var message = context.Message;
+
+            // Send request to pipeline
+            var result =
+                await new GetAllArticlesModelsLogger(logger,
+                    new GetAllArticlesModelsValidator(
+                        new GetAllArticlesModelsRequest(dbContext))
+                ).Ask(message, context.CancellationToken);
             
-            var request = new GetAllArticlesModelsQuery()
-            {
-                CategoryId = message.CategoryId,
-                InstanceId = message.InstanceId
-            };
-            
-            var result = await _mediator.Send(request);
-            
+            // Check response of create article request
             switch (result)
             {
                 case IGetAllArticlesModelsSuccessResultContract:

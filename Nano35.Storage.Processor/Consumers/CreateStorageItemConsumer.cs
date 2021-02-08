@@ -1,39 +1,43 @@
+using System;
 using System.Threading.Tasks;
 using MassTransit;
+using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Storage.Artifacts;
-using Nano35.Storage.Processor.Requests;
+using Nano35.Storage.Processor.Requests.CreateStorageItem;
+using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.Consumers
 {
     public class CreateStorageItemConsumer : 
         IConsumer<ICreateStorageItemRequestContract>
     {
-        private readonly MediatR.IMediator _mediator;
+        private readonly IServiceProvider _services;
         
         public CreateStorageItemConsumer(
-            MediatR.IMediator mediator)
+            IServiceProvider services)
         {
-            _mediator = mediator;
+            _services = services;
         }
+
         public async Task Consume(
             ConsumeContext<ICreateStorageItemRequestContract> context)
         {
+            // Setup configuration of pipeline
+            var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
+            var logger = (ILogger<CreateStorageItemLogger>) _services.GetService(typeof(ILogger<CreateStorageItemLogger>));
+
+            // Explore message of request
             var message = context.Message;
+
+            // Send request to pipeline
+            var result =
+                await new CreateStorageItemLogger(logger,
+                    new CreateStorageItemValidator(
+                        new CreateStorageItemTransaction(dbContext,
+                            new CreateStorageItemRequest(dbContext)))
+                ).Ask(message, context.CancellationToken);
             
-            var request = new CreateStorageItemCommand()
-            {
-                NewId = message.NewId,
-                ArticleId = message.ArticleId,
-                ConditionId = message.ConditionId,
-                InstanceId = message.InstanceId,
-                Comment = message.Comment,
-                HiddenComment = message.HiddenComment,
-                RetailPrice = message.RetailPrice,
-                PurchasePrice = message.PurchasePrice
-            };
-            
-            var result = await _mediator.Send(request);
-            
+            // Check response of create article request
             switch (result)
             {
                 case ICreateStorageItemSuccessResultContract:

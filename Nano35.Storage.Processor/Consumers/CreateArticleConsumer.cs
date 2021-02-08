@@ -1,10 +1,8 @@
 using System.Threading.Tasks;
 using MassTransit;
 using System;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Storage.Artifacts;
-using Nano35.Storage.Processor.Requests;
 using Nano35.Storage.Processor.Requests.CreateArticle;
 using Nano35.Storage.Processor.Services;
 
@@ -35,7 +33,7 @@ namespace Nano35.Storage.Processor.Consumers
                 await new CreateArticleLogger(logger,
                 new CreateArticleValidator(
                     new CreateArticleRequest(dbContext))
-                ).Ask(message);
+                ).Ask(message, context.CancellationToken);
             
             // Check response of create article request
             switch (result)

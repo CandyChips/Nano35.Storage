@@ -1,37 +1,44 @@
+using System;
 using System.Threading.Tasks;
 using MassTransit;
+using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Storage.Artifacts;
-using Nano35.Storage.Processor.Requests;
+using Nano35.Storage.Processor.Requests.CreateComing;
+using Nano35.Storage.Processor.Requests.CreateMove;
+using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.Consumers
 {
     public class CreateMoveConsumer : 
         IConsumer<ICreateMoveRequestContract>
     {
-        private readonly MediatR.IMediator _mediator;
+        private readonly IServiceProvider _services;
         
         public CreateMoveConsumer(
-            MediatR.IMediator mediator)
+            IServiceProvider services)
         {
-            _mediator = mediator;
+            _services = services;
         }
+        
         public async Task Consume(
             ConsumeContext<ICreateMoveRequestContract> context)
         {
+            // Setup configuration of pipeline
+            var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
+            var logger = (ILogger<CreateMoveLogger>) _services.GetService(typeof(ILogger<CreateMoveLogger>));
+
+            // Explore message of request
             var message = context.Message;
+
+            // Send request to pipeline
+            var result =
+                await new CreateMoveLogger(logger,
+                    new CreateMoveValidator(
+                        new CreateMoveTransaction(dbContext,
+                            new CreateMoveRequest(dbContext)))
+                ).Ask(message, context.CancellationToken);
             
-            var request = new CreateMoveCommand()
-            {
-                NewId = message.NewId,
-                IntsanceId = message.IntsanceId,
-                FromUnitId = message.FromUnitId,
-                ToUnitId = message.ToUnitId,
-                Number = message.Number,
-                Details = message.Details,
-            };
-            
-            var result = await _mediator.Send(request);
-            
+            // Check response of create article request
             switch (result)
             {
                 case ICreateMoveSuccessResultContract:
