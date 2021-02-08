@@ -4,32 +4,32 @@ using Nano35.Contracts;
 
 namespace Nano35.Storage.Processor.Models
 {
-    public class Coming :
+    public class Cancellation :
         ICastable
     {
         // Primary key
         public Guid Id { get; set; }
         
-        // Data
+        //Data
         public string Number { get; set; }
         public DateTime Date { get; set; }
         
-        // Foreign keys
+        //Foreign keys
     }
 
-    public class ComingFluentContext
+    public class CancellationsFluentContext
     {
         public void Configure(ModelBuilder modelBuilder)
         {
             //Primary key
-            modelBuilder.Entity<Coming>()
+            modelBuilder.Entity<Cancellation>()
                 .HasKey(u => new {u.Id});  
             
             //Data
-            modelBuilder.Entity<Coming>()
+            modelBuilder.Entity<Cancellation>()
                 .Property(b => b.Number)
                 .IsRequired();
-            modelBuilder.Entity<Coming>()
+            modelBuilder.Entity<Cancellation>()
                 .Property(b => b.Date)
                 .IsRequired();
             

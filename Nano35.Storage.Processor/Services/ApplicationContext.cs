@@ -9,8 +9,8 @@ namespace Nano35.Storage.Processor.Services
     public class ApplicationContext : DbContext
     {
         
-        public DbSet<Cancelation> Cancelations {get;set;}
-        public DbSet<CancelationDetail> CancelationDetails {get;set;}
+        public DbSet<Cancellation> Cancellations {get;set;}
+        public DbSet<CancelationDetail> CancellationsDetails {get;set;}
         
         public DbSet<Coming> Comings { get; set; }
         public DbSet<ComingDetail> ComingDetails { get; set; }
@@ -18,12 +18,12 @@ namespace Nano35.Storage.Processor.Services
         public DbSet<Move> Moves { get; set; }
         public DbSet<MoveDetail> MoveDetails { get; set; }
         
-        public DbSet<Salle> Salles { get; set; }
-        public DbSet<SalleDetail> SalleDetails { get; set; }
+        public DbSet<Salle> Sells { get; set; }
+        public DbSet<SalleDetail> SelleDetails { get; set; }
         
-        public DbSet<Specification> Specifications { get; set; }
+        public DbSet<Spec> Specs { get; set; }
         public DbSet<Article> Articles { get; set; }
-        public DbSet<Category> Categorys { get; set; }
+        public DbSet<Category> Categories { get; set; }
         public DbSet<StorageItem> StorageItems { get; set; }
         public DbSet<StorageItemCondition> StorageItemConditions { get; set; }
         public DbSet<WarehouseByItemOnStorage> Warehouses { get; set; }
@@ -36,14 +36,14 @@ namespace Nano35.Storage.Processor.Services
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             new ArticlesFluentContext().Configure(modelBuilder);
-            new SpecificationsFluentContext().Configure(modelBuilder);
+            new ArticleSpecFluentContext().Configure(modelBuilder);
             new StorageItemsFluentContext().Configure(modelBuilder);
             new StorageItemConditionsFluentContext().Configure(modelBuilder);
             new StorageItemEventsFluentContext().Configure(modelBuilder);
             new StorageItemEventDetailsFluentContext().Configure(modelBuilder);
             new WarehousesFluentContext().Configure(modelBuilder);
 
-            new CancelationFluentContext().Configure(modelBuilder);
+            new CancellationsFluentContext().Configure(modelBuilder);
             new CancelationDetailFluentContext().Configure(modelBuilder);
             
             new ComingFluentContext().Configure(modelBuilder);
@@ -65,15 +65,15 @@ namespace Nano35.Storage.Processor.Services
             Moves.Load();
             MoveDetails.Load();
             
-            Cancelations.Load();
-            CancelationDetails.Load();
+            Cancellations.Load();
+            CancellationsDetails.Load();
             
-            Salles.Load();
-            SalleDetails.Load();
+            Sells.Load();
+            SelleDetails.Load();
             
             Articles.Load();
-            Categorys.Load();
-            Specifications.Load();
+            Categories.Load();
+            Specs.Load();
             StorageItems.Load();
             StorageItemConditions.Load();
             Warehouses.Load();

@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Threading.Tasks;
+using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Storage.Api.Requests;
 using Nano35.Storage.Api.Requests.CreateStorageItem;
+using Nano35.Storage.Api.Requests.GetAllArticles;
 using Nano35.Storage.Api.Requests.GetAllStorageItemConditions;
 using Nano35.Storage.Api.Requests.GetAllStorageItems;
 using Nano35.Storage.Api.Requests.GetStorageItemById;
+using Nano35.Storage.HttpContext;
 
 namespace Nano35.Storage.Api.Controllers
 {
@@ -16,29 +19,31 @@ namespace Nano35.Storage.Api.Controllers
     [Route("[controller]")]
     public class StorageItemsController : ControllerBase
     {
-        private readonly ILogger<StorageItemsController> _logger;
-        private readonly IMediator _mediator;
+        private readonly IServiceProvider _services;
 
         public StorageItemsController(
-            ILogger<StorageItemsController> logger,
-            IMediator mediator)
+            IServiceProvider services)
         {
-            _logger = logger;
-            _mediator = mediator;
+            _services = services;
         }
     
         [HttpGet]
         [Route("GetAllStorageItems")]
         public async Task<IActionResult> GetAllStorageItems(
-            [FromQuery] Guid instanceId)
+            [FromQuery] GetAllStorageItemsHttpContext query)
         {
-            var request = new GetAllStorageItemsQuery()
-            {
-                InstanceId = instanceId
-            };
+            // Setup configuration of pipeline
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<GetAllStorageItemsLogger>)_services.GetService(typeof(ILogger<GetAllStorageItemsLogger>));
             
-            var result = await _mediator.Send(request);
-
+            // Send request to pipeline
+            var result = 
+                await new GetAllStorageItemsLogger(logger,
+                    new GetAllStorageItemsValidator(
+                        new GetAllStorageItemsRequest(bus))
+                ).Ask(query);
+            
+            // Check response of get all instances request
             return result switch
             {
                 IGetAllStorageItemsSuccessResultContract success => Ok(success.Data),
@@ -51,10 +56,17 @@ namespace Nano35.Storage.Api.Controllers
         [Route("GetAllStorageItemConditions")]
         public async Task<IActionResult> GetAllStorageItemConditions()
         {
-            var request = new GetAllStorageItemConditionsQuery();
+            // Setup configuration of pipeline
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<GetAllStorageItemConditionsLogger>)_services.GetService(typeof(ILogger<GetAllStorageItemConditionsLogger>));
             
-            var result = await _mediator.Send(request);
-
+            // Send request to pipeline
+            var result = 
+                await new GetAllStorageItemConditionsLogger(logger,
+                    new GetAllStorageItemConditionsRequest(bus)
+                ).Ask(new GetAllStorageItemConditionsHttpContext());
+            
+            // Check response of get all instances request
             return result switch
             {
                 IGetAllStorageItemConditionsSuccessResultContract success => Ok(success.Data),
@@ -66,15 +78,20 @@ namespace Nano35.Storage.Api.Controllers
         [HttpGet]
         [Route("GetStorageItemById")]
         public async Task<IActionResult> GetStorageItemById(
-            [FromQuery] Guid id)
+            [FromQuery] GetStorageItemByIdHttpContext query)
         {
-            var request = new GetStorageItemByIdQuery()
-            {
-                Id = id
-            };
+            // Setup configuration of pipeline
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<GetStorageItemByIdLogger>)_services.GetService(typeof(ILogger<GetStorageItemByIdLogger>));
             
-            var result = await _mediator.Send(request);
-
+            // Send request to pipeline
+            var result = 
+                await new GetStorageItemByIdLogger(logger,
+                    new GetStorageItemByIdValidator(
+                        new GetStorageItemByIdRequest(bus))
+                ).Ask(query);
+            
+            // Check response of get all instances request
             return result switch
             {
                 IGetStorageItemByIdSuccessResultContract success => Ok(success.Data),
@@ -86,10 +103,20 @@ namespace Nano35.Storage.Api.Controllers
         [HttpPost]
         [Route("CreateStorageItem")]
         public async Task<IActionResult> CreateStorageItem(
-            [FromBody] CreateStorageItemCommand command)
+            [FromBody] CreateStorageItemHttpContext command)
         {
-            var result = await _mediator.Send(command);
-
+            // Setup configuration of pipeline
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<CreateStorageItemLogger>)_services.GetService(typeof(ILogger<CreateStorageItemLogger>));
+            
+            // Send request to pipeline
+            var result = 
+                await new CreateStorageItemLogger(logger,
+                    new CreateStorageItemValidator(
+                        new CreateStorageItemRequest(bus))
+                ).Ask(command);
+            
+            // Check response of get all instances request
             return result switch
             {
                 ICreateStorageItemSuccessResultContract => Ok(),

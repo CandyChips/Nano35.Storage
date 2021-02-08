@@ -18,7 +18,7 @@ namespace Nano35.Storage.Processor.Models
         
         //Forgein values
         public WarehouseByItemOnStorage FromWarehouse { get; set; }
-        public Cancelation Cancelation { get; set; }
+        public Cancellation Cancellation { get; set; }
     }
 
     public class CancelationDetailFluentContext
@@ -42,7 +42,7 @@ namespace Nano35.Storage.Processor.Models
                 .HasForeignKey(p => new {p.StorageItemId, p.FromUnitId});
             
             modelBuilder.Entity<CancelationDetail>()
-                .HasOne(p => p.Cancelation)
+                .HasOne(p => p.Cancellation)
                 .WithMany()
                 .OnDelete(DeleteBehavior.NoAction)
                 .HasForeignKey(p => new {p.CancelationId});

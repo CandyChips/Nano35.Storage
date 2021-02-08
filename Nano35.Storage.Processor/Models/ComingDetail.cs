@@ -10,14 +10,14 @@ namespace Nano35.Storage.Processor.Models
         // Primary key
         public Guid Id { get; set; }
         
-        //Data
+        // Data
         public double Price { get; set; }
         public int Count { get; set; }
         public Guid ComingId { get; set; }
         public Guid StorageItemId { get; set; }
         public Guid ToUnitId { get; set; }
         
-        //Forgein keys
+        // Foreign keys
         public WarehouseByItemOnStorage ToWarehouse { get; set; }
         public Coming Coming { get; set; }
     }
@@ -26,11 +26,11 @@ namespace Nano35.Storage.Processor.Models
     {
         public void Configure(ModelBuilder modelBuilder)
         {
-            //Primary key
+            // Primary key
             modelBuilder.Entity<ComingDetail>()
                 .HasKey(u => new {u.Id});  
             
-            //Data
+            // Data
             modelBuilder.Entity<ComingDetail>()
                 .Property(b => b.Price)
                 .IsRequired();
@@ -38,7 +38,7 @@ namespace Nano35.Storage.Processor.Models
                 .Property(b => b.Count)
                 .IsRequired();
             
-            //Forgein keys
+            // Foreign keys
             modelBuilder.Entity<ComingDetail>()
                 .HasOne(p => p.ToWarehouse)
                 .WithMany()

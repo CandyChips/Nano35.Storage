@@ -14,13 +14,14 @@ namespace Nano35.Storage.Processor.Models
         public Guid Id { get; set; }
         public Guid InstanceId { get; set; }
         
-        //Data
+        // Data
         public bool IsDeleted { get; set; }
         public string Model { get; set; }
         public string Brand { get; set; }
-        
-        //Forgein keys
+        public string Info { get; set; }
         public Guid CategoryId { get; set; }
+        
+        // Foreign keys
         public Category Category { get; set; }
     }
 
@@ -28,11 +29,11 @@ namespace Nano35.Storage.Processor.Models
     {
         public void Configure(ModelBuilder modelBuilder)
         {
-            //Primary key
+            // Primary key
             modelBuilder.Entity<Article>()
                 .HasKey(u => new {u.Id, u.InstanceId});  
             
-            //Data
+            // Data
             modelBuilder.Entity<Article>()
                 .Property(b => b.IsDeleted)
                 .IsRequired();
@@ -42,8 +43,11 @@ namespace Nano35.Storage.Processor.Models
             modelBuilder.Entity<Article>()
                 .Property(b => b.Brand)
                 .IsRequired();
+            modelBuilder.Entity<Article>()
+                .Property(b => b.Info)
+                .IsRequired();
             
-            //Forgein keys
+            // Foreign keys
             modelBuilder.Entity<Article>()
                 .HasOne(p => p.Category)
                 .WithMany()

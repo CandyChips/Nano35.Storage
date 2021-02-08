@@ -1,33 +1,31 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Storage.Artifacts;
 
 namespace Nano35.Storage.Api.Requests.CreateStorageItem
 {
-    public class CreateStorageItemValidatorErrorResult : 
-        ICreateStorageItemErrorResultContract
-    {
-        public string Message { get; set; }
-    }
-    
-    public class CreateStorageItemValidator:
+    public class CreateStorageItemLogger :
         IPipelineNode<ICreateStorageItemRequestContract, ICreateStorageItemResultContract>
     {
+        private readonly ILogger<CreateStorageItemLogger> _logger;
         private readonly IPipelineNode<ICreateStorageItemRequestContract, ICreateStorageItemResultContract> _nextNode;
 
-        public CreateStorageItemValidator(
+        public CreateStorageItemLogger(
+            ILogger<CreateStorageItemLogger> logger,
             IPipelineNode<ICreateStorageItemRequestContract, ICreateStorageItemResultContract> nextNode)
         {
             _nextNode = nextNode;
+            _logger = logger;
         }
 
         public async Task<ICreateStorageItemResultContract> Ask(
             ICreateStorageItemRequestContract input)
         {
-            if (false)
-            {
-                return new CreateStorageItemValidatorErrorResult() {Message = "Ошибка валидации"};
-            }
-            return await _nextNode.Ask(input);
+            _logger.LogInformation($"CreateStorageItemLogger starts on: {DateTime.Now}");
+            var result = await _nextNode.Ask(input);
+            _logger.LogInformation($"CreateStorageItemLogger ends on: {DateTime.Now}");
+            return result;
         }
     }
 }

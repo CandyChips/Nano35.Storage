@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -7,11 +8,12 @@ using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Storage.Api.Requests;
 using Nano35.Storage.Api.Requests.CreateArticle;
 using Nano35.Storage.Api.Requests.CreateCategory;
-using Nano35.Storage.Api.Requests.GetAllArticleBrands;
-using Nano35.Storage.Api.Requests.GetAllArticleCategories;
-using Nano35.Storage.Api.Requests.GetAllArticleModels;
 using Nano35.Storage.Api.Requests.GetAllArticles;
+using Nano35.Storage.Api.Requests.GetAllArticlesBrands;
+using Nano35.Storage.Api.Requests.GetAllArticlesCategories;
+using Nano35.Storage.Api.Requests.GetAllArticlesModels;
 using Nano35.Storage.Api.Requests.GetArticleById;
+using Nano35.Storage.HttpContext;
 
 namespace Nano35.Storage.Api.Controllers
 {
@@ -19,29 +21,31 @@ namespace Nano35.Storage.Api.Controllers
     [Route("[controller]")]
     public class ArticlesController : ControllerBase
     {
-        private readonly ILogger<ArticlesController> _logger;
-        private readonly IMediator _mediator;
+        private readonly IServiceProvider _services;
 
         public ArticlesController(
-            ILogger<ArticlesController> logger, 
-            IMediator mediator)
+            IServiceProvider services)
         {
-            _logger = logger;
-            _mediator = mediator;
+            _services = services;
         }
     
         [HttpGet]
         [Route("GetAllArticles")]
         public async Task<IActionResult> GetAllArticles(
-            [FromQuery] Guid instanceId)
+            [FromQuery] GetAllArticlesHttpContext query)
         {
-            var request = new GetAllArticlesQuery()
-            {
-                InstanceId = instanceId
-            };
+            // Setup configuration of pipeline
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<GetAllArticlesLogger>)_services.GetService(typeof(ILogger<GetAllArticlesLogger>));
             
-            var result = await _mediator.Send(request);
-
+            // Send request to pipeline
+            var result = 
+                await new GetAllArticlesLogger(logger,
+                    new GetAllArticlesValidator(
+                        new GetAllArticlesRequest(bus))
+                ).Ask(query);
+            
+            // Check response of get all instances request
             return result switch
             {
                 IGetAllArticlesSuccessResultContract success => Ok(success.Data),
@@ -53,12 +57,20 @@ namespace Nano35.Storage.Api.Controllers
         [HttpGet]
         [Route("GetAllArticleModels")]
         public async Task<IActionResult> GetAllArticleModels(
-            [FromQuery] Guid instanceId)
+            [FromQuery] GetAllArticlesModelsHttpContext query)
         {
-            var request = new GetAllArticlesModelsQuery() {InstanceId = instanceId};
+            // Setup configuration of pipeline
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<GetAllArticlesModelsLogger>)_services.GetService(typeof(ILogger<GetAllArticlesModelsLogger>));
             
-            var result = await _mediator.Send(request);
-
+            // Send request to pipeline
+            var result = 
+                await new GetAllArticlesModelsLogger(logger,
+                    new GetAllArticlesModelsValidator(
+                        new GetAllArticlesModelsRequest(bus))
+                ).Ask(query);
+            
+            // Check response of get all instances request
             return result switch
             {
                 IGetAllArticlesModelsSuccessResultContract success => Ok(success.Data),
@@ -70,12 +82,20 @@ namespace Nano35.Storage.Api.Controllers
         [HttpGet]
         [Route("GetAllArticleBrands")]
         public async Task<IActionResult> GetAllArticleBrands(
-            [FromQuery] Guid instanceId)
+            [FromQuery] GetAllArticlesBrandsHttpContext query)
         {
-            var request = new GetAllArticleBrandsQuery() {InstanceId = instanceId};
+            // Setup configuration of pipeline
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<GetAllArticlesBrandsLogger>)_services.GetService(typeof(ILogger<GetAllArticlesBrandsLogger>));
             
-            var result = await _mediator.Send(request);
-
+            // Send request to pipeline
+            var result = 
+                await new GetAllArticlesBrandsLogger(logger,
+                    new GetAllArticlesBrandsValidator(
+                        new GetAllArticlesBrandsRequest(bus))
+                ).Ask(query);
+            
+            // Check response of get all instances request
             return result switch
             {
                 IGetAllArticlesBrandsSuccessResultContract success => Ok(success.Data),
@@ -87,13 +107,20 @@ namespace Nano35.Storage.Api.Controllers
         [HttpGet]
         [Route("GetAllArticleCategories")]
         public async Task<IActionResult> GetAllArticleCategories(
-            [FromQuery] Guid instanceId,
-            [FromQuery] Guid parentId)
+            [FromQuery] GetAllArticlesCategoriesHttpContext query)
         {
-            var request = new GetAllArticlesCategoriesQuery() {InstanceId = instanceId, ParentId = parentId};
+            // Setup configuration of pipeline
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<GetAllArticlesCategoriesLogger>)_services.GetService(typeof(ILogger<GetAllArticlesCategoriesLogger>));
             
-            var result = await _mediator.Send(request);
-
+            // Send request to pipeline
+            var result = 
+                await new GetAllArticlesCategoriesLogger(logger,
+                    new GetAllArticlesCategoriesValidator(
+                        new GetAllArticlesCategoriesRequest(bus))
+                ).Ask(query);
+            
+            // Check response of get all instances request
             return result switch
             {
                 IGetAllArticlesCategoriesSuccessResultContract success => Ok(success.Data),
@@ -105,15 +132,20 @@ namespace Nano35.Storage.Api.Controllers
         [HttpGet]
         [Route("GetArticleById")]
         public async Task<IActionResult> GetArticleById(
-            [FromQuery] Guid id)
+            [FromQuery] GetArticleByIdHttpContext query)
         {
-            var request = new GetArticleByIdQuery()
-            {
-                Id = id
-            };
+            // Setup configuration of pipeline
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<GetArticleByIdLogger>)_services.GetService(typeof(ILogger<GetArticleByIdLogger>));
             
-            var result = await _mediator.Send(request);
-
+            // Send request to pipeline
+            var result = 
+                await new GetArticleByIdLogger(logger,
+                    new GetArticleByIdValidator(
+                        new GetArticleByIdRequest(bus))
+                ).Ask(query);
+            
+            // Check response of get all instances request
             return result switch
             {
                 IGetArticleByIdSuccessResultContract success => Ok(success.Data),
@@ -125,10 +157,20 @@ namespace Nano35.Storage.Api.Controllers
         [HttpPost]
         [Route("CreateArticle")]
         public async Task<IActionResult> CreateArticle(
-            [FromBody] CreateArticleCommand command)
+            [FromBody] CreateArticleHttpContext query)
         {
-            var result = await _mediator.Send(command);
-
+            // Setup configuration of pipeline
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<CreateArticleLogger>)_services.GetService(typeof(ILogger<CreateArticleLogger>));
+            
+            // Send request to pipeline
+            var result = 
+                await new CreateArticleLogger(logger,
+                    new CreateArticleValidator(
+                        new CreateArticleRequest(bus))
+                ).Ask(query);
+            
+            // Check response of get all instances request
             return result switch
             {
                 ICreateArticleSuccessResultContract => Ok(),
@@ -140,10 +182,20 @@ namespace Nano35.Storage.Api.Controllers
         [HttpPost]
         [Route("CreateCategory")]
         public async Task<IActionResult> CreateCategory(
-            [FromBody] CreateCategoryCommand command)
+            [FromBody] CreateCategoryHttpContext query)
         {
-            var result = await _mediator.Send(command);
-
+            // Setup configuration of pipeline
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<CreateCategoryLogger>)_services.GetService(typeof(ILogger<CreateCategoryLogger>));
+            
+            // Send request to pipeline
+            var result = 
+                await new CreateCategoryLogger(logger,
+                    new CreateCategoryValidator(
+                        new CreateCategoryRequest(bus))
+                ).Ask(query);
+            
+            // Check response of get all instances request
             return result switch
             {
                 ICreateCategorySuccessResultContract => Ok(),
