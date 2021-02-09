@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using MassTransit;
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Storage.Artifacts;
-using Nano35.Storage.Api.Requests;
 using Nano35.Storage.Api.Requests.CreateArticle;
 using Nano35.Storage.Api.Requests.CreateCategory;
 using Nano35.Storage.Api.Requests.GetAllArticles;
@@ -19,16 +17,30 @@ namespace Nano35.Storage.Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ArticlesController : ControllerBase
+    public class ArticlesController :
+        ControllerBase
     {
         private readonly IServiceProvider _services;
 
+        /// <summary>
+        /// Controller provide IServiceProvider from asp net core DI
+        /// for registration services to pipe nodes
+        /// </summary>
         public ArticlesController(
             IServiceProvider services)
         {
             _services = services;
         }
     
+        /// <summary>
+        /// Controllers accept a HttpContext type
+        /// All controllers actions works by pipelines
+        /// Implementation works with 3 steps
+        /// 1. Setup DI services from IServiceProvider;
+        /// 2. Building pipeline like a onion
+        ///     '(PipeNode1(PipeNode2(PipeNode3(...).Ask()).Ask()).Ask()).Ask()';
+        /// 3. Response pattern match of pipeline response;
+        /// </summary>
         [HttpGet]
         [Route("GetAllArticles")]
         public async Task<IActionResult> GetAllArticles(
@@ -42,10 +54,11 @@ namespace Nano35.Storage.Api.Controllers
             var result = 
                 await new GetAllArticlesLogger(logger,
                     new GetAllArticlesValidator(
-                        new GetAllArticlesRequest(bus))
-                ).Ask(query);
+                        new GetAllArticlesRequest(bus)
+                        )).Ask(query);
             
             // Check response of get all instances request
+            // You can check result by result contracts
             return result switch
             {
                 IGetAllArticlesSuccessResultContract success => Ok(success.Data),
@@ -67,10 +80,11 @@ namespace Nano35.Storage.Api.Controllers
             var result = 
                 await new GetAllArticlesModelsLogger(logger,
                     new GetAllArticlesModelsValidator(
-                        new GetAllArticlesModelsRequest(bus))
-                ).Ask(query);
+                        new GetAllArticlesModelsRequest(bus)
+                        )).Ask(query);
             
             // Check response of get all instances request
+            // You can check result by result contracts
             return result switch
             {
                 IGetAllArticlesModelsSuccessResultContract success => Ok(success.Data),
@@ -92,10 +106,11 @@ namespace Nano35.Storage.Api.Controllers
             var result = 
                 await new GetAllArticlesBrandsLogger(logger,
                     new GetAllArticlesBrandsValidator(
-                        new GetAllArticlesBrandsRequest(bus))
-                ).Ask(query);
+                        new GetAllArticlesBrandsRequest(bus)
+                        )).Ask(query);
             
             // Check response of get all instances request
+            // You can check result by result contracts
             return result switch
             {
                 IGetAllArticlesBrandsSuccessResultContract success => Ok(success.Data),
@@ -117,10 +132,11 @@ namespace Nano35.Storage.Api.Controllers
             var result = 
                 await new GetAllArticlesCategoriesLogger(logger,
                     new GetAllArticlesCategoriesValidator(
-                        new GetAllArticlesCategoriesRequest(bus))
-                ).Ask(query);
+                        new GetAllArticlesCategoriesRequest(bus)
+                        )).Ask(query);
             
             // Check response of get all instances request
+            // You can check result by result contracts
             return result switch
             {
                 IGetAllArticlesCategoriesSuccessResultContract success => Ok(success.Data),
@@ -142,10 +158,11 @@ namespace Nano35.Storage.Api.Controllers
             var result = 
                 await new GetArticleByIdLogger(logger,
                     new GetArticleByIdValidator(
-                        new GetArticleByIdRequest(bus))
-                ).Ask(query);
+                        new GetArticleByIdRequest(bus)
+                        )).Ask(query);
             
             // Check response of get all instances request
+            // You can check result by result contracts
             return result switch
             {
                 IGetArticleByIdSuccessResultContract success => Ok(success.Data),
@@ -167,10 +184,11 @@ namespace Nano35.Storage.Api.Controllers
             var result = 
                 await new CreateArticleLogger(logger,
                     new CreateArticleValidator(
-                        new CreateArticleRequest(bus))
-                ).Ask(query);
+                        new CreateArticleRequest(bus)
+                        )).Ask(query);
             
             // Check response of get all instances request
+            // You can check result by result contracts
             return result switch
             {
                 ICreateArticleSuccessResultContract => Ok(),
@@ -192,10 +210,11 @@ namespace Nano35.Storage.Api.Controllers
             var result = 
                 await new CreateCategoryLogger(logger,
                     new CreateCategoryValidator(
-                        new CreateCategoryRequest(bus))
-                ).Ask(query);
+                        new CreateCategoryRequest(bus)
+                        )).Ask(query);
             
             // Check response of get all instances request
+            // You can check result by result contracts
             return result switch
             {
                 ICreateCategorySuccessResultContract => Ok(),

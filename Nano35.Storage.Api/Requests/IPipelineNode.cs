@@ -2,7 +2,7 @@
 
 namespace Nano35.Storage.Api.Requests
 {
-    public interface IPipelineNode<TIn, TOut>
+    public interface IPipelineNode<in TIn, TOut>
     {
         Task<TOut> Ask(TIn input);
     }

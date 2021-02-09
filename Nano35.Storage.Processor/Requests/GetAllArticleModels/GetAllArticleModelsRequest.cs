@@ -39,7 +39,7 @@ namespace Nano35.Storage.Processor.Requests.GetAllArticleModels
             var result = await _context
                 .Articles
                 .Where(c => c.InstanceId == input.InstanceId && c.CategoryId == input.CategoryId)
-                .Select(a => a.Brand)
+                .Select(a => a.Model)
                 .Distinct()
                 .ToListAsync(cancellationToken: cancellationToken);
 

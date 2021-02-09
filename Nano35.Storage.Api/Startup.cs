@@ -20,22 +20,24 @@ namespace Nano35.Storage.Api
         
         public void ConfigureServices(IServiceCollection services)
         {
-            //new Configurator(services, new AuthenticationConfiguration()).Configure();
-            //new Configurator(services, new ConfigurationOfAuthStateProvider()).Configure();
+            new Configurator(services, new AuthenticationConfiguration()).Configure();
+            new Configurator(services, new ConfigurationOfAuthStateProvider()).Configure();
             new Configurator(services, new CorsConfiguration()).Configure();
             new Configurator(services, new SwaggerConfiguration()).Configure();
             new Configurator(services, new MassTransitConfiguration()).Configure();
             new Configurator(services, new ConfigurationOfControllers()).Configure();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Nano35.Storage.Api v1"));
+                app.UseSwaggerUI(c => 
+                    c.SwaggerEndpoint(
+                        "/swagger/v1/swagger.json", 
+                        "Nano35.Storage.Api v1"));
             }
 
             app.UseHttpsRedirection();

@@ -39,17 +39,21 @@ namespace Nano35.Storage.Processor.Requests.CreateArticle
                 Info = input.Info,
                 CategoryId = input.CategoryId,
             };
-
-            var specs = input.Specs.Select(a => new Spec()
-            {
-                ArticleId = input.NewId,
-                Key = a.Key,
-                Value = a.Value
-            });
-                    
             await _context.AddAsync(article, cancellationToken);
-            await _context.Specs.AddRangeAsync(specs, cancellationToken);
-                    
+
+            if (input.Specs != null)
+            {
+                var specs = input.Specs.Select(a => new Spec()
+                {
+                    ArticleId = input.NewId,
+                    InstanceId = input.InstanceId,
+                    Key = a.Item1,
+                    Value = a.Item2
+                });
+                await _context.Specs.AddRangeAsync(specs, cancellationToken);
+                return new CreateArticleSuccessResultContract();
+            }
+
             return new CreateArticleSuccessResultContract();
         }
     }

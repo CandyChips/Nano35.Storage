@@ -8,16 +8,31 @@ using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.Consumers
 {
+    /// <summary>
+    /// Consumer accept a request contract type
+    /// All consumers actions works by pipelines
+    /// Implementation works with 3 steps
+    /// 1. Setup DI services from IServiceProvider;
+    /// 2. Explore message of request;
+    /// 3. Building pipeline like a onion
+    ///     '(PipeNode1(PipeNode2(PipeNode3(...).Ask()).Ask()).Ask()).Ask()';
+    /// 4. Response pattern match of pipeline response;
+    /// </summary>
     public class CreateArticleConsumer : 
         IConsumer<ICreateArticleRequestContract>
     {
         private readonly IServiceProvider _services;
         
+        /// <summary>
+        /// Consumer provide IServiceProvider from asp net core DI
+        /// for registration services to pipe nodes
+        /// </summary>
         public CreateArticleConsumer(
             IServiceProvider services)
         {
             _services = services;
         }
+        
         public async Task Consume(
             ConsumeContext<ICreateArticleRequestContract> context)
         {
@@ -32,8 +47,9 @@ namespace Nano35.Storage.Processor.Consumers
             var result =
                 await new CreateArticleLogger(logger,
                 new CreateArticleValidator(
-                    new CreateArticleRequest(dbContext))
-                ).Ask(message, context.CancellationToken);
+                    new CreateArticleTransaction(dbContext,
+                        new CreateArticleRequest(dbContext)
+                        ))).Ask(message, context.CancellationToken);
             
             // Check response of create article request
             switch (result)

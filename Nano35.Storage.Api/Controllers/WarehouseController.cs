@@ -4,6 +4,10 @@ using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Storage.Artifacts;
+using Nano35.Storage.Api.Requests.CreateCancelation;
+using Nano35.Storage.Api.Requests.CreateComing;
+using Nano35.Storage.Api.Requests.CreateMove;
+using Nano35.Storage.Api.Requests.CreateSalle;
 using Nano35.Storage.Api.Requests.CreateStorageItem;
 using Nano35.Storage.Api.Requests.GetAllStorageItemConditions;
 using Nano35.Storage.Api.Requests.GetAllStorageItems;
@@ -14,7 +18,7 @@ namespace Nano35.Storage.Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class StorageItemsController :
+    public class WarehouseController :
         ControllerBase
     {
         private readonly IServiceProvider _services;
@@ -23,7 +27,7 @@ namespace Nano35.Storage.Api.Controllers
         /// Controller provide IServiceProvider from asp net core DI
         /// for registration services to pipe nodes
         /// </summary>
-        public StorageItemsController(
+        public WarehouseController(
             IServiceProvider services)
         {
             _services = services;
@@ -38,103 +42,106 @@ namespace Nano35.Storage.Api.Controllers
         ///     '(PipeNode1(PipeNode2(PipeNode3(...).Ask()).Ask()).Ask()).Ask()';
         /// 3. Response pattern match of pipeline response;
         /// </summary>
-        [HttpGet]
-        [Route("GetAllStorageItems")]
-        public async Task<IActionResult> GetAllStorageItems(
-            [FromQuery] GetAllStorageItemsHttpContext query)
-        {
-            // Setup configuration of pipeline
-            var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<GetAllStorageItemsLogger>)_services.GetService(typeof(ILogger<GetAllStorageItemsLogger>));
-            
-            // Send request to pipeline
-            var result = 
-                await new GetAllStorageItemsLogger(logger,
-                    new GetAllStorageItemsValidator(
-                        new GetAllStorageItemsRequest(bus)
-                        )).Ask(query);
-            
-            // Check response of get all instances request
-            // You can check result by result contracts
-            return result switch
-            {
-                IGetAllStorageItemsSuccessResultContract success => Ok(success.Data),
-                IGetAllStorageItemsErrorResultContract error => BadRequest(error.Message),
-                _ => BadRequest()
-            };
-        }
-    
-        [HttpGet]
-        [Route("GetAllStorageItemConditions")]
-        public async Task<IActionResult> GetAllStorageItemConditions()
-        {
-            // Setup configuration of pipeline
-            var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<GetAllStorageItemConditionsLogger>)_services.GetService(typeof(ILogger<GetAllStorageItemConditionsLogger>));
-            
-            // Send request to pipeline
-            var result = 
-                await new GetAllStorageItemConditionsLogger(logger,
-                    new GetAllStorageItemConditionsRequest(bus)
-                ).Ask(new GetAllStorageItemConditionsHttpContext());
-            
-            // Check response of get all instances request
-            // You can check result by result contracts
-            return result switch
-            {
-                IGetAllStorageItemConditionsSuccessResultContract success => Ok(success.Data),
-                IGetAllStorageItemConditionsErrorResultContract error => BadRequest(error.Message),
-                _ => BadRequest()
-            };
-        }
-    
-        [HttpGet]
-        [Route("GetStorageItemById")]
-        public async Task<IActionResult> GetStorageItemById(
-            [FromQuery] GetStorageItemByIdHttpContext query)
-        {
-            // Setup configuration of pipeline
-            var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<GetStorageItemByIdLogger>)_services.GetService(typeof(ILogger<GetStorageItemByIdLogger>));
-            
-            // Send request to pipeline
-            var result = 
-                await new GetStorageItemByIdLogger(logger,
-                    new GetStorageItemByIdValidator(
-                        new GetStorageItemByIdRequest(bus)
-                        )).Ask(query);
-            
-            // Check response of get all instances request
-            return result switch
-            {
-                IGetStorageItemByIdSuccessResultContract success => Ok(success.Data),
-                IGetStorageItemByIdErrorResultContract error => BadRequest(error.Message),
-                _ => BadRequest()
-            };
-        }
-
         [HttpPost]
-        [Route("CreateStorageItem")]
-        public async Task<IActionResult> CreateStorageItem(
-            [FromBody] CreateStorageItemHttpContext command)
+        [Route("CreateCancelation")]
+        public async Task<IActionResult> CreateCancelation(
+            [FromBody] CreateCancelationHttpContext command)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<CreateStorageItemLogger>)_services.GetService(typeof(ILogger<CreateStorageItemLogger>));
+            var logger = (ILogger<CreateCancelationLogger>)_services.GetService(typeof(ILogger<CreateCancelationLogger>));
             
             // Send request to pipeline
             var result = 
-                await new CreateStorageItemLogger(logger,
-                    new CreateStorageItemValidator(
-                        new CreateStorageItemRequest(bus)
-                        )).Ask(command);
+                await new CreateCancelationLogger(logger,
+                    new CreateCancelationValidator(
+                        new CreateCancelationRequest(bus)
+                    )).Ask(command);
             
             // Check response of get all instances request
             // You can check result by result contracts
             return result switch
             {
-                ICreateStorageItemSuccessResultContract => Ok(),
-                ICreateStorageItemErrorResultContract error => BadRequest(error.Message),
+                ICreateCancelationSuccessResultContract success => Ok(),
+                ICreateCancelationErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
+        }
+        
+        [HttpPost]
+        [Route("CreateComing")]
+        public async Task<IActionResult> CreateComing(
+            [FromBody] CreateComingHttpContext command)
+        {
+            // Setup configuration of pipeline
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<CreateComingLogger>)_services.GetService(typeof(ILogger<CreateComingLogger>));
+            
+            // Send request to pipeline
+            var result = 
+                await new CreateComingLogger(logger,
+                    new CreateComingValidator(
+                        new CreateComingRequest(bus)
+                    )).Ask(command);
+            
+            // Check response of get all instances request
+            // You can check result by result contracts
+            return result switch
+            {
+                ICreateComingSuccessResultContract success => Ok(),
+                ICreateComingErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
+        }
+        
+        [HttpPost]
+        [Route("CreateMove")]
+        public async Task<IActionResult> CreateMove(
+            [FromBody] CreateMoveHttpContext command)
+        {
+            // Setup configuration of pipeline
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<CreateMoveLogger>)_services.GetService(typeof(ILogger<CreateMoveLogger>));
+            
+            // Send request to pipeline
+            var result = 
+                await new CreateMoveLogger(logger,
+                    new CreateMoveValidator(
+                        new CreateMoveRequest(bus)
+                    )).Ask(command);
+            
+            // Check response of get all instances request
+            // You can check result by result contracts
+            return result switch
+            {
+                ICreateMoveSuccessResultContract success => Ok(),
+                ICreateMoveErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
+        }
+        
+        [HttpPost]
+        [Route("CreateSalle")]
+        public async Task<IActionResult> CreateSalle(
+            [FromBody] CreateSalleHttpContext command)
+        {
+            // Setup configuration of pipeline
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<CreateSalleLogger>)_services.GetService(typeof(ILogger<CreateSalleLogger>));
+            
+            // Send request to pipeline
+            var result = 
+                await new CreateSalleLogger(logger,
+                    new CreateSalleValidator(
+                        new CreateSalleRequest(bus)
+                    )).Ask(command);
+            
+            // Check response of get all instances request
+            // You can check result by result contracts
+            return result switch
+            {
+                ICreateSalleSuccessResultContract success => Ok(),
+                ICreateSalleErrorResultContract error => BadRequest(error.Message),
                 _ => BadRequest()
             };
         }

@@ -5,6 +5,13 @@ using Nano35.Contracts.Storage.Models;
 
 namespace Nano35.Storage.HttpContext
 {
+    public class SpecHttpContext :
+        ISpecVievModel
+    {
+        public string Key { get; set; }
+        public string Value { get; set; }
+    }
+    
     public class CreateArticleHttpContext : 
         ICreateArticleRequestContract
     {
@@ -14,6 +21,6 @@ namespace Nano35.Storage.HttpContext
         public string Brand { get; set; }
         public Guid CategoryId { get; set; }
         public string Info { get; set; }
-        public IEnumerable<ISpecVievModel> Specs { get; set; }
+        public IEnumerable<Tuple<string,string>> Specs { get; set; }
     }
 }
