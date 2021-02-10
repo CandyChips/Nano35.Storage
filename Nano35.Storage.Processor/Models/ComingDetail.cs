@@ -8,13 +8,12 @@ namespace Nano35.Storage.Processor.Models
         ICastable
     {
         // Primary key
-        public Guid Id { get; set; }
+        public Guid ComingId { get; set; }
+        public Guid StorageItemId { get; set; }
         
         // Data
         public double Price { get; set; }
         public int Count { get; set; }
-        public Guid ComingId { get; set; }
-        public Guid StorageItemId { get; set; }
         public Guid ToUnitId { get; set; }
         
         // Foreign keys
@@ -28,7 +27,7 @@ namespace Nano35.Storage.Processor.Models
         {
             // Primary key
             modelBuilder.Entity<ComingDetail>()
-                .HasKey(u => new {u.Id});  
+                .HasKey(u => new {u.ComingId, u.StorageItemId});  
             
             // Data
             modelBuilder.Entity<ComingDetail>()

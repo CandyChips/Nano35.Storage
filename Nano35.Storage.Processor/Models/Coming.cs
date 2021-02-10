@@ -11,6 +11,7 @@ namespace Nano35.Storage.Processor.Models
         public Guid Id { get; set; }
         
         // Data
+        public Guid InstanceId { get; set; }
         public string Number { get; set; }
         public DateTime Date { get; set; }
         
@@ -28,6 +29,9 @@ namespace Nano35.Storage.Processor.Models
             //Data
             modelBuilder.Entity<Coming>()
                 .Property(b => b.Number)
+                .IsRequired();
+            modelBuilder.Entity<Coming>()
+                .Property(b => b.InstanceId)
                 .IsRequired();
             modelBuilder.Entity<Coming>()
                 .Property(b => b.Date)

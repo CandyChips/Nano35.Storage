@@ -38,7 +38,7 @@ namespace Nano35.Storage.Api.Controllers
         /// Implementation works with 3 steps
         /// 1. Setup DI services from IServiceProvider;
         /// 2. Building pipeline like a onion
-        ///     '(PipeNode1(PipeNode2(PipeNode3(...).Ask()).Ask()).Ask()).Ask()';
+        ///     '''(PipeNode1(PipeNode2(PipeNode3(...).Ask()).Ask()).Ask()).Ask()''';
         /// 3. Response pattern match of pipeline response;
         /// </summary>
         [HttpGet]

@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Storage.Processor.Services;
@@ -43,10 +44,10 @@ namespace Nano35.Storage.Processor.Requests.CreateArticle
                 await transaction.CommitAsync(cancellationToken);
                 return response;
             }
-            catch
+            catch (Exception ex)
             {
                 await transaction.RollbackAsync(cancellationToken).ConfigureAwait(false);
-                return new CreateArticleTransactionErrorResult{ Message = "Транзакция отменена"};
+                return new CreateArticleTransactionErrorResult{ Message = "Наименование не создано"};
             }
         }
     }

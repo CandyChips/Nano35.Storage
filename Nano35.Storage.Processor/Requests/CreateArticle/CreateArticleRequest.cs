@@ -39,6 +39,7 @@ namespace Nano35.Storage.Processor.Requests.CreateArticle
                 Info = input.Info,
                 CategoryId = input.CategoryId,
             };
+            
             await _context.AddAsync(article, cancellationToken);
 
             if (input.Specs != null)
@@ -50,8 +51,8 @@ namespace Nano35.Storage.Processor.Requests.CreateArticle
                     Key = a.Item1,
                     Value = a.Item2
                 });
+                
                 await _context.Specs.AddRangeAsync(specs, cancellationToken);
-                return new CreateArticleSuccessResultContract();
             }
 
             return new CreateArticleSuccessResultContract();
