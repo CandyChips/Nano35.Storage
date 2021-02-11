@@ -5,34 +5,34 @@ using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.Requests.CreateMove
 {
-    public class CreateComingTransactionErrorResult :
-        ICreateComingErrorResultContract
+    public class CreateMoveTransactionErrorResult :
+        ICreateMoveErrorResultContract
     {
         public string Message { get; set; }
     }
     
-    public class CreateComingTransaction :
+    public class CreateMoveTransaction :
         IPipelineNode<
-            ICreateComingRequestContract, 
-            ICreateComingResultContract>
+            ICreateMoveRequestContract, 
+            ICreateMoveResultContract>
     {
         private readonly ApplicationContext _context;
         private readonly IPipelineNode<
-            ICreateComingRequestContract,
-            ICreateComingResultContract> _nextNode;
+            ICreateMoveRequestContract,
+            ICreateMoveResultContract> _nextNode;
 
-        public CreateComingTransaction(
+        public CreateMoveTransaction(
             ApplicationContext context,
             IPipelineNode<
-                ICreateComingRequestContract, 
-                ICreateComingResultContract> nextNode)
+                ICreateMoveRequestContract, 
+                ICreateMoveResultContract> nextNode)
         {
             _nextNode = nextNode;
             _context = context;
         }
 
-        public async Task<ICreateComingResultContract> Ask(
-            ICreateComingRequestContract input,
+        public async Task<ICreateMoveResultContract> Ask(
+            ICreateMoveRequestContract input,
             CancellationToken cancellationToken)
         {
             var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
@@ -46,7 +46,7 @@ namespace Nano35.Storage.Processor.Requests.CreateMove
             catch
             {
                 await transaction.RollbackAsync(cancellationToken).ConfigureAwait(false);
-                return new CreateComingTransactionErrorResult{ Message = "Транзакция отменена"};
+                return new CreateMoveTransactionErrorResult{ Message = "Транзакция отменена"};
             }
         }
     }

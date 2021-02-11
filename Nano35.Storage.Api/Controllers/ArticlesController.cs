@@ -15,13 +15,18 @@ using Nano35.Storage.HttpContext;
 
 namespace Nano35.Storage.Api.Controllers
 {
+    /// ToDo Hey Maslyonok
+    /// <summary>
+    /// http://localhost:5104/articles/[action]
+    /// </summary>
     [ApiController]
     [Route("[controller]")]
     public class ArticlesController :
         ControllerBase
     {
         private readonly IServiceProvider _services;
-
+        
+        /// ToDo Hey Maslyonok
         /// <summary>
         /// Controller provide IServiceProvider from asp net core DI
         /// for registration services to pipe nodes
@@ -32,7 +37,12 @@ namespace Nano35.Storage.Api.Controllers
             _services = services;
         }
     
+        /// ToDo Hey Maslyonok
         /// <summary>
+        /// GET -> http://localhost:5104/articles/GetAllArticles
+        /// success -> Articles[]
+        /// error -> string
+        /// ---$---$---
         /// Controllers accept a HttpContext type
         /// All controllers actions works by pipelines
         /// Implementation works with 3 steps
@@ -46,10 +56,12 @@ namespace Nano35.Storage.Api.Controllers
         public async Task<IActionResult> GetAllArticles(
             [FromQuery] GetAllArticlesHttpContext query)
         {
+            // ToDo Hey Maslyonok
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<GetAllArticlesLogger>)_services.GetService(typeof(ILogger<GetAllArticlesLogger>));
             
+            // ToDo Hey Maslyonok
             // Send request to pipeline
             var result = 
                 await new GetAllArticlesLogger(logger,
@@ -57,6 +69,7 @@ namespace Nano35.Storage.Api.Controllers
                         new GetAllArticlesRequest(bus)
                         )).Ask(query);
             
+            // ToDo Hey Maslyonok
             // Check response of get all instances request
             // You can check result by result contracts
             return result switch

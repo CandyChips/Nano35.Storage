@@ -15,6 +15,7 @@ namespace Nano35.Storage.Processor.Models
         public Guid CancelationId { get; set; }
         public Guid StorageItemId { get; set; }
         public Guid FromUnitId { get; set; }
+        public string FromPlace { get; set; }
         
         //Forgein values
         public WarehouseByItemOnStorage FromWarehouse { get; set; }
@@ -33,13 +34,16 @@ namespace Nano35.Storage.Processor.Models
             modelBuilder.Entity<CancelationDetail>()
                 .Property(b => b.Count)
                 .IsRequired();
+            modelBuilder.Entity<CancelationDetail>()
+                .Property(b => b.FromPlace)
+                .IsRequired();
             
             //Forgein keys
             modelBuilder.Entity<CancelationDetail>()
                 .HasOne(p => p.FromWarehouse)
                 .WithMany()
                 .OnDelete(DeleteBehavior.NoAction)
-                .HasForeignKey(p => new {p.StorageItemId, p.FromUnitId});
+                .HasForeignKey(p => new {p.StorageItemId, p.FromUnitId, p.FromPlace});
             
             modelBuilder.Entity<CancelationDetail>()
                 .HasOne(p => p.Cancellation)

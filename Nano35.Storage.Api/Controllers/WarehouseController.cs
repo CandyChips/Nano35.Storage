@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
@@ -32,7 +33,7 @@ namespace Nano35.Storage.Api.Controllers
         {
             _services = services;
         }
-    
+
         /// <summary>
         /// Controllers accept a HttpContext type
         /// All controllers actions works by pipelines
@@ -43,20 +44,30 @@ namespace Nano35.Storage.Api.Controllers
         /// 3. Response pattern match of pipeline response;
         /// </summary>
         [HttpPost]
-        [Route("CreateCancelation")]
-        public async Task<IActionResult> CreateCancelation(
-            [FromBody] CreateCancelationHttpContext command)
+        [Route("CreateCancellation")]
+        public async Task<IActionResult> CreateCancellation(
+            [FromBody] CreateCancelationHttpContext.Body body)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<CreateCancelationLogger>)_services.GetService(typeof(ILogger<CreateCancelationLogger>));
+
+            var message = new CreateCancelationRequestContract
+            {
+                NewId = body.NewId,
+                IntsanceId = body.IntsanceId,
+                Number = body.Number,
+                UnitId = body.UnitId,
+                Comment = body.Comment,
+                Details = body.Details,
+            };
             
             // Send request to pipeline
             var result = 
                 await new CreateCancelationLogger(logger,
                     new CreateCancelationValidator(
                         new CreateCancelationRequest(bus)
-                    )).Ask(command);
+                    )).Ask(message);
             
             // Check response of get all instances request
             // You can check result by result contracts
@@ -67,22 +78,33 @@ namespace Nano35.Storage.Api.Controllers
                 _ => BadRequest()
             };
         }
-        
+
         [HttpPost]
         [Route("CreateComing")]
         public async Task<IActionResult> CreateComing(
-            [FromBody] CreateComingHttpContext command)
+            [FromBody] CreateComingHttpContext.Body command)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<CreateComingLogger>)_services.GetService(typeof(ILogger<CreateComingLogger>));
+            
+            var message = new CreateComingRequestContract()
+            {
+                NewId = command.NewId,
+                InstanceId = command.InstanceId,
+                Number = command.Number,
+                UnitId = command.UnitId,
+                Comment = command.Comment,
+                Details = command.Details,
+                ClientId = command.ClientId,
+            };
             
             // Send request to pipeline
             var result = 
                 await new CreateComingLogger(logger,
                     new CreateComingValidator(
                         new CreateComingRequest(bus)
-                    )).Ask(command);
+                    )).Ask(message);
             
             // Check response of get all instances request
             // You can check result by result contracts

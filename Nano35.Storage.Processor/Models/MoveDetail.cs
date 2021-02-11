@@ -15,7 +15,9 @@ namespace Nano35.Storage.Processor.Models
         public Guid StorageItemId { get; set; }
         public Guid MoveId { get; set; }
         public Guid ToUnitId { get; set; }
+        public string ToPlace { get; set; }
         public Guid FromUnitId { get; set; }
+        public string FromPlace { get; set; }
         
         //Forgein keys
         public WarehouseByItemOnStorage ToWarehouse { get; set; }
@@ -35,19 +37,27 @@ namespace Nano35.Storage.Processor.Models
             modelBuilder.Entity<MoveDetail>()
                 .Property(b => b.Count)
                 .IsRequired();
-            
+
+            modelBuilder.Entity<MoveDetail>()
+                .Property(b => b.ToPlace)
+                .IsRequired();
+
+            modelBuilder.Entity<MoveDetail>()
+                .Property(b => b.FromPlace)
+                .IsRequired();
+
             //Forgein keys
             modelBuilder.Entity<MoveDetail>()
                 .HasOne(p => p.ToWarehouse)
                 .WithMany()
                 .OnDelete(DeleteBehavior.NoAction)
-                .HasForeignKey(p => new {p.StorageItemId, p.ToUnitId});
+                .HasForeignKey(p => new {p.StorageItemId, p.ToUnitId, p.ToPlace});
 
             modelBuilder.Entity<MoveDetail>()
                 .HasOne(p => p.FromWarehouse)
                 .WithMany()
                 .OnDelete(DeleteBehavior.NoAction)
-                .HasForeignKey(p => new {p.StorageItemId, p.FromUnitId});
+                .HasForeignKey(p => new {p.StorageItemId, p.FromUnitId, p.FromPlace});
 
             modelBuilder.Entity<MoveDetail>()
                 .HasOne(p => p.Move)

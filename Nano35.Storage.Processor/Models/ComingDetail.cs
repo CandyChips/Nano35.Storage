@@ -13,6 +13,7 @@ namespace Nano35.Storage.Processor.Models
         
         // Data
         public double Price { get; set; }
+        public string ToPlace { get; set; }
         public int Count { get; set; }
         public Guid ToUnitId { get; set; }
         
@@ -36,13 +37,19 @@ namespace Nano35.Storage.Processor.Models
             modelBuilder.Entity<ComingDetail>()
                 .Property(b => b.Count)
                 .IsRequired();
+            modelBuilder.Entity<ComingDetail>()
+                .Property(b => b.ToPlace)
+                .IsRequired();
+            modelBuilder.Entity<ComingDetail>()
+                .Property(b => b.ToUnitId)
+                .IsRequired();
             
             // Foreign keys
             modelBuilder.Entity<ComingDetail>()
                 .HasOne(p => p.ToWarehouse)
                 .WithMany()
                 .OnDelete(DeleteBehavior.NoAction)
-                .HasForeignKey(p => new {p.StorageItemId, p.ToUnitId});
+                .HasForeignKey(p => new {p.StorageItemId, p.ToUnitId, p.ToPlace});
             
             modelBuilder.Entity<ComingDetail>()
                 .HasOne(p => p.Coming)

@@ -2,31 +2,32 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Storage.Processor.Models;
 using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.Requests.CreateComing
 {
-    public class CreateMoveRequest :
-        IPipelineNode<ICreateMoveRequestContract, ICreateMoveResultContract>
+    public class CreateComingRequest :
+        IPipelineNode<ICreateComingRequestContract, ICreateComingResultContract>
     {
         private readonly ApplicationContext _context;
 
-        public CreateMoveRequest(
+        public CreateComingRequest(
             ApplicationContext context)
         {
             _context = context;
         }
         
-        private class CreateMoveSuccessResultContract : 
-            ICreateMoveSuccessResultContract
+        private class CreateComingSuccessResultContract : 
+            ICreateComingSuccessResultContract
         {
             
         }
         
-        public async Task<ICreateMoveResultContract> Ask(
-            ICreateMoveRequestContract input,
+        public async Task<ICreateComingResultContract> Ask(
+            ICreateComingRequestContract input,
             CancellationToken cancellationToken)
         {
             var coming = new Coming()
@@ -34,7 +35,7 @@ namespace Nano35.Storage.Processor.Requests.CreateComing
                 Id = input.NewId,
                 Date = DateTime.Now,
                 Number = input.Number,
-                InstanceId = input.IntsanceId,
+                InstanceId = input.InstanceId,
             };
             
             var comingDetails = input.Details
@@ -43,11 +44,42 @@ namespace Nano35.Storage.Processor.Requests.CreateComing
                     ComingId = input.NewId,
                     Count = a.Count, 
                     Price = a.Price,
-                    StorageItemId = a.StringItemId, 
-                    ToUnitId = input.ToUnitId
+                    StorageItemId = a.StorageItemId, 
+                    ToUnitId = input.UnitId
                 });
+            
+            foreach (var item in input.Details)
+            {
+                if(_context.Warehouses
+                    .Any(a =>
+                        a.StorageItemId == item.StorageItemId && 
+                        a.UnitId == input.UnitId))
+                {
+                    var wh = (await _context.Warehouses
+                        .FirstOrDefaultAsync(a =>
+                            a.StorageItemId == item.StorageItemId &&
+                            a.UnitId == input.UnitId, cancellationToken: cancellationToken));
+                    wh.Count += item.Count;
+                }
+                else
+                {
+                    await _context.Warehouses.AddAsync(new WarehouseByItemOnStorage()
+                    {
+                        Count = item.Count,
+                        InstanceId = input.InstanceId,
+                        IsDeleted = false,
+                        Name = item.PlaceOnStorage,
+                        StorageItemId = item.StorageItemId,
+                        UnitId = input.UnitId
+                    }, cancellationToken);
+                }
+            }
+
+            await _context.Comings.AddAsync(coming, cancellationToken);
+            
+            await _context.ComingDetails.AddRangeAsync(comingDetails, cancellationToken);
                     
-            return new CreateMoveSuccessResultContract();
+            return new CreateComingSuccessResultContract();
         }
     }
 }

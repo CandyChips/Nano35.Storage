@@ -1,38 +1,39 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.Requests.CreateComing
 {
-    public class CreateMoveTransactionErrorResult :
-        ICreateMoveErrorResultContract
+    public class CreateComingTransactionErrorResult :
+        ICreateComingErrorResultContract
     {
         public string Message { get; set; }
     }
     
-    public class CreateMoveTransaction :
+    public class CreateComingTransaction :
         IPipelineNode<
-            ICreateMoveRequestContract, 
-            ICreateMoveResultContract>
+            ICreateComingRequestContract, 
+            ICreateComingResultContract>
     {
         private readonly ApplicationContext _context;
         private readonly IPipelineNode<
-            ICreateMoveRequestContract,
-            ICreateMoveResultContract> _nextNode;
+            ICreateComingRequestContract,
+            ICreateComingResultContract> _nextNode;
 
-        public CreateMoveTransaction(
+        public CreateComingTransaction(
             ApplicationContext context,
             IPipelineNode<
-                ICreateMoveRequestContract, 
-                ICreateMoveResultContract> nextNode)
+                ICreateComingRequestContract, 
+                ICreateComingResultContract> nextNode)
         {
             _nextNode = nextNode;
             _context = context;
         }
 
-        public async Task<ICreateMoveResultContract> Ask(
-            ICreateMoveRequestContract input,
+        public async Task<ICreateComingResultContract> Ask(
+            ICreateComingRequestContract input,
             CancellationToken cancellationToken)
         {
             var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
@@ -43,10 +44,10 @@ namespace Nano35.Storage.Processor.Requests.CreateComing
                 await transaction.CommitAsync(cancellationToken);
                 return response;
             }
-            catch
+            catch(Exception ex)
             {
                 await transaction.RollbackAsync(cancellationToken).ConfigureAwait(false);
-                return new CreateMoveTransactionErrorResult{ Message = "Транзакция отменена"};
+                return new CreateComingTransactionErrorResult{ Message = "Транзакция отменена"};
             }
         }
     }

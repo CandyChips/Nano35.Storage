@@ -5,30 +5,30 @@ using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.Requests.CreateMove
 {
-    public class CreateComingRequest :
-        IPipelineNode<ICreateComingRequestContract, ICreateComingResultContract>
+    public class CreateMoveRequest :
+        IPipelineNode<ICreateMoveRequestContract, ICreateMoveResultContract>
     {
         private readonly ApplicationContext _context;
 
-        public CreateComingRequest(
+        public CreateMoveRequest(
             ApplicationContext context)
         {
             _context = context;
         }
         
-        private class CreateComingSuccessResultContract : 
-            ICreateComingSuccessResultContract
+        private class CreateMoveSuccessResultContract : 
+            ICreateMoveSuccessResultContract
         {
             
         }
         
-        public async Task<ICreateComingResultContract> Ask(
-            ICreateComingRequestContract input,
+        public async Task<ICreateMoveResultContract> Ask(
+            ICreateMoveRequestContract input,
             CancellationToken cancellationToken)
         {
             // ToDo !!!
                     
-            return new CreateComingSuccessResultContract();
+            return new CreateMoveSuccessResultContract();
         }
     }
 }

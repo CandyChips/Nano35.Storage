@@ -25,19 +25,13 @@ namespace Nano35.Storage.Processor.Requests.GetAllArticleBrands
         {
             public IStorageItemViewModel Data { get; set; }
         }
-
-        private class GetStorageItemByIdErrorResultContract : 
-            IGetStorageItemByIdErrorResultContract
-        {
-            public string Message { get; set; }
-        }
         
         public async Task<IGetStorageItemByIdResultContract> Ask(
             IGetStorageItemByIdRequestContract input, 
             CancellationToken cancellationToken)
         {
-            var result = _context.StorageItems
-                .FirstOrDefaultAsync(c => c.Id == input.Id, cancellationToken: cancellationToken)
+            var result = (await _context.StorageItems
+                    .FirstOrDefaultAsync(c => c.Id == input.Id, cancellationToken: cancellationToken))
                 .MapTo<IStorageItemViewModel>();
 
             return new GetStorageItemByIdSuccessResultContract() {Data = result};

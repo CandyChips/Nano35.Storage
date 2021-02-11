@@ -40,7 +40,7 @@ namespace Nano35.Storage.Processor.Requests.GetAllArticleCategories
             var result = input.ParentId == Guid.Empty
                 ? await _context.Categories.Where(c => c.InstanceId == input.InstanceId && c.ParentCategoryId == null)
                     .MapAllToAsync<ICategoryViewModel>()
-                : await _context.Categories.Where(c => c.InstanceId == input.InstanceId && c.ParentCategoryId == input.ParentId)
+                : await _context.Categories.Where(c => c.ParentCategoryId == input.ParentId)
                     .MapAllToAsync<ICategoryViewModel>();
 
             return new GetAllArticlesCategoriesSuccessResultContract() {Data = result};

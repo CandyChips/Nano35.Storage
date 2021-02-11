@@ -10,10 +10,10 @@ namespace Nano35.Storage.Processor.Models
         // Primary key
         public Guid UnitId { get; set; }
         public Guid InstanceId { get; set; }
+        public string Name { get; set; }
         
         //Data
         public int Count { get; set; }
-        public string Name { get; set; }
         public bool IsDeleted { get; set; }
 
         //Forgein keys
@@ -27,15 +27,11 @@ namespace Nano35.Storage.Processor.Models
         {
             //Primary key
             modelBuilder.Entity<WarehouseByItemOnStorage>()
-                .HasKey(u => new {u.StorageItemId, u.UnitId});  
+                .HasKey(u => new {u.StorageItemId, u.UnitId, u.Name});  
             
             //Data
             modelBuilder.Entity<WarehouseByItemOnStorage>()
                 .Property(b => b.Count)
-                .IsRequired();
-            
-            modelBuilder.Entity<WarehouseByItemOnStorage>()
-                .Property(b => b.Name)
                 .IsRequired();
             
             modelBuilder.Entity<WarehouseByItemOnStorage>()
