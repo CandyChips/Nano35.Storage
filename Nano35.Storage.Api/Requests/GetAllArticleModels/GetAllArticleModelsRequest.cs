@@ -3,24 +3,19 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using MassTransit;
 using Nano35.Contracts.Storage.Artifacts;
-using Nano35.Contracts.Storage.Models;
 
-namespace Nano35.Storage.Api.Requests.GetAllArticlesModels
+namespace Nano35.Storage.Api.Requests.GetAllArticleModels
 {
     public class GetAllArticlesModelsRequest :
-        IPipelineNode<IGetAllArticlesModelsRequestContract, IGetAllArticlesModelsResultContract>
+        IPipelineNode<
+            IGetAllArticlesModelsRequestContract,
+            IGetAllArticlesModelsResultContract>
     {
         private readonly IBus _bus;
         public GetAllArticlesModelsRequest(
             IBus bus)
         {
             _bus = bus;
-        }
-        
-        private class GetAllArticlesModelsSuccessResultContract : 
-            IGetAllArticlesModelsSuccessResultContract
-        {
-            public IEnumerable<string> Data { get; set; }
         }
         
         public async Task<IGetAllArticlesModelsResultContract> Ask(

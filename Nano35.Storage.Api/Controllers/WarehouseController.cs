@@ -1,18 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Storage.Artifacts;
-using Nano35.Storage.Api.Requests.CreateCancelation;
+using Nano35.Storage.Api.Requests.CreateCancellation;
 using Nano35.Storage.Api.Requests.CreateComing;
 using Nano35.Storage.Api.Requests.CreateMove;
-using Nano35.Storage.Api.Requests.CreateSalle;
-using Nano35.Storage.Api.Requests.CreateStorageItem;
-using Nano35.Storage.Api.Requests.GetAllStorageItemConditions;
-using Nano35.Storage.Api.Requests.GetAllStorageItems;
-using Nano35.Storage.Api.Requests.GetStorageItemById;
+using Nano35.Storage.Api.Requests.GetAllComings;
 using Nano35.Storage.HttpContext;
 
 namespace Nano35.Storage.Api.Controllers
@@ -44,59 +39,24 @@ namespace Nano35.Storage.Api.Controllers
         /// 3. Response pattern match of pipeline response;
         /// </summary>
         [HttpPost]
-        [Route("CreateCancellation")]
-        public async Task<IActionResult> CreateCancellation(
-            [FromBody] CreateCancelationHttpContext.Body body)
-        {
-            // Setup configuration of pipeline
-            var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<CreateCancelationLogger>)_services.GetService(typeof(ILogger<CreateCancelationLogger>));
-
-            var message = new CreateCancelationRequestContract
-            {
-                NewId = body.NewId,
-                IntsanceId = body.IntsanceId,
-                Number = body.Number,
-                UnitId = body.UnitId,
-                Comment = body.Comment,
-                Details = body.Details,
-            };
-            
-            // Send request to pipeline
-            var result = 
-                await new CreateCancelationLogger(logger,
-                    new CreateCancelationValidator(
-                        new CreateCancelationRequest(bus)
-                    )).Ask(message);
-            
-            // Check response of get all instances request
-            // You can check result by result contracts
-            return result switch
-            {
-                ICreateCancelationSuccessResultContract success => Ok(),
-                ICreateCancelationErrorResultContract error => BadRequest(error.Message),
-                _ => BadRequest()
-            };
-        }
-
-        [HttpPost]
         [Route("CreateComing")]
         public async Task<IActionResult> CreateComing(
-            [FromBody] CreateComingHttpContext.Body command)
+            [FromHeader] CreateComingHttpContext.CreateComingHeader header,
+            [FromBody] CreateComingHttpContext.CreateComingBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<CreateComingLogger>)_services.GetService(typeof(ILogger<CreateComingLogger>));
             
-            var message = new CreateComingRequestContract()
+            var message = new CreateComingHttpContext.CreateComingRequest()
             {
-                NewId = command.NewId,
-                InstanceId = command.InstanceId,
-                Number = command.Number,
-                UnitId = command.UnitId,
-                Comment = command.Comment,
-                Details = command.Details,
-                ClientId = command.ClientId,
+                NewId = header.NewId,
+                InstanceId = header.InstanceId,
+                Number = body.Number,
+                UnitId = body.UnitId,
+                Comment = body.Comment,
+                Details = body.Details,
+                ClientId = body.ClientId,
             };
             
             // Send request to pipeline
@@ -116,11 +76,52 @@ namespace Nano35.Storage.Api.Controllers
             };
         }
         
+        [HttpGet]
+        [Route("GetAllComings")]
+        public async Task<IActionResult> GetAllComings(
+            [FromHeader] GetAllComingsHttpContext.GetAllComingsHeader header,
+            [FromQuery] GetAllComingsHttpContext.GetAllComingsQuery query)
+        {
+            var request = new GetAllComingsHttpContext.GetAllComingsRequest()
+            {
+                InstanceId = header.InstanceId,
+                StorageItemId = query.StorageItemId,
+                UnitId = query.UnitId,
+            };
+            
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<GetAllComingsLogger>)_services.GetService(typeof(ILogger<GetAllComingsLogger>));
+            
+            var result = 
+                await new GetAllComingsLogger(logger,
+                    new GetAllComingsValidator(
+                        new GetAllComingsRequest(bus)
+                    )).Ask(request);
+            
+            return result switch
+            {
+                IGetAllComingsSuccessResultContract success => Ok(success.Data),
+                IGetAllComingsErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
+        }
+        
         [HttpPost]
         [Route("CreateMove")]
         public async Task<IActionResult> CreateMove(
-            [FromBody] CreateMoveHttpContext command)
+            [FromHeader] CreateMoveHttpContext.CreateMoveHeader header,
+            [FromBody] CreateMoveHttpContext.CreateMoveBody body)
         {
+            var request = new CreateMoveHttpContext.CreateMoveRequest()
+            {
+                Details = body.Details,
+                FromUnitId = body.FromUnitId,
+                InstanceId = header.InstanceId,
+                NewId = header.NewId,
+                Number = body.Number,
+                ToUnitId = body.ToUnitId,
+            };
+            
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<CreateMoveLogger>)_services.GetService(typeof(ILogger<CreateMoveLogger>));
@@ -130,7 +131,7 @@ namespace Nano35.Storage.Api.Controllers
                 await new CreateMoveLogger(logger,
                     new CreateMoveValidator(
                         new CreateMoveRequest(bus)
-                    )).Ask(command);
+                    )).Ask(request);
             
             // Check response of get all instances request
             // You can check result by result contracts
@@ -143,27 +144,38 @@ namespace Nano35.Storage.Api.Controllers
         }
         
         [HttpPost]
-        [Route("CreateSalle")]
-        public async Task<IActionResult> CreateSalle(
-            [FromBody] CreateSalleHttpContext command)
+        [Route("CreateCancellation")]
+        public async Task<IActionResult> CreateCancellation(
+            [FromHeader] CreateCancellationHttpContext.CreateCancellationHeader header,
+            [FromBody] CreateCancellationHttpContext.CreateCancellationBody body)
         {
+            var request = new CreateCancellationHttpContext.CreateCancellationRequestContract()
+            {
+                Comment = body.Comment,
+                Details = body.Details,
+                InstanceId = header.InstanceId,
+                NewId = header.NewId,
+                Number = body.Number,
+                UnitId = body.UnitId
+            };
+            
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<CreateSalleLogger>)_services.GetService(typeof(ILogger<CreateSalleLogger>));
+            var logger = (ILogger<CreateCancellationLogger>)_services.GetService(typeof(ILogger<CreateCancellationLogger>));
             
             // Send request to pipeline
             var result = 
-                await new CreateSalleLogger(logger,
-                    new CreateSalleValidator(
-                        new CreateSalleRequest(bus)
-                    )).Ask(command);
+                await new CreateCancellationLogger(logger,
+                    new CreateCancellationValidator(
+                        new CreateCancellationRequest(bus)
+                    )).Ask(request);
             
             // Check response of get all instances request
             // You can check result by result contracts
             return result switch
             {
-                ICreateSalleSuccessResultContract success => Ok(),
-                ICreateSalleErrorResultContract error => BadRequest(error.Message),
+                ICreateCancellationSuccessResultContract success => Ok(),
+                ICreateCancellationErrorResultContract error => BadRequest(error.Message),
                 _ => BadRequest()
             };
         }

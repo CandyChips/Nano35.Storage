@@ -6,14 +6,20 @@ using Nano35.Contracts.Storage.Artifacts;
 namespace Nano35.Storage.Api.Requests.GetArticleById
 {
     public class GetArticleByIdLogger :
-        IPipelineNode<IGetArticleByIdRequestContract, IGetArticleByIdResultContract>
+        IPipelineNode<
+            IGetArticleByIdRequestContract, 
+            IGetArticleByIdResultContract>
     {
         private readonly ILogger<GetArticleByIdLogger> _logger;
-        private readonly IPipelineNode<IGetArticleByIdRequestContract, IGetArticleByIdResultContract> _nextNode;
+        private readonly IPipelineNode<
+            IGetArticleByIdRequestContract,
+            IGetArticleByIdResultContract> _nextNode;
 
         public GetArticleByIdLogger(
             ILogger<GetArticleByIdLogger> logger,
-            IPipelineNode<IGetArticleByIdRequestContract, IGetArticleByIdResultContract> nextNode)
+            IPipelineNode<
+                IGetArticleByIdRequestContract,
+                IGetArticleByIdResultContract> nextNode)
         {
             _nextNode = nextNode;
             _logger = logger;

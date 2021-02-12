@@ -29,14 +29,14 @@ namespace Nano35.Storage.Processor.Configurations
                         e.Consumer<GetAllArticlesConsumer>(provider);
                     });
                     
-                    cfg.ReceiveEndpoint("ICreateCancelationRequestContract", e =>
+                    cfg.ReceiveEndpoint("ICreateCancellationRequestContract", e =>
                     {
-                        e.Consumer<CreateCancelationConsumer>(provider);
+                        e.Consumer<CreateCancellationConsumer>(provider);
                     });
                     
-                    cfg.ReceiveEndpoint("ICreateSalleRequestContract", e =>
+                    cfg.ReceiveEndpoint("ICreateSelleRequestContract", e =>
                     {
-                        e.Consumer<CreateSalleConsumer>(provider);
+                        e.Consumer<CreateSelleConsumer>(provider);
                     });
                     
                     cfg.ReceiveEndpoint("ICreateComingRequestContract", e =>
@@ -98,6 +98,11 @@ namespace Nano35.Storage.Processor.Configurations
                     {
                         e.Consumer<GetAllStorageItemConditionsConsumer>(provider);
                     });
+
+                    cfg.ReceiveEndpoint("IGetAllComingsRequestContract", e =>
+                    {
+                        e.Consumer<GetAllComingsConsumer>(provider);
+                    });
                 }));
                 x.AddConsumer<CreateArticleConsumer>();
                 x.AddConsumer<CreateStorageItemConsumer>();
@@ -109,11 +114,12 @@ namespace Nano35.Storage.Processor.Configurations
                 x.AddConsumer<GetAllArticlesCategoriesConsumer>();
                 x.AddConsumer<GetAllArticlesModelsConsumer>();
                 x.AddConsumer<GetAllStorageItemConditionsConsumer>();
-                x.AddConsumer<CreateCancelationConsumer>();
+                x.AddConsumer<CreateCancellationConsumer>();
                 x.AddConsumer<CreateCategoryConsumer>();
                 x.AddConsumer<CreateComingConsumer>();
                 x.AddConsumer<CreateMoveConsumer>();
-                x.AddConsumer<CreateSalleConsumer>();
+                x.AddConsumer<CreateSelleConsumer>();
+                x.AddConsumer<GetAllComingsConsumer>();
                 
                 x.AddRequestClient<IGetUserByIdRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IGetUserByIdRequestContract"));
             });

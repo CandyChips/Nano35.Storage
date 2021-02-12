@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Nano35.Contracts.Storage.Artifacts;
 
-namespace Nano35.Storage.Api.Requests.GetAllArticlesCategories
+namespace Nano35.Storage.Api.Requests.GetAllArticleCategories
 {
     public class GetAllArticlesCategoriesValidatorErrorResult : 
         IGetAllArticlesCategoriesErrorResultContract
@@ -10,12 +10,18 @@ namespace Nano35.Storage.Api.Requests.GetAllArticlesCategories
     }
     
     public class GetAllArticlesCategoriesValidator:
-        IPipelineNode<IGetAllArticlesCategoriesRequestContract, IGetAllArticlesCategoriesResultContract>
+        IPipelineNode<
+            IGetAllArticlesCategoriesRequestContract,
+            IGetAllArticlesCategoriesResultContract>
     {
-        private readonly IPipelineNode<IGetAllArticlesCategoriesRequestContract, IGetAllArticlesCategoriesResultContract> _nextNode;
+        private readonly IPipelineNode<
+            IGetAllArticlesCategoriesRequestContract,
+            IGetAllArticlesCategoriesResultContract> _nextNode;
 
         public GetAllArticlesCategoriesValidator(
-            IPipelineNode<IGetAllArticlesCategoriesRequestContract, IGetAllArticlesCategoriesResultContract> nextNode)
+            IPipelineNode<
+                IGetAllArticlesCategoriesRequestContract,
+                IGetAllArticlesCategoriesResultContract> nextNode)
         {
             _nextNode = nextNode;
         }

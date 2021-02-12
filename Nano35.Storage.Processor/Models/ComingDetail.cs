@@ -1,6 +1,8 @@
 ﻿using System;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Nano35.Contracts;
+using Nano35.Contracts.Storage.Artifacts;
 
 namespace Nano35.Storage.Processor.Models
 {
@@ -56,6 +58,20 @@ namespace Nano35.Storage.Processor.Models
                 .WithMany()
                 .OnDelete(DeleteBehavior.NoAction)
                 .HasForeignKey(p => new {p.ComingId});
+        }
+    }
+
+    public class ComingDetailAutoMapperProfile : Profile
+    {
+        public ComingDetailAutoMapperProfile()
+        {
+            CreateMap<ComingDetail, IComingDetailViewModel>()
+                .ForMember(dest => dest.Count, source => source
+                    .MapFrom(source => source.Count))
+                .ForMember(dest => dest.PlaceOnStorage, source => source
+                    .MapFrom(source => source.ToPlace))
+                .ForMember(dest => dest.Price, source => source
+                    .MapFrom(source => source.Price));
         }
     }
 }

@@ -5,30 +5,30 @@ using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.Requests.CreateSalle
 {
-    public class CreateSalleRequest :
-        IPipelineNode<ICreateSalleRequestContract, ICreateSalleResultContract>
+    public class CreateSelleRequest :
+        IPipelineNode<ICreateSelleRequestContract, ICreateSelleResultContract>
     {
         private readonly ApplicationContext _context;
 
-        public CreateSalleRequest(
+        public CreateSelleRequest(
             ApplicationContext context)
         {
             _context = context;
         }
         
-        private class CreateSalleSuccessResultContract : 
-            ICreateSalleSuccessResultContract
+        private class CreateSelleSuccessResultContract : 
+            ICreateSelleSuccessResultContract
         {
             
         }
         
-        public async Task<ICreateSalleResultContract> Ask(
-            ICreateSalleRequestContract input,
+        public async Task<ICreateSelleResultContract> Ask(
+            ICreateSelleRequestContract input,
             CancellationToken cancellationToken)
         {
             // ToDo !!!
                     
-            return new CreateSalleSuccessResultContract();
+            return new CreateSelleSuccessResultContract();
         }
     }
 }

@@ -5,22 +5,18 @@ using MassTransit;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Contracts.Storage.Models;
 
-namespace Nano35.Storage.Api.Requests.GetAllArticlesCategories
+namespace Nano35.Storage.Api.Requests.GetAllArticleCategories
 {
     public class GetAllArticlesCategoriesRequest :
-        IPipelineNode<IGetAllArticlesCategoriesRequestContract, IGetAllArticlesCategoriesResultContract>
+        IPipelineNode<
+            IGetAllArticlesCategoriesRequestContract,
+            IGetAllArticlesCategoriesResultContract>
     {
         private readonly IBus _bus;
         public GetAllArticlesCategoriesRequest(
             IBus bus)
         {
             _bus = bus;
-        }
-        
-        private class GetAllArticlesCategoriesSuccessResultContract : 
-            IGetAllArticlesCategoriesSuccessResultContract
-        {
-            public IEnumerable<ICategoryViewModel> Data { get; set; }
         }
         
         public async Task<IGetAllArticlesCategoriesResultContract> Ask(

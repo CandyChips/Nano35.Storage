@@ -3,36 +3,36 @@ using System.Threading.Tasks;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Storage.Processor.Services;
 
-namespace Nano35.Storage.Processor.Requests.CreateCancelation
+namespace Nano35.Storage.Processor.Requests.CreateSalle
 {
-    public class CreateCancelationTransactionErrorResult :
-        ICreateCancelationErrorResultContract
+    public class CreateSelleTransactionErrorResult :
+        ICreateSelleErrorResultContract
     {
         public string Message { get; set; }
     }
     
-    public class CreateCancelationTransaction :
+    public class CreateSelleTransaction :
         IPipelineNode<
-            ICreateCancelationRequestContract, 
-            ICreateCancelationResultContract>
+            ICreateSelleRequestContract, 
+            ICreateSelleResultContract>
     {
         private readonly ApplicationContext _context;
         private readonly IPipelineNode<
-            ICreateCancelationRequestContract,
-            ICreateCancelationResultContract> _nextNode;
+            ICreateSelleRequestContract,
+            ICreateSelleResultContract> _nextNode;
 
-        public CreateCancelationTransaction(
+        public CreateSelleTransaction(
             ApplicationContext context,
             IPipelineNode<
-                ICreateCancelationRequestContract, 
-                ICreateCancelationResultContract> nextNode)
+                ICreateSelleRequestContract, 
+                ICreateSelleResultContract> nextNode)
         {
             _nextNode = nextNode;
             _context = context;
         }
 
-        public async Task<ICreateCancelationResultContract> Ask(
-            ICreateCancelationRequestContract input,
+        public async Task<ICreateSelleResultContract> Ask(
+            ICreateSelleRequestContract input,
             CancellationToken cancellationToken)
         {
             var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
@@ -46,7 +46,7 @@ namespace Nano35.Storage.Processor.Requests.CreateCancelation
             catch
             {
                 await transaction.RollbackAsync(cancellationToken).ConfigureAwait(false);
-                return new CreateCancelationTransactionErrorResult{ Message = "Транзакция отменена"};
+                return new CreateSelleTransactionErrorResult{ Message = "Транзакция отменена"};
             }
         }
     }

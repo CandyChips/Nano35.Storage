@@ -3,17 +3,23 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Storage.Artifacts;
 
-namespace Nano35.Storage.Api.Requests.GetAllArticlesCategories
+namespace Nano35.Storage.Api.Requests.GetAllArticleCategories
 {
     public class GetAllArticlesCategoriesLogger :
-        IPipelineNode<IGetAllArticlesCategoriesRequestContract, IGetAllArticlesCategoriesResultContract>
+        IPipelineNode<
+            IGetAllArticlesCategoriesRequestContract,
+            IGetAllArticlesCategoriesResultContract>
     {
         private readonly ILogger<GetAllArticlesCategoriesLogger> _logger;
-        private readonly IPipelineNode<IGetAllArticlesCategoriesRequestContract, IGetAllArticlesCategoriesResultContract> _nextNode;
+        private readonly IPipelineNode<
+            IGetAllArticlesCategoriesRequestContract,
+            IGetAllArticlesCategoriesResultContract> _nextNode;
 
         public GetAllArticlesCategoriesLogger(
             ILogger<GetAllArticlesCategoriesLogger> logger,
-            IPipelineNode<IGetAllArticlesCategoriesRequestContract, IGetAllArticlesCategoriesResultContract> nextNode)
+            IPipelineNode<
+                IGetAllArticlesCategoriesRequestContract,
+                IGetAllArticlesCategoriesResultContract> nextNode)
         {
             _nextNode = nextNode;
             _logger = logger;

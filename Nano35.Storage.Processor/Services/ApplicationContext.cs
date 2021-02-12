@@ -36,13 +36,14 @@ namespace Nano35.Storage.Processor.Services
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             new ArticlesFluentContext().Configure(modelBuilder);
+            new CategoriesFluentContext().Configure(modelBuilder);
             new ArticleSpecFluentContext().Configure(modelBuilder);
+            
             new StorageItemsFluentContext().Configure(modelBuilder);
             new StorageItemConditionsFluentContext().Configure(modelBuilder);
-            new StorageItemEventsFluentContext().Configure(modelBuilder);
-            new StorageItemEventDetailsFluentContext().Configure(modelBuilder);
+            
             new WarehousesFluentContext().Configure(modelBuilder);
-
+            
             new CancellationsFluentContext().Configure(modelBuilder);
             new CancelationDetailFluentContext().Configure(modelBuilder);
             

@@ -6,14 +6,20 @@ using Nano35.Contracts.Storage.Artifacts;
 namespace Nano35.Storage.Api.Requests.CreateCategory
 {
     public class CreateCategoryLogger :
-        IPipelineNode<ICreateCategoryRequestContract, ICreateCategoryResultContract>
+        IPipelineNode<
+            ICreateCategoryRequestContract, 
+            ICreateCategoryResultContract>
     {
         private readonly ILogger<CreateCategoryLogger> _logger;
-        private readonly IPipelineNode<ICreateCategoryRequestContract, ICreateCategoryResultContract> _nextNode;
+        private readonly IPipelineNode<
+            ICreateCategoryRequestContract, 
+            ICreateCategoryResultContract> _nextNode;
 
         public CreateCategoryLogger(
             ILogger<CreateCategoryLogger> logger,
-            IPipelineNode<ICreateCategoryRequestContract, ICreateCategoryResultContract> nextNode)
+            IPipelineNode<
+                ICreateCategoryRequestContract, 
+                ICreateCategoryResultContract> nextNode)
         {
             _nextNode = nextNode;
             _logger = logger;

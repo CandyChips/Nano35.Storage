@@ -51,7 +51,7 @@ namespace Nano35.Storage.Processor.Models
                 .HasOne(p => p.Category)
                 .WithMany()
                 .OnDelete(DeleteBehavior.NoAction)
-                .HasForeignKey(p => new {p.CategoryId});
+                .HasForeignKey(p => new {p.CategoryId, p.InstanceId});
         }
     }
 

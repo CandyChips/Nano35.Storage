@@ -10,12 +10,18 @@ namespace Nano35.Storage.Api.Requests.CreateStorageItem
     }
     
     public class CreateStorageItemValidator:
-        IPipelineNode<ICreateStorageItemRequestContract, ICreateStorageItemResultContract>
+        IPipelineNode<
+            ICreateStorageItemRequestContract, 
+            ICreateStorageItemResultContract>
     {
-        private readonly IPipelineNode<ICreateStorageItemRequestContract, ICreateStorageItemResultContract> _nextNode;
+        private readonly IPipelineNode<
+            ICreateStorageItemRequestContract, 
+            ICreateStorageItemResultContract> _nextNode;
 
         public CreateStorageItemValidator(
-            IPipelineNode<ICreateStorageItemRequestContract, ICreateStorageItemResultContract> nextNode)
+            IPipelineNode<
+                ICreateStorageItemRequestContract, 
+                ICreateStorageItemResultContract> nextNode)
         {
             _nextNode = nextNode;
         }

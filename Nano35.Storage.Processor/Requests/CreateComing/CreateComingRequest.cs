@@ -42,9 +42,10 @@ namespace Nano35.Storage.Processor.Requests.CreateComing
                 .Select(a => new ComingDetail()
                 {
                     ComingId = input.NewId,
+                    StorageItemId = a.StorageItemId, 
+                    ToPlace = a.PlaceOnStorage,
                     Count = a.Count, 
                     Price = a.Price,
-                    StorageItemId = a.StorageItemId, 
                     ToUnitId = input.UnitId
                 });
             

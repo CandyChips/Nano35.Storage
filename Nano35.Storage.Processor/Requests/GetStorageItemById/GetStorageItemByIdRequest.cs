@@ -5,7 +5,7 @@ using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Contracts.Storage.Models;
 using Nano35.Storage.Processor.Services;
 
-namespace Nano35.Storage.Processor.Requests.GetAllArticleBrands
+namespace Nano35.Storage.Processor.Requests.GetStorageItemById
 {
     public class GetStorageItemByIdRequest :
         IPipelineNode<

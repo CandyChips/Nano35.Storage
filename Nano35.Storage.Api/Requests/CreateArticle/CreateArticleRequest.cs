@@ -6,19 +6,15 @@ using Nano35.Contracts.Storage.Artifacts;
 namespace Nano35.Storage.Api.Requests.CreateArticle
 {
     public class CreateArticleRequest :
-        IPipelineNode<ICreateArticleRequestContract, ICreateArticleResultContract>
+        IPipelineNode<
+            ICreateArticleRequestContract, 
+            ICreateArticleResultContract>
     {
         private readonly IBus _bus;
         public CreateArticleRequest(
             IBus bus)
         {
             _bus = bus;
-        }
-        
-        private class CreateArticleSuccessResultContract : 
-            ICreateArticleSuccessResultContract
-        {
-            
         }
         
         public async Task<ICreateArticleResultContract> Ask(

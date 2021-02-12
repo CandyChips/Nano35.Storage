@@ -6,14 +6,20 @@ using Nano35.Contracts.Storage.Artifacts;
 namespace Nano35.Storage.Api.Requests.CreateComing
 {
     public class CreateComingLogger :
-        IPipelineNode<ICreateComingRequestContract, ICreateComingResultContract>
+        IPipelineNode<
+            ICreateComingRequestContract,
+            ICreateComingResultContract>
     {
         private readonly ILogger<CreateComingLogger> _logger;
-        private readonly IPipelineNode<ICreateComingRequestContract, ICreateComingResultContract> _nextNode;
+        private readonly IPipelineNode<
+            ICreateComingRequestContract, 
+            ICreateComingResultContract> _nextNode;
 
         public CreateComingLogger(
             ILogger<CreateComingLogger> logger,
-            IPipelineNode<ICreateComingRequestContract, ICreateComingResultContract> nextNode)
+            IPipelineNode<
+                ICreateComingRequestContract, 
+                ICreateComingResultContract> nextNode)
         {
             _nextNode = nextNode;
             _logger = logger;

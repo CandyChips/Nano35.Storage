@@ -4,58 +4,22 @@ using Nano35.Contracts.Storage.Artifacts;
 
 namespace Nano35.Storage.HttpContext
 {
-    public class GetAllStorageItemsHttpContext : 
-        IGetAllStorageItemsRequestContract
+    public class GetAllStorageItemsHttpContext
     {
-        public Guid InstanceId { get; set; }
-    }
-    
-    public class CreateCancelationRequestContract :
-        ICreateCancelationRequestContract
-    {
-        public Guid NewId { get; set; }
-        public Guid IntsanceId { get; set; }
-        public Guid UnitId { get; set; }
-        public string Number { get; set; }
-        public string Comment { get; set; }
-        public IEnumerable<ICreateCancelationRequestContract.ICreateCancelationDetailViewModel> Details {get; set;}
-    }
-    public class CreateCancelationHttpContext
-    {
-        public class CancellationDetail :
-            ICreateCancelationRequestContract.ICreateCancelationDetailViewModel
+        public class GetAllStorageItemsHeader
         {
-            public int Count { get; set; }
-            public string PlaceOnStorage { get; set; }
-            public Guid StringItemId { get; set; }
-        }
-
-        public class Header
-        {
-            public Guid NewId { get; set; }
         }
         
-        public class Body
+        public class GetAllStorageItemsQuery 
         {
-            public Guid NewId { get; set; }
-            public Guid IntsanceId { get; set; }
-            public Guid UnitId { get; set; }
-            public string Number { get; set; }
-            public string Comment { get; set; }
-            public IEnumerable<CancellationDetail> Details { get; set; }
+            public Guid InstanceId { get; set; }
         }
-    }
         
-    public class CreateComingRequestContract :
-        ICreateComingRequestContract
-    {
-        public Guid NewId { get; set; }
-        public Guid InstanceId { get; set; }
-        public Guid UnitId { get; set; }
-        public string Number { get; set; }
-        public string Comment { get; set; }
-        public Guid ClientId { get; set; }
-        public IEnumerable<ICreateComingRequestContract.ICreateComingDetailViewModel> Details { get; set; }
+        public class GetAllStorageItemsRequest :
+            IGetAllStorageItemsRequestContract
+        {
+            public Guid InstanceId { get; set; }
+        }
     }
     
     public class CreateComingHttpContext
@@ -69,11 +33,21 @@ namespace Nano35.Storage.HttpContext
             public Guid StorageItemId { get; set; }
             public double Price { get; set; }
         }
-        public class Header
+        public class CreateComingHeader
         {
             public Guid NewId { get; set; }
+            public Guid InstanceId { get; set; }
         }
-        public class Body
+        public class CreateComingBody
+        {
+            public Guid UnitId { get; set; }
+            public string Number { get; set; }
+            public string Comment { get; set; }
+            public Guid ClientId { get; set; }
+            public IEnumerable<ComingDetail> Details { get; set; }
+        }
+        public class CreateComingRequest :
+            ICreateComingRequestContract
         {
             public Guid NewId { get; set; }
             public Guid InstanceId { get; set; }
@@ -81,29 +55,7 @@ namespace Nano35.Storage.HttpContext
             public string Number { get; set; }
             public string Comment { get; set; }
             public Guid ClientId { get; set; }
-            public IEnumerable<ComingDetail> Details { get; set; }
+            public IEnumerable<ICreateComingRequestContract.ICreateComingDetailViewModel> Details { get; set; }
         }
-    }
-    
-    public class CreateMoveHttpContext :
-        ICreateMoveRequestContract
-    {
-        public Guid NewId { get; set; }
-        public Guid IntsanceId { get; set; }
-        public Guid FromUnitId { get; set; }
-        public Guid ToUnitId { get; set; }
-        public string Number { get; set; }
-        public IEnumerable<ICreateMoveRequestContract.ICreateMoveDetailViewModel> Details { get; set; }
-    }
-    
-    public class CreateSalleHttpContext :
-        ICreateSalleRequestContract
-    {
-        public Guid NewId { get; set; }
-        public Guid IntsanceId { get; set; }
-        public Guid UnitId { get; set; }
-        public string Number { get; set; }
-        public Guid ClientId { get; set; }
-        public IEnumerable<ICreateSalleRequestContract.ICreateSalleDetailViewModel> Details { get; set; }
     }
 }

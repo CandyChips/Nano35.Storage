@@ -25,10 +25,10 @@ namespace Nano35.Storage.Api.Configurations
                 }));
                 x.AddRequestClient<IGetAllArticlesRequestContract>(
                     new Uri($"{ContractBase.RabbitMqLocation}/IGetAllArticlesRequestContract"));
-                x.AddRequestClient<ICreateCancelationRequestContract>(
-                    new Uri($"{ContractBase.RabbitMqLocation}/ICreateCancelationRequestContract"));
-                x.AddRequestClient<ICreateSalleRequestContract>(
-                    new Uri($"{ContractBase.RabbitMqLocation}/ICreateSalleRequestContract"));
+                x.AddRequestClient<ICreateCancellationRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/ICreateCancellationRequestContract"));
+                x.AddRequestClient<ICreateSelleRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/ICreateSelleRequestContract"));
                 x.AddRequestClient<ICreateComingRequestContract>(
                     new Uri($"{ContractBase.RabbitMqLocation}/ICreateComingRequestContract"));
                 x.AddRequestClient<ICreateMoveRequestContract>(
@@ -53,6 +53,8 @@ namespace Nano35.Storage.Api.Configurations
                     new Uri($"{ContractBase.RabbitMqLocation}/IGetAllArticlesModelsRequestContract"));
                 x.AddRequestClient<IGetAllStorageItemConditionsRequestContract>(
                     new Uri($"{ContractBase.RabbitMqLocation}/IGetAllStorageItemConditionsRequestContract"));
+                x.AddRequestClient<IGetAllComingsRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/IGetAllComingsRequestContract"));
             });
             services.AddMassTransitHostedService();
         }

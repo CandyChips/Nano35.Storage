@@ -8,19 +8,15 @@ using Nano35.Contracts.Storage.Models;
 namespace Nano35.Storage.Api.Requests.GetAllStorageItemConditions
 {
     public class GetAllStorageItemConditionsRequest :
-        IPipelineNode<IGetAllStorageItemConditionsRequestContract, IGetAllStorageItemConditionsResultContract>
+        IPipelineNode<
+            IGetAllStorageItemConditionsRequestContract, 
+            IGetAllStorageItemConditionsResultContract>
     {
         private readonly IBus _bus;
         public GetAllStorageItemConditionsRequest(
             IBus bus)
         {
             _bus = bus;
-        }
-        
-        private class GetAllStorageItemConditionsSuccessResultContract : 
-            IGetAllStorageItemConditionsSuccessResultContract
-        {
-            public IEnumerable<IStorageItemConditionViewModel> Data { get; set; }
         }
         
         public async Task<IGetAllStorageItemConditionsResultContract> Ask(

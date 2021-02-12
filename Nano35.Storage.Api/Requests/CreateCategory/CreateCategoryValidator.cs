@@ -10,12 +10,18 @@ namespace Nano35.Storage.Api.Requests.CreateCategory
     }
     
     public class CreateCategoryValidator:
-        IPipelineNode<ICreateCategoryRequestContract, ICreateCategoryResultContract>
+        IPipelineNode<
+            ICreateCategoryRequestContract, 
+            ICreateCategoryResultContract>
     {
-        private readonly IPipelineNode<ICreateCategoryRequestContract, ICreateCategoryResultContract> _nextNode;
+        private readonly IPipelineNode<
+            ICreateCategoryRequestContract, 
+            ICreateCategoryResultContract> _nextNode;
 
         public CreateCategoryValidator(
-            IPipelineNode<ICreateCategoryRequestContract, ICreateCategoryResultContract> nextNode)
+            IPipelineNode<
+                ICreateCategoryRequestContract, 
+                ICreateCategoryResultContract> nextNode)
         {
             _nextNode = nextNode;
         }

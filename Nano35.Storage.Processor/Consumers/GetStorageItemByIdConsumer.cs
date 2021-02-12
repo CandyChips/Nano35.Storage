@@ -4,6 +4,7 @@ using MassTransit;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Storage.Processor.Requests.GetAllArticleBrands;
+using Nano35.Storage.Processor.Requests.GetStorageItemById;
 using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.Consumers

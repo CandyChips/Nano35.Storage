@@ -5,7 +5,7 @@ using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Contracts.Storage.Models;
 using Nano35.Storage.Processor.Services;
 
-namespace Nano35.Storage.Processor.Requests.GetAllArticleBrands
+namespace Nano35.Storage.Processor.Requests.GetArticleById
 {
     public class GetArticleByIdRequest :
         IPipelineNode<
@@ -24,12 +24,6 @@ namespace Nano35.Storage.Processor.Requests.GetAllArticleBrands
             IGetArticleByIdSuccessResultContract
         {
             public IArticleViewModel Data { get; set; }
-        }
-
-        private class GetArticleByIdErrorResultContract : 
-            IGetArticleByIdErrorResultContract
-        {
-            public string Message { get; set; }
         }
         
         public async Task<IGetArticleByIdResultContract> Ask(

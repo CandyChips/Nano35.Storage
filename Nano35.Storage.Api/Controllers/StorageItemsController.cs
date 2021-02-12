@@ -41,8 +41,14 @@ namespace Nano35.Storage.Api.Controllers
         [HttpGet]
         [Route("GetAllStorageItems")]
         public async Task<IActionResult> GetAllStorageItems(
-            [FromQuery] GetAllStorageItemsHttpContext query)
+            [FromHeader] GetAllStorageItemsHttpContext.GetAllStorageItemsHeader header,
+            [FromQuery] GetAllStorageItemsHttpContext.GetAllStorageItemsQuery query)
         {
+            var request = new GetAllStorageItemsHttpContext.GetAllStorageItemsRequest()
+            {
+                InstanceId = query.InstanceId
+            };
+            
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<GetAllStorageItemsLogger>)_services.GetService(typeof(ILogger<GetAllStorageItemsLogger>));
@@ -52,7 +58,7 @@ namespace Nano35.Storage.Api.Controllers
                 await new GetAllStorageItemsLogger(logger,
                     new GetAllStorageItemsValidator(
                         new GetAllStorageItemsRequest(bus)
-                        )).Ask(query);
+                        )).Ask(request);
             
             // Check response of get all instances request
             // You can check result by result contracts

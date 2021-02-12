@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Nano35.Contracts.Storage.Artifacts;
 
-namespace Nano35.Storage.Processor.Requests.GetAllArticle
+namespace Nano35.Storage.Processor.Requests.GetAllStorageItemConditions
 {
     public class GetAllStorageItemConditionsValidatorErrorResult :
         IGetAllStorageItemConditionsErrorResultContract

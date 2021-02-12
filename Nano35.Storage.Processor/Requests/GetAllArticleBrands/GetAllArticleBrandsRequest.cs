@@ -26,12 +26,6 @@ namespace Nano35.Storage.Processor.Requests.GetAllArticleBrands
         {
             public IEnumerable<string> Data { get; set; }
         }
-
-        private class GetAllArticlesBrandsErrorResultContract : 
-            IGetAllArticlesBrandsErrorResultContract
-        {
-            public string Message { get; set; }
-        }
         
         public async Task<IGetAllArticlesBrandsResultContract> Ask
             (IGetAllArticlesBrandsRequestContract input, CancellationToken cancellationToken)

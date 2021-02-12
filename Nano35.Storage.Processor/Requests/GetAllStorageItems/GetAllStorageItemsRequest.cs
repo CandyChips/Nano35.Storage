@@ -6,7 +6,7 @@ using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Contracts.Storage.Models;
 using Nano35.Storage.Processor.Services;
 
-namespace Nano35.Storage.Processor.Requests.GetAllArticle
+namespace Nano35.Storage.Processor.Requests.GetAllStorageItems
 {
     public class GetAllStorageItemsRequest :
         IPipelineNode<
@@ -25,12 +25,6 @@ namespace Nano35.Storage.Processor.Requests.GetAllArticle
             IGetAllStorageItemsSuccessResultContract
         {
             public IEnumerable<IStorageItemViewModel> Data { get; set; }
-        }
-
-        private class GetAllStorageItemsErrorResultContract : 
-            IGetAllStorageItemsErrorResultContract
-        {
-            public string Message { get; set; }
         }
         
         public async Task<IGetAllStorageItemsResultContract> Ask

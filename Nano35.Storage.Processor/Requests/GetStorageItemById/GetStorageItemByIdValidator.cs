@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Nano35.Contracts.Storage.Artifacts;
 
-namespace Nano35.Storage.Processor.Requests.GetAllArticleBrands
+namespace Nano35.Storage.Processor.Requests.GetStorageItemById
 {
     public class GetStorageItemByIdValidatorErrorResult :
         IGetStorageItemByIdErrorResultContract

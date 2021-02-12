@@ -10,12 +10,18 @@ namespace Nano35.Storage.Api.Requests.GetStorageItemById
     }
     
     public class GetStorageItemByIdValidator:
-        IPipelineNode<IGetStorageItemByIdRequestContract, IGetStorageItemByIdResultContract>
+        IPipelineNode<
+            IGetStorageItemByIdRequestContract,
+            IGetStorageItemByIdResultContract>
     {
-        private readonly IPipelineNode<IGetStorageItemByIdRequestContract, IGetStorageItemByIdResultContract> _nextNode;
+        private readonly IPipelineNode<
+            IGetStorageItemByIdRequestContract, 
+            IGetStorageItemByIdResultContract> _nextNode;
 
         public GetStorageItemByIdValidator(
-            IPipelineNode<IGetStorageItemByIdRequestContract, IGetStorageItemByIdResultContract> nextNode)
+            IPipelineNode<
+                IGetStorageItemByIdRequestContract, 
+                IGetStorageItemByIdResultContract> nextNode)
         {
             _nextNode = nextNode;
         }

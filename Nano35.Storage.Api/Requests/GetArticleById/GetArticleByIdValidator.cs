@@ -10,12 +10,18 @@ namespace Nano35.Storage.Api.Requests.GetArticleById
     }
     
     public class GetArticleByIdValidator:
-        IPipelineNode<IGetArticleByIdRequestContract, IGetArticleByIdResultContract>
+        IPipelineNode<
+            IGetArticleByIdRequestContract,
+            IGetArticleByIdResultContract>
     {
-        private readonly IPipelineNode<IGetArticleByIdRequestContract, IGetArticleByIdResultContract> _nextNode;
+        private readonly IPipelineNode<
+            IGetArticleByIdRequestContract, 
+            IGetArticleByIdResultContract> _nextNode;
 
         public GetArticleByIdValidator(
-            IPipelineNode<IGetArticleByIdRequestContract, IGetArticleByIdResultContract> nextNode)
+            IPipelineNode<
+                IGetArticleByIdRequestContract, 
+                IGetArticleByIdResultContract> nextNode)
         {
             _nextNode = nextNode;
         }

@@ -3,18 +3,25 @@ using Nano35.Contracts.Storage.Artifacts;
 
 namespace Nano35.Storage.Api.Requests.CreateMove
 {
-    public class CreateMoveValidatorErrorResult : ICreateMoveErrorResultContract
+    public class CreateMoveValidatorErrorResult : 
+        ICreateMoveErrorResultContract
     {
         public string Message { get; set; }
     }
     
     public class CreateMoveValidator:
-        IPipelineNode<ICreateMoveRequestContract, ICreateMoveResultContract>
+        IPipelineNode<
+            ICreateMoveRequestContract,
+            ICreateMoveResultContract>
     {
-        private readonly IPipelineNode<ICreateMoveRequestContract, ICreateMoveResultContract> _nextNode;
+        private readonly IPipelineNode<
+            ICreateMoveRequestContract, 
+            ICreateMoveResultContract> _nextNode;
 
         public CreateMoveValidator(
-            IPipelineNode<ICreateMoveRequestContract, ICreateMoveResultContract> nextNode)
+            IPipelineNode<
+                ICreateMoveRequestContract, 
+                ICreateMoveResultContract> nextNode)
         {
             _nextNode = nextNode;
         }

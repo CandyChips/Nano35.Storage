@@ -1,6 +1,8 @@
 ﻿using System;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Nano35.Contracts;
+using Nano35.Contracts.Storage.Artifacts;
 
 namespace Nano35.Storage.Processor.Models
 {
@@ -14,6 +16,7 @@ namespace Nano35.Storage.Processor.Models
         public Guid InstanceId { get; set; }
         public string Number { get; set; }
         public DateTime Date { get; set; }
+        public Guid ClientId { get; set; }
         
         // Foreign keys
     }
@@ -38,6 +41,18 @@ namespace Nano35.Storage.Processor.Models
                 .IsRequired();
             
             //Foreign keys
+        }
+    }
+
+    public class ComingAutoMapperProfile : Profile
+    {
+        public ComingAutoMapperProfile()
+        {
+            CreateMap<Coming, IComingViewModel>()
+                .ForMember(dest => dest.Id, source => source
+                    .MapFrom(source => source.Id))
+                .ForMember(dest => dest.Number, source => source
+                    .MapFrom(source => source.Number));
         }
     }
 }

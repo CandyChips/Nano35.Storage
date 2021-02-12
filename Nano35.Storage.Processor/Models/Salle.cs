@@ -13,6 +13,7 @@ namespace Nano35.Storage.Processor.Models
         //Data
         public string Number { get; set; }
         public DateTime Date { get; set; }
+        public Guid ClientId { get; set; }
         
         //Forgein keys
     }

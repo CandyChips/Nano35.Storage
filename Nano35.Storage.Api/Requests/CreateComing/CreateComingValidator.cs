@@ -3,18 +3,25 @@ using Nano35.Contracts.Storage.Artifacts;
 
 namespace Nano35.Storage.Api.Requests.CreateComing
 {
-    public class CreateComingValidatorErrorResult : ICreateComingErrorResultContract
+    public class CreateComingValidatorErrorResult : 
+        ICreateComingErrorResultContract
     {
         public string Message { get; set; }
     }
     
     public class CreateComingValidator:
-        IPipelineNode<ICreateComingRequestContract, ICreateComingResultContract>
+        IPipelineNode<
+            ICreateComingRequestContract, 
+            ICreateComingResultContract>
     {
-        private readonly IPipelineNode<ICreateComingRequestContract, ICreateComingResultContract> _nextNode;
+        private readonly IPipelineNode<
+            ICreateComingRequestContract, 
+            ICreateComingResultContract> _nextNode;
 
         public CreateComingValidator(
-            IPipelineNode<ICreateComingRequestContract, ICreateComingResultContract> nextNode)
+            IPipelineNode<
+                ICreateComingRequestContract,
+                ICreateComingResultContract> nextNode)
         {
             _nextNode = nextNode;
         }
