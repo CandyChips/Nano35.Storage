@@ -14,7 +14,7 @@ namespace Nano35.Storage.Processor.Models
         public string Number { get; set; }
         public DateTime Date { get; set; }
         
-        //Forgein keys
+        //Foreign keys
     }
 
     public class MoveFluentContext
@@ -33,7 +33,7 @@ namespace Nano35.Storage.Processor.Models
                 .Property(b => b.Date)
                 .IsRequired();
 
-            //Forgein keys
+            //Foreign keys
         }
     }
 }

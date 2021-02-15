@@ -33,13 +33,10 @@ namespace Nano35.Storage.HttpContext
             public Guid StorageItemId { get; set; }
             public double Price { get; set; }
         }
-        public class CreateComingHeader
+        public class CreateComingBody
         {
             public Guid NewId { get; set; }
             public Guid InstanceId { get; set; }
-        }
-        public class CreateComingBody
-        {
             public Guid UnitId { get; set; }
             public string Number { get; set; }
             public string Comment { get; set; }

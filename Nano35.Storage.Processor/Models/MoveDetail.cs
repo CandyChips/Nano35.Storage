@@ -19,7 +19,7 @@ namespace Nano35.Storage.Processor.Models
         public Guid FromUnitId { get; set; }
         public string FromPlace { get; set; }
         
-        //Forgein keys
+        //Foreign keys
         public WarehouseByItemOnStorage ToWarehouse { get; set; }
         public WarehouseByItemOnStorage FromWarehouse { get; set; }
         public Move Move { get; set; }
@@ -46,7 +46,7 @@ namespace Nano35.Storage.Processor.Models
                 .Property(b => b.FromPlace)
                 .IsRequired();
 
-            //Forgein keys
+            //Foreign keys
             modelBuilder.Entity<MoveDetail>()
                 .HasOne(p => p.ToWarehouse)
                 .WithMany()

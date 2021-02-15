@@ -4,7 +4,7 @@ using Nano35.Contracts;
 
 namespace Nano35.Storage.Processor.Models
 {
-    public class Salle :
+    public class Selle :
         ICastable
     {
         // Primary key
@@ -14,27 +14,31 @@ namespace Nano35.Storage.Processor.Models
         public string Number { get; set; }
         public DateTime Date { get; set; }
         public Guid ClientId { get; set; }
+        public Guid CashOperationId { get; set; }
         
-        //Forgein keys
+        //Foreign keys
     }
 
-    public class SalleFluentContext
+    public class SelleFluentContext
     {
         public void Configure(ModelBuilder modelBuilder)
         {
             //Primary key
-            modelBuilder.Entity<Salle>()
+            modelBuilder.Entity<Selle>()
                 .HasKey(u => new {u.Id});  
             
             //Data
-            modelBuilder.Entity<Salle>()
+            modelBuilder.Entity<Selle>()
                 .Property(b => b.Number)
                 .IsRequired();
-            modelBuilder.Entity<Salle>()
+            modelBuilder.Entity<Selle>()
+                .Property(b => b.CashOperationId)
+                .IsRequired();
+            modelBuilder.Entity<Selle>()
                 .Property(b => b.Date)
                 .IsRequired();
             
-            //Forgein keys
+            //Foreign keys
         }
     }
 }

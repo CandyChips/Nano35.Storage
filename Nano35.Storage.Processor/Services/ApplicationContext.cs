@@ -18,8 +18,8 @@ namespace Nano35.Storage.Processor.Services
         public DbSet<Move> Moves { get; set; }
         public DbSet<MoveDetail> MoveDetails { get; set; }
         
-        public DbSet<Salle> Sells { get; set; }
-        public DbSet<SalleDetail> SelleDetails { get; set; }
+        public DbSet<Selle> Sells { get; set; }
+        public DbSet<SelleDetail> SelleDetails { get; set; }
         
         public DbSet<Spec> Specs { get; set; }
         public DbSet<Article> Articles { get; set; }
@@ -45,7 +45,7 @@ namespace Nano35.Storage.Processor.Services
             new WarehousesFluentContext().Configure(modelBuilder);
             
             new CancellationsFluentContext().Configure(modelBuilder);
-            new CancelationDetailFluentContext().Configure(modelBuilder);
+            new CancellationDetailFluentContext().Configure(modelBuilder);
             
             new ComingFluentContext().Configure(modelBuilder);
             new ComingDetailFluentContext().Configure(modelBuilder);
@@ -53,8 +53,8 @@ namespace Nano35.Storage.Processor.Services
             new MoveFluentContext().Configure(modelBuilder);
             new MoveDetailFluentContext().Configure(modelBuilder);
             
-            new SalleFluentContext().Configure(modelBuilder);
-            new SalleDetailFluentContext().Configure(modelBuilder);
+            new SelleFluentContext().Configure(modelBuilder);
+            new SelleDetailFluentContext().Configure(modelBuilder);
             
             base.OnModelCreating(modelBuilder);
         }

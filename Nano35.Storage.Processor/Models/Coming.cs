@@ -17,6 +17,7 @@ namespace Nano35.Storage.Processor.Models
         public string Number { get; set; }
         public DateTime Date { get; set; }
         public Guid ClientId { get; set; }
+        public Guid CashOperationId { get; set; }
         
         // Foreign keys
     }
@@ -35,6 +36,12 @@ namespace Nano35.Storage.Processor.Models
                 .IsRequired();
             modelBuilder.Entity<Coming>()
                 .Property(b => b.InstanceId)
+                .IsRequired();
+            modelBuilder.Entity<Coming>()
+                .Property(b => b.CashOperationId)
+                .IsRequired();
+            modelBuilder.Entity<Coming>()
+                .Property(b => b.ClientId)
                 .IsRequired();
             modelBuilder.Entity<Coming>()
                 .Property(b => b.Date)

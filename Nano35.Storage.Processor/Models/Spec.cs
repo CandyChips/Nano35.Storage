@@ -17,7 +17,7 @@ namespace Nano35.Storage.Processor.Models
         public Guid ArticleId { get; set; }
         public Guid InstanceId { get; set; }
         
-        //Forgein keys
+        //Foreign keys
         public Article Article { get; set; }
     }
 
@@ -34,7 +34,7 @@ namespace Nano35.Storage.Processor.Models
                 .Property(b => b.Value)
                 .IsRequired();
             
-            //Forgein keys
+            //Foreign keys
             modelBuilder.Entity<Spec>()
                 .HasOne(p => p.Article)
                 .WithMany()

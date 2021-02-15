@@ -16,7 +16,7 @@ namespace Nano35.Storage.Processor.Models
         public int Count { get; set; }
         public bool IsDeleted { get; set; }
 
-        //Forgein keys
+        //Foreign keys
         public Guid StorageItemId { get; set; }
         public StorageItem StorageItem { get; set; }
     }
@@ -38,7 +38,7 @@ namespace Nano35.Storage.Processor.Models
                 .Property(b => b.IsDeleted)
                 .IsRequired();
 
-            //Forgein keys
+            //Foreign keys
             modelBuilder.Entity<WarehouseByItemOnStorage>()
                 .HasOne(p => p.StorageItem)
                 .WithMany()

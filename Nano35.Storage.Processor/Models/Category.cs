@@ -18,7 +18,7 @@ namespace Nano35.Storage.Processor.Models
         public bool IsDeleted { get; set; }
         public Guid? ParentCategoryId { get; set; }
         
-        //Forgein keys
+        //Foreign keys
         public Category? ParentCategory { get; set; }
 
         public override string ToString()
@@ -44,7 +44,7 @@ namespace Nano35.Storage.Processor.Models
                 .Property(b => b.Name)
                 .IsRequired();
             
-            //Forgein keys
+            //Foreign keys
             modelBuilder.Entity<Category>()
                 .HasOne(p => p.ParentCategory)
                 .WithMany()

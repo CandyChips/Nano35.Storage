@@ -4,7 +4,7 @@ using Nano35.Contracts;
 
 namespace Nano35.Storage.Processor.Models
 {
-    public class SalleDetail :
+    public class SelleDetail :
         ICastable
     {
         // Primary key
@@ -13,47 +13,47 @@ namespace Nano35.Storage.Processor.Models
         //Data
         public double Price { get; set; }
         public int Count { get; set; }
-        public Guid SalleId { get; set; }
+        public Guid SelleId { get; set; }
         public Guid StorageItemId { get; set; }
         public Guid FromUnitId { get; set; }
         public string FromPlace { get; set; }
         
-        //Forgein keys
+        //Foreign keys
         public WarehouseByItemOnStorage FromWarehouse { get; set; }
-        public Salle Salle { get; set; }
+        public Selle Selle { get; set; }
     }
 
-    public class SalleDetailFluentContext
+    public class SelleDetailFluentContext
     {
         public void Configure(ModelBuilder modelBuilder)
         {
             //Primary key
-            modelBuilder.Entity<SalleDetail>()
+            modelBuilder.Entity<SelleDetail>()
                 .HasKey(u => new {u.Id});  
             
             //Data
-            modelBuilder.Entity<SalleDetail>()
+            modelBuilder.Entity<SelleDetail>()
                 .Property(b => b.Price)
                 .IsRequired();
-            modelBuilder.Entity<SalleDetail>()
+            modelBuilder.Entity<SelleDetail>()
                 .Property(b => b.Count)
                 .IsRequired();
-            modelBuilder.Entity<SalleDetail>()
+            modelBuilder.Entity<SelleDetail>()
                 .Property(b => b.FromPlace)
                 .IsRequired();
             
-            //Forgein keys
-            modelBuilder.Entity<SalleDetail>()
+            //Foreign keys
+            modelBuilder.Entity<SelleDetail>()
                 .HasOne(p => p.FromWarehouse)
                 .WithMany()
                 .OnDelete(DeleteBehavior.NoAction)
                 .HasForeignKey(p => new {p.StorageItemId, p.FromUnitId, p.FromPlace});
             
-            modelBuilder.Entity<SalleDetail>()
-                .HasOne(p => p.Salle)
+            modelBuilder.Entity<SelleDetail>()
+                .HasOne(p => p.Selle)
                 .WithMany()
                 .OnDelete(DeleteBehavior.NoAction)
-                .HasForeignKey(p => new {p.SalleId});
+                .HasForeignKey(p => new {SalleId = p.SelleId});
         }
     }
 }

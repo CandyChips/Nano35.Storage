@@ -41,8 +41,7 @@ namespace Nano35.Storage.Api.Controllers
         [HttpPost]
         [Route("CreateComing")]
         public async Task<IActionResult> CreateComing(
-            [FromHeader] CreateComingHttpContext.CreateComingHeader header,
-            [FromBody] CreateComingHttpContext.CreateComingBody body)
+            CreateComingHttpContext.CreateComingBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
@@ -50,8 +49,8 @@ namespace Nano35.Storage.Api.Controllers
             
             var message = new CreateComingHttpContext.CreateComingRequest()
             {
-                NewId = header.NewId,
-                InstanceId = header.InstanceId,
+                NewId = body.NewId,
+                InstanceId = body.InstanceId,
                 Number = body.Number,
                 UnitId = body.UnitId,
                 Comment = body.Comment,

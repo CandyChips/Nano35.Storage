@@ -16,7 +16,7 @@ namespace Nano35.Storage.Processor.Models
         public string Name { get; set; }
         public bool IsDeleted { get; set; }
 
-        //Forgein keys
+        //Foreign keys
     }
 
     public class StorageItemConditionsFluentContext
@@ -35,7 +35,7 @@ namespace Nano35.Storage.Processor.Models
                 .Property(b => b.IsDeleted)
                 .IsRequired();
             
-            //Forgein keys
+            //Foreign keys
         }
     }
 

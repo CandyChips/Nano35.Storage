@@ -20,7 +20,7 @@ namespace Nano35.Storage.Processor.Models
         public decimal PurchasePrice { get; set; }
         public bool IsDeleted { get; set; }
         
-        //Forgein keys
+        //Foreign keys
         public Guid ArticleId { get; set; }
         public Article Article { get; set; }
         
@@ -61,7 +61,7 @@ namespace Nano35.Storage.Processor.Models
                 .HasColumnType("money")
                 .IsRequired();
             
-            //Forgein keys
+            //Foreign keys
             modelBuilder.Entity<StorageItem>()
                 .HasOne(p => p.Article)
                 .WithMany()
