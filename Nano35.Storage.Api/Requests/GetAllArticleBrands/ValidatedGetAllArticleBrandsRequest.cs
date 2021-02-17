@@ -9,7 +9,7 @@ namespace Nano35.Storage.Api.Requests.GetAllArticleBrands
         public string Message { get; set; }
     }
     
-    public class GetAllArticlesBrandsValidator:
+    public class ValidatedGetAllArticlesBrandsRequest:
         IPipelineNode<
             IGetAllArticlesBrandsRequestContract, 
             IGetAllArticlesBrandsResultContract>
@@ -18,7 +18,7 @@ namespace Nano35.Storage.Api.Requests.GetAllArticleBrands
             IGetAllArticlesBrandsRequestContract,
             IGetAllArticlesBrandsResultContract> _nextNode;
 
-        public GetAllArticlesBrandsValidator(
+        public ValidatedGetAllArticlesBrandsRequest(
             IPipelineNode<
                 IGetAllArticlesBrandsRequestContract, 
                 IGetAllArticlesBrandsResultContract> nextNode)

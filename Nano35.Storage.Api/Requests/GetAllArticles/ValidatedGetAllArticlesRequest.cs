@@ -9,7 +9,7 @@ namespace Nano35.Storage.Api.Requests.GetAllArticles
         public string Message { get; set; }
     }
     
-    public class GetAllArticlesValidator:
+    public class ValidatedGetAllArticlesRequest:
         IPipelineNode<
             IGetAllArticlesRequestContract,
             IGetAllArticlesResultContract>
@@ -18,7 +18,7 @@ namespace Nano35.Storage.Api.Requests.GetAllArticles
             IGetAllArticlesRequestContract,
             IGetAllArticlesResultContract> _nextNode;
 
-        public GetAllArticlesValidator(
+        public ValidatedGetAllArticlesRequest(
             IPipelineNode<
                 IGetAllArticlesRequestContract, 
                 IGetAllArticlesResultContract> nextNode)

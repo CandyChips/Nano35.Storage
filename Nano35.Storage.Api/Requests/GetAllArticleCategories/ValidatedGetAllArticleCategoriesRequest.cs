@@ -9,7 +9,7 @@ namespace Nano35.Storage.Api.Requests.GetAllArticleCategories
         public string Message { get; set; }
     }
     
-    public class GetAllArticlesCategoriesValidator:
+    public class ValidatedGetAllArticlesCategoriesRequest:
         IPipelineNode<
             IGetAllArticlesCategoriesRequestContract,
             IGetAllArticlesCategoriesResultContract>
@@ -18,7 +18,7 @@ namespace Nano35.Storage.Api.Requests.GetAllArticleCategories
             IGetAllArticlesCategoriesRequestContract,
             IGetAllArticlesCategoriesResultContract> _nextNode;
 
-        public GetAllArticlesCategoriesValidator(
+        public ValidatedGetAllArticlesCategoriesRequest(
             IPipelineNode<
                 IGetAllArticlesCategoriesRequestContract,
                 IGetAllArticlesCategoriesResultContract> nextNode)

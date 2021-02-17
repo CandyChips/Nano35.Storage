@@ -5,18 +5,18 @@ using Nano35.Contracts.Storage.Artifacts;
 
 namespace Nano35.Storage.Api.Requests.GetAllArticleBrands
 {
-    public class GetAllArticlesBrandsLogger :
+    public class LoggedGetAllArticlesBrandsRequest :
         IPipelineNode<
             IGetAllArticlesBrandsRequestContract, 
             IGetAllArticlesBrandsResultContract>
     {
-        private readonly ILogger<GetAllArticlesBrandsLogger> _logger;
+        private readonly ILogger<LoggedGetAllArticlesBrandsRequest> _logger;
         private readonly IPipelineNode<
             IGetAllArticlesBrandsRequestContract, 
             IGetAllArticlesBrandsResultContract> _nextNode;
 
-        public GetAllArticlesBrandsLogger(
-            ILogger<GetAllArticlesBrandsLogger> logger,
+        public LoggedGetAllArticlesBrandsRequest(
+            ILogger<LoggedGetAllArticlesBrandsRequest> logger,
             IPipelineNode<
                 IGetAllArticlesBrandsRequestContract, 
                 IGetAllArticlesBrandsResultContract> nextNode)

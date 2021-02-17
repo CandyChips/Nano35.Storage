@@ -51,12 +51,12 @@ namespace Nano35.Storage.Api.Controllers
             
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<GetAllStorageItemsLogger>)_services.GetService(typeof(ILogger<GetAllStorageItemsLogger>));
+            var logger = (ILogger<LoggedGetAllStorageItemsRequest>)_services.GetService(typeof(ILogger<LoggedGetAllStorageItemsRequest>));
             
             // Send request to pipeline
             var result = 
-                await new GetAllStorageItemsLogger(logger,
-                    new GetAllStorageItemsValidator(
+                await new LoggedGetAllStorageItemsRequest(logger,
+                    new ValidatedGetAllStorageItemsRequest(
                         new GetAllStorageItemsRequest(bus)
                         )).Ask(request);
             
@@ -76,11 +76,11 @@ namespace Nano35.Storage.Api.Controllers
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<GetAllStorageItemConditionsLogger>)_services.GetService(typeof(ILogger<GetAllStorageItemConditionsLogger>));
+            var logger = (ILogger<LoggedGetAllStorageItemConditionsRequest>)_services.GetService(typeof(ILogger<LoggedGetAllStorageItemConditionsRequest>));
             
             // Send request to pipeline
             var result = 
-                await new GetAllStorageItemConditionsLogger(logger,
+                await new LoggedGetAllStorageItemConditionsRequest(logger,
                     new GetAllStorageItemConditionsRequest(bus)
                 ).Ask(new GetAllStorageItemConditionsHttpContext());
             
@@ -101,12 +101,12 @@ namespace Nano35.Storage.Api.Controllers
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<GetStorageItemByIdLogger>)_services.GetService(typeof(ILogger<GetStorageItemByIdLogger>));
+            var logger = (ILogger<LoggedGetStorageItemByIdRequest>)_services.GetService(typeof(ILogger<LoggedGetStorageItemByIdRequest>));
             
             // Send request to pipeline
             var result = 
-                await new GetStorageItemByIdLogger(logger,
-                    new GetStorageItemByIdValidator(
+                await new LoggedGetStorageItemByIdRequest(logger,
+                    new ValidatedGetStorageItemByIdRequest(
                         new GetStorageItemByIdRequest(bus)
                         )).Ask(query);
             
@@ -126,12 +126,12 @@ namespace Nano35.Storage.Api.Controllers
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<CreateStorageItemLogger>)_services.GetService(typeof(ILogger<CreateStorageItemLogger>));
+            var logger = (ILogger<LoggedCreateStorageItemRequest>)_services.GetService(typeof(ILogger<LoggedCreateStorageItemRequest>));
             
             // Send request to pipeline
             var result = 
-                await new CreateStorageItemLogger(logger,
-                    new CreateStorageItemValidator(
+                await new LoggedCreateStorageItemRequest(logger,
+                    new ValidatedCreateStorageItemRequest(
                         new CreateStorageItemRequest(bus)
                         )).Ask(command);
             

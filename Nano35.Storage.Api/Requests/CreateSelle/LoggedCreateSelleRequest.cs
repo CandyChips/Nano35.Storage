@@ -5,18 +5,18 @@ using Nano35.Contracts.Storage.Artifacts;
 
 namespace Nano35.Storage.Api.Requests.CreateSelle
 {
-    public class CreateSelleLogger :
+    public class LoggedCreateSelleRequest :
         IPipelineNode<
             ICreateSelleRequestContract, 
             ICreateSelleResultContract>
     {
-        private readonly ILogger<CreateSelleLogger> _logger;
+        private readonly ILogger<LoggedCreateSelleRequest> _logger;
         private readonly IPipelineNode<
             ICreateSelleRequestContract, 
             ICreateSelleResultContract> _nextNode;
 
-        public CreateSelleLogger(
-            ILogger<CreateSelleLogger> logger,
+        public LoggedCreateSelleRequest(
+            ILogger<LoggedCreateSelleRequest> logger,
             IPipelineNode<
                 ICreateSelleRequestContract, 
                 ICreateSelleResultContract> nextNode)

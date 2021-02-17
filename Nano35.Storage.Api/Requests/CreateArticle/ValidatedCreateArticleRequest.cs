@@ -1,37 +1,39 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
+﻿using System.Threading.Tasks;
 using Nano35.Contracts.Storage.Artifacts;
 
 namespace Nano35.Storage.Api.Requests.CreateArticle
 {
-    public class CreateArticleLogger :
+    public class CreateArticleValidatorErrorResult : 
+        ICreateArticleErrorResultContract
+    {
+        public string Message { get; set; }
+    }
+    
+    public class ValidatedCreateArticleRequest:
         IPipelineNode<
             ICreateArticleRequestContract,
             ICreateArticleResultContract>
     {
-        private readonly ILogger<CreateArticleLogger> _logger;
         private readonly IPipelineNode<
             ICreateArticleRequestContract, 
             ICreateArticleResultContract> _nextNode;
 
-        public CreateArticleLogger(
-            ILogger<CreateArticleLogger> logger,
+        public ValidatedCreateArticleRequest(
             IPipelineNode<
                 ICreateArticleRequestContract,
                 ICreateArticleResultContract> nextNode)
         {
             _nextNode = nextNode;
-            _logger = logger;
         }
 
         public async Task<ICreateArticleResultContract> Ask(
             ICreateArticleRequestContract input)
         {
-            _logger.LogInformation($"CreateArticleLogger starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input);
-            _logger.LogInformation($"CreateArticleLogger ends on: {DateTime.Now}");
-            return result;
+            if (false)
+            {
+                return new CreateArticleValidatorErrorResult() {Message = "Ошибка валидации"};
+            }
+            return await _nextNode.Ask(input);
         }
     }
 }

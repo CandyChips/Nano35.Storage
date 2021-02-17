@@ -9,12 +9,12 @@ namespace Nano35.Storage.Api.Requests.CreateCancellation
         public string Message { get; set; }
     }
     
-    public class CreateCancellationValidator:
+    public class ValidatedCreateCancellationRequest:
         IPipelineNode<ICreateCancellationRequestContract, ICreateCancellationResultContract>
     {
         private readonly IPipelineNode<ICreateCancellationRequestContract, ICreateCancellationResultContract> _nextNode;
 
-        public CreateCancellationValidator(
+        public ValidatedCreateCancellationRequest(
             IPipelineNode<ICreateCancellationRequestContract, ICreateCancellationResultContract> nextNode)
         {
             _nextNode = nextNode;

@@ -1,39 +1,37 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Storage.Artifacts;
 
 namespace Nano35.Storage.Api.Requests.CreateMove
 {
-    public class CreateMoveValidatorErrorResult : 
-        ICreateMoveErrorResultContract
-    {
-        public string Message { get; set; }
-    }
-    
-    public class CreateMoveValidator:
+    public class LoggedCreateMoveRequest :
         IPipelineNode<
-            ICreateMoveRequestContract,
+            ICreateMoveRequestContract, 
             ICreateMoveResultContract>
     {
+        private readonly ILogger<LoggedCreateMoveRequest> _logger;
         private readonly IPipelineNode<
             ICreateMoveRequestContract, 
             ICreateMoveResultContract> _nextNode;
 
-        public CreateMoveValidator(
+        public LoggedCreateMoveRequest(
+            ILogger<LoggedCreateMoveRequest> logger,
             IPipelineNode<
                 ICreateMoveRequestContract, 
                 ICreateMoveResultContract> nextNode)
         {
             _nextNode = nextNode;
+            _logger = logger;
         }
 
         public async Task<ICreateMoveResultContract> Ask(
             ICreateMoveRequestContract input)
         {
-            if (false)
-            {
-                return new CreateMoveValidatorErrorResult() {Message = "Ошибка валидации"};
-            }
-            return await _nextNode.Ask(input);
+            _logger.LogInformation($"CreateMoveLogger starts on: {DateTime.Now}");
+            var result = await _nextNode.Ask(input);
+            _logger.LogInformation($"CreateMoveLogger ends on: {DateTime.Now}");
+            return result;
         }
     }
 }

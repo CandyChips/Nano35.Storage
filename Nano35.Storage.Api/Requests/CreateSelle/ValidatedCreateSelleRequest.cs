@@ -9,7 +9,7 @@ namespace Nano35.Storage.Api.Requests.CreateSelle
         public string Message { get; set; }
     }
     
-    public class CreateSelleValidator:
+    public class ValidatedCreateSelleRequest:
         IPipelineNode<
             ICreateSelleRequestContract, 
             ICreateSelleResultContract>
@@ -18,7 +18,7 @@ namespace Nano35.Storage.Api.Requests.CreateSelle
             ICreateSelleRequestContract,
             ICreateSelleResultContract> _nextNode;
 
-        public CreateSelleValidator(
+        public ValidatedCreateSelleRequest(
             IPipelineNode<
                 ICreateSelleRequestContract,
                 ICreateSelleResultContract> nextNode)
