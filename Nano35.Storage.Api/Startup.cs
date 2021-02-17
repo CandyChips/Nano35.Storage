@@ -21,7 +21,6 @@ namespace Nano35.Storage.Api
         public void ConfigureServices(IServiceCollection services)
         {
             new Configurator(services, new AuthenticationConfiguration()).Configure();
-            new Configurator(services, new ConfigurationOfAuthStateProvider()).Configure();
             new Configurator(services, new CorsConfiguration()).Configure();
             new Configurator(services, new SwaggerConfiguration()).Configure();
             new Configurator(services, new MassTransitConfiguration()).Configure();

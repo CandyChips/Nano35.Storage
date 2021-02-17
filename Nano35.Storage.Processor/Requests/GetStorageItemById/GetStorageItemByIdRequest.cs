@@ -31,7 +31,7 @@ namespace Nano35.Storage.Processor.Requests.GetStorageItemById
             CancellationToken cancellationToken)
         {
             var result = (await _context.StorageItems
-                    .FirstOrDefaultAsync(c => c.Id == input.Id, cancellationToken: cancellationToken))
+                .FirstOrDefaultAsync(c => c.Id == input.Id, cancellationToken: cancellationToken))
                 .MapTo<IStorageItemViewModel>();
 
             return new GetStorageItemByIdSuccessResultContract() {Data = result};

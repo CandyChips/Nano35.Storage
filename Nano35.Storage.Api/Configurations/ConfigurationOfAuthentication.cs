@@ -1,5 +1,6 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Nano35.Contracts;
@@ -34,6 +35,8 @@ namespace Nano35.Storage.Api.Configurations
                         ValidateLifetime = false
                     };
                 });
+            services.AddScoped<ICustomAuthStateProvider, CookiesAuthStateProvider>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
     }
 }

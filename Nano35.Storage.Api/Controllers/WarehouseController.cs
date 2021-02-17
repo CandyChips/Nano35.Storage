@@ -4,12 +4,18 @@ using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Storage.Artifacts;
+using Nano35.Storage.Api.HttpContext;
 using Nano35.Storage.Api.Requests.CreateCancellation;
 using Nano35.Storage.Api.Requests.CreateComing;
 using Nano35.Storage.Api.Requests.CreateMove;
+using Nano35.Storage.Api.Requests.CreateSelle;
 using Nano35.Storage.Api.Requests.GetAllComings;
 using Nano35.Storage.Api.Requests.GetComingDetailsById;
-using Nano35.Storage.HttpContext;
+using CreateCancellationHttpContext = Nano35.Storage.Api.HttpContext.CreateCancellationHttpContext;
+using CreateComingHttpContext = Nano35.Storage.Api.HttpContext.CreateComingHttpContext;
+using CreateMoveHttpContext = Nano35.Storage.Api.HttpContext.CreateMoveHttpContext;
+using GetAllComingsHttpContext = Nano35.Storage.Api.HttpContext.GetAllComingsHttpContext;
+using GetComingDetailsByIdHttpContext = Nano35.Storage.Api.HttpContext.GetComingDetailsByIdHttpContext;
 
 namespace Nano35.Storage.Api.Controllers
 {
@@ -42,6 +48,7 @@ namespace Nano35.Storage.Api.Controllers
         [HttpPost]
         [Route("CreateComing")]
         public async Task<IActionResult> CreateComing(
+            [FromHeader] CreateComingHttpContext.CreateComingHeader header,
             [FromBody] CreateComingHttpContext.CreateComingBody body)
         {
             // Setup configuration of pipeline
@@ -50,8 +57,8 @@ namespace Nano35.Storage.Api.Controllers
             
             var message = new CreateComingHttpContext.CreateComingRequest()
             {
-                NewId = body.NewId,
-                InstanceId = body.InstanceId,
+                NewId = header.NewId,
+                InstanceId = header.InstanceId,
                 Number = body.Number,
                 UnitId = body.UnitId,
                 Comment = body.Comment,
@@ -139,12 +146,12 @@ namespace Nano35.Storage.Api.Controllers
         {
             var request = new CreateMoveHttpContext.CreateMoveRequest()
             {
-                Details = body.Details,
-                FromUnitId = body.FromUnitId,
-                InstanceId = header.InstanceId,
                 NewId = header.NewId,
-                Number = body.Number,
+                InstanceId = header.InstanceId,
+                FromUnitId = body.FromUnitId,
                 ToUnitId = body.ToUnitId,
+                Details = body.Details,
+                Number = body.Number,
             };
             
             // Setup configuration of pipeline
@@ -166,6 +173,50 @@ namespace Nano35.Storage.Api.Controllers
                 ICreateMoveErrorResultContract error => BadRequest(error.Message),
                 _ => BadRequest()
             };
+        }
+        
+        [HttpPost]
+        [Route("CreateSelle")]
+        public async Task<IActionResult> CreateSelle(
+            [FromHeader] CreateSelleHttpContext.CreateSelleHeader header,
+            [FromBody] CreateSelleHttpContext.CreateSelleBody body)
+        {
+            var request = new CreateSelleHttpContext.CreateSelleRequest()
+            {
+                Details = body.Details,
+                UnitId = body.UnitId,
+                InstanceId = header.InstanceId,
+                NewId = header.NewId,
+                Number = body.Number,
+                ClientId = body.ClientId,
+            };
+            
+            // Setup configuration of pipeline
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<LoggedCreateSelleRequest>)_services.GetService(typeof(ILogger<LoggedCreateSelleRequest>));
+            
+            // Send request to pipeline
+            var result = 
+                await new LoggedCreateSelleRequest(logger,
+                    new ValidatedCreateSelleRequest(
+                        new CreateSelleRequest(bus)
+                    )).Ask(request);
+            
+            // Check response of get all instances request
+            // You can check result by result contracts
+            return result switch
+            {
+                ICreateSelleSuccessResultContract success => Ok(),
+                ICreateSelleErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
+        }
+
+        [HttpGet]
+        [Route("GetAllSells")]
+        public async Task<IActionResult> GetAllSells()
+        {
+            
         }
         
         [HttpPost]

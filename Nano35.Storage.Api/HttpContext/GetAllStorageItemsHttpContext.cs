@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Nano35.Contracts.Storage.Artifacts;
 
-namespace Nano35.Storage.HttpContext
+namespace Nano35.Storage.Api.HttpContext
 {
     public class GetAllStorageItemsHttpContext
     {
@@ -33,10 +33,15 @@ namespace Nano35.Storage.HttpContext
             public Guid StorageItemId { get; set; }
             public double Price { get; set; }
         }
-        public class CreateComingBody
+
+        public class CreateComingHeader
         {
             public Guid NewId { get; set; }
             public Guid InstanceId { get; set; }
+        }
+        
+        public class CreateComingBody
+        {
             public Guid UnitId { get; set; }
             public string Number { get; set; }
             public string Comment { get; set; }
@@ -53,6 +58,33 @@ namespace Nano35.Storage.HttpContext
             public string Comment { get; set; }
             public Guid ClientId { get; set; }
             public IEnumerable<ICreateComingRequestContract.ICreateComingDetailViewModel> Details { get; set; }
+        }
+    }
+    
+    
+    public class CreateSelleHttpContext 
+    {
+        public class CreateSelleRequest :
+            ICreateSelleRequestContract
+        {
+            public Guid NewId { get; set; }
+            public Guid InstanceId { get; set; }
+            public Guid UnitId { get; set; }
+            public string Number { get; set; }
+            public Guid ClientId { get; set; }
+            public IEnumerable<ICreateSelleRequestContract.ICreateSelleDetailViewModel> Details { get; set; }
+        }
+        public class CreateSelleHeader
+        {
+            public Guid NewId { get; set; }
+            public Guid InstanceId { get; set; }
+        }
+        public class CreateSelleBody
+        {
+            public Guid UnitId { get; set; }
+            public string Number { get; set; }
+            public Guid ClientId { get; set; }
+            public IEnumerable<ICreateSelleRequestContract.ICreateSelleDetailViewModel> Details { get; set; }
         }
     }
 }

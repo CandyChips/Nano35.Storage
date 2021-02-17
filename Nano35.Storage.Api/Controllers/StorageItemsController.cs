@@ -9,7 +9,10 @@ using Nano35.Storage.Api.Requests.GetAllStorageItemConditions;
 using Nano35.Storage.Api.Requests.GetAllStorageItems;
 using Nano35.Storage.Api.Requests.GetComingDetailsById;
 using Nano35.Storage.Api.Requests.GetStorageItemById;
-using Nano35.Storage.HttpContext;
+using CreateStorageItemHttpContext = Nano35.Storage.Api.HttpContext.CreateStorageItemHttpContext;
+using GetAllStorageItemConditionsHttpContext = Nano35.Storage.Api.HttpContext.GetAllStorageItemConditionsHttpContext;
+using GetAllStorageItemsHttpContext = Nano35.Storage.Api.HttpContext.GetAllStorageItemsHttpContext;
+using GetStorageItemByIdHttpContext = Nano35.Storage.Api.HttpContext.GetStorageItemByIdHttpContext;
 
 namespace Nano35.Storage.Api.Controllers
 {

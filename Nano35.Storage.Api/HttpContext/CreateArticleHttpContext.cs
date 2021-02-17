@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Contracts.Storage.Models;
 
-namespace Nano35.Storage.HttpContext
+namespace Nano35.Storage.Api.HttpContext
 {
     public class SpecHttpContext :
         ISpecVievModel

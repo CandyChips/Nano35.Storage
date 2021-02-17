@@ -11,7 +11,13 @@ using Nano35.Storage.Api.Requests.GetAllArticleCategories;
 using Nano35.Storage.Api.Requests.GetAllArticleModels;
 using Nano35.Storage.Api.Requests.GetAllArticles;
 using Nano35.Storage.Api.Requests.GetArticleById;
-using Nano35.Storage.HttpContext;
+using CreateArticleHttpContext = Nano35.Storage.Api.HttpContext.CreateArticleHttpContext;
+using CreateCategoryHttpContext = Nano35.Storage.Api.HttpContext.CreateCategoryHttpContext;
+using GetAllArticlesBrandsHttpContext = Nano35.Storage.Api.HttpContext.GetAllArticlesBrandsHttpContext;
+using GetAllArticlesCategoriesHttpContext = Nano35.Storage.Api.HttpContext.GetAllArticlesCategoriesHttpContext;
+using GetAllArticlesHttpContext = Nano35.Storage.Api.HttpContext.GetAllArticlesHttpContext;
+using GetAllArticlesModelsHttpContext = Nano35.Storage.Api.HttpContext.GetAllArticlesModelsHttpContext;
+using GetArticleByIdHttpContext = Nano35.Storage.Api.HttpContext.GetArticleByIdHttpContext;
 
 namespace Nano35.Storage.Api.Controllers
 {

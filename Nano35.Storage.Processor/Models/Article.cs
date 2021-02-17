@@ -25,7 +25,7 @@ namespace Nano35.Storage.Processor.Models
 
         public override string ToString()
         {
-            return $"{Category.Name} {Brand} {Model}";
+            return $"{Category} {Brand} {Model}";
         }
     }
 
@@ -68,7 +68,7 @@ namespace Nano35.Storage.Processor.Models
                 .ForMember(dest => dest.Id, source => source
                     .MapFrom(source => source.Id))
                 .ForMember(dest => dest.Category, source => source
-                    .MapFrom(source => source.Category.Name))
+                    .MapFrom(source => source.Category.ToString()))
                 .ForMember(dest => dest.Brand, source => source
                     .MapFrom(source => source.Brand))
                 .ForMember(dest => dest.Model, source => source
