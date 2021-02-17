@@ -4,48 +4,48 @@ using MassTransit;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Storage.Processor.Requests.GetAllArticle;
-using Nano35.Storage.Processor.Requests.GetAllComings;
+using Nano35.Storage.Processor.Requests.GetComingDetailsById;
 using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.Consumers
 {
-    public class GetAllComingsConsumer : 
-        IConsumer<IGetAllComingsRequestContract>
+    public class GetComingDetailsByIdConsumer : 
+        IConsumer<IGetComingDetailsByIdRequestContract>
     {
         private readonly IServiceProvider _services;
         
-        public GetAllComingsConsumer(
+        public GetComingDetailsByIdConsumer(
             IServiceProvider services)
         {
             _services = services;
         }
         
         public async Task Consume(
-            ConsumeContext<IGetAllComingsRequestContract> context)
+            ConsumeContext<IGetComingDetailsByIdRequestContract> context)
         {
             // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
             var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<GetAllComingsLogger>) _services.GetService(typeof(ILogger<GetAllComingsLogger>));
+            var logger = (ILogger<GetComingDetailsByIdLogger>) _services.GetService(typeof(ILogger<GetComingDetailsByIdLogger>));
 
             // Explore message of request
             var message = context.Message;
 
             // Send request to pipeline
             var result =
-                await new GetAllComingsLogger(logger,
-                    new GetAllComingsValidator(
-                        new GetAllComingsRequest(dbContext, bus))
+                await new GetComingDetailsByIdLogger(logger,
+                    new GetComingDetailsByIdValidator(
+                        new GetComingDetailsByIdRequest(dbContext, bus))
                 ).Ask(message, context.CancellationToken);
             
             // Check response of create article request
             switch (result)
             {
-                case IGetAllComingsSuccessResultContract:
-                    await context.RespondAsync<IGetAllComingsSuccessResultContract>(result);
+                case IGetComingDetailsByIdSuccessResultContract:
+                    await context.RespondAsync<IGetComingDetailsByIdSuccessResultContract>(result);
                     break;
-                case IGetAllComingsErrorResultContract:
-                    await context.RespondAsync<IGetAllComingsErrorResultContract>(result);
+                case IGetComingDetailsByIdErrorResultContract:
+                    await context.RespondAsync<IGetComingDetailsByIdErrorResultContract>(result);
                     break;
             }
         }

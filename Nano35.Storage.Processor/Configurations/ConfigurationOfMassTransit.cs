@@ -3,6 +3,7 @@ using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 using Nano35.Contracts;
 using Nano35.Contracts.Identity.Artifacts;
+using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Storage.Processor.Consumers;
 
 namespace Nano35.Storage.Processor.Configurations
@@ -103,6 +104,11 @@ namespace Nano35.Storage.Processor.Configurations
                     {
                         e.Consumer<GetAllComingsConsumer>(provider);
                     });
+
+                    cfg.ReceiveEndpoint("IGetComingDetailsByIdRequestContract", e =>
+                    {
+                        e.Consumer<GetComingDetailsByIdConsumer>(provider);
+                    });
                 }));
                 x.AddConsumer<CreateArticleConsumer>();
                 x.AddConsumer<CreateStorageItemConsumer>();
@@ -120,6 +126,11 @@ namespace Nano35.Storage.Processor.Configurations
                 x.AddConsumer<CreateMoveConsumer>();
                 x.AddConsumer<CreateSelleConsumer>();
                 x.AddConsumer<GetAllComingsConsumer>();
+                x.AddConsumer<GetComingDetailsByIdConsumer>();
+                
+                x.AddRequestClient<IGetClientByIdRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IGetClientByIdRequestContract"));
+                
+                x.AddRequestClient<IGetUnitByIdRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IGetUnitByIdRequestContract"));
                 
                 x.AddRequestClient<IGetUserByIdRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IGetUserByIdRequestContract"));
             });

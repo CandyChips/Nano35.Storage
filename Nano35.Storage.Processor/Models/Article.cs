@@ -22,6 +22,11 @@ namespace Nano35.Storage.Processor.Models
         
         // Foreign keys
         public Category Category { get; set; }
+
+        public override string ToString()
+        {
+            return $"{Category.Name} {Brand} {Model}";
+        }
     }
 
     public class ArticlesFluentContext

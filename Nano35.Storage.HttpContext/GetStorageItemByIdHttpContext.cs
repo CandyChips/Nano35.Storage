@@ -8,4 +8,10 @@ namespace Nano35.Storage.HttpContext
     {
         public Guid Id { get; set; }
     }
+    
+    public class GetComingDetailsByIdHttpContext :
+        IGetComingDetailsByIdRequestContract
+    {
+        public Guid Id { get; set; }
+    }
 }

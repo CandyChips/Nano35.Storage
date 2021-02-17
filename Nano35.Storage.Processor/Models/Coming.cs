@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Nano35.Contracts;
@@ -20,6 +21,13 @@ namespace Nano35.Storage.Processor.Models
         public Guid CashOperationId { get; set; }
         
         // Foreign keys
+        
+        public ICollection<ComingDetail> Details { get; set; }
+
+        public Coming()
+        {
+            Details = new List<ComingDetail>();
+        }
     }
 
     public class ComingFluentContext

@@ -26,6 +26,11 @@ namespace Nano35.Storage.Processor.Models
         
         public Guid ConditionId { get; set; }
         public StorageItemCondition Condition { get; set; }
+
+        public override string ToString()
+        {
+            return $"{Article}, {Condition.Name}";
+        }
     }
 
     public class StorageItemsFluentContext

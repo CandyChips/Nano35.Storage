@@ -53,18 +53,20 @@ namespace Nano35.Storage.Processor.Requests.CreateComing
             {
                 if(_context.Warehouses
                     .Any(a =>
+                        a.Name == item.PlaceOnStorage &&
                         a.StorageItemId == item.StorageItemId && 
                         a.UnitId == input.UnitId))
                 {
                     var wh = (await _context.Warehouses
                         .FirstOrDefaultAsync(a =>
+                            a.Name == item.PlaceOnStorage &&
                             a.StorageItemId == item.StorageItemId &&
                             a.UnitId == input.UnitId, cancellationToken: cancellationToken));
                     wh.Count += item.Count;
                 }
                 else
                 {
-                    await _context.Warehouses.AddAsync(new WarehouseByItemOnStorage()
+                    var warehouse = new WarehouseByItemOnStorage()
                     {
                         Count = item.Count,
                         InstanceId = input.InstanceId,
@@ -72,7 +74,8 @@ namespace Nano35.Storage.Processor.Requests.CreateComing
                         Name = item.PlaceOnStorage,
                         StorageItemId = item.StorageItemId,
                         UnitId = input.UnitId
-                    }, cancellationToken);
+                    };
+                    await _context.Warehouses.AddAsync(warehouse, cancellationToken);
                 }
             }
 

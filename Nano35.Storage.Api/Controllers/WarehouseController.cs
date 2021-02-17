@@ -8,6 +8,7 @@ using Nano35.Storage.Api.Requests.CreateCancellation;
 using Nano35.Storage.Api.Requests.CreateComing;
 using Nano35.Storage.Api.Requests.CreateMove;
 using Nano35.Storage.Api.Requests.GetAllComings;
+using Nano35.Storage.Api.Requests.GetComingDetailsById;
 using Nano35.Storage.HttpContext;
 
 namespace Nano35.Storage.Api.Controllers
@@ -41,7 +42,7 @@ namespace Nano35.Storage.Api.Controllers
         [HttpPost]
         [Route("CreateComing")]
         public async Task<IActionResult> CreateComing(
-            CreateComingHttpContext.CreateComingBody body)
+            [FromBody] CreateComingHttpContext.CreateComingBody body)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
@@ -71,6 +72,31 @@ namespace Nano35.Storage.Api.Controllers
             {
                 ICreateComingSuccessResultContract success => Ok(),
                 ICreateComingErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
+        }
+    
+        [HttpGet]
+        [Route("GetComingDetailsById")]
+        public async Task<IActionResult> GetComingDetailsById(
+            [FromQuery] GetComingDetailsByIdHttpContext query)
+        {
+            // Setup configuration of pipeline
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<GetComingDetailsByIdLogger>)_services.GetService(typeof(ILogger<GetComingDetailsByIdLogger>));
+            
+            // Send request to pipeline
+            var result = 
+                await new GetComingDetailsByIdLogger(logger,
+                    new GetComingDetailsByIdValidator(
+                        new GetComingDetailsByIdRequest(bus)
+                    )).Ask(query);
+            
+            // Check response of get all instances request
+            return result switch
+            {
+                IGetComingDetailsByIdSuccessResultContract success => Ok(success),
+                IGetComingDetailsByIdErrorResultContract error => BadRequest(error.Message),
                 _ => BadRequest()
             };
         }

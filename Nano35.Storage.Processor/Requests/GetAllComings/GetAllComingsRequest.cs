@@ -1,9 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using MassTransit;
+using Microsoft.EntityFrameworkCore;
+using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Contracts.Storage.Models;
+using Nano35.Storage.Processor.Models;
 using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.Requests.GetAllComings
@@ -14,11 +19,14 @@ namespace Nano35.Storage.Processor.Requests.GetAllComings
             IGetAllComingsResultContract>
     {
         private readonly ApplicationContext _context;
+        private readonly IBus _bus;
 
         public GetAllComingsRequest(
-            ApplicationContext context)
+            ApplicationContext context, 
+            IBus bus)
         {
             _context = context;
+            _bus = bus;
         }
         
         private class GetAllComingsSuccessResultContract : 
@@ -27,22 +35,34 @@ namespace Nano35.Storage.Processor.Requests.GetAllComings
             public IEnumerable<IComingViewModel> Data { get; set; }
         }
         
+        private class ComingImpl : IComingViewModel
+        {
+            public Guid Id { get; set; }
+            public string Number { get; set; }
+            public DateTime Date { get; set; }
+            public string Unit { get; set; }
+            public string Client { get; set; }
+            public double Cash { get; set; }
+        }
+
         public async Task<IGetAllComingsResultContract> Ask
             (IGetAllComingsRequestContract input, CancellationToken cancellationToken)
         {
             var result = await _context
                 .Comings
                 .Where(c => c.InstanceId == input.InstanceId)
-                .MapAllToAsync<IComingViewModel>();
+                .Select(a =>
+                    new ComingImpl()
+                    {
+                        Id = a.Id,
+                        Number = a.Number,
+                        Date = a.Date,
+                        Cash = a.Details
+                            .Select(f => f.Price * f.Count)
+                            .Sum()
+                    })
+                .ToListAsync(cancellationToken);
             
-            result.ForEach(e =>
-            {
-                e.Details = _context.ComingDetails
-                    .Where(w => 
-                        w.ComingId == e.Id)
-                    .MapAllTo<IComingDetailViewModel>();
-            });
-
             return new GetAllComingsSuccessResultContract() {Data = result};
         }
     }   

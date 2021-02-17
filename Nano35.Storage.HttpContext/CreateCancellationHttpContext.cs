@@ -22,6 +22,7 @@ namespace Nano35.Storage.HttpContext
             public class CancellationDetail :
                 ICreateCancellationRequestContract.ICreateCancellationDetailViewModel
             {
+                public Guid NewId { get; set; }
                 public int Count { get; set; }
                 public string PlaceOnStorage { get; set; }
                 public Guid StorageItemId { get; set; }

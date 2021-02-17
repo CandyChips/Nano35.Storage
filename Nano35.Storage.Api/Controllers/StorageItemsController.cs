@@ -7,6 +7,7 @@ using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Storage.Api.Requests.CreateStorageItem;
 using Nano35.Storage.Api.Requests.GetAllStorageItemConditions;
 using Nano35.Storage.Api.Requests.GetAllStorageItems;
+using Nano35.Storage.Api.Requests.GetComingDetailsById;
 using Nano35.Storage.Api.Requests.GetStorageItemById;
 using Nano35.Storage.HttpContext;
 
@@ -108,7 +109,7 @@ namespace Nano35.Storage.Api.Controllers
                 await new GetStorageItemByIdLogger(logger,
                     new GetStorageItemByIdValidator(
                         new GetStorageItemByIdRequest(bus)
-                        )).Ask(query);
+                    )).Ask(query);
             
             // Check response of get all instances request
             return result switch
@@ -118,7 +119,6 @@ namespace Nano35.Storage.Api.Controllers
                 _ => BadRequest()
             };
         }
-
         [HttpPost]
         [Route("CreateStorageItem")]
         public async Task<IActionResult> CreateStorageItem(

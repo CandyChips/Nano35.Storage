@@ -26,7 +26,7 @@ namespace Nano35.Storage.Api.Requests.GetAllStorageItems
             
             var response = await client
                 .GetResponse<IGetAllStorageItemsSuccessResultContract, IGetAllStorageItemsErrorResultContract>(input);
-            
+
             if (response.Is(out Response<IGetAllStorageItemsSuccessResultContract> successResponse))
                 return successResponse.Message;
             
