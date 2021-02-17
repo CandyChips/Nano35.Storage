@@ -1,39 +1,37 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Storage.Artifacts;
 
 namespace Nano35.Storage.Api.Requests.GetAllComings
 {
-    public class GetAllComingsValidatorErrorResult : 
-        IGetAllComingsErrorResultContract
-    {
-        public string Message { get; set; }
-    }
-    
-    public class GetAllComingsValidator:
+    public class LoggedGetAllComingsRequest :
         IPipelineNode<
             IGetAllComingsRequestContract, 
             IGetAllComingsResultContract>
     {
+        private readonly ILogger<LoggedGetAllComingsRequest> _logger;
         private readonly IPipelineNode<
-            IGetAllComingsRequestContract, 
+            IGetAllComingsRequestContract,
             IGetAllComingsResultContract> _nextNode;
 
-        public GetAllComingsValidator(
+        public LoggedGetAllComingsRequest(
+            ILogger<LoggedGetAllComingsRequest> logger,
             IPipelineNode<
                 IGetAllComingsRequestContract,
                 IGetAllComingsResultContract> nextNode)
         {
             _nextNode = nextNode;
+            _logger = logger;
         }
 
         public async Task<IGetAllComingsResultContract> Ask(
             IGetAllComingsRequestContract input)
         {
-            if (false)
-            {
-                return new GetAllComingsValidatorErrorResult() {Message = "Ошибка валидации"};
-            }
-            return await _nextNode.Ask(input);
+            _logger.LogInformation($"GetAllComingsLogger starts on: {DateTime.Now}");
+            var result = await _nextNode.Ask(input);
+            _logger.LogInformation($"GetAllComingsLogger ends on: {DateTime.Now}");
+            return result;
         }
     }
 }

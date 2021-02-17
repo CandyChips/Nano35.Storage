@@ -5,18 +5,18 @@ using Nano35.Contracts.Storage.Artifacts;
 
 namespace Nano35.Storage.Api.Requests.CreateStorageItem
 {
-    public class CreateStorageItemLogger :
+    public class LoggedCreateStorageItemRequest :
         IPipelineNode<
             ICreateStorageItemRequestContract, 
             ICreateStorageItemResultContract>
     {
-        private readonly ILogger<CreateStorageItemLogger> _logger;
+        private readonly ILogger<LoggedCreateStorageItemRequest> _logger;
         private readonly IPipelineNode<
             ICreateStorageItemRequestContract, 
             ICreateStorageItemResultContract> _nextNode;
 
-        public CreateStorageItemLogger(
-            ILogger<CreateStorageItemLogger> logger,
+        public LoggedCreateStorageItemRequest(
+            ILogger<LoggedCreateStorageItemRequest> logger,
             IPipelineNode<
                 ICreateStorageItemRequestContract, 
                 ICreateStorageItemResultContract> nextNode)

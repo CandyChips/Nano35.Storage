@@ -59,13 +59,13 @@ namespace Nano35.Storage.Api.Controllers
             // ToDo Hey Maslyonok
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<GetAllArticlesLogger>)_services.GetService(typeof(ILogger<GetAllArticlesLogger>));
+            var logger = (ILogger<LoggedGetAllArticlesRequest>)_services.GetService(typeof(ILogger<LoggedGetAllArticlesRequest>));
             
             // ToDo Hey Maslyonok
             // Send request to pipeline
             var result = 
-                await new GetAllArticlesLogger(logger,
-                    new GetAllArticlesValidator(
+                await new LoggedGetAllArticlesRequest(logger,
+                    new ValidatedGetAllArticlesRequest(
                         new GetAllArticlesRequest(bus)
                         )).Ask(query);
             
@@ -87,12 +87,12 @@ namespace Nano35.Storage.Api.Controllers
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<GetAllArticlesModelsLogger>)_services.GetService(typeof(ILogger<GetAllArticlesModelsLogger>));
+            var logger = (ILogger<LoggedGetAllArticlesModelsRequest>)_services.GetService(typeof(ILogger<LoggedGetAllArticlesModelsRequest>));
             
             // Send request to pipeline
             var result = 
-                await new GetAllArticlesModelsLogger(logger,
-                    new GetAllArticlesModelsValidator(
+                await new LoggedGetAllArticlesModelsRequest(logger,
+                    new ValidatedGetAllArticlesModelsRequest(
                         new GetAllArticlesModelsRequest(bus)
                         )).Ask(query);
             
@@ -113,12 +113,12 @@ namespace Nano35.Storage.Api.Controllers
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<GetAllArticlesBrandsLogger>)_services.GetService(typeof(ILogger<GetAllArticlesBrandsLogger>));
+            var logger = (ILogger<LoggedGetAllArticlesBrandsRequest>)_services.GetService(typeof(ILogger<LoggedGetAllArticlesBrandsRequest>));
             
             // Send request to pipeline
             var result = 
-                await new GetAllArticlesBrandsLogger(logger,
-                    new GetAllArticlesBrandsValidator(
+                await new LoggedGetAllArticlesBrandsRequest(logger,
+                    new ValidatedGetAllArticlesBrandsRequest(
                         new GetAllArticlesBrandsRequest(bus)
                         )).Ask(query);
             
@@ -139,12 +139,12 @@ namespace Nano35.Storage.Api.Controllers
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<GetAllArticlesCategoriesLogger>)_services.GetService(typeof(ILogger<GetAllArticlesCategoriesLogger>));
+            var logger = (ILogger<LoggedGetAllArticlesCategoriesRequest>)_services.GetService(typeof(ILogger<LoggedGetAllArticlesCategoriesRequest>));
             
             // Send request to pipeline
             var result = 
-                await new GetAllArticlesCategoriesLogger(logger,
-                    new GetAllArticlesCategoriesValidator(
+                await new LoggedGetAllArticlesCategoriesRequest(logger,
+                    new ValidatedGetAllArticlesCategoriesRequest(
                         new GetAllArticlesCategoriesRequest(bus)
                         )).Ask(query);
             
@@ -165,12 +165,12 @@ namespace Nano35.Storage.Api.Controllers
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<GetArticleByIdLogger>)_services.GetService(typeof(ILogger<GetArticleByIdLogger>));
+            var logger = (ILogger<LoggedGetArticleByIdRequest>)_services.GetService(typeof(ILogger<LoggedGetArticleByIdRequest>));
             
             // Send request to pipeline
             var result = 
-                await new GetArticleByIdLogger(logger,
-                    new GetArticleByIdValidator(
+                await new LoggedGetArticleByIdRequest(logger,
+                    new ValidatedGetArticleByIdRequest(
                         new GetArticleByIdRequest(bus)
                         )).Ask(query);
             
@@ -191,12 +191,12 @@ namespace Nano35.Storage.Api.Controllers
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<CreateArticleLogger>)_services.GetService(typeof(ILogger<CreateArticleLogger>));
+            var logger = (ILogger<LoggedCreateArticleRequest>)_services.GetService(typeof(ILogger<LoggedCreateArticleRequest>));
             
             // Send request to pipeline
             var result = 
-                await new CreateArticleLogger(logger,
-                    new CreateArticleValidator(
+                await new LoggedCreateArticleRequest(logger,
+                    new ValidatedCreateArticleRequest(
                         new CreateArticleRequest(bus)
                         )).Ask(query);
             
@@ -217,12 +217,12 @@ namespace Nano35.Storage.Api.Controllers
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<CreateCategoryLogger>)_services.GetService(typeof(ILogger<CreateCategoryLogger>));
+            var logger = (ILogger<LoggedCreateCategoryRequest>)_services.GetService(typeof(ILogger<LoggedCreateCategoryRequest>));
             
             // Send request to pipeline
             var result = 
-                await new CreateCategoryLogger(logger,
-                    new CreateCategoryValidator(
+                await new LoggedCreateCategoryRequest(logger,
+                    new ValidatedCreateCategoryRequest(
                         new CreateCategoryRequest(bus)
                         )).Ask(query);
             

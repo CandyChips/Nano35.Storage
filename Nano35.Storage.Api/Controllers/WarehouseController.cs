@@ -46,7 +46,7 @@ namespace Nano35.Storage.Api.Controllers
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<CreateComingLogger>)_services.GetService(typeof(ILogger<CreateComingLogger>));
+            var logger = (ILogger<LoggedCreateComingRequest>)_services.GetService(typeof(ILogger<LoggedCreateComingRequest>));
             
             var message = new CreateComingHttpContext.CreateComingRequest()
             {
@@ -61,8 +61,8 @@ namespace Nano35.Storage.Api.Controllers
             
             // Send request to pipeline
             var result = 
-                await new CreateComingLogger(logger,
-                    new CreateComingValidator(
+                await new LoggedCreateComingRequest(logger,
+                    new ValidatedCreateComingRequest(
                         new CreateComingRequest(bus)
                     )).Ask(message);
             
@@ -115,11 +115,11 @@ namespace Nano35.Storage.Api.Controllers
             };
             
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<GetAllComingsLogger>)_services.GetService(typeof(ILogger<GetAllComingsLogger>));
+            var logger = (ILogger<LoggedGetAllComingsRequest>)_services.GetService(typeof(ILogger<LoggedGetAllComingsRequest>));
             
             var result = 
-                await new GetAllComingsLogger(logger,
-                    new GetAllComingsValidator(
+                await new LoggedGetAllComingsRequest(logger,
+                    new ValidatedGetAllComingsRequest(
                         new GetAllComingsRequest(bus)
                     )).Ask(request);
             
@@ -149,12 +149,12 @@ namespace Nano35.Storage.Api.Controllers
             
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<CreateMoveLogger>)_services.GetService(typeof(ILogger<CreateMoveLogger>));
+            var logger = (ILogger<LoggedCreateMoveRequest>)_services.GetService(typeof(ILogger<LoggedCreateMoveRequest>));
             
             // Send request to pipeline
             var result = 
-                await new CreateMoveLogger(logger,
-                    new CreateMoveValidator(
+                await new LoggedCreateMoveRequest(logger,
+                    new ValidatedCreateMoveRequest(
                         new CreateMoveRequest(bus)
                     )).Ask(request);
             
@@ -186,12 +186,12 @@ namespace Nano35.Storage.Api.Controllers
             
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<CreateCancellationLogger>)_services.GetService(typeof(ILogger<CreateCancellationLogger>));
+            var logger = (ILogger<LoggedCreateCancellationRequest>)_services.GetService(typeof(ILogger<LoggedCreateCancellationRequest>));
             
             // Send request to pipeline
             var result = 
-                await new CreateCancellationLogger(logger,
-                    new CreateCancellationValidator(
+                await new LoggedCreateCancellationRequest(logger,
+                    new ValidatedCreateCancellationRequest(
                         new CreateCancellationRequest(bus)
                     )).Ask(request);
             

@@ -9,7 +9,7 @@ namespace Nano35.Storage.Api.Requests.CreateComing
         public string Message { get; set; }
     }
     
-    public class CreateComingValidator:
+    public class ValidatedCreateComingRequest:
         IPipelineNode<
             ICreateComingRequestContract, 
             ICreateComingResultContract>
@@ -18,7 +18,7 @@ namespace Nano35.Storage.Api.Requests.CreateComing
             ICreateComingRequestContract, 
             ICreateComingResultContract> _nextNode;
 
-        public CreateComingValidator(
+        public ValidatedCreateComingRequest(
             IPipelineNode<
                 ICreateComingRequestContract,
                 ICreateComingResultContract> nextNode)

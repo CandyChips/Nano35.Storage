@@ -9,7 +9,7 @@ namespace Nano35.Storage.Api.Requests.GetAllStorageItems
         public string Message { get; set; }
     }
     
-    public class GetAllStorageItemsValidator:
+    public class ValidatedGetAllStorageItemsRequest:
         IPipelineNode<
             IGetAllStorageItemsRequestContract,
             IGetAllStorageItemsResultContract>
@@ -18,7 +18,7 @@ namespace Nano35.Storage.Api.Requests.GetAllStorageItems
             IGetAllStorageItemsRequestContract, 
             IGetAllStorageItemsResultContract> _nextNode;
 
-        public GetAllStorageItemsValidator(
+        public ValidatedGetAllStorageItemsRequest(
             IPipelineNode<
                 IGetAllStorageItemsRequestContract,
                 IGetAllStorageItemsResultContract> nextNode)

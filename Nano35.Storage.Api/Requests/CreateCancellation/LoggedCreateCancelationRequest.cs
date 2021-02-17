@@ -5,14 +5,14 @@ using Nano35.Contracts.Storage.Artifacts;
 
 namespace Nano35.Storage.Api.Requests.CreateCancellation
 {
-    public class CreateCancellationLogger :
+    public class LoggedCreateCancellationRequest :
         IPipelineNode<ICreateCancellationRequestContract, ICreateCancellationResultContract>
     {
-        private readonly ILogger<CreateCancellationLogger> _logger;
+        private readonly ILogger<LoggedCreateCancellationRequest> _logger;
         private readonly IPipelineNode<ICreateCancellationRequestContract, ICreateCancellationResultContract> _nextNode;
 
-        public CreateCancellationLogger(
-            ILogger<CreateCancellationLogger> logger,
+        public LoggedCreateCancellationRequest(
+            ILogger<LoggedCreateCancellationRequest> logger,
             IPipelineNode<ICreateCancellationRequestContract, ICreateCancellationResultContract> nextNode)
         {
             _nextNode = nextNode;
