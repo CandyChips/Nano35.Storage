@@ -7,26 +7,26 @@ namespace Nano35.Storage.Api.Requests.GetCancellationDetails
 {
     public class LoggedGetCancellationDetailsRequest :
         IPipelineNode<
-            IGetCancellationDetailsRequestContract, 
-            IGetCancellationDetailsResultContract>
+            IGetCancellationDetailsByIdRequestContract, 
+            IGetCancellationDetailsByIdResultContract>
     {
         private readonly ILogger<LoggedGetCancellationDetailsRequest> _logger;
         private readonly IPipelineNode<
-            IGetCancellationDetailsRequestContract,
-            IGetCancellationDetailsResultContract> _nextNode;
+            IGetCancellationDetailsByIdRequestContract,
+            IGetCancellationDetailsByIdResultContract> _nextNode;
 
         public LoggedGetCancellationDetailsRequest(
             ILogger<LoggedGetCancellationDetailsRequest> logger,
             IPipelineNode<
-                IGetCancellationDetailsRequestContract,
-                IGetCancellationDetailsResultContract> nextNode)
+                IGetCancellationDetailsByIdRequestContract,
+                IGetCancellationDetailsByIdResultContract> nextNode)
         {
             _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<IGetCancellationDetailsResultContract> Ask(
-            IGetCancellationDetailsRequestContract input)
+        public async Task<IGetCancellationDetailsByIdResultContract> Ask(
+            IGetCancellationDetailsByIdRequestContract input)
         {
             _logger.LogInformation($"GetCancellationDetailsLogger starts on: {DateTime.Now}");
             var result = await _nextNode.Ask(input);

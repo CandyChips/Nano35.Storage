@@ -90,12 +90,12 @@ namespace Nano35.Storage.Api.Controllers
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<GetComingDetailsByIdLogger>)_services.GetService(typeof(ILogger<GetComingDetailsByIdLogger>));
+            var logger = (ILogger<LoggedGetComingDetailsByIdRequest>)_services.GetService(typeof(ILogger<LoggedGetComingDetailsByIdRequest>));
             
             // Send request to pipeline
             var result = 
-                await new GetComingDetailsByIdLogger(logger,
-                    new GetComingDetailsByIdValidator(
+                await new LoggedGetComingDetailsByIdRequest(logger,
+                    new ValidatedGetComingDetailsByIdRequest(
                         new GetComingDetailsByIdRequest(bus)
                     )).Ask(query);
             

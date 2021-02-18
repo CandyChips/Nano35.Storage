@@ -3,36 +3,36 @@ using Nano35.Contracts.Storage.Artifacts;
 
 namespace Nano35.Storage.Api.Requests.GetSelleDetails
 {
-    public class GetSelleDetailsValidatorErrorResult : 
+    public class GetSelleDetailsByIdValidatorErrorResult : 
             
-        IGetSelleDetailsErrorResultContract
+        IGetSelleDetailsByIdErrorResultContract
     {
         public string Message { get; set; }
     }
     
     public class ValidatedGetSelleDetailsRequest:
         IPipelineNode<
-            IGetSelleDetailsRequestContract, 
-            IGetSelleDetailsResultContract>
+            IGetSelleDetailsByIdRequestContract, 
+            IGetSelleDetailsByIdResultContract>
     {
         private readonly IPipelineNode<
-            IGetSelleDetailsRequestContract, 
-            IGetSelleDetailsResultContract> _nextNode;
+            IGetSelleDetailsByIdRequestContract, 
+            IGetSelleDetailsByIdResultContract> _nextNode;
 
         public ValidatedGetSelleDetailsRequest(
             IPipelineNode<
-                IGetSelleDetailsRequestContract,
-                IGetSelleDetailsResultContract> nextNode)
+                IGetSelleDetailsByIdRequestContract,
+                IGetSelleDetailsByIdResultContract> nextNode)
         {
             _nextNode = nextNode;
         }
 
-        public async Task<IGetSelleDetailsResultContract> Ask(
-            IGetSelleDetailsRequestContract input)
+        public async Task<IGetSelleDetailsByIdResultContract> Ask(
+            IGetSelleDetailsByIdRequestContract input)
         {
             if (false)
             {
-                return new GetSelleDetailsValidatorErrorResult() {Message = "Ошибка валидации"};
+                return new GetSelleDetailsByIdValidatorErrorResult() {Message = "Ошибка валидации"};
             }
             return await _nextNode.Ask(input);
         }

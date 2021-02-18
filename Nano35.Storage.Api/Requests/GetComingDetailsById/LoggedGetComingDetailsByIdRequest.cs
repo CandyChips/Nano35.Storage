@@ -6,18 +6,18 @@ using Nano35.Contracts.Storage.Artifacts;
 
 namespace Nano35.Storage.Api.Requests.GetComingDetailsById
 {
-    public class GetComingDetailsByIdLogger :
+    public class LoggedGetComingDetailsByIdRequest :
         IPipelineNode<
             IGetComingDetailsByIdRequestContract, 
             IGetComingDetailsByIdResultContract>
     {
-        private readonly ILogger<GetComingDetailsByIdLogger> _logger;
+        private readonly ILogger<LoggedGetComingDetailsByIdRequest> _logger;
         private readonly IPipelineNode<
             IGetComingDetailsByIdRequestContract,
             IGetComingDetailsByIdResultContract> _nextNode;
 
-        public GetComingDetailsByIdLogger(
-            ILogger<GetComingDetailsByIdLogger> logger,
+        public LoggedGetComingDetailsByIdRequest(
+            ILogger<LoggedGetComingDetailsByIdRequest> logger,
             IPipelineNode<
                 IGetComingDetailsByIdRequestContract,
                 IGetComingDetailsByIdResultContract> nextNode)

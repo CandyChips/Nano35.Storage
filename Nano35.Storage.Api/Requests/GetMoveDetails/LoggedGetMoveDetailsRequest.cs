@@ -7,26 +7,26 @@ namespace Nano35.Storage.Api.Requests.GetMoveDetails
 {
     public class LoggedGetMoveDetailsRequest :
         IPipelineNode<
-            IGetMoveDetailsRequestContract, 
-            IGetMoveDetailsResultContract>
+            IGetMoveDetailsByIdRequestContract, 
+            IGetMoveDetailsByIdResultContract>
     {
         private readonly ILogger<LoggedGetMoveDetailsRequest> _logger;
         private readonly IPipelineNode<
-            IGetMoveDetailsRequestContract,
-            IGetMoveDetailsResultContract> _nextNode;
+            IGetMoveDetailsByIdRequestContract,
+            IGetMoveDetailsByIdResultContract> _nextNode;
 
         public LoggedGetMoveDetailsRequest(
             ILogger<LoggedGetMoveDetailsRequest> logger,
             IPipelineNode<
-                IGetMoveDetailsRequestContract,
-                IGetMoveDetailsResultContract> nextNode)
+                IGetMoveDetailsByIdRequestContract,
+                IGetMoveDetailsByIdResultContract> nextNode)
         {
             _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<IGetMoveDetailsResultContract> Ask(
-            IGetMoveDetailsRequestContract input)
+        public async Task<IGetMoveDetailsByIdResultContract> Ask(
+            IGetMoveDetailsByIdRequestContract input)
         {
             _logger.LogInformation($"GetMoveDetailsLogger starts on: {DateTime.Now}");
             var result = await _nextNode.Ask(input);

@@ -33,12 +33,12 @@ namespace Nano35.Storage.Processor.Requests.GetCancellationDetailsById
         private class GetCancellationDetailsByIdSuccessResultContract : 
             IGetCancellationDetailsByIdSuccessResultContract
         {
-            Guid Id { get; set; }
-            string Number { get; set; }
-            DateTime Date { get; set; }
-            IUnitViewModel Unit { get; set; }
-            IClientViewModel Client { get; set; }
-            IEnumerable<ICancellationDetailViewModel> Details { get; set; }
+            public Guid Id { get; set; }
+            public string Number { get; set; }
+            public DateTime Date { get; set; }
+            public IUnitViewModel Unit { get; set; }
+            public IClientViewModel Client { get; set; }
+            public IEnumerable<ICancellationDetailViewModel> Details { get; set; }
         }
         
         private class ComingDetailImpl : ICancellationDetailViewModel

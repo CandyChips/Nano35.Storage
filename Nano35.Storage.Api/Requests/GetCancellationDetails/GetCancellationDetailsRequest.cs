@@ -9,8 +9,8 @@ namespace Nano35.Storage.Api.Requests.GetCancellationDetails
 {
     public class GetCancellationDetailsRequest :
         IPipelineNode<
-            IGetCancellationDetailsRequestContract,
-            IGetCancellationDetailsResultContract>
+            IGetCancellationDetailsByIdRequestContract,
+            IGetCancellationDetailsByIdResultContract>
     {
         private readonly IBus _bus;
         public GetCancellationDetailsRequest(
@@ -19,18 +19,18 @@ namespace Nano35.Storage.Api.Requests.GetCancellationDetails
             _bus = bus;
         }
         
-        public async Task<IGetCancellationDetailsResultContract> Ask(
-            IGetCancellationDetailsRequestContract input)
+        public async Task<IGetCancellationDetailsByIdResultContract> Ask(
+            IGetCancellationDetailsByIdRequestContract input)
         {
-            var client = _bus.CreateRequestClient<IGetCancellationDetailsRequestContract>(TimeSpan.FromSeconds(10));
+            var client = _bus.CreateRequestClient<IGetCancellationDetailsByIdRequestContract>(TimeSpan.FromSeconds(10));
             
             var response = await client
-                .GetResponse<IGetCancellationDetailsSuccessResultContract, IGetCancellationDetailsErrorResultContract>(input);
+                .GetResponse<IGetCancellationDetailsByIdSuccessResultContract, IGetCancellationDetailsByIdErrorResultContract>(input);
             
-            if (response.Is(out Response<IGetCancellationDetailsSuccessResultContract> successResponse))
+            if (response.Is(out Response<IGetCancellationDetailsByIdSuccessResultContract> successResponse))
                 return successResponse.Message;
             
-            if (response.Is(out Response<IGetCancellationDetailsErrorResultContract> errorResponse))
+            if (response.Is(out Response<IGetCancellationDetailsByIdErrorResultContract> errorResponse))
                 return errorResponse.Message;
             
             throw new InvalidOperationException();

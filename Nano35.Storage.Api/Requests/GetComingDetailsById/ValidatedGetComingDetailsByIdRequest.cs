@@ -10,7 +10,7 @@ namespace Nano35.Storage.Api.Requests.GetComingDetailsById
         public string Message { get; set; }
     }
     
-    public class GetComingDetailsByIdValidator:
+    public class ValidatedGetComingDetailsByIdRequest:
         IPipelineNode<
             IGetComingDetailsByIdRequestContract, 
             IGetComingDetailsByIdResultContract>
@@ -19,7 +19,7 @@ namespace Nano35.Storage.Api.Requests.GetComingDetailsById
             IGetComingDetailsByIdRequestContract, 
             IGetComingDetailsByIdResultContract> _nextNode;
 
-        public GetComingDetailsByIdValidator(
+        public ValidatedGetComingDetailsByIdRequest(
             IPipelineNode<
                 IGetComingDetailsByIdRequestContract,
                 IGetComingDetailsByIdResultContract> nextNode)

@@ -9,8 +9,8 @@ namespace Nano35.Storage.Api.Requests.GetMoveDetails
 {
     public class GetMoveDetailsRequest :
         IPipelineNode<
-            IGetMoveDetailsRequestContract,
-            IGetMoveDetailsResultContract>
+            IGetMoveDetailsByIdRequestContract,
+            IGetMoveDetailsByIdResultContract>
     {
         private readonly IBus _bus;
         public GetMoveDetailsRequest(
@@ -19,18 +19,18 @@ namespace Nano35.Storage.Api.Requests.GetMoveDetails
             _bus = bus;
         }
         
-        public async Task<IGetMoveDetailsResultContract> Ask(
-            IGetMoveDetailsRequestContract input)
+        public async Task<IGetMoveDetailsByIdResultContract> Ask(
+            IGetMoveDetailsByIdRequestContract input)
         {
-            var client = _bus.CreateRequestClient<IGetMoveDetailsRequestContract>(TimeSpan.FromSeconds(10));
+            var client = _bus.CreateRequestClient<IGetMoveDetailsByIdRequestContract>(TimeSpan.FromSeconds(10));
             
             var response = await client
-                .GetResponse<IGetMoveDetailsSuccessResultContract, IGetMoveDetailsErrorResultContract>(input);
+                .GetResponse<IGetMoveDetailsByIdSuccessResultContract, IGetMoveDetailsByIdErrorResultContract>(input);
             
-            if (response.Is(out Response<IGetMoveDetailsSuccessResultContract> successResponse))
+            if (response.Is(out Response<IGetMoveDetailsByIdSuccessResultContract> successResponse))
                 return successResponse.Message;
             
-            if (response.Is(out Response<IGetMoveDetailsErrorResultContract> errorResponse))
+            if (response.Is(out Response<IGetMoveDetailsByIdErrorResultContract> errorResponse))
                 return errorResponse.Message;
             
             throw new InvalidOperationException();

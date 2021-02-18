@@ -3,36 +3,36 @@ using Nano35.Contracts.Storage.Artifacts;
 
 namespace Nano35.Storage.Api.Requests.GetMoveDetails
 {
-    public class GetMoveDetailsValidatorErrorResult : 
+    public class GetMoveDetailsByIdValidatorErrorResult : 
             
-        IGetMoveDetailsErrorResultContract
+        IGetMoveDetailsByIdErrorResultContract
     {
         public string Message { get; set; }
     }
     
     public class ValidatedGetMoveDetailsRequest:
         IPipelineNode<
-            IGetMoveDetailsRequestContract, 
-            IGetMoveDetailsResultContract>
+            IGetMoveDetailsByIdRequestContract, 
+            IGetMoveDetailsByIdResultContract>
     {
         private readonly IPipelineNode<
-            IGetMoveDetailsRequestContract, 
-            IGetMoveDetailsResultContract> _nextNode;
+            IGetMoveDetailsByIdRequestContract, 
+            IGetMoveDetailsByIdResultContract> _nextNode;
 
         public ValidatedGetMoveDetailsRequest(
             IPipelineNode<
-                IGetMoveDetailsRequestContract,
-                IGetMoveDetailsResultContract> nextNode)
+                IGetMoveDetailsByIdRequestContract,
+                IGetMoveDetailsByIdResultContract> nextNode)
         {
             _nextNode = nextNode;
         }
 
-        public async Task<IGetMoveDetailsResultContract> Ask(
-            IGetMoveDetailsRequestContract input)
+        public async Task<IGetMoveDetailsByIdResultContract> Ask(
+            IGetMoveDetailsByIdRequestContract input)
         {
             if (false)
             {
-                return new GetMoveDetailsValidatorErrorResult() {Message = "Ошибка валидации"};
+                return new GetMoveDetailsByIdValidatorErrorResult() {Message = "Ошибка валидации"};
             }
             return await _nextNode.Ask(input);
         }

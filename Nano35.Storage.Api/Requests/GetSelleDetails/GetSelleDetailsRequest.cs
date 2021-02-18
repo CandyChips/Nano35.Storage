@@ -9,8 +9,8 @@ namespace Nano35.Storage.Api.Requests.GetSelleDetails
 {
     public class GetSelleDetailsRequest :
         IPipelineNode<
-            IGetSelleDetailsRequestContract,
-            IGetSelleDetailsResultContract>
+            IGetSelleDetailsByIdRequestContract,
+            IGetSelleDetailsByIdResultContract>
     {
         private readonly IBus _bus;
         public GetSelleDetailsRequest(
@@ -19,18 +19,18 @@ namespace Nano35.Storage.Api.Requests.GetSelleDetails
             _bus = bus;
         }
         
-        public async Task<IGetSelleDetailsResultContract> Ask(
-            IGetSelleDetailsRequestContract input)
+        public async Task<IGetSelleDetailsByIdResultContract> Ask(
+            IGetSelleDetailsByIdRequestContract input)
         {
-            var client = _bus.CreateRequestClient<IGetSelleDetailsRequestContract>(TimeSpan.FromSeconds(10));
+            var client = _bus.CreateRequestClient<IGetSelleDetailsByIdRequestContract>(TimeSpan.FromSeconds(10));
             
             var response = await client
-                .GetResponse<IGetSelleDetailsSuccessResultContract, IGetSelleDetailsErrorResultContract>(input);
+                .GetResponse<IGetSelleDetailsByIdSuccessResultContract, IGetSelleDetailsByIdErrorResultContract>(input);
             
-            if (response.Is(out Response<IGetSelleDetailsSuccessResultContract> successResponse))
+            if (response.Is(out Response<IGetSelleDetailsByIdSuccessResultContract> successResponse))
                 return successResponse.Message;
             
-            if (response.Is(out Response<IGetSelleDetailsErrorResultContract> errorResponse))
+            if (response.Is(out Response<IGetSelleDetailsByIdErrorResultContract> errorResponse))
                 return errorResponse.Message;
             
             throw new InvalidOperationException();

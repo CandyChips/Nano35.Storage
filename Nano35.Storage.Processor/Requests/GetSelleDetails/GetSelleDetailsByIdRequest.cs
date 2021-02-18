@@ -33,22 +33,20 @@ namespace Nano35.Storage.Processor.Requests.GetSelleDetailsById
         private class GetSelleDetailsByIdSuccessResultContract : 
             IGetSelleDetailsByIdSuccessResultContract
         {
-            Guid Id { get; set; }
-            string Number { get; set; }
-            DateTime Date { get; set; }
-            IUnitViewModel Unit { get; set; }
-            IClientViewModel Client { get; set; }
-            IEnumerable<ISelleDetailViewModel> Details { get; set; }
+            public Guid Id { get; set; }
+            public string Number { get; set; }
+            public DateTime Date { get; set; }
+            public IUnitViewModel Unit { get; set; }
+            public IClientViewModel Client { get; set; }
+            public IEnumerable<ISelleDetailViewModel> Details { get; set; }
         }
         
         private class ComingImpl : ISelleDetailViewModel
         {
-            public Guid Id { get; set; }
-            public string Number { get; set; }
-            public DateTime Date { get; set; }
-            public string Unit { get; set; }
-            public string Client { get; set; }
-            public double Cash { get; set; }
+            public int Count { get; set; }
+            public string PlaceOnStorage { get; set; }
+            public string StorageItem { get; set; }
+            public double Price { get; set; }
         }
 
         public async Task<IGetSelleDetailsByIdResultContract> Ask

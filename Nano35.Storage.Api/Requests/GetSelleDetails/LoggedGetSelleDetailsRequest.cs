@@ -7,26 +7,26 @@ namespace Nano35.Storage.Api.Requests.GetSelleDetails
 {
     public class LoggedGetSelleDetailsRequest :
         IPipelineNode<
-            IGetSelleDetailsRequestContract, 
-            IGetSelleDetailsResultContract>
+            IGetSelleDetailsByIdRequestContract, 
+            IGetSelleDetailsByIdResultContract>
     {
         private readonly ILogger<LoggedGetSelleDetailsRequest> _logger;
         private readonly IPipelineNode<
-            IGetSelleDetailsRequestContract,
-            IGetSelleDetailsResultContract> _nextNode;
+            IGetSelleDetailsByIdRequestContract,
+            IGetSelleDetailsByIdResultContract> _nextNode;
 
         public LoggedGetSelleDetailsRequest(
             ILogger<LoggedGetSelleDetailsRequest> logger,
             IPipelineNode<
-                IGetSelleDetailsRequestContract,
-                IGetSelleDetailsResultContract> nextNode)
+                IGetSelleDetailsByIdRequestContract,
+                IGetSelleDetailsByIdResultContract> nextNode)
         {
             _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<IGetSelleDetailsResultContract> Ask(
-            IGetSelleDetailsRequestContract input)
+        public async Task<IGetSelleDetailsByIdResultContract> Ask(
+            IGetSelleDetailsByIdRequestContract input)
         {
             _logger.LogInformation($"GetSelleDetailsLogger starts on: {DateTime.Now}");
             var result = await _nextNode.Ask(input);

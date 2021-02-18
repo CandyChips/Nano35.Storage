@@ -31,14 +31,14 @@ namespace Nano35.Storage.Processor.Requests.GetMoveDetailsById
         }
         
         private class GetMoveDetailsByIdSuccessResultContract : 
-            IGetMoveDetailsByIdByIdSuccessResultContract
+            IGetMoveDetailsByIdSuccessResultContract
         {
-            Guid Id { get; set; }
-            string Number { get; set; }
-            DateTime Date { get; set; }
-            IUnitViewModel Unit { get; set; }
-            IClientViewModel Client { get; set; }
-            IEnumerable<IMoveDetailViewModel> Details { get; set; }
+            public Guid Id { get; set; }
+            public string Number { get; set; }
+            public DateTime Date { get; set; }
+            public IUnitViewModel Unit { get; set; }
+            public IClientViewModel Client { get; set; }
+            public IEnumerable<IMoveDetailViewModel> Details { get; set; }
         }
         
         private class ComingImpl : IMoveDetailViewModel
