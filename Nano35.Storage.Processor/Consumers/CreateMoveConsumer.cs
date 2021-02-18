@@ -25,16 +25,16 @@ namespace Nano35.Storage.Processor.Consumers
         {
             // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<CreateMoveLogger>) _services.GetService(typeof(ILogger<CreateMoveLogger>));
+            var logger = (ILogger<LoggedCreateMoveRequest>) _services.GetService(typeof(ILogger<LoggedCreateMoveRequest>));
 
             // Explore message of request
             var message = context.Message;
 
             // Send request to pipeline
             var result =
-                await new CreateMoveLogger(logger,
-                    new CreateMoveValidator(
-                        new CreateMoveTransaction(dbContext,
+                await new LoggedCreateMoveRequest(logger,
+                    new ValidatedCreateMoveRequest(
+                        new TransactedCreateMoveRequest(dbContext,
                             new CreateMoveRequest(dbContext)))
                 ).Ask(message, context.CancellationToken);
             

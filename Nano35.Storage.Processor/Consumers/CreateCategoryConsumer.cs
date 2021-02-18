@@ -23,16 +23,16 @@ namespace Nano35.Storage.Processor.Consumers
         {
             // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<CreateCategoryLogger>) _services.GetService(typeof(ILogger<CreateCategoryLogger>));
+            var logger = (ILogger<LoggedCreateCategoryRequest>) _services.GetService(typeof(ILogger<LoggedCreateCategoryRequest>));
 
             // Explore message of request
             var message = context.Message;
 
             // Send request to pipeline
             var result =
-                await new CreateCategoryLogger(logger,
-                    new CreateCategoryValidator(
-                        new CreateCategoryTransaction(dbContext,
+                await new LoggedCreateCategoryRequest(logger,
+                    new ValidatedCreateCategoryRequest(
+                        new TransactedCreateCategoryRequest(dbContext,
                             new CreateCategoryRequest(dbContext)))
                 ).Ask(message, context.CancellationToken);
             

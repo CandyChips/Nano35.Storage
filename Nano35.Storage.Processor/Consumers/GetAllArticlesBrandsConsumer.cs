@@ -24,15 +24,15 @@ namespace Nano35.Storage.Processor.Consumers
         {
             // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<GetAllArticlesBrandsLogger>) _services.GetService(typeof(ILogger<GetAllArticlesBrandsLogger>));
+            var logger = (ILogger<LoggedGetAllArticlesBrandsRequest>) _services.GetService(typeof(ILogger<LoggedGetAllArticlesBrandsRequest>));
 
             // Explore message of request
             var message = context.Message;
 
             // Send request to pipeline
             var result =
-                await new GetAllArticlesBrandsLogger(logger,
-                    new GetAllArticlesBrandsValidator(
+                await new LoggedGetAllArticlesBrandsRequest(logger,
+                    new ValidatedGetAllArticlesBrandsRequest(
                         new GetAllArticlesBrandsRequest(dbContext))
                 ).Ask(message, context.CancellationToken);
             

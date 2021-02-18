@@ -26,15 +26,15 @@ namespace Nano35.Storage.Processor.Consumers
             // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
             var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<GetAllComingsLogger>) _services.GetService(typeof(ILogger<GetAllComingsLogger>));
+            var logger = (ILogger<LoggedGetAllComingsRequest>) _services.GetService(typeof(ILogger<LoggedGetAllComingsRequest>));
 
             // Explore message of request
             var message = context.Message;
 
             // Send request to pipeline
             var result =
-                await new GetAllComingsLogger(logger,
-                    new GetAllComingsValidator(
+                await new LoggedGetAllComingsRequest(logger,
+                    new ValidatedGetAllComingsRequest(
                         new GetAllComingsRequest(dbContext, bus))
                 ).Ask(message, context.CancellationToken);
             

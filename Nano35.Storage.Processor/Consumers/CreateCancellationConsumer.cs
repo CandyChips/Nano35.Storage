@@ -24,16 +24,16 @@ namespace Nano35.Storage.Processor.Consumers
         {
             // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<CreateCancellationLogger>) _services.GetService(typeof(ILogger<CreateCancellationLogger>));
+            var logger = (ILogger<LoggedCreateCancellatioRequest>) _services.GetService(typeof(ILogger<LoggedCreateCancellatioRequest>));
 
             // Explore message of request
             var message = context.Message;
 
             // Send request to pipeline
             var result =
-                await new CreateCancellationLogger(logger,
-                    new CreateCancellationValidator(
-                        new CreateCancellationTransaction(dbContext,
+                await new LoggedCreateCancellatioRequest(logger,
+                    new ValidatedCreateCancellationRequest(
+                        new TransactedCreateCancellationRequest(dbContext,
                             new CreateCancellationRequest(dbContext)))
                 ).Ask(message, context.CancellationToken);
             

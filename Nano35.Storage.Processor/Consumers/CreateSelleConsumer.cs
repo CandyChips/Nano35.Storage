@@ -24,16 +24,16 @@ namespace Nano35.Storage.Processor.Consumers
         {
             // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<CreateSelleLogger>) _services.GetService(typeof(ILogger<CreateSelleLogger>));
+            var logger = (ILogger<LoggedCreateSelleRequest>) _services.GetService(typeof(ILogger<LoggedCreateSelleRequest>));
 
             // Explore message of request
             var message = context.Message;
 
             // Send request to pipeline
             var result =
-                await new CreateSelleLogger(logger,
-                    new CreateSelleValidator(
-                        new CreateSelleTransaction(dbContext,
+                await new LoggedCreateSelleRequest(logger,
+                    new ValidatedCreateSelleRequest(
+                        new TransactedCreateSelleRequest(dbContext,
                             new CreateSelleRequest(dbContext)))
                 ).Ask(message, context.CancellationToken);
             
