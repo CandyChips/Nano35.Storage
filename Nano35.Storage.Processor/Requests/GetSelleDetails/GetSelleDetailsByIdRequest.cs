@@ -53,8 +53,6 @@ namespace Nano35.Storage.Processor.Requests.GetSelleDetailsById
             (IGetSelleDetailsByIdRequestContract input, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
-            
-            return new GetSelleDetailsByIdSuccessResultContract() {Data = result};
         }
     }   
 }

@@ -49,8 +49,6 @@ namespace Nano35.Storage.Processor.Requests.GetAllMoves
             (IGetAllMovesRequestContract input, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
-            
-            return new GetAllMovesSuccessResultContract() {Data = result};
         }
     }   
 }

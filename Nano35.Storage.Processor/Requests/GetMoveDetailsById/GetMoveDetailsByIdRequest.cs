@@ -53,8 +53,6 @@ namespace Nano35.Storage.Processor.Requests.GetMoveDetailsById
             (IGetMoveDetailsByIdRequestContract input, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
-            
-            return new GetMoveDetailsByIdSuccessResultContract() {Data = result};
         }
     }   
 }

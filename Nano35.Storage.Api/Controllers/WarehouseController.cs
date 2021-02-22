@@ -216,7 +216,7 @@ namespace Nano35.Storage.Api.Controllers
         [Route("GetAllSells")]
         public async Task<IActionResult> GetAllSells()
         {
-            
+            return Ok();
         }
         
         [HttpPost]

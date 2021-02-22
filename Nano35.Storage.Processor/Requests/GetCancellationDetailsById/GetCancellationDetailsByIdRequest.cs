@@ -52,8 +52,6 @@ namespace Nano35.Storage.Processor.Requests.GetCancellationDetailsById
             (IGetCancellationDetailsByIdRequestContract input, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
-            
-            return new GetCancellationDetailsByIdSuccessResultContract() {Data = result};
         }
     }   
 }

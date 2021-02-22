@@ -8,12 +8,12 @@
 
 ### of Nano35.Shop.Api
 
-    docker build -t bushemi2021/nano35.instance.api:latest ./Nano35.Instance.Api
-    docker push bushemi2021/nano35.instance.api:latest
+    docker build -t bushemi2021/nano35.storage.api:latest ./Nano35.Storage.Api
+    docker push bushemi2021/nano35.storage.api:latest
 
 ### of Nano35.Shop.Processor
 
-    docker build -t bushemi2021/nano35.instance.processor:latest ./Nano35.Instance.Processor
-    docker push bushemi2021/nano35.instance.processor:latest
+    docker build -t bushemi2021/nano35.storage.processor:latest ./Nano35.Storage.Processor
+    docker push bushemi2021/nano35.storage.processor:latest
 
 ### then restart deployment shop

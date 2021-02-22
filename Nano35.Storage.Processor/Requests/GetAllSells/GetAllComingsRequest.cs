@@ -49,8 +49,6 @@ namespace Nano35.Storage.Processor.Requests.GetAllSells
             (IGetAllSellsRequestContract input, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
-            
-            return new GetAllSellsSuccessResultContract() {Data = result};
         }
     }   
 }
