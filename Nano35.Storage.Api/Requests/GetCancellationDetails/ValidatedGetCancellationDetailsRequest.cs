@@ -10,7 +10,7 @@ namespace Nano35.Storage.Api.Requests.GetCancellationDetails
         public string Message { get; set; }
     }
     
-    public class ValidatedGetCancellationDetailsRequest:
+    public class ValidatedGetCancellationDetailsByIdRequest:
         IPipelineNode<
             IGetCancellationDetailsByIdRequestContract, 
             IGetCancellationDetailsByIdResultContract>
@@ -19,7 +19,7 @@ namespace Nano35.Storage.Api.Requests.GetCancellationDetails
             IGetCancellationDetailsByIdRequestContract, 
             IGetCancellationDetailsByIdResultContract> _nextNode;
 
-        public ValidatedGetCancellationDetailsRequest(
+        public ValidatedGetCancellationDetailsByIdRequest(
             IPipelineNode<
                 IGetCancellationDetailsByIdRequestContract,
                 IGetCancellationDetailsByIdResultContract> nextNode)

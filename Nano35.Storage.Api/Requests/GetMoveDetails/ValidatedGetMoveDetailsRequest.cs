@@ -10,7 +10,7 @@ namespace Nano35.Storage.Api.Requests.GetMoveDetails
         public string Message { get; set; }
     }
     
-    public class ValidatedGetMoveDetailsRequest:
+    public class ValidatedGetMoveDetailsByIdRequest:
         IPipelineNode<
             IGetMoveDetailsByIdRequestContract, 
             IGetMoveDetailsByIdResultContract>
@@ -19,7 +19,7 @@ namespace Nano35.Storage.Api.Requests.GetMoveDetails
             IGetMoveDetailsByIdRequestContract, 
             IGetMoveDetailsByIdResultContract> _nextNode;
 
-        public ValidatedGetMoveDetailsRequest(
+        public ValidatedGetMoveDetailsByIdRequest(
             IPipelineNode<
                 IGetMoveDetailsByIdRequestContract,
                 IGetMoveDetailsByIdResultContract> nextNode)

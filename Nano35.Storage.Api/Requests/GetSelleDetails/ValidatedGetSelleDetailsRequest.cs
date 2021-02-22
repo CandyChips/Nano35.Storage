@@ -10,7 +10,7 @@ namespace Nano35.Storage.Api.Requests.GetSelleDetails
         public string Message { get; set; }
     }
     
-    public class ValidatedGetSelleDetailsRequest:
+    public class ValidatedGetSelleDetailsByIdRequest:
         IPipelineNode<
             IGetSelleDetailsByIdRequestContract, 
             IGetSelleDetailsByIdResultContract>
@@ -19,7 +19,7 @@ namespace Nano35.Storage.Api.Requests.GetSelleDetails
             IGetSelleDetailsByIdRequestContract, 
             IGetSelleDetailsByIdResultContract> _nextNode;
 
-        public ValidatedGetSelleDetailsRequest(
+        public ValidatedGetSelleDetailsByIdRequest(
             IPipelineNode<
                 IGetSelleDetailsByIdRequestContract,
                 IGetSelleDetailsByIdResultContract> nextNode)

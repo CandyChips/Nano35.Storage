@@ -5,18 +5,18 @@ using Nano35.Contracts.Storage.Artifacts;
 
 namespace Nano35.Storage.Api.Requests.GetMoveDetails
 {
-    public class LoggedGetMoveDetailsRequest :
+    public class LoggedGetMoveDetailsByIdRequest :
         IPipelineNode<
             IGetMoveDetailsByIdRequestContract, 
             IGetMoveDetailsByIdResultContract>
     {
-        private readonly ILogger<LoggedGetMoveDetailsRequest> _logger;
+        private readonly ILogger<LoggedGetMoveDetailsByIdRequest> _logger;
         private readonly IPipelineNode<
             IGetMoveDetailsByIdRequestContract,
             IGetMoveDetailsByIdResultContract> _nextNode;
 
-        public LoggedGetMoveDetailsRequest(
-            ILogger<LoggedGetMoveDetailsRequest> logger,
+        public LoggedGetMoveDetailsByIdRequest(
+            ILogger<LoggedGetMoveDetailsByIdRequest> logger,
             IPipelineNode<
                 IGetMoveDetailsByIdRequestContract,
                 IGetMoveDetailsByIdResultContract> nextNode)
@@ -28,9 +28,9 @@ namespace Nano35.Storage.Api.Requests.GetMoveDetails
         public async Task<IGetMoveDetailsByIdResultContract> Ask(
             IGetMoveDetailsByIdRequestContract input)
         {
-            _logger.LogInformation($"GetMoveDetailsLogger starts on: {DateTime.Now}");
+            _logger.LogInformation($"GetMoveDetailsByIdLogger starts on: {DateTime.Now}");
             var result = await _nextNode.Ask(input);
-            _logger.LogInformation($"GetMoveDetailsLogger ends on: {DateTime.Now}");
+            _logger.LogInformation($"GetMoveDetailsByIdLogger ends on: {DateTime.Now}");
             return result;
         }
     }

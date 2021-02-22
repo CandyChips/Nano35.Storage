@@ -16,4 +16,8 @@ RUN dotnet publish Nano35.Storage.Api.csproj -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+
+RUN apk add --no-cache icu-libs
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
+
 ENTRYPOINT ["dotnet", "Nano35.Storage.Api.dll"]

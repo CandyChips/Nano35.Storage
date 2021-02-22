@@ -29,8 +29,7 @@ namespace Nano35.Storage.Api.HttpContext
     public class GetAllSellsHttpContext
     {
 
-        public class GetAllSellsRequest :
-            IGetAllSellsRequestContract
+        public class GetAllSellsRequest 
         {
             public Guid InstanceId { get; set; }
             public Guid UnitId { get; set; }

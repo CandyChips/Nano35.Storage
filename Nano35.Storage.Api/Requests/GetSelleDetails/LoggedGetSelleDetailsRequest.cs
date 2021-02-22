@@ -5,18 +5,18 @@ using Nano35.Contracts.Storage.Artifacts;
 
 namespace Nano35.Storage.Api.Requests.GetSelleDetails
 {
-    public class LoggedGetSelleDetailsRequest :
+    public class LoggedGetSelleDetailsByIdRequest :
         IPipelineNode<
             IGetSelleDetailsByIdRequestContract, 
             IGetSelleDetailsByIdResultContract>
     {
-        private readonly ILogger<LoggedGetSelleDetailsRequest> _logger;
+        private readonly ILogger<LoggedGetSelleDetailsByIdRequest> _logger;
         private readonly IPipelineNode<
             IGetSelleDetailsByIdRequestContract,
             IGetSelleDetailsByIdResultContract> _nextNode;
 
-        public LoggedGetSelleDetailsRequest(
-            ILogger<LoggedGetSelleDetailsRequest> logger,
+        public LoggedGetSelleDetailsByIdRequest(
+            ILogger<LoggedGetSelleDetailsByIdRequest> logger,
             IPipelineNode<
                 IGetSelleDetailsByIdRequestContract,
                 IGetSelleDetailsByIdResultContract> nextNode)
@@ -28,9 +28,9 @@ namespace Nano35.Storage.Api.Requests.GetSelleDetails
         public async Task<IGetSelleDetailsByIdResultContract> Ask(
             IGetSelleDetailsByIdRequestContract input)
         {
-            _logger.LogInformation($"GetSelleDetailsLogger starts on: {DateTime.Now}");
+            _logger.LogInformation($"GetSelleDetailsByIdLogger starts on: {DateTime.Now}");
             var result = await _nextNode.Ask(input);
-            _logger.LogInformation($"GetSelleDetailsLogger ends on: {DateTime.Now}");
+            _logger.LogInformation($"GetSelleDetailsByIdLogger ends on: {DateTime.Now}");
             return result;
         }
     }
