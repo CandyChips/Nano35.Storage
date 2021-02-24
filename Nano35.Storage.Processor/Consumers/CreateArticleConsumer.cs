@@ -38,7 +38,8 @@ namespace Nano35.Storage.Processor.Consumers
         {
             // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<LoggedCreateArticleRequest>) _services.GetService(typeof(ILogger<LoggedCreateArticleRequest>));
+            var logger = (ILogger<LoggedCreateArticleRequest>) _services
+                .GetService(typeof(ILogger<LoggedCreateArticleRequest>));
 
             // Explore message of request
             var message = context.Message;

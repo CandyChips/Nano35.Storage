@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using MassTransit;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Storage.Artifacts;
-using Nano35.Storage.Processor.Requests.GetAllArticle;
+using Nano35.Storage.Processor.Requests.GetAllArticles;
 using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.Consumers
@@ -24,7 +24,8 @@ namespace Nano35.Storage.Processor.Consumers
         {
             // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<LoggedGetAllArticlesRequest>) _services.GetService(typeof(ILogger<LoggedGetAllArticlesRequest>));
+            var logger = (ILogger<LoggedGetAllArticlesRequest>) _services
+                .GetService(typeof(ILogger<LoggedGetAllArticlesRequest>));
 
             // Explore message of request
             var message = context.Message;

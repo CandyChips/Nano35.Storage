@@ -11,6 +11,12 @@ using Nano35.Storage.Api.Requests.GetAllArticleCategories;
 using Nano35.Storage.Api.Requests.GetAllArticleModels;
 using Nano35.Storage.Api.Requests.GetAllArticles;
 using Nano35.Storage.Api.Requests.GetArticleById;
+using Nano35.Storage.Api.Requests.UpdateArticleBrand;
+using Nano35.Storage.Api.Requests.UpdateArticleCategory;
+using Nano35.Storage.Api.Requests.UpdateArticleInfo;
+using Nano35.Storage.Api.Requests.UpdateArticleModel;
+using Nano35.Storage.Api.Requests.UpdateCategoryName;
+using Nano35.Storage.Api.Requests.UpdateCategoryParentCategoryId;
 using CreateArticleHttpContext = Nano35.Storage.Api.HttpContext.CreateArticleHttpContext;
 using CreateCategoryHttpContext = Nano35.Storage.Api.HttpContext.CreateCategoryHttpContext;
 using GetAllArticlesBrandsHttpContext = Nano35.Storage.Api.HttpContext.GetAllArticlesBrandsHttpContext;
@@ -30,6 +36,40 @@ namespace Nano35.Storage.Api.Controllers
     public class ArticlesController :
         ControllerBase
     {
+        public class UpdateArticleBrandHttpContext : IUpdateArticleBrandRequestContract
+        {
+            public Guid Id { get; set; }
+            public string Brand { get; set; }
+        }
+        public class UpdateArticleCategoryHttpContext : IUpdateArticleCategoryRequestContract
+        {
+            public Guid Id { get; set; }
+            public Guid CategoryId { get; set; }
+        }
+        public class UpdateArticleInfoHttpContext : IUpdateArticleInfoRequestContract
+        {
+            public Guid Id { get; set; }
+            public string Info { get; set; }
+        }
+        public class UpdateArticleModelHttpContext : IUpdateArticleModelRequestContract
+        {
+            public Guid Id { get; set; }
+            public string Model { get; set; }
+        }
+        
+        public class UpdateCategoryNameHttpContext : IUpdateCategoryNameRequestContract
+        {
+            public Guid Id { get; set; }
+            public string Name { get; set; }
+        }
+        
+        public class UpdateCategoryParentCategoryIdHttpContext : IUpdateCategoryParentCategoryIdRequestContract
+        {
+            public Guid Id { get; set; }
+            public Guid ParentCategoryId { get; set; }
+        }
+        
+        
         private readonly IServiceProvider _services;
         
         /// ToDo Hey Maslyonok
@@ -238,6 +278,151 @@ namespace Nano35.Storage.Api.Controllers
             {
                 ICreateCategorySuccessResultContract => Ok(),
                 ICreateCategoryErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
+        }
+
+        [HttpPatch]
+        [Route("UpdateArticleBrand")]
+        public async Task<IActionResult> UpdateArticleBrand(
+            [FromBody] UpdateArticleBrandHttpContext body)
+        {
+            
+            var bus = (IBus) _services.GetService(typeof(IBus));
+            var logger = (ILogger<LoggedUpdateArticleBrandRequest>) _services.GetService(typeof(ILogger<LoggedUpdateArticleBrandRequest>));
+
+            var result =
+                await new LoggedUpdateArticleBrandRequest(logger,  
+                    new ValidatedUpdateArticleBrandRequest(
+                        new UpdateArticleBrandRequest(bus)
+                    )
+                ).Ask(body);
+            
+            return result switch
+            {
+                IUpdateArticleBrandSuccessResultContract => Ok(),
+                IUpdateArticleBrandErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
+        }
+        
+        [HttpPatch]
+        [Route("UpdateArticleCategory")]
+        public async Task<IActionResult> UpdateArticleCategory(
+            [FromBody] UpdateArticleCategoryHttpContext body)
+        {
+            
+            var bus = (IBus) _services.GetService(typeof(IBus));
+            var logger = (ILogger<LoggedUpdateArticleCategoryRequest>) _services.GetService(typeof(ILogger<LoggedUpdateArticleCategoryRequest>));
+
+            var result =
+                await new LoggedUpdateArticleCategoryRequest(logger,  
+                    new ValidatedUpdateArticleCategoryRequest(
+                        new UpdateArticleCategoryRequest(bus)
+                    )
+                ).Ask(body);
+            
+            return result switch
+            {
+                IUpdateArticleCategorySuccessResultContract => Ok(),
+                IUpdateArticleCategoryErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
+        }
+        
+        [HttpPatch]
+        [Route("UpdateArticleInfo")]
+        public async Task<IActionResult> UpdateArticleInfo(
+            [FromBody] UpdateArticleInfoHttpContext body)
+        {
+            
+            var bus = (IBus) _services.GetService(typeof(IBus));
+            var logger = (ILogger<LoggedUpdateArticleInfoRequest>) _services.GetService(typeof(ILogger<LoggedUpdateArticleInfoRequest>));
+
+            var result =
+                await new LoggedUpdateArticleInfoRequest(logger,  
+                    new ValidatedUpdateArticleInfoRequest(
+                        new UpdateArticleInfoRequest(bus)
+                    )
+                ).Ask(body);
+            
+            return result switch
+            {
+                IUpdateArticleInfoSuccessResultContract => Ok(),
+                IUpdateArticleInfoErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
+        }
+        
+        [HttpPatch]
+        [Route("UpdateArticleModel")]
+        public async Task<IActionResult> UpdateArticleModel(
+            [FromBody] UpdateArticleModelHttpContext body)
+        {
+            
+            var bus = (IBus) _services.GetService(typeof(IBus));
+            var logger = (ILogger<LoggedUpdateArticleModelRequest>) _services.GetService(typeof(ILogger<LoggedUpdateArticleModelRequest>));
+
+            var result =
+                await new LoggedUpdateArticleModelRequest(logger,  
+                    new ValidatedUpdateArticleModelRequest(
+                        new UpdateArticleModelRequest(bus)
+                    )
+                ).Ask(body);
+            
+            return result switch
+            {
+                IUpdateArticleModelSuccessResultContract => Ok(),
+                IUpdateArticleModelErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
+        }
+        
+        [HttpPatch]
+        [Route("UpdateCategoryName")]
+        public async Task<IActionResult> UpdateCategoryName(
+            [FromBody] UpdateCategoryNameHttpContext body)
+        {
+            
+            var bus = (IBus) _services.GetService(typeof(IBus));
+            var logger = (ILogger<LoggedUpdateCategoryNameRequest>) _services.GetService(typeof(ILogger<LoggedUpdateCategoryNameRequest>));
+
+            var result =
+                await new LoggedUpdateCategoryNameRequest(logger,  
+                    new ValidatedUpdateCategoryNameRequest(
+                        new UpdateCategoryNameRequest(bus)
+                    )
+                ).Ask(body);
+            
+            return result switch
+            {
+                IUpdateCategoryNameSuccessResultContract => Ok(),
+                IUpdateCategoryNameErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
+        }
+        
+        [HttpPatch]
+        [Route("UpdateCategoryParentCategoryId")]
+        public async Task<IActionResult> UpdateCategoryParentCategoryId(
+            [FromBody] UpdateCategoryParentCategoryIdHttpContext body)
+        {
+            
+            var bus = (IBus) _services.GetService(typeof(IBus));
+            var logger = (ILogger<LoggedUpdateCategoryParentCategoryIdRequest>) _services
+                .GetService(typeof(ILogger<LoggedUpdateCategoryParentCategoryIdRequest>));
+
+            var result =
+                await new LoggedUpdateCategoryParentCategoryIdRequest(logger,  
+                    new ValidatedUpdateCategoryParentCategoryIdRequest(
+                        new UpdateCategoryParentCategoryIdRequest(bus)
+                    )
+                ).Ask(body);
+            
+            return result switch
+            {
+                IUpdateCategoryParentCategoryIdSuccessResultContract => Ok(),
+                IUpdateCategoryParentCategoryIdErrorResultContract error => BadRequest(error.Message),
                 _ => BadRequest()
             };
         }

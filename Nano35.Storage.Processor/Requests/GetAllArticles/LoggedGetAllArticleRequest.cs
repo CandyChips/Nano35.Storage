@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Storage.Artifacts;
 
-namespace Nano35.Storage.Processor.Requests.GetAllArticle
+namespace Nano35.Storage.Processor.Requests.GetAllArticles
 {
     public class LoggedGetAllArticlesRequest :
         IPipelineNode<

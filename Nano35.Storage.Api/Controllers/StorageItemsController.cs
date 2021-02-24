@@ -9,6 +9,12 @@ using Nano35.Storage.Api.Requests.GetAllStorageItemConditions;
 using Nano35.Storage.Api.Requests.GetAllStorageItems;
 using Nano35.Storage.Api.Requests.GetComingDetailsById;
 using Nano35.Storage.Api.Requests.GetStorageItemById;
+using Nano35.Storage.Api.Requests.UpdateStorageItemArticle;
+using Nano35.Storage.Api.Requests.UpdateStorageItemComment;
+using Nano35.Storage.Api.Requests.UpdateStorageItemCondition;
+using Nano35.Storage.Api.Requests.UpdateStorageItemHiddenComment;
+using Nano35.Storage.Api.Requests.UpdateStorageItemPurchasePrice;
+using Nano35.Storage.Api.Requests.UpdateStorageItemRetailPrice;
 using CreateStorageItemHttpContext = Nano35.Storage.Api.HttpContext.CreateStorageItemHttpContext;
 using GetAllStorageItemConditionsHttpContext = Nano35.Storage.Api.HttpContext.GetAllStorageItemConditionsHttpContext;
 using GetAllStorageItemsHttpContext = Nano35.Storage.Api.HttpContext.GetAllStorageItemsHttpContext;
@@ -21,6 +27,38 @@ namespace Nano35.Storage.Api.Controllers
     public class StorageItemsController :
         ControllerBase
     {
+        public class UpdateStorageItemArticleHttpContext : IUpdateStorageItemArticleRequestContract
+        {
+            public Guid Id { get; set; }
+            public Guid ArticleId { get; set; }
+        }
+        
+        public class UpdateStorageItemCommentHttpContext : IUpdateStorageItemCommentRequestContract
+        {
+            public Guid Id { get; set; }
+            public string Comment { get; set; }
+        }
+        public class UpdateStorageItemConditionHttpContext : IUpdateStorageItemConditionRequestContract
+        {
+            public Guid Id { get; set; }
+            public Guid ConditionId { get; set; }
+        }
+        public class UpdateStorageItemHiddenCommentHttpContext : IUpdateStorageItemHiddenCommentRequestContract
+        {
+            public Guid Id { get; set; }
+            public string HiddenComment { get; set; }
+        }
+        public class UpdateStorageItemPurchasePriceHttpContext : IUpdateStorageItemPurchasePriceRequestContract
+        {
+            public Guid Id { get; set; }
+            public decimal PurchasePrice { get; set; }
+        }
+        public class UpdateStorageItemRetailPriceHttpContext : IUpdateStorageItemRetailPriceRequestContract
+        {
+            public Guid Id { get; set; }
+            public decimal RetailPrice { get; set; }
+        }
+        
         private readonly IServiceProvider _services;
 
         /// <summary>
@@ -144,6 +182,156 @@ namespace Nano35.Storage.Api.Controllers
             {
                 ICreateStorageItemSuccessResultContract => Ok(),
                 ICreateStorageItemErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
+        }
+        
+        [HttpPatch]
+        [Route("UpdateStorageItemArticle")]
+        public async Task<IActionResult> UpdateStorageItemArticle(
+            [FromBody] UpdateStorageItemArticleHttpContext body)
+        {
+            
+            var bus = (IBus) _services.GetService(typeof(IBus));
+            var logger = (ILogger<LoggedUpdateStorageItemArticleRequest>) _services
+                .GetService(typeof(ILogger<LoggedUpdateStorageItemArticleRequest>));
+
+            var result =
+                await new LoggedUpdateStorageItemArticleRequest(logger,  
+                    new ValidatedUpdateStorageItemArticleRequest(
+                        new UpdateStorageItemArticleRequest(bus)
+                    )
+                ).Ask(body);
+            
+            return result switch
+            {
+                IUpdateStorageItemArticleSuccessResultContract => Ok(),
+                IUpdateStorageItemArticleErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
+        }
+        
+        [HttpPatch]
+        [Route("UpdateStorageItemComment")]
+        public async Task<IActionResult> UpdateStorageItemComment(
+            [FromBody] UpdateStorageItemCommentHttpContext body)
+        {
+            
+            var bus = (IBus) _services.GetService(typeof(IBus));
+            var logger = (ILogger<LoggedUpdateStorageItemCommentRequest>) _services
+                .GetService(typeof(ILogger<LoggedUpdateStorageItemCommentRequest>));
+
+            var result =
+                await new LoggedUpdateStorageItemCommentRequest(logger,  
+                    new ValidatedUpdateStorageItemCommentRequest(
+                        new UpdateStorageItemCommentRequest(bus)
+                    )
+                ).Ask(body);
+            
+            return result switch
+            {
+                IUpdateStorageItemCommentSuccessResultContract => Ok(),
+                IUpdateStorageItemCommentErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
+        }
+        
+        [HttpPatch]
+        [Route("UpdateStorageItemCondition")]
+        public async Task<IActionResult> UpdateStorageItemCondition(
+            [FromBody] UpdateStorageItemConditionHttpContext body)
+        {
+            
+            var bus = (IBus) _services.GetService(typeof(IBus));
+            var logger = (ILogger<LoggedUpdateStorageItemConditionRequest>) _services
+                .GetService(typeof(ILogger<LoggedUpdateStorageItemConditionRequest>));
+
+            var result =
+                await new LoggedUpdateStorageItemConditionRequest(logger,  
+                    new ValidatedUpdateStorageItemConditionRequest(
+                        new UpdateStorageItemConditionRequest(bus)
+                    )
+                ).Ask(body);
+            
+            return result switch
+            {
+                IUpdateStorageItemConditionSuccessResultContract => Ok(),
+                IUpdateStorageItemConditionErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
+        }
+        
+        [HttpPatch]
+        [Route("UpdateStorageItemHiddenComment")]
+        public async Task<IActionResult> UpdateStorageItemHiddenComment(
+            [FromBody] UpdateStorageItemHiddenCommentHttpContext body)
+        {
+            
+            var bus = (IBus) _services.GetService(typeof(IBus));
+            var logger = (ILogger<LoggedUpdateStorageItemHiddenCommentRequest>) _services
+                .GetService(typeof(ILogger<LoggedUpdateStorageItemHiddenCommentRequest>));
+
+            var result =
+                await new LoggedUpdateStorageItemHiddenCommentRequest(logger,  
+                    new ValidatedUpdateStorageItemHiddenCommentRequest(
+                        new UpdateStorageItemHiddenCommentRequest(bus)
+                    )
+                ).Ask(body);
+            
+            return result switch
+            {
+                IUpdateStorageItemHiddenCommentSuccessResultContract => Ok(),
+                IUpdateStorageItemHiddenCommentErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
+        }
+        
+        [HttpPatch]
+        [Route("UpdateStorageItemPurchasePrice")]
+        public async Task<IActionResult> UpdateStorageItemPurchasePrice(
+            [FromBody] UpdateStorageItemPurchasePriceHttpContext body)
+        {
+            
+            var bus = (IBus) _services.GetService(typeof(IBus));
+            var logger = (ILogger<LoggedUpdateStorageItemPurchasePriceRequest>) _services
+                .GetService(typeof(ILogger<LoggedUpdateStorageItemPurchasePriceRequest>));
+
+            var result =
+                await new LoggedUpdateStorageItemPurchasePriceRequest(logger,  
+                    new ValidatedUpdateStorageItemPurchasePriceRequest(
+                        new UpdateStorageItemPurchasePriceRequest(bus)
+                    )
+                ).Ask(body);
+            
+            return result switch
+            {
+                IUpdateStorageItemPurchasePriceSuccessResultContract => Ok(),
+                IUpdateStorageItemPurchasePriceErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
+        }
+        
+        [HttpPatch]
+        [Route("UpdateStorageItemRetailPrice")]
+        public async Task<IActionResult> UpdateStorageItemRetailPrice(
+            [FromBody] UpdateStorageItemRetailPriceHttpContext body)
+        {
+            
+            var bus = (IBus) _services.GetService(typeof(IBus));
+            var logger = (ILogger<LoggedUpdateStorageItemRetailPriceRequest>) _services
+                .GetService(typeof(ILogger<LoggedUpdateStorageItemRetailPriceRequest>));
+
+            var result =
+                await new LoggedUpdateStorageItemRetailPriceRequest(logger,  
+                    new ValidatedUpdateStorageItemRetailPriceRequest(
+                        new UpdateStorageItemRetailPriceRequest(bus)
+                    )
+                ).Ask(body);
+            
+            return result switch
+            {
+                IUpdateStorageItemRetailPriceSuccessResultContract => Ok(),
+                IUpdateStorageItemRetailPriceErrorResultContract error => BadRequest(error.Message),
                 _ => BadRequest()
             };
         }
