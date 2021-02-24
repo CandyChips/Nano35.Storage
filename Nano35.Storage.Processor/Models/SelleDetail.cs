@@ -45,13 +45,13 @@ namespace Nano35.Storage.Processor.Models
             //Foreign keys
             modelBuilder.Entity<SelleDetail>()
                 .HasOne(p => p.FromWarehouse)
-                .WithMany()
+                .WithMany(p => p.SelleDetails)
                 .OnDelete(DeleteBehavior.NoAction)
                 .HasForeignKey(p => new {p.StorageItemId, p.FromUnitId, p.FromPlace});
             
             modelBuilder.Entity<SelleDetail>()
                 .HasOne(p => p.Selle)
-                .WithMany()
+                .WithMany(p => p.Details)
                 .OnDelete(DeleteBehavior.NoAction)
                 .HasForeignKey(p => new {SalleId = p.SelleId});
         }

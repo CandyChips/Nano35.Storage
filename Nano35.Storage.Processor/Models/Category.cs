@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Nano35.Contracts;
@@ -24,6 +25,13 @@ namespace Nano35.Storage.Processor.Models
         public override string ToString()
         {
             return ParentCategory != null ? $"{ParentCategory} {Name}" : Name;
+        }
+        
+        public ICollection<Article> Articles { get; set; }
+
+        public Category()
+        {
+            Articles = new List<Article>();
         }
     }
 

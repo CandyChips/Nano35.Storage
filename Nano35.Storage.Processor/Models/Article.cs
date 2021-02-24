@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Nano35.Contracts;
@@ -27,6 +28,13 @@ namespace Nano35.Storage.Processor.Models
         {
             return $"{Category} {Brand} {Model}";
         }
+        
+        public ICollection<StorageItem> StorageItems { get; set; }
+
+        public Article()
+        {
+            StorageItems = new List<StorageItem>();
+        }
     }
 
     public class ArticlesFluentContext
@@ -54,7 +62,7 @@ namespace Nano35.Storage.Processor.Models
             // Foreign keys
             modelBuilder.Entity<Article>()
                 .HasOne(p => p.Category)
-                .WithMany()
+                .WithMany(p => p.Articles)
                 .OnDelete(DeleteBehavior.NoAction)
                 .HasForeignKey(p => new {p.CategoryId, p.InstanceId});
         }

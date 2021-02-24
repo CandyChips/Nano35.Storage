@@ -69,7 +69,7 @@ namespace Nano35.Storage.Processor.Models
             //Foreign keys
             modelBuilder.Entity<StorageItem>()
                 .HasOne(p => p.Article)
-                .WithMany()
+                .WithMany(p => p.StorageItems)
                 .OnDelete(DeleteBehavior.NoAction)
                 .HasForeignKey(p => new { p.ArticleId, p.InstanceId });
             

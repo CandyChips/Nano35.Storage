@@ -41,13 +41,13 @@ namespace Nano35.Storage.Processor.Models
             //Foreign keys
             modelBuilder.Entity<CancelationDetail>()
                 .HasOne(p => p.FromWarehouse)
-                .WithMany()
+                .WithMany(p => p.CancelationDetails)
                 .OnDelete(DeleteBehavior.NoAction)
                 .HasForeignKey(p => new {p.StorageItemId, p.FromUnitId, p.FromPlace});
             
             modelBuilder.Entity<CancelationDetail>()
                 .HasOne(p => p.Cancellation)
-                .WithMany()
+                .WithMany(p => p.Details)
                 .OnDelete(DeleteBehavior.NoAction)
                 .HasForeignKey(p => new {CancelationId = p.CancellationsId});
         }

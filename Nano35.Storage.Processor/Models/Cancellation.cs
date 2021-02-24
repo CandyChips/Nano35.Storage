@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Nano35.Contracts;
 
@@ -9,12 +10,19 @@ namespace Nano35.Storage.Processor.Models
     {
         // Primary key
         public Guid Id { get; set; }
-        
         //Data
+        public Guid InstanceId { get; set; }
         public string Number { get; set; }
         public DateTime Date { get; set; }
         
         //Foreign keys
+        
+        public ICollection<CancelationDetail> Details { get; set; }
+
+        public Cancellation()
+        {
+            Details = new List<CancelationDetail>();
+        }
     }
 
     public class CancellationsFluentContext

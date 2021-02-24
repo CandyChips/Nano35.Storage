@@ -35,7 +35,7 @@ namespace Nano35.Storage.Processor.Requests.GetAllSells
             public IEnumerable<ISelleViewModel> Data { get; set; }
         }
         
-        private class ComingImpl : ISelleViewModel
+        private class SelleImpl : ISelleViewModel
         {
             public Guid Id { get; set; }
             public string Number { get; set; }
@@ -48,7 +48,22 @@ namespace Nano35.Storage.Processor.Requests.GetAllSells
         public async Task<IGetAllSellsResultContract> Ask
             (IGetAllSellsRequestContract input, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var result = await _context
+                .Sells
+                .Where(c => c.InstanceId == input.InstanceId)
+                .Select(a =>
+                    new SelleImpl()
+                    {
+                        Id = a.Id,
+                        Number = a.Number,
+                        Date = a.Date,
+                        Cash = a.Details
+                            .Select(f => f.Price * f.Count)
+                            .Sum()
+                    })
+                .ToListAsync(cancellationToken: cancellationToken);
+
+            return new GetAllSellsSuccessResultContract() {Data = result};
         }
     }   
 }

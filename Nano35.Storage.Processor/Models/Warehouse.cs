@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Nano35.Contracts;
 
@@ -19,6 +20,23 @@ namespace Nano35.Storage.Processor.Models
         //Foreign keys
         public Guid StorageItemId { get; set; }
         public StorageItem StorageItem { get; set; }
+        
+        
+        public ICollection<ComingDetail> ComingDetails { get; set; }
+        public ICollection<SelleDetail> SelleDetails { get; set; }
+        public ICollection<CancelationDetail> CancelationDetails { get; set; }
+        public ICollection<MoveDetail> MoveFromDetails { get; set; }
+        public ICollection<MoveDetail> MoveToDetails { get; set; }
+
+        public WarehouseByItemOnStorage()
+        {
+            ComingDetails = new List<ComingDetail>();
+            SelleDetails = new List<SelleDetail>();
+            CancelationDetails = new List<CancelationDetail>();
+            MoveFromDetails = new List<MoveDetail>();
+            MoveToDetails = new List<MoveDetail>();
+        }
+        
     }
 
     public class WarehousesFluentContext

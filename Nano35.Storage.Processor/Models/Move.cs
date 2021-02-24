@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Nano35.Contracts;
 
@@ -11,10 +12,18 @@ namespace Nano35.Storage.Processor.Models
         public Guid Id { get; set; }
         
         //Data
+        public Guid InstanceId { get; set; }
         public string Number { get; set; }
         public DateTime Date { get; set; }
         
         //Foreign keys
+        
+        public ICollection<MoveDetail> Details { get; set; }
+
+        public Move()
+        {
+            Details = new List<MoveDetail>();
+        }
     }
 
     public class MoveFluentContext
