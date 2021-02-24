@@ -57,18 +57,6 @@ namespace Nano35.Storage.Api.Controllers
             public string Model { get; set; }
         }
         
-        public class UpdateCategoryNameHttpContext : IUpdateCategoryNameRequestContract
-        {
-            public Guid Id { get; set; }
-            public string Name { get; set; }
-        }
-        
-        public class UpdateCategoryParentCategoryIdHttpContext : IUpdateCategoryParentCategoryIdRequestContract
-        {
-            public Guid Id { get; set; }
-            public Guid ParentCategoryId { get; set; }
-        }
-        
         
         private readonly IServiceProvider _services;
         
@@ -256,32 +244,6 @@ namespace Nano35.Storage.Api.Controllers
             };
         }
 
-        [HttpPost]
-        [Route("CreateCategory")]
-        public async Task<IActionResult> CreateCategory(
-            [FromBody] CreateCategoryHttpContext query)
-        {
-            // Setup configuration of pipeline
-            var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedCreateCategoryRequest>)_services.GetService(typeof(ILogger<LoggedCreateCategoryRequest>));
-            
-            // Send request to pipeline
-            var result = 
-                await new LoggedCreateCategoryRequest(logger,
-                    new ValidatedCreateCategoryRequest(
-                        new CreateCategoryRequest(bus)
-                        )).Ask(query);
-            
-            // Check response of get all instances request
-            // You can check result by result contracts
-            return result switch
-            {
-                ICreateCategorySuccessResultContract => Ok(),
-                ICreateCategoryErrorResultContract error => BadRequest(error.Message),
-                _ => BadRequest()
-            };
-        }
-
         [HttpPatch]
         [Route("UpdateArticleBrand")]
         public async Task<IActionResult> UpdateArticleBrand(
@@ -374,55 +336,6 @@ namespace Nano35.Storage.Api.Controllers
             {
                 IUpdateArticleModelSuccessResultContract => Ok(),
                 IUpdateArticleModelErrorResultContract error => BadRequest(error.Message),
-                _ => BadRequest()
-            };
-        }
-        
-        [HttpPatch]
-        [Route("UpdateCategoryName")]
-        public async Task<IActionResult> UpdateCategoryName(
-            [FromBody] UpdateCategoryNameHttpContext body)
-        {
-            
-            var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedUpdateCategoryNameRequest>) _services.GetService(typeof(ILogger<LoggedUpdateCategoryNameRequest>));
-
-            var result =
-                await new LoggedUpdateCategoryNameRequest(logger,  
-                    new ValidatedUpdateCategoryNameRequest(
-                        new UpdateCategoryNameRequest(bus)
-                    )
-                ).Ask(body);
-            
-            return result switch
-            {
-                IUpdateCategoryNameSuccessResultContract => Ok(),
-                IUpdateCategoryNameErrorResultContract error => BadRequest(error.Message),
-                _ => BadRequest()
-            };
-        }
-        
-        [HttpPatch]
-        [Route("UpdateCategoryParentCategoryId")]
-        public async Task<IActionResult> UpdateCategoryParentCategoryId(
-            [FromBody] UpdateCategoryParentCategoryIdHttpContext body)
-        {
-            
-            var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedUpdateCategoryParentCategoryIdRequest>) _services
-                .GetService(typeof(ILogger<LoggedUpdateCategoryParentCategoryIdRequest>));
-
-            var result =
-                await new LoggedUpdateCategoryParentCategoryIdRequest(logger,  
-                    new ValidatedUpdateCategoryParentCategoryIdRequest(
-                        new UpdateCategoryParentCategoryIdRequest(bus)
-                    )
-                ).Ask(body);
-            
-            return result switch
-            {
-                IUpdateCategoryParentCategoryIdSuccessResultContract => Ok(),
-                IUpdateCategoryParentCategoryIdErrorResultContract error => BadRequest(error.Message),
                 _ => BadRequest()
             };
         }
