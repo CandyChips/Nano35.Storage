@@ -22,6 +22,9 @@ using GetStorageItemByIdHttpContext = Nano35.Storage.Api.HttpContext.GetStorageI
 
 namespace Nano35.Storage.Api.Controllers
 {
+    /// <summary>
+    /// http://localhost:6003/articles/[action]
+    /// </summary>
     [ApiController]
     [Route("[controller]")]
     public class StorageItemsController :

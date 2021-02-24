@@ -19,6 +19,9 @@ using GetComingDetailsByIdHttpContext = Nano35.Storage.Api.HttpContext.GetComing
 
 namespace Nano35.Storage.Api.Controllers
 {
+    /// <summary>
+    /// http://localhost:6003/articles/[action]
+    /// </summary>
     [ApiController]
     [Route("[controller]")]
     public class WarehouseController :
@@ -174,6 +177,20 @@ namespace Nano35.Storage.Api.Controllers
                 _ => BadRequest()
             };
         }
+
+        [HttpGet]
+        [Route("GetAllMoves")]
+        public async Task<IActionResult> GetAllMoves()
+        {
+            return Ok();
+        }
+
+        [HttpGet]
+        [Route("GetAllMoveDetailsById")]
+        public async Task<IActionResult> GetAllMoveDetailsById()
+        {
+            return Ok();
+        }
         
         [HttpPost]
         [Route("CreateSelle")]
@@ -215,6 +232,13 @@ namespace Nano35.Storage.Api.Controllers
         [HttpGet]
         [Route("GetAllSells")]
         public async Task<IActionResult> GetAllSells()
+        {
+            return Ok();
+        }
+
+        [HttpGet]
+        [Route("GetAllSelleDetailsById")]
+        public async Task<IActionResult> GetAllSelleDetailsById()
         {
             return Ok();
         }

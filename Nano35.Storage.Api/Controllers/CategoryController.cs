@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Storage.Api.HttpContext;
 using Nano35.Storage.Api.Requests.CreateCategory;
+using Nano35.Storage.Api.Requests.GetAllArticleCategories;
 using Nano35.Storage.Api.Requests.UpdateCategoryName;
 using Nano35.Storage.Api.Requests.UpdateCategoryParentCategoryId;
 
@@ -13,7 +14,7 @@ namespace Nano35.Storage.Api.Controllers
 {
     /// ToDo Hey Maslyonok
     /// <summary>
-    /// http://localhost:5104/articles/[action]
+    /// http://localhost:6003/articles/[action]
     /// </summary>
     [ApiController]
     [Route("[controller]")]
@@ -44,6 +45,32 @@ namespace Nano35.Storage.Api.Controllers
             IServiceProvider services)
         {
             _services = services;
+        }
+    
+        [HttpGet]
+        [Route("GetAllArticleCategories")]
+        public async Task<IActionResult> GetAllArticleCategories(
+            [FromQuery] GetAllArticlesCategoriesHttpContext query)
+        {
+            // Setup configuration of pipeline
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<LoggedGetAllArticlesCategoriesRequest>)_services.GetService(typeof(ILogger<LoggedGetAllArticlesCategoriesRequest>));
+            
+            // Send request to pipeline
+            var result = 
+                await new LoggedGetAllArticlesCategoriesRequest(logger,
+                    new ValidatedGetAllArticlesCategoriesRequest(
+                        new GetAllArticlesCategoriesRequest(bus)
+                    )).Ask(query);
+            
+            // Check response of get all instances request
+            // You can check result by result contracts
+            return result switch
+            {
+                IGetAllArticlesCategoriesSuccessResultContract success => Ok(success.Data),
+                IGetAllArticlesCategoriesErrorResultContract error => BadRequest(error.Message),
+                _ => BadRequest()
+            };
         }
         
         [HttpPost]
