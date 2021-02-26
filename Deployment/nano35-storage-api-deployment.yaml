@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nano35-storage-api
+  namespace: nano35
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nano35-storage-api
+  template:
+    metadata:
+      labels:
+        app: nano35-storage-api
+    spec:
+      containers:
+      - image: bushemi2021/nano35.storage.api:latest
+        name: nano35-storage-api
+        ports:
+        - containerPort: 80
+      restartPolicy: Always

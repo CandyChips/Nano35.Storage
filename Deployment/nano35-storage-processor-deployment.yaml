@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nano35-storage-processor
+  namespace: nano35
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nano35-storage-processor
+  template:
+    metadata:
+      labels:
+        app: nano35-storage-processor
+    spec:
+      containers:
+      - image: bushemi2021/nano35.storage.processor:latest
+        name: nano35-storage-processor
+        ports:
+        - containerPort: 80
+      restartPolicy: Always
