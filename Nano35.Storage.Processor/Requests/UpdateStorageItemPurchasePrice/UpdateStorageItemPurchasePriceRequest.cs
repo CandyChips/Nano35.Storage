@@ -32,8 +32,7 @@ namespace Nano35.Storage.Processor.Requests.UpdateStorageItemPurchasePrice
             IUpdateStorageItemPurchasePriceRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = await (_context.StorageItems
-                .FirstOrDefaultAsync(a => a.Id == input.Id, cancellationToken));
+            var result = await _context.StorageItems.FirstOrDefaultAsync(a => a.Id == input.Id, cancellationToken);
             result.PurchasePrice = input.PurchasePrice;
             return new UpdateStorageItemPurchasePriceSuccessResultContract();
         }

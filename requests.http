@@ -1,6 +1,4 @@
 ### For VS code plugin "REST client"
 ### Get all storage item conditions
-http://localhost:5103/StorageItems/GetAllStorageItemConditions 
 
-### Get all worker roles
-http://local
+http://localhost:30003/StorageItems/GetAllStorageItemConditions 

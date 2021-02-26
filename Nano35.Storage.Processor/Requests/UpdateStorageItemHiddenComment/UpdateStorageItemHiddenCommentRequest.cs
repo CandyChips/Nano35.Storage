@@ -32,8 +32,7 @@ namespace Nano35.Storage.Processor.Requests.UpdateStorageItemHiddenComment
             IUpdateStorageItemHiddenCommentRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = await (_context.StorageItems
-                .FirstOrDefaultAsync(a => a.Id == input.Id, cancellationToken));
+            var result = await _context.StorageItems.FirstOrDefaultAsync(a => a.Id == input.Id, cancellationToken);
             result.HiddenComment = input.HiddenComment;
             return new UpdateStorageItemHiddenCommentSuccessResultContract();
         }

@@ -27,8 +27,9 @@ namespace Nano35.Storage.Processor.Requests.GetAllArticleBrands
             public IEnumerable<string> Data { get; set; }
         }
         
-        public async Task<IGetAllArticlesBrandsResultContract> Ask
-            (IGetAllArticlesBrandsRequestContract input, CancellationToken cancellationToken)
+        public async Task<IGetAllArticlesBrandsResultContract> Ask(
+            IGetAllArticlesBrandsRequestContract input, 
+            CancellationToken cancellationToken)
         {
             var result = await _context
                 .Articles

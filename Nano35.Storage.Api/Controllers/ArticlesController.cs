@@ -4,10 +4,9 @@ using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Storage.Artifacts;
+using Nano35.HttpContext.storage;
 using Nano35.Storage.Api.Requests.CreateArticle;
-using Nano35.Storage.Api.Requests.CreateCategory;
 using Nano35.Storage.Api.Requests.GetAllArticleBrands;
-using Nano35.Storage.Api.Requests.GetAllArticleCategories;
 using Nano35.Storage.Api.Requests.GetAllArticleModels;
 using Nano35.Storage.Api.Requests.GetAllArticles;
 using Nano35.Storage.Api.Requests.GetArticleById;
@@ -15,11 +14,6 @@ using Nano35.Storage.Api.Requests.UpdateArticleBrand;
 using Nano35.Storage.Api.Requests.UpdateArticleCategory;
 using Nano35.Storage.Api.Requests.UpdateArticleInfo;
 using Nano35.Storage.Api.Requests.UpdateArticleModel;
-using CreateArticleHttpContext = Nano35.Storage.Api.HttpContext.CreateArticleHttpContext;
-using GetAllArticlesBrandsHttpContext = Nano35.Storage.Api.HttpContext.GetAllArticlesBrandsHttpContext;
-using GetAllArticlesHttpContext = Nano35.Storage.Api.HttpContext.GetAllArticlesHttpContext;
-using GetAllArticlesModelsHttpContext = Nano35.Storage.Api.HttpContext.GetAllArticlesModelsHttpContext;
-using GetArticleByIdHttpContext = Nano35.Storage.Api.HttpContext.GetArticleByIdHttpContext;
 
 namespace Nano35.Storage.Api.Controllers
 {
@@ -32,30 +26,6 @@ namespace Nano35.Storage.Api.Controllers
     public class ArticlesController :
         ControllerBase
     {
-        /// ToDo Hey Maslyonok
-        /// <summary>
-        /// HttpContexts has data from http requests
-        /// </summary>
-        public class UpdateArticleBrandHttpContext : IUpdateArticleBrandRequestContract
-        {
-            public Guid Id { get; set; }
-            public string Brand { get; set; }
-        }
-        public class UpdateArticleCategoryHttpContext : IUpdateArticleCategoryRequestContract
-        {
-            public Guid Id { get; set; }
-            public Guid CategoryId { get; set; }
-        }
-        public class UpdateArticleInfoHttpContext : IUpdateArticleInfoRequestContract
-        {
-            public Guid Id { get; set; }
-            public string Info { get; set; }
-        }
-        public class UpdateArticleModelHttpContext : IUpdateArticleModelRequestContract
-        {
-            public Guid Id { get; set; }
-            public string Model { get; set; }
-        }
         
         /// ToDo Hey Maslyonok
         /// <summary>

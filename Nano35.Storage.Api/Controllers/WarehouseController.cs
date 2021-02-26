@@ -4,18 +4,13 @@ using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Storage.Artifacts;
-using Nano35.Storage.Api.HttpContext;
+using Nano35.HttpContext.storage;
 using Nano35.Storage.Api.Requests.CreateCancellation;
 using Nano35.Storage.Api.Requests.CreateComing;
 using Nano35.Storage.Api.Requests.CreateMove;
 using Nano35.Storage.Api.Requests.CreateSelle;
 using Nano35.Storage.Api.Requests.GetAllComings;
 using Nano35.Storage.Api.Requests.GetComingDetailsById;
-using CreateCancellationHttpContext = Nano35.Storage.Api.HttpContext.CreateCancellationHttpContext;
-using CreateComingHttpContext = Nano35.Storage.Api.HttpContext.CreateComingHttpContext;
-using CreateMoveHttpContext = Nano35.Storage.Api.HttpContext.CreateMoveHttpContext;
-using GetAllComingsHttpContext = Nano35.Storage.Api.HttpContext.GetAllComingsHttpContext;
-using GetComingDetailsByIdHttpContext = Nano35.Storage.Api.HttpContext.GetComingDetailsByIdHttpContext;
 
 namespace Nano35.Storage.Api.Controllers
 {

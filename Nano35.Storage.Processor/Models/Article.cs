@@ -68,7 +68,8 @@ namespace Nano35.Storage.Processor.Models
         }
     }
 
-    public class ArticleAutoMapperProfile : Profile
+    public class ArticleAutoMapperProfile :
+        Profile
     {
         public ArticleAutoMapperProfile()
         {

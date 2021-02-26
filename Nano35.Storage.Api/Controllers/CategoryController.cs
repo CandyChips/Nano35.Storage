@@ -4,7 +4,7 @@ using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Storage.Artifacts;
-using Nano35.Storage.Api.HttpContext;
+using Nano35.HttpContext.storage;
 using Nano35.Storage.Api.Requests.CreateCategory;
 using Nano35.Storage.Api.Requests.GetAllArticleCategories;
 using Nano35.Storage.Api.Requests.UpdateCategoryName;
@@ -12,35 +12,15 @@ using Nano35.Storage.Api.Requests.UpdateCategoryParentCategoryId;
 
 namespace Nano35.Storage.Api.Controllers
 {
-    /// ToDo Hey Maslyonok
-    /// <summary>
-    /// http://localhost:6003/articles/[action]
-    /// </summary>
     [ApiController]
     [Route("[controller]")]
     public class CategoryController :
         ControllerBase
     {
-        public class UpdateCategoryNameHttpContext : IUpdateCategoryNameRequestContract
-        {
-            public Guid Id { get; set; }
-            public string Name { get; set; }
-        }
-        
-        public class UpdateCategoryParentCategoryIdHttpContext : IUpdateCategoryParentCategoryIdRequestContract
-        {
-            public Guid Id { get; set; }
-            public Guid ParentCategoryId { get; set; }
-        }
         
         
         private readonly IServiceProvider _services;
         
-        /// ToDo Hey Maslyonok
-        /// <summary>
-        /// Controller provide IServiceProvider from asp net core DI
-        /// for registration services to pipe nodes
-        /// </summary>
         public CategoryController(
             IServiceProvider services)
         {

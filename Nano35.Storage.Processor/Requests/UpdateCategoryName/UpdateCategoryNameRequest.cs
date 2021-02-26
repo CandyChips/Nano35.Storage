@@ -32,9 +32,9 @@ namespace Nano35.Storage.Processor.Requests.UpdateCategoryName
             IUpdateCategoryNameRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = await (_context.Categories
-                .FirstOrDefaultAsync(a => a.Id == input.Id, cancellationToken));
+            var result = await _context.Categories.FirstOrDefaultAsync(a => a.Id == input.Id, cancellationToken);
             result.Name = input.Name;
+            
             return new UpdateCategoryNameSuccessResultContract();
         }
     }

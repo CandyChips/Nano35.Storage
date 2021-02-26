@@ -33,7 +33,6 @@ namespace Nano35.Storage.Processor.Requests.GetAllStorageItems
             _logger.LogInformation($"GetAllStorageItemsLogger starts on: {DateTime.Now}");
             var result = await _nextNode.Ask(input, cancellationToken);
             _logger.LogInformation($"GetAllStorageItemsLogger ends on: {DateTime.Now}");
-            _logger.LogInformation("");
             return result;
         }
     }

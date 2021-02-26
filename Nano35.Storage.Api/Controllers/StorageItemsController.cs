@@ -4,10 +4,10 @@ using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Storage.Artifacts;
+using Nano35.HttpContext.storage;
 using Nano35.Storage.Api.Requests.CreateStorageItem;
 using Nano35.Storage.Api.Requests.GetAllStorageItemConditions;
 using Nano35.Storage.Api.Requests.GetAllStorageItems;
-using Nano35.Storage.Api.Requests.GetComingDetailsById;
 using Nano35.Storage.Api.Requests.GetStorageItemById;
 using Nano35.Storage.Api.Requests.UpdateStorageItemArticle;
 using Nano35.Storage.Api.Requests.UpdateStorageItemComment;
@@ -15,10 +15,6 @@ using Nano35.Storage.Api.Requests.UpdateStorageItemCondition;
 using Nano35.Storage.Api.Requests.UpdateStorageItemHiddenComment;
 using Nano35.Storage.Api.Requests.UpdateStorageItemPurchasePrice;
 using Nano35.Storage.Api.Requests.UpdateStorageItemRetailPrice;
-using CreateStorageItemHttpContext = Nano35.Storage.Api.HttpContext.CreateStorageItemHttpContext;
-using GetAllStorageItemConditionsHttpContext = Nano35.Storage.Api.HttpContext.GetAllStorageItemConditionsHttpContext;
-using GetAllStorageItemsHttpContext = Nano35.Storage.Api.HttpContext.GetAllStorageItemsHttpContext;
-using GetStorageItemByIdHttpContext = Nano35.Storage.Api.HttpContext.GetStorageItemByIdHttpContext;
 
 namespace Nano35.Storage.Api.Controllers
 {
@@ -30,37 +26,6 @@ namespace Nano35.Storage.Api.Controllers
     public class StorageItemsController :
         ControllerBase
     {
-        public class UpdateStorageItemArticleHttpContext : IUpdateStorageItemArticleRequestContract
-        {
-            public Guid Id { get; set; }
-            public Guid ArticleId { get; set; }
-        }
-        
-        public class UpdateStorageItemCommentHttpContext : IUpdateStorageItemCommentRequestContract
-        {
-            public Guid Id { get; set; }
-            public string Comment { get; set; }
-        }
-        public class UpdateStorageItemConditionHttpContext : IUpdateStorageItemConditionRequestContract
-        {
-            public Guid Id { get; set; }
-            public Guid ConditionId { get; set; }
-        }
-        public class UpdateStorageItemHiddenCommentHttpContext : IUpdateStorageItemHiddenCommentRequestContract
-        {
-            public Guid Id { get; set; }
-            public string HiddenComment { get; set; }
-        }
-        public class UpdateStorageItemPurchasePriceHttpContext : IUpdateStorageItemPurchasePriceRequestContract
-        {
-            public Guid Id { get; set; }
-            public decimal PurchasePrice { get; set; }
-        }
-        public class UpdateStorageItemRetailPriceHttpContext : IUpdateStorageItemRetailPriceRequestContract
-        {
-            public Guid Id { get; set; }
-            public decimal RetailPrice { get; set; }
-        }
         
         private readonly IServiceProvider _services;
 

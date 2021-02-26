@@ -32,9 +32,9 @@ namespace Nano35.Storage.Processor.Requests.UpdateStorageItemComment
             IUpdateStorageItemCommentRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = await (_context.StorageItems
-                .FirstOrDefaultAsync(a => a.Id == input.Id, cancellationToken));
+            var result = await _context.StorageItems.FirstOrDefaultAsync(a => a.Id == input.Id, cancellationToken);
             result.Comment = input.Comment;
+            
             return new UpdateStorageItemCommentSuccessResultContract();
         }
     }
