@@ -41,6 +41,8 @@ namespace Nano35.Storage.Api.Configurations
                     new Uri($"{ContractBase.RabbitMqLocation}/ICreateArticleRequestContract"));
                 x.AddRequestClient<IGetAllStorageItemsRequestContract>(
                     new Uri($"{ContractBase.RabbitMqLocation}/IGetAllStorageItemsRequestContract"));
+                x.AddRequestClient<IGetAllCancellationsRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/IGetAllCancellationsRequestContract"));
                 x.AddRequestClient<IGetStorageItemByIdRequestContract>(
                     new Uri($"{ContractBase.RabbitMqLocation}/IGetStorageItemByIdRequestContract"));
                 x.AddRequestClient<ICreateStorageItemRequestContract>(
@@ -55,8 +57,48 @@ namespace Nano35.Storage.Api.Configurations
                     new Uri($"{ContractBase.RabbitMqLocation}/IGetAllStorageItemConditionsRequestContract"));
                 x.AddRequestClient<IGetAllComingsRequestContract>(
                     new Uri($"{ContractBase.RabbitMqLocation}/IGetAllComingsRequestContract"));
+                x.AddRequestClient<IGetAllMovesRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/IGetAllMovesRequestContract"));
+                x.AddRequestClient<IGetAllSellsRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/IGetAllSellsRequestContract"));
                 x.AddRequestClient<IGetComingDetailsByIdRequestContract>(
                     new Uri($"{ContractBase.RabbitMqLocation}/IGetComingDetailsByIdRequestContract"));
+                x.AddRequestClient<IGetMoveDetailsByIdRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/IGetMoveDetailsByIdRequestContract"));
+                x.AddRequestClient<IGetSelleDetailsByIdRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/IGetSelleDetailsByIdRequestContract"));
+                x.AddRequestClient<IGetAllWarehousesOfItemRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/IGetAllWarehousesOfItemRequestContract"));
+                x.AddRequestClient<IGetAllWarehousesOfUnitRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/IGetAllWarehousesOfUnitRequestContract"));
+                x.AddRequestClient<IGetCancellationDetailsByIdRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/IGetCancellationDetailsByIdRequestContract"));
+                x.AddRequestClient<IUpdateArticleBrandRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/IUpdateArticleBrandRequestContract"));
+                x.AddRequestClient<IUpdateArticleCategoryRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/IUpdateArticleCategoryRequestContract"));
+                x.AddRequestClient<IUpdateArticleInfoRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/IUpdateArticleInfoRequestContract"));
+                x.AddRequestClient<IUpdateArticleModelRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/IUpdateArticleModelRequestContract"));
+                x.AddRequestClient<IUpdateCategoryNameRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/IUpdateCategoryNameRequestContract"));
+                x.AddRequestClient<IUpdateCategoryParentCategoryIdRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/IUpdateCategoryParentCategoryIdRequestContract"));
+                x.AddRequestClient<IUpdateCategoryParentCategoryIdRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/IUpdateCategoryParentCategoryIdRequestContract"));
+                x.AddRequestClient<IUpdateStorageItemArticleRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/IUpdateStorageItemArticleRequestContract"));
+                x.AddRequestClient<IUpdateStorageItemCommentRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/IUpdateStorageItemCommentRequestContract"));
+                x.AddRequestClient<IUpdateStorageItemConditionRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/IUpdateStorageItemConditionRequestContract"));
+                x.AddRequestClient<IUpdateStorageItemHiddenCommentRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/IUpdateStorageItemHiddenCommentRequestContract"));
+                x.AddRequestClient<IUpdateStorageItemPurchasePriceRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/IUpdateStorageItemPurchasePriceRequestContract"));
+                x.AddRequestClient<IUpdateStorageItemRetailPriceRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/IUpdateStorageItemRetailPriceRequestContract"));
             });
             services.AddMassTransitHostedService();
         }
