@@ -48,8 +48,8 @@ namespace Nano35.Storage.Processor.Requests.CreateArticle
                 {
                     ArticleId = input.NewId,
                     InstanceId = input.InstanceId,
-                    Key = a.Item1,
-                    Value = a.Item2
+                    Key = a.Key,
+                    Value = a.Value
                 });
                 
                 await _context.Specs.AddRangeAsync(specs, cancellationToken);

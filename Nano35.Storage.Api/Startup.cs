@@ -25,6 +25,7 @@ namespace Nano35.Storage.Api
             new Configurator(services, new SwaggerConfiguration()).Configure();
             new Configurator(services, new MassTransitConfiguration()).Configure();
             new Configurator(services, new ConfigurationOfControllers()).Configure();
+            services.AddHealthChecks();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

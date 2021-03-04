@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
 using MassTransit;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Storage.Artifacts;
+using Nano35.HttpContext.instance;
 using Nano35.HttpContext.storage;
 using Nano35.Storage.Api.Requests.CreateStorageItem;
 using Nano35.Storage.Api.Requests.GetAllStorageItemConditions;
@@ -18,60 +20,41 @@ using Nano35.Storage.Api.Requests.UpdateStorageItemRetailPrice;
 
 namespace Nano35.Storage.Api.Controllers
 {
-    /// <summary>
-    /// http://localhost:6003/articles/[action]
-    /// </summary>
     [ApiController]
     [Route("[controller]")]
     public class StorageItemsController :
         ControllerBase
     {
-        
         private readonly IServiceProvider _services;
 
-        /// <summary>
-        /// Controller provide IServiceProvider from asp net core DI
-        /// for registration services to pipe nodes
-        /// </summary>
         public StorageItemsController(
             IServiceProvider services)
         {
             _services = services;
         }
-    
-        /// <summary>
-        /// Controllers accept a HttpContext type
-        /// All controllers actions works by pipelines
-        /// Implementation works with 3 steps
-        /// 1. Setup DI services from IServiceProvider;
-        /// 2. Building pipeline like a onion
-        ///     '(PipeNode1(PipeNode2(PipeNode3(...).Ask()).Ask()).Ask()).Ask()';
-        /// 3. Response pattern match of pipeline response;
-        /// </summary>
+        
         [HttpGet]
         [Route("GetAllStorageItems")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllStorageItemsSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllStorageItemsErrorHttpResponse))] 
         public async Task<IActionResult> GetAllStorageItems(
-            [FromHeader] GetAllStorageItemsHttpContext.GetAllStorageItemsHeader header,
-            [FromQuery] GetAllStorageItemsHttpContext.GetAllStorageItemsQuery query)
+            [FromHeader] GetAllStorageItemsQuery header)
         {
-            var request = new GetAllStorageItemsHttpContext.GetAllStorageItemsRequest()
+            var bus = (IBus) _services.GetService(typeof(IBus));
+            var logger = (ILogger<LoggedGetAllStorageItemsRequest>) _services.GetService(typeof(ILogger<LoggedGetAllStorageItemsRequest>));
+
+            var request = new GetAllStorageItemsRequestContract()
             {
-                InstanceId = query.InstanceId
+                InstanceId = header.InstanceId
             };
             
-            // Setup configuration of pipeline
-            var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetAllStorageItemsRequest>)_services.GetService(typeof(ILogger<LoggedGetAllStorageItemsRequest>));
-            
-            // Send request to pipeline
             var result = 
                 await new LoggedGetAllStorageItemsRequest(logger,
                     new ValidatedGetAllStorageItemsRequest(
-                        new GetAllStorageItemsRequest(bus)
-                        )).Ask(request);
+                        new GetAllStorageItemsRequest(bus)))
+                    .Ask(request);
             
-            // Check response of get all instances request
-            // You can check result by result contracts
             return result switch
             {
                 IGetAllStorageItemsSuccessResultContract success => Ok(success.Data),
@@ -82,20 +65,21 @@ namespace Nano35.Storage.Api.Controllers
     
         [HttpGet]
         [Route("GetAllStorageItemConditions")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllStorageItemConditionsSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllStorageItemConditionsErrorHttpResponse))] 
         public async Task<IActionResult> GetAllStorageItemConditions()
         {
-            // Setup configuration of pipeline
-            var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetAllStorageItemConditionsRequest>)_services.GetService(typeof(ILogger<LoggedGetAllStorageItemConditionsRequest>));
+            var bus = (IBus) _services.GetService(typeof(IBus));
+            var logger = (ILogger<LoggedGetAllStorageItemConditionsRequest>) _services.GetService(typeof(ILogger<LoggedGetAllStorageItemConditionsRequest>));
+
+            var request = new GetAllStorageItemConditionsRequestContract();
             
-            // Send request to pipeline
             var result = 
                 await new LoggedGetAllStorageItemConditionsRequest(logger,
-                    new GetAllStorageItemConditionsRequest(bus)
-                ).Ask(new GetAllStorageItemConditionsHttpContext());
+                    new GetAllStorageItemConditionsRequest(bus))
+                    .Ask(request);
             
-            // Check response of get all instances request
-            // You can check result by result contracts
             return result switch
             {
                 IGetAllStorageItemConditionsSuccessResultContract success => Ok(success.Data),
@@ -106,21 +90,26 @@ namespace Nano35.Storage.Api.Controllers
     
         [HttpGet]
         [Route("GetStorageItemById")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetStorageItemByIdSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetStorageItemByIdErrorHttpResponse))] 
         public async Task<IActionResult> GetStorageItemById(
-            [FromQuery] GetStorageItemByIdHttpContext query)
+            [FromQuery] GetStorageItemByIdHttpQuery query)
         {
-            // Setup configuration of pipeline
-            var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetStorageItemByIdRequest>)_services.GetService(typeof(ILogger<LoggedGetStorageItemByIdRequest>));
+            var bus = (IBus) _services.GetService(typeof(IBus));
+            var logger = (ILogger<LoggedGetStorageItemByIdRequest>) _services.GetService(typeof(ILogger<LoggedGetStorageItemByIdRequest>));
+
+            var request = new GetStorageItemByIdRequestContract()
+            {
+                Id = query.Id
+            };
             
-            // Send request to pipeline
             var result = 
                 await new LoggedGetStorageItemByIdRequest(logger,
                     new ValidatedGetStorageItemByIdRequest(
-                        new GetStorageItemByIdRequest(bus)
-                    )).Ask(query);
+                        new GetStorageItemByIdRequest(bus)))
+                    .Ask(request);
             
-            // Check response of get all instances request
             return result switch
             {
                 IGetStorageItemByIdSuccessResultContract success => Ok(success.Data),
@@ -128,24 +117,37 @@ namespace Nano35.Storage.Api.Controllers
                 _ => BadRequest()
             };
         }
+        
         [HttpPost]
         [Route("CreateStorageItem")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateStorageItemSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateStorageItemErrorHttpResponse))] 
         public async Task<IActionResult> CreateStorageItem(
-            [FromBody] CreateStorageItemHttpContext command)
+            [FromHeader] CreateStorageItemHttpHeader header,
+            [FromBody] CreateStorageItemHttpBody body)
         {
-            // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedCreateStorageItemRequest>)_services.GetService(typeof(ILogger<LoggedCreateStorageItemRequest>));
+            var logger = (ILogger<LoggedCreateStorageItemRequest>) _services.GetService(typeof(ILogger<LoggedCreateStorageItemRequest>));
+
+            var request = new CreateStorageItemRequestContract()
+            {
+                ArticleId = body.ArticleId,
+                Comment = body.Comment,
+                ConditionId = body.ConditionId,
+                HiddenComment = body.HiddenComment,
+                InstanceId = header.InstanceId,
+                NewId = header.NewId,
+                PurchasePrice = body.PurchasePrice,
+                RetailPrice = body.RetailPrice
+            };
             
-            // Send request to pipeline
             var result = 
                 await new LoggedCreateStorageItemRequest(logger,
                     new ValidatedCreateStorageItemRequest(
-                        new CreateStorageItemRequest(bus)
-                        )).Ask(command);
+                        new CreateStorageItemRequest(bus)))
+                    .Ask(request);
             
-            // Check response of get all instances request
-            // You can check result by result contracts
             return result switch
             {
                 ICreateStorageItemSuccessResultContract => Ok(),
@@ -156,20 +158,27 @@ namespace Nano35.Storage.Api.Controllers
         
         [HttpPatch]
         [Route("UpdateStorageItemArticle")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateStorageItemArticleSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateStorageItemArticleErrorHttpResponse))] 
         public async Task<IActionResult> UpdateStorageItemArticle(
-            [FromBody] UpdateStorageItemArticleHttpContext body)
+            [FromBody] UpdateStorageItemArticleHttpBody body)
         {
             
             var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedUpdateStorageItemArticleRequest>) _services
-                .GetService(typeof(ILogger<LoggedUpdateStorageItemArticleRequest>));
+            var logger = (ILogger<LoggedUpdateStorageItemArticleRequest>) _services.GetService(typeof(ILogger<LoggedUpdateStorageItemArticleRequest>));
 
+            var request = new UpdateStorageItemArticleRequestContract()
+            {
+                ArticleId = body.ArticleId,
+                Id = body.Id
+            };
+            
             var result =
                 await new LoggedUpdateStorageItemArticleRequest(logger,  
                     new ValidatedUpdateStorageItemArticleRequest(
-                        new UpdateStorageItemArticleRequest(bus)
-                    )
-                ).Ask(body);
+                        new UpdateStorageItemArticleRequest(bus)))
+                    .Ask(request);
             
             return result switch
             {
@@ -181,20 +190,27 @@ namespace Nano35.Storage.Api.Controllers
         
         [HttpPatch]
         [Route("UpdateStorageItemComment")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateStorageItemCommentSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateStorageItemCommentErrorHttpResponse))] 
         public async Task<IActionResult> UpdateStorageItemComment(
-            [FromBody] UpdateStorageItemCommentHttpContext body)
+            [FromBody] UpdateStorageItemCommentHttpBody body)
         {
             
             var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedUpdateStorageItemCommentRequest>) _services
-                .GetService(typeof(ILogger<LoggedUpdateStorageItemCommentRequest>));
+            var logger = (ILogger<LoggedUpdateStorageItemCommentRequest>) _services.GetService(typeof(ILogger<LoggedUpdateStorageItemCommentRequest>));
 
+            var request = new UpdateStorageItemCommentRequestContract()
+            {
+                Comment = body.Comment,
+                Id = body.Id
+            };
+            
             var result =
                 await new LoggedUpdateStorageItemCommentRequest(logger,  
                     new ValidatedUpdateStorageItemCommentRequest(
-                        new UpdateStorageItemCommentRequest(bus)
-                    )
-                ).Ask(body);
+                        new UpdateStorageItemCommentRequest(bus)))
+                    .Ask(request);
             
             return result switch
             {
@@ -206,20 +222,26 @@ namespace Nano35.Storage.Api.Controllers
         
         [HttpPatch]
         [Route("UpdateStorageItemCondition")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateStorageItemConditionSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateStorageItemConditionErrorHttpResponse))] 
         public async Task<IActionResult> UpdateStorageItemCondition(
-            [FromBody] UpdateStorageItemConditionHttpContext body)
+            [FromBody] UpdateStorageItemConditionHttpBody body)
         {
-            
             var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedUpdateStorageItemConditionRequest>) _services
-                .GetService(typeof(ILogger<LoggedUpdateStorageItemConditionRequest>));
+            var logger = (ILogger<LoggedUpdateStorageItemConditionRequest>) _services.GetService(typeof(ILogger<LoggedUpdateStorageItemConditionRequest>));
 
+            var request = new UpdateStorageItemConditionRequestContract()
+            {
+                ConditionId = body.ConditionId,
+                Id = body.Id,
+            };
+            
             var result =
                 await new LoggedUpdateStorageItemConditionRequest(logger,  
                     new ValidatedUpdateStorageItemConditionRequest(
-                        new UpdateStorageItemConditionRequest(bus)
-                    )
-                ).Ask(body);
+                        new UpdateStorageItemConditionRequest(bus)))
+                    .Ask(request);
             
             return result switch
             {
@@ -231,20 +253,26 @@ namespace Nano35.Storage.Api.Controllers
         
         [HttpPatch]
         [Route("UpdateStorageItemHiddenComment")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateStorageItemHiddenCommentSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateStorageItemHiddenCommentErrorHttpResponse))] 
         public async Task<IActionResult> UpdateStorageItemHiddenComment(
-            [FromBody] UpdateStorageItemHiddenCommentHttpContext body)
+            [FromBody] UpdateStorageItemHiddenCommentHttpBody body)
         {
-            
             var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedUpdateStorageItemHiddenCommentRequest>) _services
-                .GetService(typeof(ILogger<LoggedUpdateStorageItemHiddenCommentRequest>));
+            var logger = (ILogger<LoggedUpdateStorageItemHiddenCommentRequest>) _services.GetService(typeof(ILogger<LoggedUpdateStorageItemHiddenCommentRequest>));
 
+            var request = new UpdateStorageItemHiddenCommentRequestContract()
+            {
+                HiddenComment = body.HiddenComment,
+                Id = body.Id,
+            };
+            
             var result =
                 await new LoggedUpdateStorageItemHiddenCommentRequest(logger,  
                     new ValidatedUpdateStorageItemHiddenCommentRequest(
-                        new UpdateStorageItemHiddenCommentRequest(bus)
-                    )
-                ).Ask(body);
+                        new UpdateStorageItemHiddenCommentRequest(bus)))
+                    .Ask(request);
             
             return result switch
             {
@@ -256,20 +284,27 @@ namespace Nano35.Storage.Api.Controllers
         
         [HttpPatch]
         [Route("UpdateStorageItemPurchasePrice")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateStorageItemPurchasePriceSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateStorageItemPurchasePriceErrorHttpResponse))] 
         public async Task<IActionResult> UpdateStorageItemPurchasePrice(
-            [FromBody] UpdateStorageItemPurchasePriceHttpContext body)
+            [FromBody] UpdateStorageItemPurchasePriceHttpBody body)
         {
             
             var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedUpdateStorageItemPurchasePriceRequest>) _services
-                .GetService(typeof(ILogger<LoggedUpdateStorageItemPurchasePriceRequest>));
+            var logger = (ILogger<LoggedUpdateStorageItemPurchasePriceRequest>) _services.GetService(typeof(ILogger<LoggedUpdateStorageItemPurchasePriceRequest>));
 
+            var request = new UpdateStorageItemPurchasePriceRequestContract()
+            {
+                PurchasePrice = body.PurchasePrice,
+                Id = body.Id
+            };
+            
             var result =
                 await new LoggedUpdateStorageItemPurchasePriceRequest(logger,  
                     new ValidatedUpdateStorageItemPurchasePriceRequest(
-                        new UpdateStorageItemPurchasePriceRequest(bus)
-                    )
-                ).Ask(body);
+                        new UpdateStorageItemPurchasePriceRequest(bus)))
+                    .Ask(request);
             
             return result switch
             {
@@ -281,20 +316,27 @@ namespace Nano35.Storage.Api.Controllers
         
         [HttpPatch]
         [Route("UpdateStorageItemRetailPrice")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateStorageItemRetailPriceSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateStorageItemRetailPriceErrorHttpResponse))] 
         public async Task<IActionResult> UpdateStorageItemRetailPrice(
-            [FromBody] UpdateStorageItemRetailPriceHttpContext body)
+            [FromBody] UpdateStorageItemRetailPriceHttpBody body)
         {
             
             var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedUpdateStorageItemRetailPriceRequest>) _services
-                .GetService(typeof(ILogger<LoggedUpdateStorageItemRetailPriceRequest>));
+            var logger = (ILogger<LoggedUpdateStorageItemRetailPriceRequest>) _services.GetService(typeof(ILogger<LoggedUpdateStorageItemRetailPriceRequest>));
 
+            var request = new UpdateStorageItemRetailPriceRequestContract()
+            {
+                RetailPrice = body.RetailPrice,
+                Id = body.Id
+            };
+            
             var result =
                 await new LoggedUpdateStorageItemRetailPriceRequest(logger,  
                     new ValidatedUpdateStorageItemRetailPriceRequest(
-                        new UpdateStorageItemRetailPriceRequest(bus)
-                    )
-                ).Ask(body);
+                        new UpdateStorageItemRetailPriceRequest(bus)))
+                    .Ask(request);
             
             return result switch
             {

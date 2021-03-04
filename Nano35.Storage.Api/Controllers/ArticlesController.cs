@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using MassTransit;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Storage.Artifacts;
@@ -60,21 +61,29 @@ namespace Nano35.Storage.Api.Controllers
         /// </summary>
         [HttpGet]
         [Route("GetAllArticles")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllArticlesSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllArticlesErrorHttpResponse))] 
         public async Task<IActionResult> GetAllArticles(
-            [FromQuery] GetAllArticlesHttpContext query)
+            [FromQuery] GetAllArticlesHttpQuery query)
         {
             // ToDo Hey Maslyonok
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetAllArticlesRequest>)_services.GetService(typeof(ILogger<LoggedGetAllArticlesRequest>));
+
+            var request = new GetAllArticlesRequestContract()
+            {
+                InstanceId = query.InstanceId
+            };
             
             // ToDo Hey Maslyonok
             // Send request to pipeline
             var result = 
                 await new LoggedGetAllArticlesRequest(logger,
                     new ValidatedGetAllArticlesRequest(
-                        new GetAllArticlesRequest(bus)
-                        )).Ask(query);
+                        new GetAllArticlesRequest(bus)))
+                    .Ask(request);
             
             // ToDo Hey Maslyonok
             // Check response of get all instances request
@@ -86,25 +95,31 @@ namespace Nano35.Storage.Api.Controllers
                 _ => BadRequest()
             };
         }
-    
+         
         [HttpGet]
         [Route("GetAllArticleModels")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllArticleModelsSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllArticleModelsErrorHttpResponse))] 
         public async Task<IActionResult> GetAllArticleModels(
-            [FromQuery] GetAllArticlesModelsHttpContext query)
+            [FromQuery] GetAllArticleModelsHttpQuery query)
         {
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetAllArticlesModelsRequest>)_services.GetService(typeof(ILogger<LoggedGetAllArticlesModelsRequest>));
+
+            var request = new GetAllArticlesModelsRequestContract()
+            {
+                CategoryId = query.CategoryId,
+                InstanceId = query.InstanceId
+            };
             
-            // Send request to pipeline
             var result = 
                 await new LoggedGetAllArticlesModelsRequest(logger,
                     new ValidatedGetAllArticlesModelsRequest(
-                        new GetAllArticlesModelsRequest(bus)
-                        )).Ask(query);
+                        new GetAllArticlesModelsRequest(bus)))
+                    .Ask(request);
             
-            // Check response of get all instances request
-            // You can check result by result contracts
             return result switch
             {
                 IGetAllArticlesModelsSuccessResultContract success => Ok(success.Data),
@@ -115,22 +130,27 @@ namespace Nano35.Storage.Api.Controllers
     
         [HttpGet]
         [Route("GetAllArticleBrands")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllArticleBrandsSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllArticleBrandsErrorHttpResponse))] 
         public async Task<IActionResult> GetAllArticleBrands(
-            [FromQuery] GetAllArticlesBrandsHttpContext query)
+            [FromQuery] GetAllArticlesBrandsHttpQuery query)
         {
-            // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetAllArticlesBrandsRequest>)_services.GetService(typeof(ILogger<LoggedGetAllArticlesBrandsRequest>));
+
+            var request = new GetAllArticlesBrandsRequestContract()
+            {
+                CategoryId = query.CategoryId,
+                InstanceId = query.InstanceId
+            };
             
-            // Send request to pipeline
             var result = 
                 await new LoggedGetAllArticlesBrandsRequest(logger,
                     new ValidatedGetAllArticlesBrandsRequest(
-                        new GetAllArticlesBrandsRequest(bus)
-                        )).Ask(query);
+                        new GetAllArticlesBrandsRequest(bus)))
+                    .Ask(request);
             
-            // Check response of get all instances request
-            // You can check result by result contracts
             return result switch
             {
                 IGetAllArticlesBrandsSuccessResultContract success => Ok(success.Data),
@@ -141,22 +161,26 @@ namespace Nano35.Storage.Api.Controllers
     
         [HttpGet]
         [Route("GetArticleById")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetArticleByIdSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetArticleByIdErrorHttpResponse))] 
         public async Task<IActionResult> GetArticleById(
-            [FromQuery] GetArticleByIdHttpContext query)
+            [FromQuery] GetArticleByIdHttpQuery query)
         {
-            // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetArticleByIdRequest>)_services.GetService(typeof(ILogger<LoggedGetArticleByIdRequest>));
+
+            var request = new GetArticleByIdRequestContract()
+            {
+                Id = query.Id
+            };
             
-            // Send request to pipeline
             var result = 
                 await new LoggedGetArticleByIdRequest(logger,
                     new ValidatedGetArticleByIdRequest(
-                        new GetArticleByIdRequest(bus)
-                        )).Ask(query);
+                        new GetArticleByIdRequest(bus)))
+                    .Ask(request);
             
-            // Check response of get all instances request
-            // You can check result by result contracts
             return result switch
             {
                 IGetArticleByIdSuccessResultContract success => Ok(success.Data),
@@ -167,22 +191,33 @@ namespace Nano35.Storage.Api.Controllers
 
         [HttpPost]
         [Route("CreateArticle")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateArticleSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateArticleErrorHttpResponse))] 
         public async Task<IActionResult> CreateArticle(
-            [FromBody] CreateArticleHttpContext query)
+            [FromHeader] CreateArticleHttpHeader header,
+            [FromBody] CreateArticleHttpBody body)
         {
-            // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedCreateArticleRequest>)_services.GetService(typeof(ILogger<LoggedCreateArticleRequest>));
+
+            var request = new CreateArticleRequestContract()
+            {
+                Brand = body.Brand,
+                CategoryId = body.CategoryId,
+                Info = body.Info,
+                InstanceId = header.InstanceId,
+                Model = body.Model,
+                NewId = header.NewId,
+                Specs = body.Specs
+            };
             
-            // Send request to pipeline
             var result = 
                 await new LoggedCreateArticleRequest(logger,
                     new ValidatedCreateArticleRequest(
-                        new CreateArticleRequest(bus)
-                        )).Ask(query);
+                        new CreateArticleRequest(bus)))
+                    .Ask(request);
             
-            // Check response of get all instances request
-            // You can check result by result contracts
             return result switch
             {
                 ICreateArticleSuccessResultContract => Ok(),
@@ -193,19 +228,27 @@ namespace Nano35.Storage.Api.Controllers
 
         [HttpPatch]
         [Route("UpdateArticleBrand")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateArticleBrandSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateArticleBrandErrorHttpResponse))] 
         public async Task<IActionResult> UpdateArticleBrand(
-            [FromBody] UpdateArticleBrandHttpContext body)
+            [FromBody] UpdateArticleBrandHttpBody body)
         {
             
             var bus = (IBus) _services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedUpdateArticleBrandRequest>) _services.GetService(typeof(ILogger<LoggedUpdateArticleBrandRequest>));
 
+            var request = new UpdateArticleBrandRequestContract()
+            {
+                Brand = body.Brand,
+                Id = body.Id
+            };
+            
             var result =
                 await new LoggedUpdateArticleBrandRequest(logger,  
                     new ValidatedUpdateArticleBrandRequest(
-                        new UpdateArticleBrandRequest(bus)
-                    )
-                ).Ask(body);
+                        new UpdateArticleBrandRequest(bus)))
+                    .Ask(request);
             
             return result switch
             {
@@ -217,19 +260,27 @@ namespace Nano35.Storage.Api.Controllers
         
         [HttpPatch]
         [Route("UpdateArticleCategory")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateArticleCategorySuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateArticleCategoryErrorHttpResponse))] 
         public async Task<IActionResult> UpdateArticleCategory(
-            [FromBody] UpdateArticleCategoryHttpContext body)
+            [FromBody] UpdateArticleCategoryHttpBody body)
         {
             
             var bus = (IBus) _services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedUpdateArticleCategoryRequest>) _services.GetService(typeof(ILogger<LoggedUpdateArticleCategoryRequest>));
 
+            var request = new UpdateArticleCategoryRequestContract()
+            {
+                Id = body.Id,
+                CategoryId = body.CategoryId
+            };
+            
             var result =
                 await new LoggedUpdateArticleCategoryRequest(logger,  
                     new ValidatedUpdateArticleCategoryRequest(
-                        new UpdateArticleCategoryRequest(bus)
-                    )
-                ).Ask(body);
+                        new UpdateArticleCategoryRequest(bus)))
+                    .Ask(request);
             
             return result switch
             {
@@ -241,19 +292,27 @@ namespace Nano35.Storage.Api.Controllers
         
         [HttpPatch]
         [Route("UpdateArticleInfo")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateArticleInfoSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateArticleInfoErrorHttpResponse))] 
         public async Task<IActionResult> UpdateArticleInfo(
-            [FromBody] UpdateArticleInfoHttpContext body)
+            [FromBody] UpdateArticleInfoHttpBody body)
         {
             
             var bus = (IBus) _services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedUpdateArticleInfoRequest>) _services.GetService(typeof(ILogger<LoggedUpdateArticleInfoRequest>));
 
+            var request = new UpdateArticleInfoRequestContract()
+            {
+                Id = body.Id,
+                Info = body.Info
+            };
+            
             var result =
                 await new LoggedUpdateArticleInfoRequest(logger,  
                     new ValidatedUpdateArticleInfoRequest(
-                        new UpdateArticleInfoRequest(bus)
-                    )
-                ).Ask(body);
+                        new UpdateArticleInfoRequest(bus)))
+                    .Ask(request);
             
             return result switch
             {
@@ -265,19 +324,27 @@ namespace Nano35.Storage.Api.Controllers
         
         [HttpPatch]
         [Route("UpdateArticleModel")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateArticleModelSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateArticleModelErrorHttpResponse))] 
         public async Task<IActionResult> UpdateArticleModel(
-            [FromBody] UpdateArticleModelHttpContext body)
+            [FromBody] UpdateArticleModelHttpBody body)
         {
             
             var bus = (IBus) _services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedUpdateArticleModelRequest>) _services.GetService(typeof(ILogger<LoggedUpdateArticleModelRequest>));
 
+            var request = new UpdateArticleModelRequestContract()
+            {
+                Id = body.Id,
+                Model = body.Model
+            };
+            
             var result =
                 await new LoggedUpdateArticleModelRequest(logger,  
-                    new ValidatedUpdateArticleModelRequest(
-                        new UpdateArticleModelRequest(bus)
-                    )
-                ).Ask(body);
+                        new ValidatedUpdateArticleModelRequest(
+                            new UpdateArticleModelRequest(bus)))
+                    .Ask(request);
             
             return result switch
             {
@@ -285,6 +352,13 @@ namespace Nano35.Storage.Api.Controllers
                 IUpdateArticleModelErrorResultContract error => BadRequest(error.Message),
                 _ => BadRequest()
             };
+        }
+        
+        [HttpDelete]
+        [Route("DeleteArticle")]
+        public async Task<IActionResult> DeleteArticle()
+        {
+            return Ok();
         }
     }
 }

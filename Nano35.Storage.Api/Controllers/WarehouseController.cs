@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
 using MassTransit;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Storage.Artifacts;
+using Nano35.HttpContext.instance;
 using Nano35.HttpContext.storage;
 using Nano35.Storage.Api.Requests.CreateCancellation;
 using Nano35.Storage.Api.Requests.CreateComing;
@@ -14,9 +16,6 @@ using Nano35.Storage.Api.Requests.GetComingDetailsById;
 
 namespace Nano35.Storage.Api.Controllers
 {
-    /// <summary>
-    /// http://localhost:6003/articles/[action]
-    /// </summary>
     [ApiController]
     [Route("[controller]")]
     public class WarehouseController :
@@ -24,36 +23,25 @@ namespace Nano35.Storage.Api.Controllers
     {
         private readonly IServiceProvider _services;
 
-        /// <summary>
-        /// Controller provide IServiceProvider from asp net core DI
-        /// for registration services to pipe nodes
-        /// </summary>
         public WarehouseController(
             IServiceProvider services)
         {
             _services = services;
         }
 
-        /// <summary>
-        /// Controllers accept a HttpContext type
-        /// All controllers actions works by pipelines
-        /// Implementation works with 3 steps
-        /// 1. Setup DI services from IServiceProvider;
-        /// 2. Building pipeline like a onion
-        ///     '(PipeNode1(PipeNode2(PipeNode3(...).Ask()).Ask()).Ask()).Ask()';
-        /// 3. Response pattern match of pipeline response;
-        /// </summary>
         [HttpPost]
         [Route("CreateComing")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateComingSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateComingErrorHttpResponse))] 
         public async Task<IActionResult> CreateComing(
-            [FromHeader] CreateComingHttpContext.CreateComingHeader header,
-            [FromBody] CreateComingHttpContext.CreateComingBody body)
+            [FromHeader] CreateComingHttpHeader header,
+            [FromBody] CreateComingHttpBody body)
         {
-            // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedCreateComingRequest>)_services.GetService(typeof(ILogger<LoggedCreateComingRequest>));
             
-            var message = new CreateComingHttpContext.CreateComingRequest()
+            var message = new CreateComingRequestContract()
             {
                 NewId = header.NewId,
                 InstanceId = header.InstanceId,
@@ -64,15 +52,12 @@ namespace Nano35.Storage.Api.Controllers
                 ClientId = body.ClientId,
             };
             
-            // Send request to pipeline
             var result = 
                 await new LoggedCreateComingRequest(logger,
                     new ValidatedCreateComingRequest(
-                        new CreateComingRequest(bus)
-                    )).Ask(message);
+                        new CreateComingRequest(bus)))
+                    .Ask(message);
             
-            // Check response of get all instances request
-            // You can check result by result contracts
             return result switch
             {
                 ICreateComingSuccessResultContract success => Ok(),
@@ -83,21 +68,26 @@ namespace Nano35.Storage.Api.Controllers
     
         [HttpGet]
         [Route("GetComingDetailsById")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetComingDetailsByIdSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetComingDetailsByIdErrorHttpResponse))] 
         public async Task<IActionResult> GetComingDetailsById(
-            [FromQuery] GetComingDetailsByIdHttpContext query)
+            [FromQuery] GetComingDetailsByIdHttpQuery query)
         {
-            // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetComingDetailsByIdRequest>)_services.GetService(typeof(ILogger<LoggedGetComingDetailsByIdRequest>));
+
+            var request = new GetComingDetailsByIdRequestContract()
+            {
+                Id = query.Id
+            };
             
-            // Send request to pipeline
             var result = 
                 await new LoggedGetComingDetailsByIdRequest(logger,
                     new ValidatedGetComingDetailsByIdRequest(
-                        new GetComingDetailsByIdRequest(bus)
-                    )).Ask(query);
+                        new GetComingDetailsByIdRequest(bus)))
+                    .Ask(request);
             
-            // Check response of get all instances request
             return result switch
             {
                 IGetComingDetailsByIdSuccessResultContract success => Ok(success),
@@ -108,25 +98,27 @@ namespace Nano35.Storage.Api.Controllers
         
         [HttpGet]
         [Route("GetAllComings")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllComingsSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllComingsErrorHttpResponse))] 
         public async Task<IActionResult> GetAllComings(
-            [FromHeader] GetAllComingsHttpContext.GetAllComingsHeader header,
-            [FromQuery] GetAllComingsHttpContext.GetAllComingsQuery query)
+            [FromHeader] GetAllComingsHttpQuery query)
         {
-            var request = new GetAllComingsHttpContext.GetAllComingsRequest()
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<LoggedGetAllComingsRequest>)_services.GetService(typeof(ILogger<LoggedGetAllComingsRequest>));
+            
+            var request = new GetAllComingsRequestContract()
             {
-                InstanceId = header.InstanceId,
+                InstanceId = query.InstanceId,
                 StorageItemId = query.StorageItemId,
                 UnitId = query.UnitId,
             };
             
-            var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetAllComingsRequest>)_services.GetService(typeof(ILogger<LoggedGetAllComingsRequest>));
-            
             var result = 
                 await new LoggedGetAllComingsRequest(logger,
                     new ValidatedGetAllComingsRequest(
-                        new GetAllComingsRequest(bus)
-                    )).Ask(request);
+                        new GetAllComingsRequest(bus)))
+                    .Ask(request);
             
             return result switch
             {
@@ -138,11 +130,17 @@ namespace Nano35.Storage.Api.Controllers
         
         [HttpPost]
         [Route("CreateMove")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateMoveSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateMoveErrorHttpResponse))] 
         public async Task<IActionResult> CreateMove(
-            [FromHeader] CreateMoveHttpContext.CreateMoveHeader header,
-            [FromBody] CreateMoveHttpContext.CreateMoveBody body)
+            [FromHeader] CreateMoveHttpHeader header,
+            [FromBody] CreateMoveHttpBody body)
         {
-            var request = new CreateMoveHttpContext.CreateMoveRequest()
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<LoggedCreateMoveRequest>)_services.GetService(typeof(ILogger<LoggedCreateMoveRequest>));
+            
+            var request = new CreateMoveRequestContract()
             {
                 NewId = header.NewId,
                 InstanceId = header.InstanceId,
@@ -152,19 +150,12 @@ namespace Nano35.Storage.Api.Controllers
                 Number = body.Number,
             };
             
-            // Setup configuration of pipeline
-            var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedCreateMoveRequest>)_services.GetService(typeof(ILogger<LoggedCreateMoveRequest>));
-            
-            // Send request to pipeline
             var result = 
                 await new LoggedCreateMoveRequest(logger,
                     new ValidatedCreateMoveRequest(
-                        new CreateMoveRequest(bus)
-                    )).Ask(request);
+                        new CreateMoveRequest(bus)))
+                    .Ask(request);
             
-            // Check response of get all instances request
-            // You can check result by result contracts
             return result switch
             {
                 ICreateMoveSuccessResultContract success => Ok(),
@@ -189,11 +180,17 @@ namespace Nano35.Storage.Api.Controllers
         
         [HttpPost]
         [Route("CreateSelle")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateSelleSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateSelleErrorHttpResponse))] 
         public async Task<IActionResult> CreateSelle(
-            [FromHeader] CreateSelleHttpContext.CreateSelleHeader header,
-            [FromBody] CreateSelleHttpContext.CreateSelleBody body)
+            [FromHeader] CreateSelleHttpHeader header,
+            [FromBody] CreateSelleHttpBody body)
         {
-            var request = new CreateSelleHttpContext.CreateSelleRequest()
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<LoggedCreateSelleRequest>)_services.GetService(typeof(ILogger<LoggedCreateSelleRequest>));
+            
+            var request = new CreateSelleRequestContract()
             {
                 Details = body.Details,
                 UnitId = body.UnitId,
@@ -203,19 +200,12 @@ namespace Nano35.Storage.Api.Controllers
                 ClientId = body.ClientId,
             };
             
-            // Setup configuration of pipeline
-            var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedCreateSelleRequest>)_services.GetService(typeof(ILogger<LoggedCreateSelleRequest>));
-            
-            // Send request to pipeline
             var result = 
                 await new LoggedCreateSelleRequest(logger,
                     new ValidatedCreateSelleRequest(
-                        new CreateSelleRequest(bus)
-                    )).Ask(request);
+                        new CreateSelleRequest(bus)))
+                    .Ask(request);
             
-            // Check response of get all instances request
-            // You can check result by result contracts
             return result switch
             {
                 ICreateSelleSuccessResultContract success => Ok(),
@@ -240,11 +230,14 @@ namespace Nano35.Storage.Api.Controllers
         
         [HttpPost]
         [Route("CreateCancellation")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateCancellationSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateCancellationErrorHttpResponse))] 
         public async Task<IActionResult> CreateCancellation(
-            [FromHeader] CreateCancellationHttpContext.CreateCancellationHeader header,
-            [FromBody] CreateCancellationHttpContext.CreateCancellationBody body)
+            [FromHeader] CreateCancellationHttpHeader header,
+            [FromBody] CreateCancellationHttpBody body)
         {
-            var request = new CreateCancellationHttpContext.CreateCancellationRequestContract()
+            var request = new CreateCancellationRequestContract()
             {
                 Comment = body.Comment,
                 Details = body.Details,
@@ -254,19 +247,15 @@ namespace Nano35.Storage.Api.Controllers
                 UnitId = body.UnitId
             };
             
-            // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedCreateCancellationRequest>)_services.GetService(typeof(ILogger<LoggedCreateCancellationRequest>));
             
-            // Send request to pipeline
             var result = 
                 await new LoggedCreateCancellationRequest(logger,
                     new ValidatedCreateCancellationRequest(
-                        new CreateCancellationRequest(bus)
-                    )).Ask(request);
+                        new CreateCancellationRequest(bus)))
+                    .Ask(request);
             
-            // Check response of get all instances request
-            // You can check result by result contracts
             return result switch
             {
                 ICreateCancellationSuccessResultContract success => Ok(),

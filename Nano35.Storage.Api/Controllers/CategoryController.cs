@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
 using MassTransit;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Storage.Artifacts;
+using Nano35.HttpContext.instance;
 using Nano35.HttpContext.storage;
 using Nano35.Storage.Api.Requests.CreateCategory;
 using Nano35.Storage.Api.Requests.GetAllArticleCategories;
@@ -17,8 +19,6 @@ namespace Nano35.Storage.Api.Controllers
     public class CategoryController :
         ControllerBase
     {
-        
-        
         private readonly IServiceProvider _services;
         
         public CategoryController(
@@ -29,22 +29,27 @@ namespace Nano35.Storage.Api.Controllers
     
         [HttpGet]
         [Route("GetAllArticleCategories")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllArticleCategoriesSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllArticleCategoriesErrorHttpResponse))] 
         public async Task<IActionResult> GetAllArticleCategories(
-            [FromQuery] GetAllArticlesCategoriesHttpContext query)
+            [FromQuery] GetAllArticlesCategoriesHttpQuery query)
         {
-            // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetAllArticlesCategoriesRequest>)_services.GetService(typeof(ILogger<LoggedGetAllArticlesCategoriesRequest>));
+
+            var request = new GetAllArticlesCategoriesRequestContract()
+            {
+                InstanceId = query.InstanceId,
+                ParentId = query.ParentId
+            };
             
-            // Send request to pipeline
             var result = 
                 await new LoggedGetAllArticlesCategoriesRequest(logger,
                     new ValidatedGetAllArticlesCategoriesRequest(
-                        new GetAllArticlesCategoriesRequest(bus)
-                    )).Ask(query);
+                        new GetAllArticlesCategoriesRequest(bus)))
+                    .Ask(request);
             
-            // Check response of get all instances request
-            // You can check result by result contracts
             return result switch
             {
                 IGetAllArticlesCategoriesSuccessResultContract success => Ok(success.Data),
@@ -55,22 +60,30 @@ namespace Nano35.Storage.Api.Controllers
         
         [HttpPost]
         [Route("CreateCategory")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateCategorySuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateCategoryErrorHttpResponse))] 
         public async Task<IActionResult> CreateCategory(
-            [FromBody] CreateCategoryHttpContext query)
+            [FromHeader] CreateCategoryHttpHeader header,
+            [FromBody] CreateCategoryHttpBody body)
         {
-            // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedCreateCategoryRequest>)_services.GetService(typeof(ILogger<LoggedCreateCategoryRequest>));
+
+            var request = new CreateCategoryRequestContract()
+            {
+                InstanceId = header.InstanceId,
+                NewId = header.NewId,
+                Name = body.Name,
+                ParentCategoryId = body.ParentCategoryId
+            };
             
-            // Send request to pipeline
             var result = 
                 await new LoggedCreateCategoryRequest(logger,
                     new ValidatedCreateCategoryRequest(
-                        new CreateCategoryRequest(bus)
-                    )).Ask(query);
+                        new CreateCategoryRequest(bus)))
+                    .Ask(request);
             
-            // Check response of get all instances request
-            // You can check result by result contracts
             return result switch
             {
                 ICreateCategorySuccessResultContract => Ok(),
@@ -81,19 +94,27 @@ namespace Nano35.Storage.Api.Controllers
         
         [HttpPatch]
         [Route("UpdateCategoryName")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateCategoryNameSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateCategoryNameErrorHttpResponse))] 
         public async Task<IActionResult> UpdateCategoryName(
-            [FromBody] UpdateCategoryNameHttpContext body)
+            [FromBody] UpdateCategoryNameHttpBody body)
         {
             
             var bus = (IBus) _services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedUpdateCategoryNameRequest>) _services.GetService(typeof(ILogger<LoggedUpdateCategoryNameRequest>));
 
+            var request = new UpdateCategoryNameRequestContract()
+            {
+                Id = body.Id,
+                Name = body.Name
+            };
+            
             var result =
                 await new LoggedUpdateCategoryNameRequest(logger,  
                     new ValidatedUpdateCategoryNameRequest(
-                        new UpdateCategoryNameRequest(bus)
-                    )
-                ).Ask(body);
+                        new UpdateCategoryNameRequest(bus)))
+                    .Ask(request);
             
             return result switch
             {
@@ -105,20 +126,29 @@ namespace Nano35.Storage.Api.Controllers
         
         [HttpPatch]
         [Route("UpdateCategoryParentCategoryId")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateCategoryParentCategoryIdSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateCategoryParentCategoryIdErrorHttpResponse))] 
         public async Task<IActionResult> UpdateCategoryParentCategoryId(
-            [FromBody] UpdateCategoryParentCategoryIdHttpContext body)
+            [FromBody] UpdateCategoryParentCategoryHttpBody body)
         {
             
             var bus = (IBus) _services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedUpdateCategoryParentCategoryIdRequest>) _services
                 .GetService(typeof(ILogger<LoggedUpdateCategoryParentCategoryIdRequest>));
 
+            var request = new UpdateCategoryParentCategoryIdRequestContract()
+            {
+                Id = body.Id,
+                ParentCategoryId = body.ParentCategoryId
+            };
+            
             var result =
                 await new LoggedUpdateCategoryParentCategoryIdRequest(logger,  
                     new ValidatedUpdateCategoryParentCategoryIdRequest(
                         new UpdateCategoryParentCategoryIdRequest(bus)
                     )
-                ).Ask(body);
+                ).Ask(request);
             
             return result switch
             {
