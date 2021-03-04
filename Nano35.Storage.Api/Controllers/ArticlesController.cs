@@ -117,8 +117,7 @@ namespace Nano35.Storage.Api.Controllers
             var result = 
                 await new LoggedGetAllArticlesModelsRequest(logger,
                     new ValidatedGetAllArticlesModelsRequest(
-                        new GetAllArticlesModelsRequest(bus)))
-                    .Ask(request);
+                        new GetAllArticlesModelsRequest(bus))).Ask(request);
             
             return result switch
             {
