@@ -35,7 +35,6 @@ namespace Nano35.Storage.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateComingSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateComingErrorHttpResponse))] 
         public async Task<IActionResult> CreateComing(
-            [FromHeader] CreateComingHttpHeader header,
             [FromBody] CreateComingHttpBody body)
         {
             var bus = (IBus)_services.GetService(typeof(IBus));
@@ -43,8 +42,8 @@ namespace Nano35.Storage.Api.Controllers
             
             var message = new CreateComingRequestContract()
             {
-                NewId = header.NewId,
-                InstanceId = header.InstanceId,
+                NewId = body.NewId,
+                InstanceId = body.InstanceId,
                 Number = body.Number,
                 UnitId = body.UnitId,
                 Comment = body.Comment,
@@ -61,7 +60,7 @@ namespace Nano35.Storage.Api.Controllers
             return result switch
             {
                 ICreateComingSuccessResultContract success => Ok(),
-                ICreateComingErrorResultContract error => BadRequest(error.Message),
+                ICreateComingErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -91,7 +90,7 @@ namespace Nano35.Storage.Api.Controllers
             return result switch
             {
                 IGetComingDetailsByIdSuccessResultContract success => Ok(success),
-                IGetComingDetailsByIdErrorResultContract error => BadRequest(error.Message),
+                IGetComingDetailsByIdErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -122,8 +121,8 @@ namespace Nano35.Storage.Api.Controllers
             
             return result switch
             {
-                IGetAllComingsSuccessResultContract success => Ok(success.Data),
-                IGetAllComingsErrorResultContract error => BadRequest(error.Message),
+                IGetAllComingsSuccessResultContract success => Ok(success),
+                IGetAllComingsErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -134,7 +133,6 @@ namespace Nano35.Storage.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateMoveSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateMoveErrorHttpResponse))] 
         public async Task<IActionResult> CreateMove(
-            [FromHeader] CreateMoveHttpHeader header,
             [FromBody] CreateMoveHttpBody body)
         {
             var bus = (IBus)_services.GetService(typeof(IBus));
@@ -142,8 +140,8 @@ namespace Nano35.Storage.Api.Controllers
             
             var request = new CreateMoveRequestContract()
             {
-                NewId = header.NewId,
-                InstanceId = header.InstanceId,
+                NewId = body.NewId,
+                InstanceId = body.InstanceId,
                 FromUnitId = body.FromUnitId,
                 ToUnitId = body.ToUnitId,
                 Details = body.Details,
@@ -158,8 +156,8 @@ namespace Nano35.Storage.Api.Controllers
             
             return result switch
             {
-                ICreateMoveSuccessResultContract success => Ok(),
-                ICreateMoveErrorResultContract error => BadRequest(error.Message),
+                ICreateMoveSuccessResultContract => Ok(),
+                ICreateMoveErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -184,7 +182,6 @@ namespace Nano35.Storage.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateSelleSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateSelleErrorHttpResponse))] 
         public async Task<IActionResult> CreateSelle(
-            [FromHeader] CreateSelleHttpHeader header,
             [FromBody] CreateSelleHttpBody body)
         {
             var bus = (IBus)_services.GetService(typeof(IBus));
@@ -194,8 +191,8 @@ namespace Nano35.Storage.Api.Controllers
             {
                 Details = body.Details,
                 UnitId = body.UnitId,
-                InstanceId = header.InstanceId,
-                NewId = header.NewId,
+                InstanceId = body.InstanceId,
+                NewId = body.NewId,
                 Number = body.Number,
                 ClientId = body.ClientId,
             };
@@ -208,8 +205,8 @@ namespace Nano35.Storage.Api.Controllers
             
             return result switch
             {
-                ICreateSelleSuccessResultContract success => Ok(),
-                ICreateSelleErrorResultContract error => BadRequest(error.Message),
+                ICreateSelleSuccessResultContract => Ok(),
+                ICreateSelleErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -234,15 +231,14 @@ namespace Nano35.Storage.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateCancellationSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateCancellationErrorHttpResponse))] 
         public async Task<IActionResult> CreateCancellation(
-            [FromHeader] CreateCancellationHttpHeader header,
             [FromBody] CreateCancellationHttpBody body)
         {
             var request = new CreateCancellationRequestContract()
             {
                 Comment = body.Comment,
                 Details = body.Details,
-                InstanceId = header.InstanceId,
-                NewId = header.NewId,
+                InstanceId = body.InstanceId,
+                NewId = body.NewId,
                 Number = body.Number,
                 UnitId = body.UnitId
             };
@@ -258,8 +254,8 @@ namespace Nano35.Storage.Api.Controllers
             
             return result switch
             {
-                ICreateCancellationSuccessResultContract success => Ok(),
-                ICreateCancellationErrorResultContract error => BadRequest(error.Message),
+                ICreateCancellationSuccessResultContract => Ok(),
+                ICreateCancellationErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }

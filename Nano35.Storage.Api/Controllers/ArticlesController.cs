@@ -90,8 +90,8 @@ namespace Nano35.Storage.Api.Controllers
             // You can check result by result contracts
             return result switch
             {
-                IGetAllArticlesSuccessResultContract success => Ok(success.Data),
-                IGetAllArticlesErrorResultContract error => BadRequest(error.Message),
+                IGetAllArticlesSuccessResultContract success => Ok(success),
+                IGetAllArticlesErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -121,8 +121,8 @@ namespace Nano35.Storage.Api.Controllers
             
             return result switch
             {
-                IGetAllArticlesModelsSuccessResultContract success => Ok(success.Data),
-                IGetAllArticlesModelsErrorResultContract error => BadRequest(error.Message),
+                IGetAllArticlesModelsSuccessResultContract success => Ok(success),
+                IGetAllArticlesModelsErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -152,8 +152,8 @@ namespace Nano35.Storage.Api.Controllers
             
             return result switch
             {
-                IGetAllArticlesBrandsSuccessResultContract success => Ok(success.Data),
-                IGetAllArticlesBrandsErrorResultContract error => BadRequest(error.Message),
+                IGetAllArticlesBrandsSuccessResultContract success => Ok(success),
+                IGetAllArticlesBrandsErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -194,7 +194,6 @@ namespace Nano35.Storage.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateArticleSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateArticleErrorHttpResponse))] 
         public async Task<IActionResult> CreateArticle(
-            [FromHeader] CreateArticleHttpHeader header,
             [FromBody] CreateArticleHttpBody body)
         {
             var bus = (IBus)_services.GetService(typeof(IBus));
@@ -205,9 +204,9 @@ namespace Nano35.Storage.Api.Controllers
                 Brand = body.Brand,
                 CategoryId = body.CategoryId,
                 Info = body.Info,
-                InstanceId = header.InstanceId,
+                InstanceId = body.InstanceId,
                 Model = body.Model,
-                NewId = header.NewId,
+                NewId = body.NewId,
                 Specs = body.Specs
             };
             
@@ -220,7 +219,7 @@ namespace Nano35.Storage.Api.Controllers
             return result switch
             {
                 ICreateArticleSuccessResultContract => Ok(),
-                ICreateArticleErrorResultContract error => BadRequest(error.Message),
+                ICreateArticleErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -252,7 +251,7 @@ namespace Nano35.Storage.Api.Controllers
             return result switch
             {
                 IUpdateArticleBrandSuccessResultContract => Ok(),
-                IUpdateArticleBrandErrorResultContract error => BadRequest(error.Message),
+                IUpdateArticleBrandErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -284,7 +283,7 @@ namespace Nano35.Storage.Api.Controllers
             return result switch
             {
                 IUpdateArticleCategorySuccessResultContract => Ok(),
-                IUpdateArticleCategoryErrorResultContract error => BadRequest(error.Message),
+                IUpdateArticleCategoryErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -316,7 +315,7 @@ namespace Nano35.Storage.Api.Controllers
             return result switch
             {
                 IUpdateArticleInfoSuccessResultContract => Ok(),
-                IUpdateArticleInfoErrorResultContract error => BadRequest(error.Message),
+                IUpdateArticleInfoErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -348,7 +347,7 @@ namespace Nano35.Storage.Api.Controllers
             return result switch
             {
                 IUpdateArticleModelSuccessResultContract => Ok(),
-                IUpdateArticleModelErrorResultContract error => BadRequest(error.Message),
+                IUpdateArticleModelErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }

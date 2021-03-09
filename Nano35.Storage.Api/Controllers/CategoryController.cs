@@ -52,8 +52,8 @@ namespace Nano35.Storage.Api.Controllers
             
             return result switch
             {
-                IGetAllArticlesCategoriesSuccessResultContract success => Ok(success.Data),
-                IGetAllArticlesCategoriesErrorResultContract error => BadRequest(error.Message),
+                IGetAllArticlesCategoriesSuccessResultContract success => Ok(success),
+                IGetAllArticlesCategoriesErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -64,7 +64,6 @@ namespace Nano35.Storage.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateCategorySuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateCategoryErrorHttpResponse))] 
         public async Task<IActionResult> CreateCategory(
-            [FromHeader] CreateCategoryHttpHeader header,
             [FromBody] CreateCategoryHttpBody body)
         {
             var bus = (IBus)_services.GetService(typeof(IBus));
@@ -72,8 +71,8 @@ namespace Nano35.Storage.Api.Controllers
 
             var request = new CreateCategoryRequestContract()
             {
-                InstanceId = header.InstanceId,
-                NewId = header.NewId,
+                InstanceId = body.InstanceId,
+                NewId = body.NewId,
                 Name = body.Name,
                 ParentCategoryId = body.ParentCategoryId
             };
@@ -87,7 +86,7 @@ namespace Nano35.Storage.Api.Controllers
             return result switch
             {
                 ICreateCategorySuccessResultContract => Ok(),
-                ICreateCategoryErrorResultContract error => BadRequest(error.Message),
+                ICreateCategoryErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -119,7 +118,7 @@ namespace Nano35.Storage.Api.Controllers
             return result switch
             {
                 IUpdateCategoryNameSuccessResultContract => Ok(),
-                IUpdateCategoryNameErrorResultContract error => BadRequest(error.Message),
+                IUpdateCategoryNameErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -153,7 +152,7 @@ namespace Nano35.Storage.Api.Controllers
             return result switch
             {
                 IUpdateCategoryParentCategoryIdSuccessResultContract => Ok(),
-                IUpdateCategoryParentCategoryIdErrorResultContract error => BadRequest(error.Message),
+                IUpdateCategoryParentCategoryIdErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }

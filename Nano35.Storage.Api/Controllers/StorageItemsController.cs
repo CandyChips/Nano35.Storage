@@ -57,8 +57,8 @@ namespace Nano35.Storage.Api.Controllers
             
             return result switch
             {
-                IGetAllStorageItemsSuccessResultContract success => Ok(success.Data),
-                IGetAllStorageItemsErrorResultContract error => BadRequest(error.Message),
+                IGetAllStorageItemsSuccessResultContract success => Ok(success),
+                IGetAllStorageItemsErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -82,8 +82,8 @@ namespace Nano35.Storage.Api.Controllers
             
             return result switch
             {
-                IGetAllStorageItemConditionsSuccessResultContract success => Ok(success.Data),
-                IGetAllStorageItemConditionsErrorResultContract error => BadRequest(error.Message),
+                IGetAllStorageItemConditionsSuccessResultContract success => Ok(success),
+                IGetAllStorageItemConditionsErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -112,8 +112,8 @@ namespace Nano35.Storage.Api.Controllers
             
             return result switch
             {
-                IGetStorageItemByIdSuccessResultContract success => Ok(success.Data),
-                IGetStorageItemByIdErrorResultContract error => BadRequest(error.Message),
+                IGetStorageItemByIdSuccessResultContract success => Ok(success),
+                IGetStorageItemByIdErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -124,7 +124,6 @@ namespace Nano35.Storage.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateStorageItemSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateStorageItemErrorHttpResponse))] 
         public async Task<IActionResult> CreateStorageItem(
-            [FromHeader] CreateStorageItemHttpHeader header,
             [FromBody] CreateStorageItemHttpBody body)
         {
             var bus = (IBus)_services.GetService(typeof(IBus));
@@ -136,8 +135,8 @@ namespace Nano35.Storage.Api.Controllers
                 Comment = body.Comment,
                 ConditionId = body.ConditionId,
                 HiddenComment = body.HiddenComment,
-                InstanceId = header.InstanceId,
-                NewId = header.NewId,
+                InstanceId = body.InstanceId,
+                NewId = body.NewId,
                 PurchasePrice = body.PurchasePrice,
                 RetailPrice = body.RetailPrice
             };
@@ -151,7 +150,7 @@ namespace Nano35.Storage.Api.Controllers
             return result switch
             {
                 ICreateStorageItemSuccessResultContract => Ok(),
-                ICreateStorageItemErrorResultContract error => BadRequest(error.Message),
+                ICreateStorageItemErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -183,7 +182,7 @@ namespace Nano35.Storage.Api.Controllers
             return result switch
             {
                 IUpdateStorageItemArticleSuccessResultContract => Ok(),
-                IUpdateStorageItemArticleErrorResultContract error => BadRequest(error.Message),
+                IUpdateStorageItemArticleErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -215,7 +214,7 @@ namespace Nano35.Storage.Api.Controllers
             return result switch
             {
                 IUpdateStorageItemCommentSuccessResultContract => Ok(),
-                IUpdateStorageItemCommentErrorResultContract error => BadRequest(error.Message),
+                IUpdateStorageItemCommentErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -246,7 +245,7 @@ namespace Nano35.Storage.Api.Controllers
             return result switch
             {
                 IUpdateStorageItemConditionSuccessResultContract => Ok(),
-                IUpdateStorageItemConditionErrorResultContract error => BadRequest(error.Message),
+                IUpdateStorageItemConditionErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -277,7 +276,7 @@ namespace Nano35.Storage.Api.Controllers
             return result switch
             {
                 IUpdateStorageItemHiddenCommentSuccessResultContract => Ok(),
-                IUpdateStorageItemHiddenCommentErrorResultContract error => BadRequest(error.Message),
+                IUpdateStorageItemHiddenCommentErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -309,7 +308,7 @@ namespace Nano35.Storage.Api.Controllers
             return result switch
             {
                 IUpdateStorageItemPurchasePriceSuccessResultContract => Ok(),
-                IUpdateStorageItemPurchasePriceErrorResultContract error => BadRequest(error.Message),
+                IUpdateStorageItemPurchasePriceErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
@@ -341,7 +340,7 @@ namespace Nano35.Storage.Api.Controllers
             return result switch
             {
                 IUpdateStorageItemRetailPriceSuccessResultContract => Ok(),
-                IUpdateStorageItemRetailPriceErrorResultContract error => BadRequest(error.Message),
+                IUpdateStorageItemRetailPriceErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
