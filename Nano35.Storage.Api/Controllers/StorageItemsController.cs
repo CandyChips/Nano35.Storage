@@ -39,7 +39,7 @@ namespace Nano35.Storage.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllStorageItemsSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllStorageItemsErrorHttpResponse))] 
         public async Task<IActionResult> GetAllStorageItems(
-            [FromHeader] GetAllStorageItemsQuery header)
+            [FromQuery] GetAllStorageItemsQuery header)
         {
             var bus = (IBus) _services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetAllStorageItemsRequest>) _services.GetService(typeof(ILogger<LoggedGetAllStorageItemsRequest>));
