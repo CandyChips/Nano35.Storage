@@ -12,6 +12,7 @@ using Nano35.Storage.Api.Requests.CreateComing;
 using Nano35.Storage.Api.Requests.CreateMove;
 using Nano35.Storage.Api.Requests.CreateSelle;
 using Nano35.Storage.Api.Requests.GetAllComings;
+using Nano35.Storage.Api.Requests.GetAllPlacesOnStorage;
 using Nano35.Storage.Api.Requests.GetComingDetailsById;
 
 namespace Nano35.Storage.Api.Controllers
@@ -223,6 +224,37 @@ namespace Nano35.Storage.Api.Controllers
         public async Task<IActionResult> GetAllSelleDetailsById()
         {
             return Ok();
+        }
+        
+        [HttpGet]
+        [Route("GetAllPlacesOnStorage")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllPlacesOnStorageSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllPlacesOnStorageErrorHttpResponse))] 
+        public async Task<IActionResult> GetAllStorageItems(
+            [FromQuery] GetAllPlacesOnStorageHttpContext header)
+        {
+            var bus = (IBus) _services.GetService(typeof(IBus));
+            var logger = (ILogger<LoggedGetAllPlacesOnStorageRequest>) _services.GetService(typeof(ILogger<LoggedGetAllPlacesOnStorageRequest>));
+
+            var request = new GetAllPlacesOnStorageContract()
+            {
+                UnitId = header.UnitId,
+                StorageItemId = header.StorageItemId
+            };
+            
+            var result = 
+                await new LoggedGetAllPlacesOnStorageRequest(logger,
+                        new ValidatedGetAllPlacesOnStorageRequest(
+                            new GetAllPlacesOnStorageRequest(bus)))
+                    .Ask(request);
+            
+            return result switch
+            {
+                IGetAllPlacesOnStorageSuccessResultContract success => Ok(success),
+                IGetAllPlacesOnStorageErrorResultContract error => BadRequest(error),
+                _ => BadRequest()
+            };
         }
         
         [HttpPost]

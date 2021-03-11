@@ -99,6 +99,8 @@ namespace Nano35.Storage.Api.Configurations
                     new Uri($"{ContractBase.RabbitMqLocation}/IUpdateStorageItemPurchasePriceRequestContract"));
                 x.AddRequestClient<IUpdateStorageItemRetailPriceRequestContract>(
                     new Uri($"{ContractBase.RabbitMqLocation}/IUpdateStorageItemRetailPriceRequestContract"));
+                x.AddRequestClient<IGetAllPlacesOnStorageContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/IGetAllPlacesOnStorageContract"));
             });
             services.AddMassTransitHostedService();
         }

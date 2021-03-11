@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Nano35.Contracts;
+using Nano35.Contracts.Storage.Artifacts;
 
 namespace Nano35.Storage.Processor.Models
 {
@@ -62,6 +64,22 @@ namespace Nano35.Storage.Processor.Models
                 .WithMany()
                 .OnDelete(DeleteBehavior.NoAction)
                 .HasForeignKey(p => new {p.StorageItemId, p.InstanceId});
+        }
+    }
+
+    public class WarehouseByItemOnStorageAutoMapperProfile : Profile
+    {
+        public WarehouseByItemOnStorageAutoMapperProfile()
+        {
+            CreateMap<WarehouseByItemOnStorage, IPlaceOnStorage>()
+                .ForMember(dest => dest.Name, source => source
+                    .MapFrom(source => source.Name))
+                .ForMember(dest => dest.Count, source => source
+                    .MapFrom(source => source.Count))
+                .ForMember(dest => dest.UnitId, source => source
+                    .MapFrom(source => source.UnitId))
+                .ForMember(dest => dest.StorageItemId, source => source
+                    .MapFrom(source => source.StorageItemId));
         }
     }
 }

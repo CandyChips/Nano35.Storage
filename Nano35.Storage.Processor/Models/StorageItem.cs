@@ -89,7 +89,17 @@ namespace Nano35.Storage.Processor.Models
                 .ForMember(dest => dest.Id, source => source
                     .MapFrom(source => source.Id))
                 .ForMember(dest => dest.Condition, source => source
-                    .MapFrom(source => source.Condition.Name));
+                    .MapFrom(source => source.Condition.Name))
+                .ForMember(dest => dest.Comment, source => source
+                    .MapFrom(source => source.Comment))
+                .ForMember(dest => dest.HiddenComment, source => source
+                    .MapFrom(source => source.HiddenComment))
+                .ForMember(dest => dest.RetailPrice, source => source
+                    .MapFrom(source => source.RetailPrice))
+                .ForMember(dest => dest.PurchasePrice, source => source
+                    .MapFrom(source => source.PurchasePrice))
+                .ForMember(dest => dest.Article, source => source
+                .MapFrom(source => source.Article.ToString()));
         }
     }
 }

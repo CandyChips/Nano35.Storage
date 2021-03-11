@@ -19,6 +19,7 @@ using Nano35.Storage.Processor.UseCases.GetAllArticles;
 using Nano35.Storage.Processor.UseCases.GetAllCancellations;
 using Nano35.Storage.Processor.UseCases.GetAllComings;
 using Nano35.Storage.Processor.UseCases.GetAllMoves;
+using Nano35.Storage.Processor.UseCases.GetAllPlacesOnStorage;
 using Nano35.Storage.Processor.UseCases.GetAllSells;
 using Nano35.Storage.Processor.UseCases.GetAllStorageItemConditions;
 using Nano35.Storage.Processor.UseCases.GetAllStorageItems;
@@ -246,8 +247,14 @@ namespace Nano35.Storage.Processor.Configurations
                     {
                         e.Consumer<UpdateStorageItemRetailPriceConsumer>(provider);
                     });
+
+                    cfg.ReceiveEndpoint("IGetAllPlacesOnStorageContract", e =>
+                    {
+                        e.Consumer<GetAllPlacesOnStorageConsumer>(provider);
+                    });
                     
                 }));
+                x.AddConsumer<GetAllPlacesOnStorageConsumer>();
                 x.AddConsumer<UpdateStorageItemRetailPriceConsumer>();
                 x.AddConsumer<UpdateStorageItemPurchasePriceConsumer>();
                 x.AddConsumer<UpdateStorageItemHiddenCommentConsumer>();
