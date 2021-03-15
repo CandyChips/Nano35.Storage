@@ -33,6 +33,7 @@ namespace Nano35.Storage.Processor.UseCases.CreateComing
             var coming = new Coming()
             {
                 Id = input.NewId,
+                ClientId = input.ClientId,
                 Date = DateTime.Now,
                 Number = input.Number,
                 InstanceId = input.InstanceId,

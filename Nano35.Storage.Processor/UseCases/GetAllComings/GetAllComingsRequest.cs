@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
+using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Storage.Processor.Services;
 
@@ -45,11 +46,15 @@ namespace Nano35.Storage.Processor.UseCases.GetAllComings
         public async Task<IGetAllComingsResultContract> Ask
             (IGetAllComingsRequestContract input, CancellationToken cancellationToken)
         {
-            var result = await _context
+            var comings = await _context
                 .Comings
                 .Where(c => c.InstanceId == input.InstanceId)
+                .ToListAsync(cancellationToken);
+            
+            var result = comings
                 .Select(a =>
-                    new ComingImpl()
+                {
+                    var res = new ComingImpl()
                     {
                         Id = a.Id,
                         Number = a.Number,
@@ -57,9 +62,29 @@ namespace Nano35.Storage.Processor.UseCases.GetAllComings
                         Cash = a.Details
                             .Select(f => f.Price * f.Count)
                             .Sum()
-                    })
-                .ToListAsync(cancellationToken);
-            
+                    };
+                    var getUnitStringRequest = new GetUnitStringById(_bus,
+                        new GetUnitStringByIdRequestContract() {UnitId = a.Details.First().ToUnitId});
+                    res.Unit = getUnitStringRequest.GetResponse().Result switch
+                    {
+                        IGetUnitStringByIdSuccessResultContract success => success.Data,
+                        IGetUnitStringByIdErrorResultContract => "",
+                        _ => ""
+                    };
+                    
+                    var getClientStringRequest = new GetClientStringById(_bus,
+                        new GetClientStringByIdRequestContract() { ClientId = a.ClientId });
+                    res.Client = getClientStringRequest.GetResponse().Result switch
+                    {
+                        IGetClientStringByIdSuccessResultContract success => success.Data,
+                        IGetClientStringByIdErrorResultContract => "",
+                        _ => ""
+                    };
+
+                    return res;
+                });
+                    
+                    
             return new GetAllComingsSuccessResultContract() {Data = result};
         }
     }   

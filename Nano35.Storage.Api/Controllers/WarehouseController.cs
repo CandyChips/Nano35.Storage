@@ -60,12 +60,12 @@ namespace Nano35.Storage.Api.Controllers
             
             return result switch
             {
-                ICreateComingSuccessResultContract success => Ok(),
+                ICreateComingSuccessResultContract => Ok(),
                 ICreateComingErrorResultContract error => BadRequest(error),
                 _ => BadRequest()
             };
         }
-    
+        
         [HttpGet]
         [Route("GetComingDetailsById")]
         [Produces("application/json")]
@@ -84,8 +84,8 @@ namespace Nano35.Storage.Api.Controllers
             
             var result = 
                 await new LoggedGetComingDetailsByIdRequest(logger,
-                    new ValidatedGetComingDetailsByIdRequest(
-                        new GetComingDetailsByIdRequest(bus)))
+                        new ValidatedGetComingDetailsByIdRequest(
+                            new GetComingDetailsByIdRequest(bus)))
                     .Ask(request);
             
             return result switch
