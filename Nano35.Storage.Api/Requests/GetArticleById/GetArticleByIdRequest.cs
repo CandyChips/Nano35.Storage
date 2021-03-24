@@ -8,18 +8,17 @@ using Nano35.Contracts.Storage.Models;
 namespace Nano35.Storage.Api.Requests.GetArticleById
 {
     public class GetArticleByIdRequest :
-        IPipelineNode<
-            IGetArticleByIdRequestContract,
-            IGetArticleByIdResultContract>
+        EndPointNodeBase<IGetArticleByIdRequestContract, IGetArticleByIdResultContract>
     {
         private readonly IBus _bus;
+        
         public GetArticleByIdRequest(
             IBus bus)
         {
             _bus = bus;
         }
         
-        public async Task<IGetArticleByIdResultContract> Ask(
+        public override async Task<IGetArticleByIdResultContract> Ask(
             IGetArticleByIdRequestContract input)
         {
             var client = _bus.CreateRequestClient<IGetArticleByIdRequestContract>(TimeSpan.FromSeconds(10));

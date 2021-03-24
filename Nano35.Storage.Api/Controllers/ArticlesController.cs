@@ -73,29 +73,12 @@ namespace Nano35.Storage.Api.Controllers
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetAllArticlesRequest>)_services.GetService(typeof(ILogger<LoggedGetAllArticlesRequest>));
-
-            var request = new GetAllArticlesRequestContract()
-            {
-                InstanceId = query.InstanceId
-            };
             
-            // ToDo Hey Maslyonok
-            // Send request to pipeline
-            var result = 
-                await new LoggedGetAllArticlesRequest(logger,
-                    new ValidatedGetAllArticlesRequest(
-                        new GetAllArticlesRequest(bus)))
-                    .Ask(request);
+            return await new ConvertedGetAllArticlesOnHttpContext(
+                        new LoggedGetAllArticlesRequest(logger,
+                            new ValidatedGetAllArticlesRequest(
+                                new GetAllArticlesRequest(bus)))).Ask(query);
             
-            // ToDo Hey Maslyonok
-            // Check response of get all instances request
-            // You can check result by result contracts
-            return result switch
-            {
-                IGetAllArticlesSuccessResultContract success => Ok(success),
-                IGetAllArticlesErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
         }
          
         [HttpGet]
@@ -106,27 +89,13 @@ namespace Nano35.Storage.Api.Controllers
         public async Task<IActionResult> GetAllArticleModels(
             [FromQuery] GetAllArticleModelsHttpQuery query)
         {
-            // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetAllArticlesModelsRequest>)_services.GetService(typeof(ILogger<LoggedGetAllArticlesModelsRequest>));
 
-            var request = new GetAllArticlesModelsRequestContract()
-            {
-                CategoryId = query.CategoryId,
-                InstanceId = query.InstanceId
-            };
-            
-            var result = 
-                await new LoggedGetAllArticlesModelsRequest(logger,
-                    new ValidatedGetAllArticlesModelsRequest(
-                        new GetAllArticlesModelsRequest(bus))).Ask(request);
-            
-            return result switch
-            {
-                IGetAllArticlesModelsSuccessResultContract success => Ok(success),
-                IGetAllArticlesModelsErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+            return await new ConvertedGetAllArticleModelsOnHttpContext(
+                        new LoggedGetAllArticlesModelsRequest(logger,
+                            new ValidatedGetAllArticlesModelsRequest(
+                                new GetAllArticlesModelsRequest(bus)))).Ask(query);
         }
     
         [HttpGet]
@@ -137,27 +106,13 @@ namespace Nano35.Storage.Api.Controllers
         public async Task<IActionResult> GetAllArticleBrands(
             [FromQuery] GetAllArticlesBrandsHttpQuery query)
         {
-            var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetAllArticlesBrandsRequest>)_services.GetService(typeof(ILogger<LoggedGetAllArticlesBrandsRequest>));
+            var bus = (IBus) _services.GetService(typeof(IBus));
+            var logger = (ILogger<LoggedGetAllArticlesBrandsRequest>) _services.GetService(typeof(ILogger<LoggedGetAllArticlesBrandsRequest>));
 
-            var request = new GetAllArticlesBrandsRequestContract()
-            {
-                CategoryId = query.CategoryId,
-                InstanceId = query.InstanceId
-            };
-            
-            var result = 
-                await new LoggedGetAllArticlesBrandsRequest(logger,
-                    new ValidatedGetAllArticlesBrandsRequest(
-                        new GetAllArticlesBrandsRequest(bus)))
-                    .Ask(request);
-            
-            return result switch
-            {
-                IGetAllArticlesBrandsSuccessResultContract success => Ok(success),
-                IGetAllArticlesBrandsErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+            return await new ConvertedGetAllArticleBrandsOnHttpContext(
+                        new LoggedGetAllArticlesBrandsRequest(logger,
+                            new ValidatedGetAllArticlesBrandsRequest(
+                                new GetAllArticlesBrandsRequest(bus)))).Ask(query);
         }
     
         [HttpGet]
@@ -168,26 +123,14 @@ namespace Nano35.Storage.Api.Controllers
         public async Task<IActionResult> GetArticleById(
             [FromQuery] GetArticleByIdHttpQuery query)
         {
-            var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetArticleByIdRequest>)_services.GetService(typeof(ILogger<LoggedGetArticleByIdRequest>));
+            var bus = (IBus) _services.GetService(typeof(IBus));
+            var logger = (ILogger<LoggedGetArticleByIdRequest>) _services.GetService(typeof(ILogger<LoggedGetArticleByIdRequest>));
 
-            var request = new GetArticleByIdRequestContract()
-            {
-                Id = query.Id
-            };
-            
-            var result = 
-                await new LoggedGetArticleByIdRequest(logger,
+            return await new ConvertedGetArticleByIdOnHttpContext(
+                new LoggedGetArticleByIdRequest(logger,
                     new ValidatedGetArticleByIdRequest(
-                        new GetArticleByIdRequest(bus)))
-                    .Ask(request);
+                        new GetArticleByIdRequest(bus)))).Ask(query);
             
-            return result switch
-            {
-                IGetArticleByIdSuccessResultContract success => Ok(success.Data),
-                IGetArticleByIdErrorResultContract error => BadRequest(error.Message),
-                _ => BadRequest()
-            };
         }
 
         [HttpPost]
@@ -201,33 +144,10 @@ namespace Nano35.Storage.Api.Controllers
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedCreateArticleRequest>)_services.GetService(typeof(ILogger<LoggedCreateArticleRequest>));
 
-            var request = new CreateArticleRequestContract()
-            {
-                Brand = body.Brand,
-                CategoryId = body.CategoryId,
-                Info = body.Info,
-                InstanceId = body.InstanceId,
-                Model = body.Model,
-                NewId = body.NewId,
-                Specs = body.Specs.Select(a => new SpecViewModel()
-                {
-                    Key = a.Key,
-                    Value = a.Value
-                }).ToList()
-            };
-            
-            var result = 
-                await new LoggedCreateArticleRequest(logger,
-                    new ValidatedCreateArticleRequest(
-                        new CreateArticleRequest(bus)))
-                    .Ask(request);
-            
-            return result switch
-            {
-                ICreateArticleSuccessResultContract => Ok(),
-                ICreateArticleErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+            return await new ConvertedCreateArticleOnHttpContext(
+                        new LoggedCreateArticleRequest(logger,
+                            new ValidatedCreateArticleRequest(
+                                new CreateArticleRequest(bus)))).Ask(body);
         }
 
         [HttpPatch]
@@ -248,11 +168,9 @@ namespace Nano35.Storage.Api.Controllers
                 Id = body.Id
             };
             
-            var result =
-                await new LoggedUpdateArticleBrandRequest(logger,  
+            var result = await new LoggedUpdateArticleBrandRequest(logger,  
                     new ValidatedUpdateArticleBrandRequest(
-                        new UpdateArticleBrandRequest(bus)))
-                    .Ask(request);
+                        new UpdateArticleBrandRequest(bus))).Ask(request);
             
             return result switch
             {
@@ -280,11 +198,9 @@ namespace Nano35.Storage.Api.Controllers
                 CategoryId = body.CategoryId
             };
             
-            var result =
-                await new LoggedUpdateArticleCategoryRequest(logger,  
+            var result = await new LoggedUpdateArticleCategoryRequest(logger,  
                     new ValidatedUpdateArticleCategoryRequest(
-                        new UpdateArticleCategoryRequest(bus)))
-                    .Ask(request);
+                        new UpdateArticleCategoryRequest(bus))).Ask(request);
             
             return result switch
             {
@@ -312,11 +228,9 @@ namespace Nano35.Storage.Api.Controllers
                 Info = body.Info
             };
             
-            var result =
-                await new LoggedUpdateArticleInfoRequest(logger,  
+            var result = await new LoggedUpdateArticleInfoRequest(logger,  
                     new ValidatedUpdateArticleInfoRequest(
-                        new UpdateArticleInfoRequest(bus)))
-                    .Ask(request);
+                        new UpdateArticleInfoRequest(bus))).Ask(request);
             
             return result switch
             {
@@ -344,11 +258,9 @@ namespace Nano35.Storage.Api.Controllers
                 Model = body.Model
             };
             
-            var result =
-                await new LoggedUpdateArticleModelRequest(logger,  
+            var result = await new LoggedUpdateArticleModelRequest(logger,  
                         new ValidatedUpdateArticleModelRequest(
-                            new UpdateArticleModelRequest(bus)))
-                    .Ask(request);
+                            new UpdateArticleModelRequest(bus))).Ask(request);
             
             return result switch
             {

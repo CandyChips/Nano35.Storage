@@ -10,30 +10,20 @@ namespace Nano35.Storage.Api.Requests.CreateCancellation
     }
     
     public class ValidatedCreateCancellationRequest :
-        IPipelineNode<
-            ICreateCancellationRequestContract, 
-            ICreateCancellationResultContract>
+        PipeNodeBase<ICreateCancellationRequestContract, ICreateCancellationResultContract>
     {
-        private readonly IPipelineNode<
-            ICreateCancellationRequestContract, 
-            ICreateCancellationResultContract> _nextNode;
-
         public ValidatedCreateCancellationRequest(
-            IPipelineNode<
-                ICreateCancellationRequestContract,
-                ICreateCancellationResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<ICreateCancellationRequestContract, ICreateCancellationResultContract> next) :
+            base(next) { }
 
-        public async Task<ICreateCancellationResultContract> Ask(
+        public override async Task<ICreateCancellationResultContract> Ask(
             ICreateCancellationRequestContract input)
         {
             if (false)
             {
                 return new CreateCancellationValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input);
+            return await DoNext(input);
         }
     }
 }

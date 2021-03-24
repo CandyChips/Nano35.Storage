@@ -10,30 +10,20 @@ namespace Nano35.Storage.Api.Requests.CreateArticle
     }
     
     public class ValidatedCreateArticleRequest:
-        IPipelineNode<
-            ICreateArticleRequestContract,
-            ICreateArticleResultContract>
+        PipeNodeBase<ICreateArticleRequestContract, ICreateArticleResultContract>
     {
-        private readonly IPipelineNode<
-            ICreateArticleRequestContract, 
-            ICreateArticleResultContract> _nextNode;
-
         public ValidatedCreateArticleRequest(
-            IPipelineNode<
-                ICreateArticleRequestContract,
-                ICreateArticleResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<ICreateArticleRequestContract, ICreateArticleResultContract> next) :
+            base(next) { }
 
-        public async Task<ICreateArticleResultContract> Ask(
+        public override async Task<ICreateArticleResultContract> Ask(
             ICreateArticleRequestContract input)
         {
             if (false)
             {
                 return new CreateArticleValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input);
+            return await DoNext(input);
         }
     }
 }

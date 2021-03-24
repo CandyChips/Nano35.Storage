@@ -199,38 +199,13 @@ namespace Nano35.Storage.Api.Controllers
         public async Task<IActionResult> CreateCancellation(
             [FromBody] CreateCancellationHttpBody body)
         {
-            var request = new CreateCancellationRequestContract()
-            {
-                Comment = body.Comment,
-                Details = body.Details.Select(a => 
-                    new CreateCancellationDetailViewModel()
-                    {
-                        Count = a.Count,
-                        NewId = a.NewId, 
-                        PlaceOnStorage = a.PlaceOnStorage,
-                        StorageItemId = a.StorageItemId
-                    }).ToList(),
-                InstanceId = body.InstanceId,
-                NewId = body.NewId,
-                Number = body.Number,
-                UnitId = body.UnitId
-            };
-            
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedCreateCancellationRequest>)_services.GetService(typeof(ILogger<LoggedCreateCancellationRequest>));
-            
-            var result = 
-                await new LoggedCreateCancellationRequest(logger,
-                    new ValidatedCreateCancellationRequest(
-                        new CreateCancellationRequest(bus)))
-                    .Ask(request);
-            
-            return result switch
-            {
-                ICreateCancellationSuccessResultContract => Ok(),
-                ICreateCancellationErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+
+            return await new ConvertedCreateCancellationOnHttpContext(
+                        new LoggedCreateCancellationRequest(logger,
+                            new ValidatedCreateCancellationRequest(
+                                new CreateCancellationRequest(bus)))).Ask(body);
         }
     }
 }

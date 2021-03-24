@@ -6,18 +6,17 @@ using Nano35.Contracts.Storage.Artifacts;
 namespace Nano35.Storage.Api.Requests.CreateCategory
 {
     public class CreateCategoryRequest :
-        IPipelineNode<
-            ICreateCategoryRequestContract, 
-            ICreateCategoryResultContract>
+        EndPointNodeBase<ICreateCategoryRequestContract, ICreateCategoryResultContract>
     {
         private readonly IBus _bus;
+        
         public CreateCategoryRequest(
             IBus bus)
         {
             _bus = bus;
         }
         
-        public async Task<ICreateCategoryResultContract> Ask(
+        public override async Task<ICreateCategoryResultContract> Ask(
             ICreateCategoryRequestContract input)
         {
             var client = _bus.CreateRequestClient<ICreateCategoryRequestContract>(TimeSpan.FromSeconds(10));

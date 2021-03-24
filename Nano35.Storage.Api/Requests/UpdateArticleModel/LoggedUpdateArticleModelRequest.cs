@@ -6,9 +6,7 @@ using Nano35.Contracts.Storage.Artifacts;
 namespace Nano35.Storage.Api.Requests.UpdateArticleModel
 {
     public class LoggedUpdateArticleModelRequest :
-        IPipelineNode<
-            IUpdateArticleModelRequestContract,
-            IUpdateArticleModelResultContract>
+        IPipelineNode<IUpdateArticleModelRequestContract, IUpdateArticleModelResultContract>
     {
         private readonly ILogger<LoggedUpdateArticleModelRequest> _logger;
         private readonly IPipelineNode<

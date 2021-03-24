@@ -8,9 +8,7 @@ using Nano35.Contracts.Storage.Models;
 namespace Nano35.Storage.Api.Requests.UpdateCategoryParentCategoryId
 {
     public class UpdateCategoryParentCategoryIdRequest :
-        IPipelineNode<
-            IUpdateCategoryParentCategoryIdRequestContract, 
-            IUpdateCategoryParentCategoryIdResultContract>
+        EndPointNodeBase<IUpdateCategoryParentCategoryIdRequestContract, IUpdateCategoryParentCategoryIdResultContract>
     {
         private readonly IBus _bus;
         public UpdateCategoryParentCategoryIdRequest(
@@ -19,7 +17,7 @@ namespace Nano35.Storage.Api.Requests.UpdateCategoryParentCategoryId
             _bus = bus;
         }
         
-        public async Task<IUpdateCategoryParentCategoryIdResultContract> Ask(
+        public override async Task<IUpdateCategoryParentCategoryIdResultContract> Ask(
             IUpdateCategoryParentCategoryIdRequestContract input)
         {
             var client = _bus.CreateRequestClient<IUpdateCategoryParentCategoryIdRequestContract>(TimeSpan.FromSeconds(10));

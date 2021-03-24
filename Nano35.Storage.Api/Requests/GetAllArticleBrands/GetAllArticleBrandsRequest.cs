@@ -6,18 +6,17 @@ using Nano35.Contracts.Storage.Artifacts;
 namespace Nano35.Storage.Api.Requests.GetAllArticleBrands
 {
     public class GetAllArticlesBrandsRequest :
-        IPipelineNode<
-            IGetAllArticlesBrandsRequestContract,
-            IGetAllArticlesBrandsResultContract>
+        EndPointNodeBase<IGetAllArticlesBrandsRequestContract, IGetAllArticlesBrandsResultContract>
     {
         private readonly IBus _bus;
+        
         public GetAllArticlesBrandsRequest(
             IBus bus)
         {
             _bus = bus;
         }
         
-        public async Task<IGetAllArticlesBrandsResultContract> Ask(
+        public override async Task<IGetAllArticlesBrandsResultContract> Ask(
             IGetAllArticlesBrandsRequestContract input)
         {
             var client = _bus.CreateRequestClient<IGetAllArticlesBrandsRequestContract>(TimeSpan.FromSeconds(10));

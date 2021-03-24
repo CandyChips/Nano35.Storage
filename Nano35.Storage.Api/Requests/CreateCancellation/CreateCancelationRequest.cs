@@ -6,18 +6,17 @@ using Nano35.Contracts.Storage.Artifacts;
 namespace Nano35.Storage.Api.Requests.CreateCancellation
 {
     public class CreateCancellationRequest :
-        IPipelineNode<
-            ICreateCancellationRequestContract,
-            ICreateCancellationResultContract>
+        EndPointNodeBase<ICreateCancellationRequestContract, ICreateCancellationResultContract>
     {
         private readonly IBus _bus;
+        
         public CreateCancellationRequest(
             IBus bus)
         {
             _bus = bus;
         }
         
-        public async Task<ICreateCancellationResultContract> Ask(
+        public override async Task<ICreateCancellationResultContract> Ask(
             ICreateCancellationRequestContract input)
         {
             var client = _bus.CreateRequestClient<ICreateCancellationRequestContract>(TimeSpan.FromSeconds(10));

@@ -10,30 +10,20 @@ namespace Nano35.Storage.Api.Requests.GetAllArticleModels
     }
     
     public class ValidatedGetAllArticlesModelsRequest:
-        IPipelineNode<
-            IGetAllArticlesModelsRequestContract, 
-            IGetAllArticlesModelsResultContract>
+        PipeNodeBase<IGetAllArticlesModelsRequestContract, IGetAllArticlesModelsResultContract>
     {
-        private readonly IPipelineNode<
-            IGetAllArticlesModelsRequestContract, 
-            IGetAllArticlesModelsResultContract> _nextNode;
-
         public ValidatedGetAllArticlesModelsRequest(
-            IPipelineNode<
-                IGetAllArticlesModelsRequestContract, 
-                IGetAllArticlesModelsResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IGetAllArticlesModelsRequestContract, IGetAllArticlesModelsResultContract> next) :
+            base(next) { }
 
-        public async Task<IGetAllArticlesModelsResultContract> Ask(
+        public override async Task<IGetAllArticlesModelsResultContract> Ask(
             IGetAllArticlesModelsRequestContract input)
         {
             if (false)
             {
                 return new GetAllArticlesModelsValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input);
+            return await DoNext(input);
         }
     }
 }

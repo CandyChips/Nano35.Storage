@@ -129,30 +129,10 @@ namespace Nano35.Storage.Api.Controllers
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedCreateStorageItemRequest>) _services.GetService(typeof(ILogger<LoggedCreateStorageItemRequest>));
 
-            var request = new CreateStorageItemRequestContract()
-            {
-                ArticleId = body.ArticleId,
-                Comment = body.Comment,
-                ConditionId = body.ConditionId,
-                HiddenComment = body.HiddenComment,
-                InstanceId = body.InstanceId,
-                NewId = body.NewId,
-                PurchasePrice = body.PurchasePrice,
-                RetailPrice = body.RetailPrice
-            };
-            
-            var result = 
-                await new LoggedCreateStorageItemRequest(logger,
-                    new ValidatedCreateStorageItemRequest(
-                        new CreateStorageItemRequest(bus)))
-                    .Ask(request);
-            
-            return result switch
-            {
-                ICreateStorageItemSuccessResultContract => Ok(),
-                ICreateStorageItemErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+            return await new ConvertedCreateStorageItemOnHttpContext(
+                        new LoggedCreateStorageItemRequest(logger,
+                            new ValidatedCreateStorageItemRequest(
+                                new CreateStorageItemRequest(bus)))).Ask(body);
         }
         
         [HttpPatch]

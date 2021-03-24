@@ -6,18 +6,17 @@ using Nano35.Contracts.Storage.Artifacts;
 namespace Nano35.Storage.Api.Requests.CreateStorageItem
 {
     public class CreateStorageItemRequest :
-        IPipelineNode<
-            ICreateStorageItemRequestContract, 
-            ICreateStorageItemResultContract>
+        EndPointNodeBase<ICreateStorageItemRequestContract, ICreateStorageItemResultContract>
     {
         private readonly IBus _bus;
+        
         public CreateStorageItemRequest(
             IBus bus)
         {
             _bus = bus;
         }
         
-        public async Task<ICreateStorageItemResultContract> Ask(
+        public override async Task<ICreateStorageItemResultContract> Ask(
             ICreateStorageItemRequestContract input)
         {
             var client = _bus.CreateRequestClient<ICreateStorageItemRequestContract>(TimeSpan.FromSeconds(10));

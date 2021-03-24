@@ -38,24 +38,11 @@ namespace Nano35.Storage.Api.Controllers
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetAllArticlesCategoriesRequest>)_services.GetService(typeof(ILogger<LoggedGetAllArticlesCategoriesRequest>));
 
-            var request = new GetAllArticlesCategoriesRequestContract()
-            {
-                InstanceId = query.InstanceId,
-                ParentId = query.ParentId
-            };
+            return await new ConvertedGetAllArticleCategoriesOnHttpContext(
+                        new LoggedGetAllArticlesCategoriesRequest(logger,
+                            new ValidatedGetAllArticlesCategoriesRequest(
+                                new GetAllArticlesCategoriesRequest(bus)))).Ask(query);
             
-            var result = 
-                await new LoggedGetAllArticlesCategoriesRequest(logger,
-                    new ValidatedGetAllArticlesCategoriesRequest(
-                        new GetAllArticlesCategoriesRequest(bus)))
-                    .Ask(request);
-            
-            return result switch
-            {
-                IGetAllArticlesCategoriesSuccessResultContract success => Ok(success),
-                IGetAllArticlesCategoriesErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
         }
         
         [HttpPost]
@@ -69,26 +56,10 @@ namespace Nano35.Storage.Api.Controllers
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedCreateCategoryRequest>)_services.GetService(typeof(ILogger<LoggedCreateCategoryRequest>));
 
-            var request = new CreateCategoryRequestContract()
-            {
-                InstanceId = body.InstanceId,
-                NewId = body.NewId,
-                Name = body.Name,
-                ParentCategoryId = body.ParentCategoryId
-            };
-            
-            var result = 
-                await new LoggedCreateCategoryRequest(logger,
-                    new ValidatedCreateCategoryRequest(
-                        new CreateCategoryRequest(bus)))
-                    .Ask(request);
-            
-            return result switch
-            {
-                ICreateCategorySuccessResultContract => Ok(),
-                ICreateCategoryErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+            return await new ConvertedCreateCategoryOnHttpContext(
+                        new LoggedCreateCategoryRequest(logger,
+                            new ValidatedCreateCategoryRequest(
+                                new CreateCategoryRequest(bus)))).Ask(body);
         }
         
         [HttpPatch]
@@ -103,24 +74,10 @@ namespace Nano35.Storage.Api.Controllers
             var bus = (IBus) _services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedUpdateCategoryNameRequest>) _services.GetService(typeof(ILogger<LoggedUpdateCategoryNameRequest>));
 
-            var request = new UpdateCategoryNameRequestContract()
-            {
-                Id = body.Id,
-                Name = body.Name
-            };
-            
-            var result =
-                await new LoggedUpdateCategoryNameRequest(logger,  
-                    new ValidatedUpdateCategoryNameRequest(
-                        new UpdateCategoryNameRequest(bus)))
-                    .Ask(request);
-            
-            return result switch
-            {
-                IUpdateCategoryNameSuccessResultContract => Ok(),
-                IUpdateCategoryNameErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+            return await new ConvertedUpdateCategoryNameOnHttpContext(
+                        new LoggedUpdateCategoryNameRequest(logger,  
+                            new ValidatedUpdateCategoryNameRequest(
+                                new UpdateCategoryNameRequest(bus)))).Ask(body);
         }
         
         [HttpPatch]
@@ -131,30 +88,13 @@ namespace Nano35.Storage.Api.Controllers
         public async Task<IActionResult> UpdateCategoryParentCategoryId(
             [FromBody] UpdateCategoryParentCategoryHttpBody body)
         {
-            
             var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedUpdateCategoryParentCategoryIdRequest>) _services
-                .GetService(typeof(ILogger<LoggedUpdateCategoryParentCategoryIdRequest>));
+            var logger = (ILogger<LoggedUpdateCategoryParentCategoryIdRequest>) _services.GetService(typeof(ILogger<LoggedUpdateCategoryParentCategoryIdRequest>));
 
-            var request = new UpdateCategoryParentCategoryIdRequestContract()
-            {
-                Id = body.Id,
-                ParentCategoryId = body.ParentCategoryId
-            };
-            
-            var result =
-                await new LoggedUpdateCategoryParentCategoryIdRequest(logger,  
-                    new ValidatedUpdateCategoryParentCategoryIdRequest(
-                        new UpdateCategoryParentCategoryIdRequest(bus)
-                    )
-                ).Ask(request);
-            
-            return result switch
-            {
-                IUpdateCategoryParentCategoryIdSuccessResultContract => Ok(),
-                IUpdateCategoryParentCategoryIdErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+            return await new ConvertedUpdateCategoryParentCategoryIdOnHttpContext(
+                        new LoggedUpdateCategoryParentCategoryIdRequest(logger,  
+                            new ValidatedUpdateCategoryParentCategoryIdRequest(
+                                new UpdateCategoryParentCategoryIdRequest(bus)))).Ask(body);
         }
     }
 }

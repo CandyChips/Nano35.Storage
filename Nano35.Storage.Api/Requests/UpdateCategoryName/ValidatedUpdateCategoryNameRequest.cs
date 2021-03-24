@@ -10,30 +10,20 @@ namespace Nano35.Storage.Api.Requests.UpdateCategoryName
     }
     
     public class ValidatedUpdateCategoryNameRequest:
-        IPipelineNode<
-            IUpdateCategoryNameRequestContract,
-            IUpdateCategoryNameResultContract>
+        PipeNodeBase<IUpdateCategoryNameRequestContract, IUpdateCategoryNameResultContract>
     {
-        private readonly IPipelineNode<
-            IUpdateCategoryNameRequestContract, 
-            IUpdateCategoryNameResultContract> _nextNode;
-
         public ValidatedUpdateCategoryNameRequest(
-            IPipelineNode<
-                IUpdateCategoryNameRequestContract, 
-                IUpdateCategoryNameResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IUpdateCategoryNameRequestContract, IUpdateCategoryNameResultContract> next) :
+            base(next) { }
 
-        public async Task<IUpdateCategoryNameResultContract> Ask(
+        public override async Task<IUpdateCategoryNameResultContract> Ask(
             IUpdateCategoryNameRequestContract input)
         {
             if (false)
             {
                 return new UpdateCategoryNameValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input);
+            return await DoNext(input);
         }
     }
 }

@@ -10,30 +10,20 @@ namespace Nano35.Storage.Api.Requests.CreateCategory
     }
     
     public class ValidatedCreateCategoryRequest:
-        IPipelineNode<
-            ICreateCategoryRequestContract, 
-            ICreateCategoryResultContract>
+        PipeNodeBase<ICreateCategoryRequestContract, ICreateCategoryResultContract>
     {
-        private readonly IPipelineNode<
-            ICreateCategoryRequestContract, 
-            ICreateCategoryResultContract> _nextNode;
-
         public ValidatedCreateCategoryRequest(
-            IPipelineNode<
-                ICreateCategoryRequestContract, 
-                ICreateCategoryResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<ICreateCategoryRequestContract, ICreateCategoryResultContract> next) :
+            base(next) { }
 
-        public async Task<ICreateCategoryResultContract> Ask(
+        public override async Task<ICreateCategoryResultContract> Ask(
             ICreateCategoryRequestContract input)
         {
             if (false)
             {
                 return new CreateCategoryValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input);
+            return await DoNext(input);
         }
     }
 }

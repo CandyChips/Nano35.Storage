@@ -12,9 +12,7 @@ namespace Nano35.Storage.Api.Requests.CreateSelle
 
         public LoggedCreateSelleRequest(
             ILogger<LoggedCreateSelleRequest> logger,
-            IPipeNode<
-                ICreateSelleRequestContract, 
-                ICreateSelleResultContract> next) :
+            IPipeNode<ICreateSelleRequestContract, ICreateSelleResultContract> next) :
             base(next)
         {
             _logger = logger;

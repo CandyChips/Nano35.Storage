@@ -8,18 +8,17 @@ using Nano35.Contracts.Storage.Models;
 namespace Nano35.Storage.Api.Requests.UpdateCategoryName
 {
     public class UpdateCategoryNameRequest :
-        IPipelineNode<
-            IUpdateCategoryNameRequestContract, 
-            IUpdateCategoryNameResultContract>
+        EndPointNodeBase<IUpdateCategoryNameRequestContract, IUpdateCategoryNameResultContract>
     {
         private readonly IBus _bus;
+        
         public UpdateCategoryNameRequest(
             IBus bus)
         {
             _bus = bus;
         }
         
-        public async Task<IUpdateCategoryNameResultContract> Ask(
+        public override async Task<IUpdateCategoryNameResultContract> Ask(
             IUpdateCategoryNameRequestContract input)
         {
             var client = _bus.CreateRequestClient<IUpdateCategoryNameRequestContract>(TimeSpan.FromSeconds(10));

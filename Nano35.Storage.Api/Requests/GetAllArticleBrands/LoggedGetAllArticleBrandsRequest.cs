@@ -6,30 +6,23 @@ using Nano35.Contracts.Storage.Artifacts;
 namespace Nano35.Storage.Api.Requests.GetAllArticleBrands
 {
     public class LoggedGetAllArticlesBrandsRequest :
-        IPipelineNode<
-            IGetAllArticlesBrandsRequestContract, 
-            IGetAllArticlesBrandsResultContract>
+        PipeNodeBase<IGetAllArticlesBrandsRequestContract, IGetAllArticlesBrandsResultContract>
     {
         private readonly ILogger<LoggedGetAllArticlesBrandsRequest> _logger;
-        private readonly IPipelineNode<
-            IGetAllArticlesBrandsRequestContract, 
-            IGetAllArticlesBrandsResultContract> _nextNode;
 
         public LoggedGetAllArticlesBrandsRequest(
             ILogger<LoggedGetAllArticlesBrandsRequest> logger,
-            IPipelineNode<
-                IGetAllArticlesBrandsRequestContract, 
-                IGetAllArticlesBrandsResultContract> nextNode)
+            IPipeNode<IGetAllArticlesBrandsRequestContract, IGetAllArticlesBrandsResultContract> next) :
+            base(next)
         {
-            _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<IGetAllArticlesBrandsResultContract> Ask(
+        public override async Task<IGetAllArticlesBrandsResultContract> Ask(
             IGetAllArticlesBrandsRequestContract input)
         {
             _logger.LogInformation($"GetAllArticlesBrandsLogger starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input);
+            var result = await DoNext(input);
             _logger.LogInformation($"GetAllArticlesBrandsLogger ends on: {DateTime.Now}");
             return result;
         }
