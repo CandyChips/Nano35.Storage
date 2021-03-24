@@ -10,30 +10,20 @@ namespace Nano35.Storage.Api.Requests.CreateMove
     }
     
     public class ValidatedCreateMoveRequest:
-        IPipelineNode<
-            ICreateMoveRequestContract,
-            ICreateMoveResultContract>
+        PipeNodeBase<ICreateMoveRequestContract, ICreateMoveResultContract>
     {
-        private readonly IPipelineNode<
-            ICreateMoveRequestContract, 
-            ICreateMoveResultContract> _nextNode;
-
         public ValidatedCreateMoveRequest(
-            IPipelineNode<
-                ICreateMoveRequestContract, 
-                ICreateMoveResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<ICreateMoveRequestContract, ICreateMoveResultContract> next) :
+            base(next) { }
 
-        public async Task<ICreateMoveResultContract> Ask(
+        public override async Task<ICreateMoveResultContract> Ask(
             ICreateMoveRequestContract input)
         {
             if (false)
             {
                 return new CreateMoveValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input);
+            return await DoNext(input);
         }
     }
 }

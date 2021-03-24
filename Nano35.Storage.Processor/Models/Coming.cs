@@ -4,6 +4,7 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Nano35.Contracts;
 using Nano35.Contracts.Storage.Artifacts;
+using Nano35.Contracts.Storage.Models;
 
 namespace Nano35.Storage.Processor.Models
 {
@@ -63,7 +64,7 @@ namespace Nano35.Storage.Processor.Models
     {
         public ComingAutoMapperProfile()
         {
-            CreateMap<Coming, IComingViewModel>()
+            CreateMap<Coming, ComingViewModel>()
                 .ForMember(dest => dest.Id, source => source
                     .MapFrom(source => source.Id))
                 .ForMember(dest => dest.Number, source => source

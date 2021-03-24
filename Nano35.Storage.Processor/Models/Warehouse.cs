@@ -4,6 +4,7 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Nano35.Contracts;
 using Nano35.Contracts.Storage.Artifacts;
+using Nano35.Contracts.Storage.Models;
 
 namespace Nano35.Storage.Processor.Models
 {
@@ -71,7 +72,7 @@ namespace Nano35.Storage.Processor.Models
     {
         public WarehouseByItemOnStorageAutoMapperProfile()
         {
-            CreateMap<WarehouseByItemOnStorage, IPlaceOnStorage>()
+            CreateMap<WarehouseByItemOnStorage, PlaceOnStorage>()
                 .ForMember(dest => dest.Name, source => source
                     .MapFrom(source => source.Name))
                 .ForMember(dest => dest.Count, source => source

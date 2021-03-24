@@ -23,7 +23,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemConditions
         private class GetAllStorageItemConditionsSuccessResultContract : 
             IGetAllStorageItemConditionsSuccessResultContract
         {
-            public IEnumerable<IStorageItemConditionViewModel> Data { get; set; }
+            public List<StorageItemConditionViewModel> Data { get; set; }
         }
         
         public async Task<IGetAllStorageItemConditionsResultContract> Ask
@@ -32,7 +32,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemConditions
         {
             var result = await _context
                 .StorageItemConditions
-                .MapAllToAsync<IStorageItemConditionViewModel>();
+                .MapAllToAsync<StorageItemConditionViewModel>();
 
             return new GetAllStorageItemConditionsSuccessResultContract() {Data = result};
         }

@@ -6,30 +6,23 @@ using Nano35.Contracts.Storage.Artifacts;
 namespace Nano35.Storage.Api.Requests.CreateComing
 {
     public class LoggedCreateComingRequest :
-        IPipelineNode<
-            ICreateComingRequestContract,
-            ICreateComingResultContract>
+        PipeNodeBase<ICreateComingRequestContract, ICreateComingResultContract>
     {
         private readonly ILogger<LoggedCreateComingRequest> _logger;
-        private readonly IPipelineNode<
-            ICreateComingRequestContract, 
-            ICreateComingResultContract> _nextNode;
 
         public LoggedCreateComingRequest(
             ILogger<LoggedCreateComingRequest> logger,
-            IPipelineNode<
-                ICreateComingRequestContract, 
-                ICreateComingResultContract> nextNode)
+            IPipeNode<ICreateComingRequestContract,  ICreateComingResultContract> next) :
+            base(next)
         {
-            _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<ICreateComingResultContract> Ask(
+        public override async Task<ICreateComingResultContract> Ask(
             ICreateComingRequestContract input)
         {
             _logger.LogInformation($"CreateComingLogger starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input);
+            var result = await DoNext(input);
             _logger.LogInformation($"CreateComingLogger ends on: {DateTime.Now}");
             return result;
         }

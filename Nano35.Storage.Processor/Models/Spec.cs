@@ -47,7 +47,7 @@ namespace Nano35.Storage.Processor.Models
     {
         public ArticleSpecAutoMapperProfile()
         {
-            CreateMap<Spec, ISpecVievModel>()
+            CreateMap<Spec, SpecViewModel>()
                 .ForMember(dest => dest.Key, source => source
                     .MapFrom(source => source.Key))
                 .ForMember(dest => dest.Value, source => source

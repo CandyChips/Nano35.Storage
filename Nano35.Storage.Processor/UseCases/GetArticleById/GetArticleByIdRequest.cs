@@ -23,7 +23,7 @@ namespace Nano35.Storage.Processor.UseCases.GetArticleById
         private class GetArticleByIdSuccessResultContract : 
             IGetArticleByIdSuccessResultContract
         {
-            public IArticleViewModel Data { get; set; }
+            public ArticleViewModel Data { get; set; }
         }
         
         public async Task<IGetArticleByIdResultContract> Ask(
@@ -32,7 +32,7 @@ namespace Nano35.Storage.Processor.UseCases.GetArticleById
         {
             var result = _context.Articles
                 .FirstOrDefault(c => c.Id == input.Id)
-                .MapTo<IArticleViewModel>();
+                .MapTo<ArticleViewModel>();
 
             return new GetArticleByIdSuccessResultContract() {Data = result};
         }

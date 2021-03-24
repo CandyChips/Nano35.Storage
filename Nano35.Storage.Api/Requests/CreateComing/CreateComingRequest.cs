@@ -6,18 +6,17 @@ using Nano35.Contracts.Storage.Artifacts;
 namespace Nano35.Storage.Api.Requests.CreateComing
 {
     public class CreateComingRequest :
-        IPipelineNode<
-            ICreateComingRequestContract,
-            ICreateComingResultContract>
+        EndPointNodeBase<ICreateComingRequestContract, ICreateComingResultContract>
     {
         private readonly IBus _bus;
+        
         public CreateComingRequest(
             IBus bus)
         {
             _bus = bus;
         }
         
-        public async Task<ICreateComingResultContract> Ask(
+        public override async Task<ICreateComingResultContract> Ask(
             ICreateComingRequestContract input)
         {
             var client = _bus.CreateRequestClient<ICreateComingRequestContract>(TimeSpan.FromSeconds(10));

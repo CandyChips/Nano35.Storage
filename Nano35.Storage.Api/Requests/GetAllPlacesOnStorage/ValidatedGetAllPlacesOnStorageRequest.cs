@@ -10,30 +10,20 @@ namespace Nano35.Storage.Api.Requests.GetAllPlacesOnStorage
     }
     
     public class ValidatedGetAllPlacesOnStorageRequest:
-        IPipelineNode<
-            IGetAllPlacesOnStorageContract, 
-            IGetAllPlacesOnStorageResultContract>
+        PipeNodeBase<IGetAllPlacesOnStorageContract, IGetAllPlacesOnStorageResultContract>
     {
-        private readonly IPipelineNode<
-            IGetAllPlacesOnStorageContract, 
-            IGetAllPlacesOnStorageResultContract> _nextNode;
-
         public ValidatedGetAllPlacesOnStorageRequest(
-            IPipelineNode<
-                IGetAllPlacesOnStorageContract,
-                IGetAllPlacesOnStorageResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IGetAllPlacesOnStorageContract, IGetAllPlacesOnStorageResultContract> next) :
+            base(next) { }
 
-        public async Task<IGetAllPlacesOnStorageResultContract> Ask(
+        public override async Task<IGetAllPlacesOnStorageResultContract> Ask(
             IGetAllPlacesOnStorageContract input)
         {
             if (false)
             {
                 return new GetAllPlacesOnStorageValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input);
+            return await DoNext(input);
         }
     }
 }

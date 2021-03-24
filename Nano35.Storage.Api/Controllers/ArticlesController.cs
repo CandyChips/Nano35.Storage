@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using MassTransit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Storage.Artifacts;
+using Nano35.Contracts.Storage.Models;
 using Nano35.HttpContext.storage;
 using Nano35.Storage.Api.Requests.CreateArticle;
 using Nano35.Storage.Api.Requests.GetAllArticleBrands;
@@ -207,7 +209,11 @@ namespace Nano35.Storage.Api.Controllers
                 InstanceId = body.InstanceId,
                 Model = body.Model,
                 NewId = body.NewId,
-                Specs = body.Specs
+                Specs = body.Specs.Select(a => new SpecViewModel()
+                {
+                    Key = a.Key,
+                    Value = a.Value
+                }).ToList()
             };
             
             var result = 

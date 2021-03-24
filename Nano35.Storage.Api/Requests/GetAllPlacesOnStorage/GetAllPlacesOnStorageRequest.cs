@@ -8,18 +8,17 @@ using Nano35.Contracts.Storage.Models;
 namespace Nano35.Storage.Api.Requests.GetAllPlacesOnStorage
 {
     public class GetAllPlacesOnStorageRequest :
-        IPipelineNode<
-            IGetAllPlacesOnStorageContract,
-            IGetAllPlacesOnStorageResultContract>
+        EndPointNodeBase<IGetAllPlacesOnStorageContract, IGetAllPlacesOnStorageResultContract>
     {
         private readonly IBus _bus;
+        
         public GetAllPlacesOnStorageRequest(
             IBus bus)
         {
             _bus = bus;
         }
         
-        public async Task<IGetAllPlacesOnStorageResultContract> Ask(
+        public override async Task<IGetAllPlacesOnStorageResultContract> Ask(
             IGetAllPlacesOnStorageContract input)
         {
             var client = _bus.CreateRequestClient<IGetAllPlacesOnStorageContract>(TimeSpan.FromSeconds(10));

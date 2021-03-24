@@ -43,7 +43,7 @@ namespace Nano35.Storage.Processor.Models
     {
         public StorageItemConditionAutoMapperProfile()
         {
-            CreateMap<StorageItemCondition, IStorageItemConditionViewModel>()
+            CreateMap<StorageItemCondition, StorageItemConditionViewModel>()
                 .ForMember(dest => dest.Id, source => source
                     .MapFrom(source => source.Id))
                 .ForMember(dest => dest.Name, source => source

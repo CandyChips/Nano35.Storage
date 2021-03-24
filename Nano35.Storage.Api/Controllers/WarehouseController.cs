@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using MassTransit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Storage.Artifacts;
+using Nano35.Contracts.Storage.Models;
 using Nano35.HttpContext.instance;
 using Nano35.HttpContext.storage;
 using Nano35.Storage.Api.Requests.CreateCancellation;
@@ -41,29 +43,12 @@ namespace Nano35.Storage.Api.Controllers
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedCreateComingRequest>)_services.GetService(typeof(ILogger<LoggedCreateComingRequest>));
             
-            var message = new CreateComingRequestContract()
-            {
-                NewId = body.NewId,
-                InstanceId = body.InstanceId,
-                Number = body.Number,
-                UnitId = body.UnitId,
-                Comment = body.Comment,
-                Details = body.Details,
-                ClientId = body.ClientId,
-            };
-            
-            var result = 
-                await new LoggedCreateComingRequest(logger,
+            return await
+                new ConvertedCreateComingOnHttpContext(
+                new LoggedCreateComingRequest(logger,
                     new ValidatedCreateComingRequest(
-                        new CreateComingRequest(bus)))
-                    .Ask(message);
+                        new CreateComingRequest(bus)))).Ask(body);
             
-            return result switch
-            {
-                ICreateComingSuccessResultContract => Ok(),
-                ICreateComingErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
         }
         
         [HttpGet]
@@ -82,11 +67,9 @@ namespace Nano35.Storage.Api.Controllers
                 Id = query.Id
             };
             
-            var result = 
-                await new LoggedGetComingDetailsByIdRequest(logger,
+            var result = await new LoggedGetComingDetailsByIdRequest(logger,
                         new ValidatedGetComingDetailsByIdRequest(
-                            new GetComingDetailsByIdRequest(bus)))
-                    .Ask(request);
+                            new GetComingDetailsByIdRequest(bus))).Ask(request);
             
             return result switch
             {
@@ -114,11 +97,9 @@ namespace Nano35.Storage.Api.Controllers
                 UnitId = query.UnitId,
             };
             
-            var result = 
-                await new LoggedGetAllComingsRequest(logger,
-                    new ValidatedGetAllComingsRequest(
-                        new GetAllComingsRequest(bus)))
-                    .Ask(request);
+            var result = await new LoggedGetAllComingsRequest(logger,
+                            new ValidatedGetAllComingsRequest(
+                                new GetAllComingsRequest(bus))).Ask(request);
             
             return result switch
             {
@@ -139,28 +120,11 @@ namespace Nano35.Storage.Api.Controllers
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedCreateMoveRequest>)_services.GetService(typeof(ILogger<LoggedCreateMoveRequest>));
             
-            var request = new CreateMoveRequestContract()
-            {
-                NewId = body.NewId,
-                InstanceId = body.InstanceId,
-                FromUnitId = body.FromUnitId,
-                ToUnitId = body.ToUnitId,
-                Details = body.Details,
-                Number = body.Number,
-            };
-            
-            var result = 
-                await new LoggedCreateMoveRequest(logger,
+            return await 
+                new ConvertedCreateMoveOnHttpContext(
+                new LoggedCreateMoveRequest(logger,
                     new ValidatedCreateMoveRequest(
-                        new CreateMoveRequest(bus)))
-                    .Ask(request);
-            
-            return result switch
-            {
-                ICreateMoveSuccessResultContract => Ok(),
-                ICreateMoveErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+                        new CreateMoveRequest(bus)))).Ask(body);
         }
 
         [HttpGet]
@@ -188,28 +152,11 @@ namespace Nano35.Storage.Api.Controllers
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedCreateSelleRequest>)_services.GetService(typeof(ILogger<LoggedCreateSelleRequest>));
             
-            var request = new CreateSelleRequestContract()
-            {
-                Details = body.Details,
-                UnitId = body.UnitId,
-                InstanceId = body.InstanceId,
-                NewId = body.NewId,
-                Number = body.Number,
-                ClientId = body.ClientId,
-            };
-            
-            var result = 
-                await new LoggedCreateSelleRequest(logger,
+            return await 
+                new ConvertedCreateSelleOnHttpContext(
+                new LoggedCreateSelleRequest(logger,
                     new ValidatedCreateSelleRequest(
-                        new CreateSelleRequest(bus)))
-                    .Ask(request);
-            
-            return result switch
-            {
-                ICreateSelleSuccessResultContract => Ok(),
-                ICreateSelleErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+                        new CreateSelleRequest(bus)))).Ask(body);
         }
 
         [HttpGet]
@@ -232,29 +179,16 @@ namespace Nano35.Storage.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllPlacesOnStorageSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllPlacesOnStorageErrorHttpResponse))] 
         public async Task<IActionResult> GetAllStorageItems(
-            [FromQuery] GetAllPlacesOnStorageHttpContext header)
+            [FromQuery] GetAllPlacesOnStorageHttpContext body)
         {
             var bus = (IBus) _services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetAllPlacesOnStorageRequest>) _services.GetService(typeof(ILogger<LoggedGetAllPlacesOnStorageRequest>));
 
-            var request = new GetAllPlacesOnStorageContract()
-            {
-                UnitId = header.UnitId,
-                StorageItemId = header.StorageItemId
-            };
-            
-            var result = 
-                await new LoggedGetAllPlacesOnStorageRequest(logger,
+            return await new ConvertedGetAllPlacesOnStorageOnHttpContext(
+                    new LoggedGetAllPlacesOnStorageRequest(logger,
                         new ValidatedGetAllPlacesOnStorageRequest(
-                            new GetAllPlacesOnStorageRequest(bus)))
-                    .Ask(request);
+                            new GetAllPlacesOnStorageRequest(bus)))).Ask(body);
             
-            return result switch
-            {
-                IGetAllPlacesOnStorageSuccessResultContract success => Ok(success),
-                IGetAllPlacesOnStorageErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
         }
         
         [HttpPost]
@@ -268,7 +202,14 @@ namespace Nano35.Storage.Api.Controllers
             var request = new CreateCancellationRequestContract()
             {
                 Comment = body.Comment,
-                Details = body.Details,
+                Details = body.Details.Select(a => 
+                    new CreateCancellationDetailViewModel()
+                    {
+                        Count = a.Count,
+                        NewId = a.NewId, 
+                        PlaceOnStorage = a.PlaceOnStorage,
+                        StorageItemId = a.StorageItemId
+                    }).ToList(),
                 InstanceId = body.InstanceId,
                 NewId = body.NewId,
                 Number = body.Number,

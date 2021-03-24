@@ -6,18 +6,17 @@ using Nano35.Contracts.Storage.Artifacts;
 namespace Nano35.Storage.Api.Requests.CreateSelle
 {
     public class CreateSelleRequest :
-        IPipelineNode<
-            ICreateSelleRequestContract,
-            ICreateSelleResultContract>
+        EndPointNodeBase<ICreateSelleRequestContract, ICreateSelleResultContract>
     {
         private readonly IBus _bus;
+        
         public CreateSelleRequest(
             IBus bus)
         {
             _bus = bus;
         }
         
-        public async Task<ICreateSelleResultContract> Ask(
+        public override async Task<ICreateSelleResultContract> Ask(
             ICreateSelleRequestContract input)
         {
             var client = _bus.CreateRequestClient<ICreateSelleRequestContract>(TimeSpan.FromSeconds(10));

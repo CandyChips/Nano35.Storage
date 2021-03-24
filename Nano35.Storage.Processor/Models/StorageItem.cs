@@ -85,7 +85,7 @@ namespace Nano35.Storage.Processor.Models
     {
         public StorageItemAutoMapperProfile()
         {
-            CreateMap<StorageItem, IStorageItemViewModel>()
+            CreateMap<StorageItem, StorageItemViewModel>()
                 .ForMember(dest => dest.Id, source => source
                     .MapFrom(source => source.Id))
                 .ForMember(dest => dest.Condition, source => source

@@ -34,14 +34,7 @@ namespace Nano35.Storage.Processor.UseCases.GetCancellationDetailsById
             public DateTime Date { get; set; }
             public IUnitViewModel Unit { get; set; }
             public IClientViewModel Client { get; set; }
-            public IEnumerable<ICancellationDetailViewModel> Details { get; set; }
-        }
-        
-        private class ComingDetailImpl : ICancellationDetailViewModel
-        {
-            public int Count { get; set; }
-            public string PlaceOnStorage { get; set; }
-            public IStorageItemViewModel StorageItem { get; set; }
+            public List<CancellationDetailViewModel> Details { get; set; }
         }
 
         public async Task<IGetCancellationDetailsByIdResultContract> Ask

@@ -6,18 +6,17 @@ using Nano35.Contracts.Storage.Artifacts;
 namespace Nano35.Storage.Api.Requests.CreateMove
 {
     public class CreateMoveRequest :
-        IPipelineNode<
-            ICreateMoveRequestContract, 
-            ICreateMoveResultContract>
+        EndPointNodeBase<ICreateMoveRequestContract, ICreateMoveResultContract>
     {
         private readonly IBus _bus;
+        
         public CreateMoveRequest(
             IBus bus)
         {
             _bus = bus;
         }
         
-        public async Task<ICreateMoveResultContract> Ask(
+        public override async Task<ICreateMoveResultContract> Ask(
             ICreateMoveRequestContract input)
         {
             var client = _bus.CreateRequestClient<ICreateMoveRequestContract>(TimeSpan.FromSeconds(10));

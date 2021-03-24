@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Nano35.Contracts.Storage.Artifacts;
+using Nano35.Contracts.Storage.Models;
 using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.UseCases.GetAllSells
@@ -29,17 +30,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllSells
         private class GetAllSellsSuccessResultContract : 
             IGetAllSellsSuccessResultContract
         {
-            public IEnumerable<ISelleViewModel> Data { get; set; }
-        }
-        
-        private class SelleImpl : ISelleViewModel
-        {
-            public Guid Id { get; set; }
-            public string Number { get; set; }
-            public DateTime Date { get; set; }
-            public string Unit { get; set; }
-            public string Client { get; set; }
-            public double Cash { get; set; }
+            public List<SelleViewModel> Data { get; set; }
         }
 
         public async Task<IGetAllSellsResultContract> Ask
@@ -49,7 +40,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllSells
                 .Sells
                 .Where(c => c.InstanceId == input.InstanceId)
                 .Select(a =>
-                    new SelleImpl()
+                    new SelleViewModel()
                     {
                         Id = a.Id,
                         Number = a.Number,

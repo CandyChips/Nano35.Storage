@@ -33,7 +33,6 @@ namespace Nano35.Storage.Processor.UseCases.GetAllWarehousesOfItem
             _logger.LogInformation($"GetAllWarehousesOfItemLogger starts on: {DateTime.Now}");
             var result = await _nextNode.Ask(input, cancellationToken);
             _logger.LogInformation($"GetAllWarehousesOfItemLogger ends on: {DateTime.Now}");
-            _logger.LogInformation("");
             return result;
         }
     }

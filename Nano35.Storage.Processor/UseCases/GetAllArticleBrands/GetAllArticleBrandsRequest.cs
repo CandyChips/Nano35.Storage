@@ -24,7 +24,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllArticleBrands
         private class GetAllArticlesBrandsSuccessResultContract : 
             IGetAllArticlesBrandsSuccessResultContract
         {
-            public IEnumerable<string> Data { get; set; }
+            public List<string> Data { get; set; }
         }
         
         public async Task<IGetAllArticlesBrandsResultContract> Ask(

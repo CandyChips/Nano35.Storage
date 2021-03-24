@@ -7,6 +7,7 @@ using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Storage.Artifacts;
+using Nano35.Contracts.Storage.Models;
 using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.UseCases.GetAllComings
@@ -30,17 +31,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllComings
         private class GetAllComingsSuccessResultContract : 
             IGetAllComingsSuccessResultContract
         {
-            public IEnumerable<IComingViewModel> Data { get; set; }
-        }
-        
-        private class ComingImpl : IComingViewModel
-        {
-            public Guid Id { get; set; }
-            public string Number { get; set; }
-            public DateTime Date { get; set; }
-            public string Unit { get; set; }
-            public string Client { get; set; }
-            public double Cash { get; set; }
+            public List<ComingViewModel> Data { get; set; }
         }
 
         public async Task<IGetAllComingsResultContract> Ask
@@ -54,7 +45,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllComings
             var result = comings
                 .Select(a =>
                 {
-                    var res = new ComingImpl()
+                    var res = new ComingViewModel()
                     {
                         Id = a.Id,
                         Number = a.Number,
@@ -82,7 +73,8 @@ namespace Nano35.Storage.Processor.UseCases.GetAllComings
                     };
 
                     return res;
-                });
+                })
+                .ToList();
                     
                     
             return new GetAllComingsSuccessResultContract() {Data = result};

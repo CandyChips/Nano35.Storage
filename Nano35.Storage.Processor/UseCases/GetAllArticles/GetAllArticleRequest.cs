@@ -24,7 +24,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllArticles
         private class GetAllArticlesSuccessResultContract : 
             IGetAllArticlesSuccessResultContract
         {
-            public IEnumerable<IArticleViewModel> Data { get; set; }
+            public List<ArticleViewModel> Data { get; set; }
         }
 
         public async Task<IGetAllArticlesResultContract> Ask
@@ -33,7 +33,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllArticles
             var result = await _context
                 .Articles
                 .Where(c => c.InstanceId == input.InstanceId)
-                .MapAllToAsync<IArticleViewModel>();
+                .MapAllToAsync<ArticleViewModel>();
 
             return new GetAllArticlesSuccessResultContract() {Data = result};
         }

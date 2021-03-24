@@ -23,7 +23,7 @@ namespace Nano35.Storage.Processor.UseCases.GetStorageItemById
         private class GetStorageItemByIdSuccessResultContract : 
             IGetStorageItemByIdSuccessResultContract
         {
-            public IStorageItemViewModel Data { get; set; }
+            public StorageItemViewModel Data { get; set; }
         }
         
         public async Task<IGetStorageItemByIdResultContract> Ask(
@@ -32,7 +32,7 @@ namespace Nano35.Storage.Processor.UseCases.GetStorageItemById
         {
             var result = (await _context.StorageItems
                 .FirstOrDefaultAsync(c => c.Id == input.Id, cancellationToken: cancellationToken))
-                .MapTo<IStorageItemViewModel>();
+                .MapTo<StorageItemViewModel>();
 
             return new GetStorageItemByIdSuccessResultContract() {Data = result};
         }

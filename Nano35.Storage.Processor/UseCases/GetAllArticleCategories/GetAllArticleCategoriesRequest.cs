@@ -25,7 +25,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllArticleCategories
         private class GetAllArticlesCategoriesSuccessResultContract : 
             IGetAllArticlesCategoriesSuccessResultContract
         {
-            public IEnumerable<ICategoryViewModel> Data { get; set; }
+            public List<CategoryViewModel> Data { get; set; }
         }
         
         public async Task<IGetAllArticlesCategoriesResultContract> Ask
@@ -33,9 +33,9 @@ namespace Nano35.Storage.Processor.UseCases.GetAllArticleCategories
         {
             var result = input.ParentId == Guid.Empty
                 ? await _context.Categories.Where(c => c.InstanceId == input.InstanceId && c.ParentCategoryId == null)
-                    .MapAllToAsync<ICategoryViewModel>()
+                    .MapAllToAsync<CategoryViewModel>()
                 : await _context.Categories.Where(c => c.ParentCategoryId == input.ParentId)
-                    .MapAllToAsync<ICategoryViewModel>();
+                    .MapAllToAsync<CategoryViewModel>();
 
             return new GetAllArticlesCategoriesSuccessResultContract() {Data = result};
         }

@@ -73,7 +73,7 @@ namespace Nano35.Storage.Processor.Models
     {
         public ArticleAutoMapperProfile()
         {
-            CreateMap<Article, IArticleViewModel>()
+            CreateMap<Article, ArticleViewModel>()
                 .ForMember(dest => dest.Id, source => source
                     .MapFrom(source => source.Id))
                 .ForMember(dest => dest.Category, source => source

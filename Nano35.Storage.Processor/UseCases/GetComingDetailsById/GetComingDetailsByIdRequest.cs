@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using MassTransit;
 using Nano35.Contracts.Instance.Models;
 using Nano35.Contracts.Storage.Artifacts;
+using Nano35.Contracts.Storage.Models;
 using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.UseCases.GetComingDetailsById
@@ -33,15 +34,7 @@ namespace Nano35.Storage.Processor.UseCases.GetComingDetailsById
             public DateTime Date { get; set; }
             public IUnitViewModel Unit { get; set; }
             public IClientViewModel Client { get; set; }
-            public IEnumerable<IComingDetailViewModel> Details { get; set; }
-        }
-        
-        private class ComingDetailImpl : IComingDetailViewModel
-        {
-            public int Count { get; set; }
-            public string PlaceOnStorage { get; set; }
-            public string StorageItem { get; set; }
-            public double Price { get; set; }
+            public List<ComingDetailViewModel> Details { get; set; }
         }
 
         public async Task<IGetComingDetailsByIdResultContract> Ask

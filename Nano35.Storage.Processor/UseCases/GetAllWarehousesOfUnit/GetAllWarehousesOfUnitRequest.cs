@@ -23,7 +23,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllWarehousesOfUnit
         private class GetAllWarehousesOfUnitSuccessResultContract : 
             IGetAllWarehousesOfUnitSuccessResultContract
         {
-            public IEnumerable<IWarehouseOfUnitViewModel> Data { get; set; }
+            public List<IWarehouseOfUnitViewModel> Data { get; set; }
         }
         
         public async Task<IGetAllWarehousesOfUnitResultContract> Ask

@@ -24,7 +24,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllPlacesOnStorage
         private class GetAllPlacesOnStorageSuccessResultContract : 
             IGetAllPlacesOnStorageSuccessResultContract
         {
-            public List<IPlaceOnStorage> Data { get; set; }
+            public List<PlaceOnStorage> Data { get; set; }
         }
         
         public async Task<IGetAllPlacesOnStorageResultContract> Ask
@@ -34,7 +34,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllPlacesOnStorage
             var result = await _context
                 .Warehouses
                 .Where(c => c.UnitId == input.UnitId && c.StorageItemId == input.StorageItemId)
-                .MapAllToAsync<IPlaceOnStorage>();
+                .MapAllToAsync<PlaceOnStorage>();
 
             return new GetAllPlacesOnStorageSuccessResultContract() {Data = result};
         }

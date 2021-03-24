@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MassTransit;
 using Nano35.Contracts.Storage.Artifacts;
+using Nano35.Contracts.Storage.Models;
 using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.UseCases.GetAllMoves
@@ -27,17 +28,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllMoves
         private class GetAllMovesSuccessResultContract : 
             IGetAllMovesSuccessResultContract
         {
-            public IEnumerable<IMoveViewModel> Data { get; set; }
-        }
-        
-        private class MoveImpl : IMoveViewModel
-        {
-            public Guid Id { get; set; }
-            public string Number { get; set; }
-            public DateTime Date { get; set; }
-            public string Unit { get; set; }
-            public string Client { get; set; }
-            public double Cash { get; set; }
+            public List<MoveViewModel> Data { get; set; }
         }
 
         public async Task<IGetAllMovesResultContract> Ask

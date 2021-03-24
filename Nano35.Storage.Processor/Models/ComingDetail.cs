@@ -3,6 +3,7 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Nano35.Contracts;
 using Nano35.Contracts.Storage.Artifacts;
+using Nano35.Contracts.Storage.Models;
 
 namespace Nano35.Storage.Processor.Models
 {
@@ -65,7 +66,7 @@ namespace Nano35.Storage.Processor.Models
     {
         public ComingDetailAutoMapperProfile()
         {
-            CreateMap<ComingDetail, IComingDetailViewModel>()
+            CreateMap<ComingDetail, ComingDetailViewModel>()
                 .ForMember(dest => dest.Count, source => source
                     .MapFrom(source => source.Count))
                 .ForMember(dest => dest.PlaceOnStorage, source => source
