@@ -176,9 +176,9 @@ namespace Nano35.Storage.Api.Controllers
         [HttpGet]
         [Route("GetAllPlacesOnStorage")]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllPlacesOnStorageSuccessHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllPlacesOnStorageErrorHttpResponse))] 
-        public async Task<IActionResult> GetAllStorageItems(
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllPlacesOnStorageSuccessResultContract))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllPlacesOnStorageErrorResultContract))] 
+        public async Task<IActionResult> GetAllPlacesOnStorage(
             [FromQuery] GetAllPlacesOnStorageHttpContext body)
         {
             var bus = (IBus) _services.GetService(typeof(IBus));
