@@ -1,20 +1,19 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using MassTransit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Storage.Artifacts;
-using Nano35.Contracts.Storage.Models;
-using Nano35.HttpContext.instance;
 using Nano35.HttpContext.storage;
 using Nano35.Storage.Api.Requests.CreateCancellation;
 using Nano35.Storage.Api.Requests.CreateComing;
 using Nano35.Storage.Api.Requests.CreateMove;
 using Nano35.Storage.Api.Requests.CreateSelle;
 using Nano35.Storage.Api.Requests.GetAllComings;
+using Nano35.Storage.Api.Requests.GetAllMoves;
 using Nano35.Storage.Api.Requests.GetAllPlacesOnStorage;
+using Nano35.Storage.Api.Requests.GetAllSells;
 using Nano35.Storage.Api.Requests.GetComingDetailsById;
 
 namespace Nano35.Storage.Api.Controllers
@@ -102,9 +101,16 @@ namespace Nano35.Storage.Api.Controllers
 
         [HttpGet]
         [Route("GetAllMoves")]
-        public async Task<IActionResult> GetAllMoves()
+        public async Task<IActionResult> GetAllMoves(
+            [FromQuery] GetAllMovesHttpQuery body)
         {
-            return Ok();
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<LoggedGetAllMovesRequest>)_services.GetService(typeof(ILogger<LoggedGetAllMovesRequest>));
+            
+            return await new ConvertedGetAllMovesOnHttpContext(
+                new LoggedGetAllMovesRequest(logger,
+                    new ValidatedGetAllMovesRequest(
+                        new GetAllMovesRequest(bus)))).Ask(body);
         }
 
         [HttpGet]
@@ -133,9 +139,16 @@ namespace Nano35.Storage.Api.Controllers
 
         [HttpGet]
         [Route("GetAllSells")]
-        public async Task<IActionResult> GetAllSells()
+        public async Task<IActionResult> GetAllSells(
+            [FromQuery] GetAllSellsHttpQuery body)
         {
-            return Ok();
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<LoggedGetAllSellsRequest>)_services.GetService(typeof(ILogger<LoggedGetAllSellsRequest>));
+            
+            return await new ConvertedGetAllSellsOnHttpContext(
+                new LoggedGetAllSellsRequest(logger,
+                    new ValidatedGetAllSellsRequest(
+                        new GetAllSellsRequest(bus)))).Ask(body);
         }
 
         [HttpGet]

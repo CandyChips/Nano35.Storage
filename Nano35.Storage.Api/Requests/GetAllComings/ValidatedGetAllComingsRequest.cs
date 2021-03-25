@@ -19,10 +19,6 @@ namespace Nano35.Storage.Api.Requests.GetAllComings
         public override async Task<IGetAllComingsResultContract> Ask(
             IGetAllComingsRequestContract input)
         {
-            if (false)
-            {
-                return new GetAllComingsValidatorErrorResult() {Message = "Ошибка валидации"};
-            }
             return await DoNext(input);
         }
     }

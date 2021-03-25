@@ -8,18 +8,17 @@ using Nano35.Contracts.Storage.Models;
 namespace Nano35.Storage.Api.Requests.GetAllMoves
 {
     public class GetAllMovesRequest :
-        IPipelineNode<
-            IGetAllMovesRequestContract,
-            IGetAllMovesResultContract>
+        EndPointNodeBase<IGetAllMovesRequestContract, IGetAllMovesResultContract>
     {
         private readonly IBus _bus;
+        
         public GetAllMovesRequest(
             IBus bus)
         {
             _bus = bus;
         }
         
-        public async Task<IGetAllMovesResultContract> Ask(
+        public override async Task<IGetAllMovesResultContract> Ask(
             IGetAllMovesRequestContract input)
         {
             var client = _bus.CreateRequestClient<IGetAllMovesRequestContract>(TimeSpan.FromSeconds(10));

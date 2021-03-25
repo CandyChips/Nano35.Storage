@@ -11,30 +11,16 @@ namespace Nano35.Storage.Api.Requests.GetAllMoves
     }
     
     public class ValidatedGetAllMovesRequest:
-        IPipelineNode<
-            IGetAllMovesRequestContract, 
-            IGetAllMovesResultContract>
+        PipeNodeBase<IGetAllMovesRequestContract, IGetAllMovesResultContract>
     {
-        private readonly IPipelineNode<
-            IGetAllMovesRequestContract, 
-            IGetAllMovesResultContract> _nextNode;
-
         public ValidatedGetAllMovesRequest(
-            IPipelineNode<
-                IGetAllMovesRequestContract,
-                IGetAllMovesResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IGetAllMovesRequestContract, IGetAllMovesResultContract> next) :
+            base(next) { }
 
-        public async Task<IGetAllMovesResultContract> Ask(
+        public override async Task<IGetAllMovesResultContract> Ask(
             IGetAllMovesRequestContract input)
         {
-            if (false)
-            {
-                return new GetAllMovesValidatorErrorResult() {Message = "Ошибка валидации"};
-            }
-            return await _nextNode.Ask(input);
+            return await DoNext(input);
         }
     }
 }

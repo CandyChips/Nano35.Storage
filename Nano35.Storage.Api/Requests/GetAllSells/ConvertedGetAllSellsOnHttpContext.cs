@@ -25,7 +25,6 @@ namespace Nano35.Storage.Api.Requests.GetAllSells
             var converted = new GetAllSellsRequestContract()
             {
                 InstanceId = input.InstanceId,
-                StorageItemId = input.StorageItemId,
                 UnitId = input.UnitId,
             };
 

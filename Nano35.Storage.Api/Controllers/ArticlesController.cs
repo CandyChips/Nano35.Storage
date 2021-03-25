@@ -5,8 +5,6 @@ using MassTransit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Nano35.Contracts.Storage.Artifacts;
-using Nano35.Contracts.Storage.Models;
 using Nano35.HttpContext.storage;
 using Nano35.Storage.Api.Requests.CreateArticle;
 using Nano35.Storage.Api.Requests.GetAllArticleBrands;

@@ -21,23 +21,19 @@ namespace Nano35.Storage.Processor.UseCases.GetAllMoves
         public async Task Consume(
             ConsumeContext<IGetAllMovesRequestContract> context)
         {
-            // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
             var bus = (IBus) _services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetAllMovesRequest>) _services
                 .GetService(typeof(ILogger<LoggedGetAllMovesRequest>));
 
-            // Explore message of request
             var message = context.Message;
 
-            // Send request to pipeline
             var result =
                 await new LoggedGetAllMovesRequest(logger,
                     new ValidatedGetAllMovesRequest(
                         new GetAllMovesRequest(dbContext, bus))
                 ).Ask(message, context.CancellationToken);
             
-            // Check response of create article request
             switch (result)
             {
                 case IGetAllMovesSuccessResultContract:

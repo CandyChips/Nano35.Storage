@@ -21,23 +21,16 @@ namespace Nano35.Storage.Processor.UseCases.GetAllComings
         public async Task Consume(
             ConsumeContext<IGetAllComingsRequestContract> context)
         {
-            // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
             var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetAllComingsRequest>) _services
-                .GetService(typeof(ILogger<LoggedGetAllComingsRequest>));
+            var logger = (ILogger<LoggedGetAllComingsRequest>) _services.GetService(typeof(ILogger<LoggedGetAllComingsRequest>));
 
-            // Explore message of request
             var message = context.Message;
 
-            // Send request to pipeline
-            var result =
-                await new LoggedGetAllComingsRequest(logger,
-                    new ValidatedGetAllComingsRequest(
-                        new GetAllComingsRequest(dbContext, bus))
-                ).Ask(message, context.CancellationToken);
+            var result = await new LoggedGetAllComingsRequest(logger,
+                        new ValidatedGetAllComingsRequest(
+                            new GetAllComingsRequest(dbContext, bus))).Ask(message, context.CancellationToken);
             
-            // Check response of create article request
             switch (result)
             {
                 case IGetAllComingsSuccessResultContract:
