@@ -10,30 +10,16 @@ namespace Nano35.Storage.Api.Requests.UpdateStorageItemHiddenComment
     }
     
     public class ValidatedUpdateStorageItemHiddenCommentRequest:
-        IPipelineNode<
-            IUpdateStorageItemHiddenCommentRequestContract,
-            IUpdateStorageItemHiddenCommentResultContract>
+        PipeNodeBase<IUpdateStorageItemHiddenCommentRequestContract, IUpdateStorageItemHiddenCommentResultContract>
     {
-        private readonly IPipelineNode<
-            IUpdateStorageItemHiddenCommentRequestContract, 
-            IUpdateStorageItemHiddenCommentResultContract> _nextNode;
-
         public ValidatedUpdateStorageItemHiddenCommentRequest(
-            IPipelineNode<
-                IUpdateStorageItemHiddenCommentRequestContract, 
-                IUpdateStorageItemHiddenCommentResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IUpdateStorageItemHiddenCommentRequestContract, IUpdateStorageItemHiddenCommentResultContract> next) :
+            base(next) { }
 
-        public async Task<IUpdateStorageItemHiddenCommentResultContract> Ask(
+        public override async Task<IUpdateStorageItemHiddenCommentResultContract> Ask(
             IUpdateStorageItemHiddenCommentRequestContract input)
         {
-            if (false)
-            {
-                return new UpdateStorageItemHiddenCommentValidatorErrorResult() {Message = "Ошибка валидации"};
-            }
-            return await _nextNode.Ask(input);
+            return await DoNext(input);
         }
     }
 }

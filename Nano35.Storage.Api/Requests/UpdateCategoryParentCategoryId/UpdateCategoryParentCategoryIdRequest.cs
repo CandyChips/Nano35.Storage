@@ -11,6 +11,7 @@ namespace Nano35.Storage.Api.Requests.UpdateCategoryParentCategoryId
         EndPointNodeBase<IUpdateCategoryParentCategoryIdRequestContract, IUpdateCategoryParentCategoryIdResultContract>
     {
         private readonly IBus _bus;
+        
         public UpdateCategoryParentCategoryIdRequest(
             IBus bus)
         {

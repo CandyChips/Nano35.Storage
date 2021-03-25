@@ -8,18 +8,17 @@ using Nano35.Contracts.Storage.Models;
 namespace Nano35.Storage.Api.Requests.GetStorageItemById
 {
     public class GetStorageItemByIdRequest :
-        IPipelineNode<
-            IGetStorageItemByIdRequestContract, 
-            IGetStorageItemByIdResultContract>
+        EndPointNodeBase<IGetStorageItemByIdRequestContract, IGetStorageItemByIdResultContract>
     {
         private readonly IBus _bus;
+        
         public GetStorageItemByIdRequest(
             IBus bus)
         {
             _bus = bus;
         }
         
-        public async Task<IGetStorageItemByIdResultContract> Ask(
+        public override async Task<IGetStorageItemByIdResultContract> Ask(
             IGetStorageItemByIdRequestContract input)
         {
             var client = _bus.CreateRequestClient<IGetStorageItemByIdRequestContract>(TimeSpan.FromSeconds(10));

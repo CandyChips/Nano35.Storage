@@ -8,18 +8,17 @@ using Nano35.Contracts.Storage.Models;
 namespace Nano35.Storage.Api.Requests.UpdateStorageItemCondition
 {
     public class UpdateStorageItemConditionRequest :
-        IPipelineNode<
-            IUpdateStorageItemConditionRequestContract, 
-            IUpdateStorageItemConditionResultContract>
+        EndPointNodeBase<IUpdateStorageItemConditionRequestContract, IUpdateStorageItemConditionResultContract>
     {
         private readonly IBus _bus;
+        
         public UpdateStorageItemConditionRequest(
             IBus bus)
         {
             _bus = bus;
         }
         
-        public async Task<IUpdateStorageItemConditionResultContract> Ask(
+        public override async Task<IUpdateStorageItemConditionResultContract> Ask(
             IUpdateStorageItemConditionRequestContract input)
         {
             var client = _bus.CreateRequestClient<IUpdateStorageItemConditionRequestContract>(TimeSpan.FromSeconds(10));

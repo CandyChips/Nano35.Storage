@@ -10,30 +10,20 @@ namespace Nano35.Storage.Api.Requests.UpdateArticleBrand
     }
     
     public class ValidatedUpdateArticleBrandRequest:
-        IPipelineNode<
-            IUpdateArticleBrandRequestContract,
-            IUpdateArticleBrandResultContract>
+        PipeNodeBase<IUpdateArticleBrandRequestContract, IUpdateArticleBrandResultContract>
     {
-        private readonly IPipelineNode<
-            IUpdateArticleBrandRequestContract, 
-            IUpdateArticleBrandResultContract> _nextNode;
-
         public ValidatedUpdateArticleBrandRequest(
-            IPipelineNode<
-                IUpdateArticleBrandRequestContract, 
-                IUpdateArticleBrandResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IUpdateArticleBrandRequestContract, IUpdateArticleBrandResultContract> next) :
+            base(next) { }
 
-        public async Task<IUpdateArticleBrandResultContract> Ask(
+        public override async Task<IUpdateArticleBrandResultContract> Ask(
             IUpdateArticleBrandRequestContract input)
         {
             if (false)
             {
                 return new UpdateArticleBrandValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input);
+            return await DoNext(input);
         }
     }
 }

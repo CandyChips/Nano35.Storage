@@ -4,8 +4,6 @@ using MassTransit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Nano35.Contracts.Storage.Artifacts;
-using Nano35.HttpContext.instance;
 using Nano35.HttpContext.storage;
 using Nano35.Storage.Api.Requests.CreateStorageItem;
 using Nano35.Storage.Api.Requests.GetAllStorageItemConditions;
@@ -44,23 +42,10 @@ namespace Nano35.Storage.Api.Controllers
             var bus = (IBus) _services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetAllStorageItemsRequest>) _services.GetService(typeof(ILogger<LoggedGetAllStorageItemsRequest>));
 
-            var request = new GetAllStorageItemsRequestContract()
-            {
-                InstanceId = header.InstanceId
-            };
-            
-            var result = 
-                await new LoggedGetAllStorageItemsRequest(logger,
-                    new ValidatedGetAllStorageItemsRequest(
-                        new GetAllStorageItemsRequest(bus)))
-                    .Ask(request);
-            
-            return result switch
-            {
-                IGetAllStorageItemsSuccessResultContract success => Ok(success),
-                IGetAllStorageItemsErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+            return await new ConvertedGetAllStorageItemsOnHttpContext(
+                        new LoggedGetAllStorageItemsRequest(logger,
+                            new ValidatedGetAllStorageItemsRequest(
+                                new GetAllStorageItemsRequest(bus)))).Ask(header);
         }
     
         [HttpGet]
@@ -73,19 +58,10 @@ namespace Nano35.Storage.Api.Controllers
             var bus = (IBus) _services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetAllStorageItemConditionsRequest>) _services.GetService(typeof(ILogger<LoggedGetAllStorageItemConditionsRequest>));
 
-            var request = new GetAllStorageItemConditionsRequestContract();
-            
-            var result = 
-                await new LoggedGetAllStorageItemConditionsRequest(logger,
-                    new GetAllStorageItemConditionsRequest(bus))
-                    .Ask(request);
-            
-            return result switch
-            {
-                IGetAllStorageItemConditionsSuccessResultContract success => Ok(success),
-                IGetAllStorageItemConditionsErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+            return await new ConvertedGetAllStorageItemConditionsOnHttpContext(
+                        new LoggedGetAllStorageItemConditionsRequest(logger,
+                            new GetAllStorageItemConditionsRequest(bus))).Ask(
+                                new GetAllStorageItemConditionsHttpQuery());
         }
     
         [HttpGet]
@@ -99,23 +75,10 @@ namespace Nano35.Storage.Api.Controllers
             var bus = (IBus) _services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetStorageItemByIdRequest>) _services.GetService(typeof(ILogger<LoggedGetStorageItemByIdRequest>));
 
-            var request = new GetStorageItemByIdRequestContract()
-            {
-                Id = query.Id
-            };
-            
-            var result = 
-                await new LoggedGetStorageItemByIdRequest(logger,
-                    new ValidatedGetStorageItemByIdRequest(
-                        new GetStorageItemByIdRequest(bus)))
-                    .Ask(request);
-            
-            return result switch
-            {
-                IGetStorageItemByIdSuccessResultContract success => Ok(success),
-                IGetStorageItemByIdErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+            return await new ConvertedGetStorageItemByIdOnHttpContext(
+                        new LoggedGetStorageItemByIdRequest(logger,
+                            new ValidatedGetStorageItemByIdRequest(
+                                new GetStorageItemByIdRequest(bus)))).Ask(query);
         }
         
         [HttpPost]
@@ -147,24 +110,10 @@ namespace Nano35.Storage.Api.Controllers
             var bus = (IBus) _services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedUpdateStorageItemArticleRequest>) _services.GetService(typeof(ILogger<LoggedUpdateStorageItemArticleRequest>));
 
-            var request = new UpdateStorageItemArticleRequestContract()
-            {
-                ArticleId = body.ArticleId,
-                Id = body.Id
-            };
-            
-            var result =
-                await new LoggedUpdateStorageItemArticleRequest(logger,  
-                    new ValidatedUpdateStorageItemArticleRequest(
-                        new UpdateStorageItemArticleRequest(bus)))
-                    .Ask(request);
-            
-            return result switch
-            {
-                IUpdateStorageItemArticleSuccessResultContract => Ok(),
-                IUpdateStorageItemArticleErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+            return await new ConvertedUpdateStorageItemArticleOnHttpContext(
+                        new LoggedUpdateStorageItemArticleRequest(logger,  
+                            new ValidatedUpdateStorageItemArticleRequest(
+                                new UpdateStorageItemArticleRequest(bus)))).Ask(body);
         }
         
         [HttpPatch]
@@ -179,24 +128,10 @@ namespace Nano35.Storage.Api.Controllers
             var bus = (IBus) _services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedUpdateStorageItemCommentRequest>) _services.GetService(typeof(ILogger<LoggedUpdateStorageItemCommentRequest>));
 
-            var request = new UpdateStorageItemCommentRequestContract()
-            {
-                Comment = body.Comment,
-                Id = body.Id
-            };
-            
-            var result =
-                await new LoggedUpdateStorageItemCommentRequest(logger,  
-                    new ValidatedUpdateStorageItemCommentRequest(
-                        new UpdateStorageItemCommentRequest(bus)))
-                    .Ask(request);
-            
-            return result switch
-            {
-                IUpdateStorageItemCommentSuccessResultContract => Ok(),
-                IUpdateStorageItemCommentErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+            return await new ConvertedUpdateStorageItemCommentOnHttpContext(
+                        new LoggedUpdateStorageItemCommentRequest(logger,  
+                            new ValidatedUpdateStorageItemCommentRequest(
+                                new UpdateStorageItemCommentRequest(bus)))).Ask(body);
         }
         
         [HttpPatch]
@@ -210,24 +145,10 @@ namespace Nano35.Storage.Api.Controllers
             var bus = (IBus) _services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedUpdateStorageItemConditionRequest>) _services.GetService(typeof(ILogger<LoggedUpdateStorageItemConditionRequest>));
 
-            var request = new UpdateStorageItemConditionRequestContract()
-            {
-                ConditionId = body.ConditionId,
-                Id = body.Id,
-            };
-            
-            var result =
-                await new LoggedUpdateStorageItemConditionRequest(logger,  
-                    new ValidatedUpdateStorageItemConditionRequest(
-                        new UpdateStorageItemConditionRequest(bus)))
-                    .Ask(request);
-            
-            return result switch
-            {
-                IUpdateStorageItemConditionSuccessResultContract => Ok(),
-                IUpdateStorageItemConditionErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+            return await new ConvertedUpdateStorageItemConditionOnHttpContext(
+                        new LoggedUpdateStorageItemConditionRequest(logger,  
+                            new ValidatedUpdateStorageItemConditionRequest(
+                                new UpdateStorageItemConditionRequest(bus)))).Ask(body);
         }
         
         [HttpPatch]
@@ -241,24 +162,10 @@ namespace Nano35.Storage.Api.Controllers
             var bus = (IBus) _services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedUpdateStorageItemHiddenCommentRequest>) _services.GetService(typeof(ILogger<LoggedUpdateStorageItemHiddenCommentRequest>));
 
-            var request = new UpdateStorageItemHiddenCommentRequestContract()
-            {
-                HiddenComment = body.HiddenComment,
-                Id = body.Id,
-            };
-            
-            var result =
-                await new LoggedUpdateStorageItemHiddenCommentRequest(logger,  
-                    new ValidatedUpdateStorageItemHiddenCommentRequest(
-                        new UpdateStorageItemHiddenCommentRequest(bus)))
-                    .Ask(request);
-            
-            return result switch
-            {
-                IUpdateStorageItemHiddenCommentSuccessResultContract => Ok(),
-                IUpdateStorageItemHiddenCommentErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+            return await new ConvertedUpdateStorageItemHiddenCommentOnHttpContext(
+                        new LoggedUpdateStorageItemHiddenCommentRequest(logger,  
+                            new ValidatedUpdateStorageItemHiddenCommentRequest(
+                                new UpdateStorageItemHiddenCommentRequest(bus)))).Ask(body);
         }
         
         [HttpPatch]
@@ -273,24 +180,10 @@ namespace Nano35.Storage.Api.Controllers
             var bus = (IBus) _services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedUpdateStorageItemPurchasePriceRequest>) _services.GetService(typeof(ILogger<LoggedUpdateStorageItemPurchasePriceRequest>));
 
-            var request = new UpdateStorageItemPurchasePriceRequestContract()
-            {
-                PurchasePrice = body.PurchasePrice,
-                Id = body.Id
-            };
-            
-            var result =
-                await new LoggedUpdateStorageItemPurchasePriceRequest(logger,  
-                    new ValidatedUpdateStorageItemPurchasePriceRequest(
-                        new UpdateStorageItemPurchasePriceRequest(bus)))
-                    .Ask(request);
-            
-            return result switch
-            {
-                IUpdateStorageItemPurchasePriceSuccessResultContract => Ok(),
-                IUpdateStorageItemPurchasePriceErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+            return await new ConvertedUpdateStorageItemPurchasePriceOnHttpContext(
+                        new LoggedUpdateStorageItemPurchasePriceRequest(logger,  
+                            new ValidatedUpdateStorageItemPurchasePriceRequest(
+                                new UpdateStorageItemPurchasePriceRequest(bus)))).Ask(body);
         }
         
         [HttpPatch]
@@ -305,24 +198,10 @@ namespace Nano35.Storage.Api.Controllers
             var bus = (IBus) _services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedUpdateStorageItemRetailPriceRequest>) _services.GetService(typeof(ILogger<LoggedUpdateStorageItemRetailPriceRequest>));
 
-            var request = new UpdateStorageItemRetailPriceRequestContract()
-            {
-                RetailPrice = body.RetailPrice,
-                Id = body.Id
-            };
-            
-            var result =
-                await new LoggedUpdateStorageItemRetailPriceRequest(logger,  
-                    new ValidatedUpdateStorageItemRetailPriceRequest(
-                        new UpdateStorageItemRetailPriceRequest(bus)))
-                    .Ask(request);
-            
-            return result switch
-            {
-                IUpdateStorageItemRetailPriceSuccessResultContract => Ok(),
-                IUpdateStorageItemRetailPriceErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+            return await new ConvertedUpdateStorageItemRetailPriceOnHttpContext(
+                        new LoggedUpdateStorageItemRetailPriceRequest(logger,  
+                            new ValidatedUpdateStorageItemRetailPriceRequest(
+                                new UpdateStorageItemRetailPriceRequest(bus)))).Ask(body);
         }
     }
 }

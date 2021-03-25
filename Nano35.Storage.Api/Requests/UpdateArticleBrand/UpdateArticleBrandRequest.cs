@@ -8,18 +8,17 @@ using Nano35.Contracts.Storage.Models;
 namespace Nano35.Storage.Api.Requests.UpdateArticleBrand
 {
     public class UpdateArticleBrandRequest :
-        IPipelineNode<
-            IUpdateArticleBrandRequestContract, 
-            IUpdateArticleBrandResultContract>
+        EndPointNodeBase<IUpdateArticleBrandRequestContract, IUpdateArticleBrandResultContract>
     {
         private readonly IBus _bus;
+        
         public UpdateArticleBrandRequest(
             IBus bus)
         {
             _bus = bus;
         }
         
-        public async Task<IUpdateArticleBrandResultContract> Ask(
+        public override async Task<IUpdateArticleBrandResultContract> Ask(
             IUpdateArticleBrandRequestContract input)
         {
             var client = _bus.CreateRequestClient<IUpdateArticleBrandRequestContract>(TimeSpan.FromSeconds(10));

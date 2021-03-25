@@ -10,30 +10,16 @@ namespace Nano35.Storage.Api.Requests.UpdateStorageItemArticle
     }
     
     public class ValidatedUpdateStorageItemArticleRequest:
-        IPipelineNode<
-            IUpdateStorageItemArticleRequestContract,
-            IUpdateStorageItemArticleResultContract>
+        PipeNodeBase<IUpdateStorageItemArticleRequestContract, IUpdateStorageItemArticleResultContract>
     {
-        private readonly IPipelineNode<
-            IUpdateStorageItemArticleRequestContract, 
-            IUpdateStorageItemArticleResultContract> _nextNode;
-
         public ValidatedUpdateStorageItemArticleRequest(
-            IPipelineNode<
-                IUpdateStorageItemArticleRequestContract, 
-                IUpdateStorageItemArticleResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IUpdateStorageItemArticleRequestContract, IUpdateStorageItemArticleResultContract> next) :
+            base(next) { }
 
-        public async Task<IUpdateStorageItemArticleResultContract> Ask(
+        public override async Task<IUpdateStorageItemArticleResultContract> Ask(
             IUpdateStorageItemArticleRequestContract input)
         {
-            if (false)
-            {
-                return new UpdateStorageItemArticleValidatorErrorResult() {Message = "Ошибка валидации"};
-            }
-            return await _nextNode.Ask(input);
+            return await DoNext(input);
         }
     }
 }

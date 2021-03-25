@@ -35,7 +35,6 @@ namespace Nano35.Storage.Api.Requests.CreateMove
                     Count = a.Count,
                     FromPlaceOnStorage = a.FromPlaceOnStorage,
                     ToPlaceOnStorage = a.ToPlaceOnStorage,
-                    Price = a.Price,
                     StorageItemId = a.StorageItemId
                 }).ToList()
             };

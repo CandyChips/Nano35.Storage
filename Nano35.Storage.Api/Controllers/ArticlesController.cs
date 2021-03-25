@@ -74,6 +74,8 @@ namespace Nano35.Storage.Api.Controllers
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetAllArticlesRequest>)_services.GetService(typeof(ILogger<LoggedGetAllArticlesRequest>));
             
+            // ToDo Hey Maslyonok
+            // Building pipeline
             return await new ConvertedGetAllArticlesOnHttpContext(
                         new LoggedGetAllArticlesRequest(logger,
                             new ValidatedGetAllArticlesRequest(
@@ -127,12 +129,38 @@ namespace Nano35.Storage.Api.Controllers
             var logger = (ILogger<LoggedGetArticleByIdRequest>) _services.GetService(typeof(ILogger<LoggedGetArticleByIdRequest>));
 
             return await new ConvertedGetArticleByIdOnHttpContext(
-                new LoggedGetArticleByIdRequest(logger,
-                    new ValidatedGetArticleByIdRequest(
-                        new GetArticleByIdRequest(bus)))).Ask(query);
+                        new LoggedGetArticleByIdRequest(logger,
+                            new ValidatedGetArticleByIdRequest(
+                                new GetArticleByIdRequest(bus)))).Ask(query);
             
         }
-
+        
+        /// <summary>
+        /// Creates a Article.
+        /// </summary>
+        /// <remarks>
+        /// Note that the NewId, InstanceId and CategoryId is a GUID and not an integer.
+        ///  
+        ///     POST /CreateArticle
+        ///     {
+        ///        "NewId": "0e7ad584-7788-4ab1-95a6-ca0a5b444cbb",
+        ///        "InstanceId": "0e7ad584-7788-4ab1-95a6-ca0a5b444cbb",
+        ///        "Model": "Cool model",
+        ///        "Brand": "Super brand",
+        ///        "CategoryId": "0e7ad584-7788-4ab1-95a6-ca0a5b444cbb",
+        ///        "Info": "Awesome thing",
+        ///        "Specs":
+        ///        {
+        ///            "Key": "Color",
+        ///            "Value": "Black",
+        ///        }
+        ///     }
+        /// 
+        /// </remarks>
+        /// <param name="body"></param>
+        /// <returns>New Created Article</returns>
+        /// <response code="201">Returns the newly created item</response>
+        /// <response code="400">If the item is null</response>
         [HttpPost]
         [Route("CreateArticle")]
         [Produces("application/json")]
@@ -158,26 +186,13 @@ namespace Nano35.Storage.Api.Controllers
         public async Task<IActionResult> UpdateArticleBrand(
             [FromBody] UpdateArticleBrandHttpBody body)
         {
-            
             var bus = (IBus) _services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedUpdateArticleBrandRequest>) _services.GetService(typeof(ILogger<LoggedUpdateArticleBrandRequest>));
 
-            var request = new UpdateArticleBrandRequestContract()
-            {
-                Brand = body.Brand,
-                Id = body.Id
-            };
-            
-            var result = await new LoggedUpdateArticleBrandRequest(logger,  
-                    new ValidatedUpdateArticleBrandRequest(
-                        new UpdateArticleBrandRequest(bus))).Ask(request);
-            
-            return result switch
-            {
-                IUpdateArticleBrandSuccessResultContract => Ok(),
-                IUpdateArticleBrandErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+            return await new ConvertedUpdateArticleBrandOnHttpContext(
+                        new LoggedUpdateArticleBrandRequest(logger,  
+                            new ValidatedUpdateArticleBrandRequest(
+                                new UpdateArticleBrandRequest(bus)))).Ask(body);
         }
         
         [HttpPatch]
@@ -188,26 +203,13 @@ namespace Nano35.Storage.Api.Controllers
         public async Task<IActionResult> UpdateArticleCategory(
             [FromBody] UpdateArticleCategoryHttpBody body)
         {
-            
             var bus = (IBus) _services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedUpdateArticleCategoryRequest>) _services.GetService(typeof(ILogger<LoggedUpdateArticleCategoryRequest>));
 
-            var request = new UpdateArticleCategoryRequestContract()
-            {
-                Id = body.Id,
-                CategoryId = body.CategoryId
-            };
-            
-            var result = await new LoggedUpdateArticleCategoryRequest(logger,  
-                    new ValidatedUpdateArticleCategoryRequest(
-                        new UpdateArticleCategoryRequest(bus))).Ask(request);
-            
-            return result switch
-            {
-                IUpdateArticleCategorySuccessResultContract => Ok(),
-                IUpdateArticleCategoryErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+            return await new ConvertedUpdateArticleCategoryOnHttpContext(
+                        new LoggedUpdateArticleCategoryRequest(logger,  
+                            new ValidatedUpdateArticleCategoryRequest(
+                                new UpdateArticleCategoryRequest(bus)))).Ask(body);
         }
         
         [HttpPatch]
@@ -222,22 +224,10 @@ namespace Nano35.Storage.Api.Controllers
             var bus = (IBus) _services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedUpdateArticleInfoRequest>) _services.GetService(typeof(ILogger<LoggedUpdateArticleInfoRequest>));
 
-            var request = new UpdateArticleInfoRequestContract()
-            {
-                Id = body.Id,
-                Info = body.Info
-            };
-            
-            var result = await new LoggedUpdateArticleInfoRequest(logger,  
-                    new ValidatedUpdateArticleInfoRequest(
-                        new UpdateArticleInfoRequest(bus))).Ask(request);
-            
-            return result switch
-            {
-                IUpdateArticleInfoSuccessResultContract => Ok(),
-                IUpdateArticleInfoErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+            return await new ConvertedUpdateArticleInfoOnHttpContext(
+                        new LoggedUpdateArticleInfoRequest(logger,  
+                            new ValidatedUpdateArticleInfoRequest(
+                                new UpdateArticleInfoRequest(bus)))).Ask(body);
         }
         
         [HttpPatch]
@@ -248,26 +238,13 @@ namespace Nano35.Storage.Api.Controllers
         public async Task<IActionResult> UpdateArticleModel(
             [FromBody] UpdateArticleModelHttpBody body)
         {
-            
             var bus = (IBus) _services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedUpdateArticleModelRequest>) _services.GetService(typeof(ILogger<LoggedUpdateArticleModelRequest>));
 
-            var request = new UpdateArticleModelRequestContract()
-            {
-                Id = body.Id,
-                Model = body.Model
-            };
-            
-            var result = await new LoggedUpdateArticleModelRequest(logger,  
-                        new ValidatedUpdateArticleModelRequest(
-                            new UpdateArticleModelRequest(bus))).Ask(request);
-            
-            return result switch
-            {
-                IUpdateArticleModelSuccessResultContract => Ok(),
-                IUpdateArticleModelErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+            return await new ConvertedUpdateArticleModelOnHttpContext(
+                        new LoggedUpdateArticleModelRequest(logger,  
+                            new ValidatedUpdateArticleModelRequest(
+                                new UpdateArticleModelRequest(bus)))).Ask(body);
         }
         
         [HttpDelete]

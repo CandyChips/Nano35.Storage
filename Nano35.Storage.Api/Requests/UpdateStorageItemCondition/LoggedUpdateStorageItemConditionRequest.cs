@@ -6,30 +6,23 @@ using Nano35.Contracts.Storage.Artifacts;
 namespace Nano35.Storage.Api.Requests.UpdateStorageItemCondition
 {
     public class LoggedUpdateStorageItemConditionRequest :
-        IPipelineNode<
-            IUpdateStorageItemConditionRequestContract,
-            IUpdateStorageItemConditionResultContract>
+        PipeNodeBase<IUpdateStorageItemConditionRequestContract, IUpdateStorageItemConditionResultContract>
     {
         private readonly ILogger<LoggedUpdateStorageItemConditionRequest> _logger;
-        private readonly IPipelineNode<
-            IUpdateStorageItemConditionRequestContract, 
-            IUpdateStorageItemConditionResultContract> _nextNode;
 
         public LoggedUpdateStorageItemConditionRequest(
             ILogger<LoggedUpdateStorageItemConditionRequest> logger,
-            IPipelineNode<
-                IUpdateStorageItemConditionRequestContract, 
-                IUpdateStorageItemConditionResultContract> nextNode)
+            IPipeNode<IUpdateStorageItemConditionRequestContract, IUpdateStorageItemConditionResultContract> next) :
+            base(next)
         {
-            _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<IUpdateStorageItemConditionResultContract> Ask(
+        public override async Task<IUpdateStorageItemConditionResultContract> Ask(
             IUpdateStorageItemConditionRequestContract input)
         {
             _logger.LogInformation($"UpdateStorageItemConditionLogger starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input);
+            var result = await DoNext(input);
             _logger.LogInformation($"UpdateStorageItemConditionLogger ends on: {DateTime.Now}");
             return result;
         }

@@ -11,30 +11,16 @@ namespace Nano35.Storage.Api.Requests.GetComingDetailsById
     }
     
     public class ValidatedGetComingDetailsByIdRequest:
-        IPipelineNode<
-            IGetComingDetailsByIdRequestContract, 
-            IGetComingDetailsByIdResultContract>
+        PipeNodeBase<IGetComingDetailsByIdRequestContract, IGetComingDetailsByIdResultContract>
     {
-        private readonly IPipelineNode<
-            IGetComingDetailsByIdRequestContract, 
-            IGetComingDetailsByIdResultContract> _nextNode;
-
         public ValidatedGetComingDetailsByIdRequest(
-            IPipelineNode<
-                IGetComingDetailsByIdRequestContract,
-                IGetComingDetailsByIdResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IGetComingDetailsByIdRequestContract, IGetComingDetailsByIdResultContract> next) :
+            base(next) { }
 
-        public async Task<IGetComingDetailsByIdResultContract> Ask(
+        public override async Task<IGetComingDetailsByIdResultContract> Ask(
             IGetComingDetailsByIdRequestContract input)
         {
-            if (false)
-            {
-                return new GetComingDetailsByIdValidatorErrorResult() {Message = "Ошибка валидации"};
-            }
-            return await _nextNode.Ask(input);
+            return await DoNext(input);
         }
     }
 }

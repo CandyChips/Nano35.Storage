@@ -10,30 +10,16 @@ namespace Nano35.Storage.Api.Requests.UpdateStorageItemPurchasePrice
     }
     
     public class ValidatedUpdateStorageItemPurchasePriceRequest:
-        IPipelineNode<
-            IUpdateStorageItemPurchasePriceRequestContract,
-            IUpdateStorageItemPurchasePriceResultContract>
+        PipeNodeBase<IUpdateStorageItemPurchasePriceRequestContract, IUpdateStorageItemPurchasePriceResultContract>
     {
-        private readonly IPipelineNode<
-            IUpdateStorageItemPurchasePriceRequestContract, 
-            IUpdateStorageItemPurchasePriceResultContract> _nextNode;
-
         public ValidatedUpdateStorageItemPurchasePriceRequest(
-            IPipelineNode<
-                IUpdateStorageItemPurchasePriceRequestContract, 
-                IUpdateStorageItemPurchasePriceResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IUpdateStorageItemPurchasePriceRequestContract, IUpdateStorageItemPurchasePriceResultContract> next) :
+            base(next) { }
 
-        public async Task<IUpdateStorageItemPurchasePriceResultContract> Ask(
+        public override async Task<IUpdateStorageItemPurchasePriceResultContract> Ask(
             IUpdateStorageItemPurchasePriceRequestContract input)
         {
-            if (false)
-            {
-                return new UpdateStorageItemPurchasePriceValidatorErrorResult() {Message = "Ошибка валидации"};
-            }
-            return await _nextNode.Ask(input);
+            return await DoNext(input);
         }
     }
 }

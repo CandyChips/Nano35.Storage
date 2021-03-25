@@ -10,30 +10,16 @@ namespace Nano35.Storage.Api.Requests.UpdateStorageItemCondition
     }
     
     public class ValidatedUpdateStorageItemConditionRequest:
-        IPipelineNode<
-            IUpdateStorageItemConditionRequestContract,
-            IUpdateStorageItemConditionResultContract>
+        PipeNodeBase<IUpdateStorageItemConditionRequestContract, IUpdateStorageItemConditionResultContract>
     {
-        private readonly IPipelineNode<
-            IUpdateStorageItemConditionRequestContract, 
-            IUpdateStorageItemConditionResultContract> _nextNode;
-
         public ValidatedUpdateStorageItemConditionRequest(
-            IPipelineNode<
-                IUpdateStorageItemConditionRequestContract, 
-                IUpdateStorageItemConditionResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IUpdateStorageItemConditionRequestContract, IUpdateStorageItemConditionResultContract> next) :
+            base(next) { }
 
-        public async Task<IUpdateStorageItemConditionResultContract> Ask(
+        public override async Task<IUpdateStorageItemConditionResultContract> Ask(
             IUpdateStorageItemConditionRequestContract input)
         {
-            if (false)
-            {
-                return new UpdateStorageItemConditionValidatorErrorResult() {Message = "Ошибка валидации"};
-            }
-            return await _nextNode.Ask(input);
+            return await DoNext(input);
         }
     }
 }

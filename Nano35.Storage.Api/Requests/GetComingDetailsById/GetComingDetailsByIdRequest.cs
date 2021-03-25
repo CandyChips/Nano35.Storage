@@ -9,9 +9,7 @@ using Nano35.Contracts.Storage.Artifacts;
 namespace Nano35.Storage.Api.Requests.GetComingDetailsById
 {
     public class GetComingDetailsByIdRequest :
-        IPipelineNode<
-            IGetComingDetailsByIdRequestContract,
-            IGetComingDetailsByIdResultContract>
+        EndPointNodeBase<IGetComingDetailsByIdRequestContract, IGetComingDetailsByIdResultContract>
     {
         private readonly IBus _bus;
 
@@ -21,7 +19,7 @@ namespace Nano35.Storage.Api.Requests.GetComingDetailsById
             _bus = bus;
         }
         
-        public async Task<IGetComingDetailsByIdResultContract> Ask
+        public override async Task<IGetComingDetailsByIdResultContract> Ask
             (IGetComingDetailsByIdRequestContract input)
         {
             var client = _bus.CreateRequestClient<IGetComingDetailsByIdRequestContract>(TimeSpan.FromSeconds(10));

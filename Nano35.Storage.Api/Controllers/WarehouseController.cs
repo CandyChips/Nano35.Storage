@@ -43,12 +43,10 @@ namespace Nano35.Storage.Api.Controllers
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedCreateComingRequest>)_services.GetService(typeof(ILogger<LoggedCreateComingRequest>));
             
-            return await
-                new ConvertedCreateComingOnHttpContext(
-                new LoggedCreateComingRequest(logger,
-                    new ValidatedCreateComingRequest(
-                        new CreateComingRequest(bus)))).Ask(body);
-            
+            return await new ConvertedCreateComingOnHttpContext(
+                        new LoggedCreateComingRequest(logger,
+                            new ValidatedCreateComingRequest(
+                                new CreateComingRequest(bus)))).Ask(body);
         }
         
         [HttpGet]
@@ -62,21 +60,10 @@ namespace Nano35.Storage.Api.Controllers
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetComingDetailsByIdRequest>)_services.GetService(typeof(ILogger<LoggedGetComingDetailsByIdRequest>));
 
-            var request = new GetComingDetailsByIdRequestContract()
-            {
-                Id = query.Id
-            };
-            
-            var result = await new LoggedGetComingDetailsByIdRequest(logger,
-                        new ValidatedGetComingDetailsByIdRequest(
-                            new GetComingDetailsByIdRequest(bus))).Ask(request);
-            
-            return result switch
-            {
-                IGetComingDetailsByIdSuccessResultContract success => Ok(success),
-                IGetComingDetailsByIdErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+            return await new ConvertedGetComingDetailsByIdOnHttpContext(
+                        new LoggedGetComingDetailsByIdRequest(logger,
+                            new ValidatedGetComingDetailsByIdRequest(
+                                new GetComingDetailsByIdRequest(bus)))).Ask(query);
         }
         
         [HttpGet]
@@ -89,24 +76,11 @@ namespace Nano35.Storage.Api.Controllers
         {
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetAllComingsRequest>)_services.GetService(typeof(ILogger<LoggedGetAllComingsRequest>));
-            
-            var request = new GetAllComingsRequestContract()
-            {
-                InstanceId = query.InstanceId,
-                StorageItemId = query.StorageItemId,
-                UnitId = query.UnitId,
-            };
-            
-            var result = await new LoggedGetAllComingsRequest(logger,
+
+            return await new ConvertedGetAllComingsOnHttpContext(
+                        new LoggedGetAllComingsRequest(logger,
                             new ValidatedGetAllComingsRequest(
-                                new GetAllComingsRequest(bus))).Ask(request);
-            
-            return result switch
-            {
-                IGetAllComingsSuccessResultContract success => Ok(success),
-                IGetAllComingsErrorResultContract error => BadRequest(error),
-                _ => BadRequest()
-            };
+                                new GetAllComingsRequest(bus)))).Ask(query);
         }
         
         [HttpPost]
@@ -120,11 +94,10 @@ namespace Nano35.Storage.Api.Controllers
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedCreateMoveRequest>)_services.GetService(typeof(ILogger<LoggedCreateMoveRequest>));
             
-            return await 
-                new ConvertedCreateMoveOnHttpContext(
-                new LoggedCreateMoveRequest(logger,
-                    new ValidatedCreateMoveRequest(
-                        new CreateMoveRequest(bus)))).Ask(body);
+            return await new ConvertedCreateMoveOnHttpContext(
+                        new LoggedCreateMoveRequest(logger,
+                            new ValidatedCreateMoveRequest(
+                                new CreateMoveRequest(bus)))).Ask(body);
         }
 
         [HttpGet]
@@ -152,11 +125,10 @@ namespace Nano35.Storage.Api.Controllers
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedCreateSelleRequest>)_services.GetService(typeof(ILogger<LoggedCreateSelleRequest>));
             
-            return await 
-                new ConvertedCreateSelleOnHttpContext(
-                new LoggedCreateSelleRequest(logger,
-                    new ValidatedCreateSelleRequest(
-                        new CreateSelleRequest(bus)))).Ask(body);
+            return await new ConvertedCreateSelleOnHttpContext(
+                        new LoggedCreateSelleRequest(logger,
+                            new ValidatedCreateSelleRequest(
+                                new CreateSelleRequest(bus)))).Ask(body);
         }
 
         [HttpGet]
@@ -185,10 +157,9 @@ namespace Nano35.Storage.Api.Controllers
             var logger = (ILogger<LoggedGetAllPlacesOnStorageRequest>) _services.GetService(typeof(ILogger<LoggedGetAllPlacesOnStorageRequest>));
 
             return await new ConvertedGetAllPlacesOnStorageOnHttpContext(
-                    new LoggedGetAllPlacesOnStorageRequest(logger,
-                        new ValidatedGetAllPlacesOnStorageRequest(
-                            new GetAllPlacesOnStorageRequest(bus)))).Ask(body);
-            
+                        new LoggedGetAllPlacesOnStorageRequest(logger,
+                            new ValidatedGetAllPlacesOnStorageRequest(
+                                new GetAllPlacesOnStorageRequest(bus)))).Ask(body);
         }
         
         [HttpPost]

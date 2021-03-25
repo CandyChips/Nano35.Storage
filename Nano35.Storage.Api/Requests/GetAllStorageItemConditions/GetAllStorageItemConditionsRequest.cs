@@ -8,9 +8,7 @@ using Nano35.Contracts.Storage.Models;
 namespace Nano35.Storage.Api.Requests.GetAllStorageItemConditions
 {
     public class GetAllStorageItemConditionsRequest :
-        IPipelineNode<
-            IGetAllStorageItemConditionsRequestContract, 
-            IGetAllStorageItemConditionsResultContract>
+        EndPointNodeBase<IGetAllStorageItemConditionsRequestContract, IGetAllStorageItemConditionsResultContract>
     {
         private readonly IBus _bus;
         public GetAllStorageItemConditionsRequest(
@@ -19,7 +17,7 @@ namespace Nano35.Storage.Api.Requests.GetAllStorageItemConditions
             _bus = bus;
         }
         
-        public async Task<IGetAllStorageItemConditionsResultContract> Ask(
+        public override async Task<IGetAllStorageItemConditionsResultContract> Ask(
             IGetAllStorageItemConditionsRequestContract input)
         {
             var client = _bus.CreateRequestClient<IGetAllStorageItemConditionsRequestContract>(TimeSpan.FromSeconds(10));

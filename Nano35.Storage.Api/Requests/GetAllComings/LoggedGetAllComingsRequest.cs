@@ -6,30 +6,23 @@ using Nano35.Contracts.Storage.Artifacts;
 namespace Nano35.Storage.Api.Requests.GetAllComings
 {
     public class LoggedGetAllComingsRequest :
-        IPipelineNode<
-            IGetAllComingsRequestContract, 
-            IGetAllComingsResultContract>
+        PipeNodeBase<IGetAllComingsRequestContract, IGetAllComingsResultContract>
     {
         private readonly ILogger<LoggedGetAllComingsRequest> _logger;
-        private readonly IPipelineNode<
-            IGetAllComingsRequestContract,
-            IGetAllComingsResultContract> _nextNode;
 
         public LoggedGetAllComingsRequest(
             ILogger<LoggedGetAllComingsRequest> logger,
-            IPipelineNode<
-                IGetAllComingsRequestContract,
-                IGetAllComingsResultContract> nextNode)
+            IPipeNode<IGetAllComingsRequestContract, IGetAllComingsResultContract> next) :
+            base(next)
         {
-            _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<IGetAllComingsResultContract> Ask(
+        public override async Task<IGetAllComingsResultContract> Ask(
             IGetAllComingsRequestContract input)
         {
             _logger.LogInformation($"GetAllComingsLogger starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input);
+            var result = await DoNext(input);
             _logger.LogInformation($"GetAllComingsLogger ends on: {DateTime.Now}");
             return result;
         }

@@ -8,18 +8,17 @@ using Nano35.Contracts.Storage.Models;
 namespace Nano35.Storage.Api.Requests.UpdateStorageItemRetailPrice
 {
     public class UpdateStorageItemRetailPriceRequest :
-        IPipelineNode<
-            IUpdateStorageItemRetailPriceRequestContract, 
-            IUpdateStorageItemRetailPriceResultContract>
+        EndPointNodeBase<IUpdateStorageItemRetailPriceRequestContract, IUpdateStorageItemRetailPriceResultContract>
     {
         private readonly IBus _bus;
+        
         public UpdateStorageItemRetailPriceRequest(
             IBus bus)
         {
             _bus = bus;
         }
         
-        public async Task<IUpdateStorageItemRetailPriceResultContract> Ask(
+        public override async Task<IUpdateStorageItemRetailPriceResultContract> Ask(
             IUpdateStorageItemRetailPriceRequestContract input)
         {
             var client = _bus.CreateRequestClient<IUpdateStorageItemRetailPriceRequestContract>(TimeSpan.FromSeconds(10));

@@ -6,30 +6,23 @@ using Nano35.Contracts.Storage.Artifacts;
 namespace Nano35.Storage.Api.Requests.UpdateStorageItemHiddenComment
 {
     public class LoggedUpdateStorageItemHiddenCommentRequest :
-        IPipelineNode<
-            IUpdateStorageItemHiddenCommentRequestContract,
-            IUpdateStorageItemHiddenCommentResultContract>
+        PipeNodeBase<IUpdateStorageItemHiddenCommentRequestContract, IUpdateStorageItemHiddenCommentResultContract>
     {
         private readonly ILogger<LoggedUpdateStorageItemHiddenCommentRequest> _logger;
-        private readonly IPipelineNode<
-            IUpdateStorageItemHiddenCommentRequestContract, 
-            IUpdateStorageItemHiddenCommentResultContract> _nextNode;
 
         public LoggedUpdateStorageItemHiddenCommentRequest(
             ILogger<LoggedUpdateStorageItemHiddenCommentRequest> logger,
-            IPipelineNode<
-                IUpdateStorageItemHiddenCommentRequestContract, 
-                IUpdateStorageItemHiddenCommentResultContract> nextNode)
+            IPipeNode<IUpdateStorageItemHiddenCommentRequestContract, IUpdateStorageItemHiddenCommentResultContract> next) :
+            base(next)
         {
-            _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<IUpdateStorageItemHiddenCommentResultContract> Ask(
+        public override async Task<IUpdateStorageItemHiddenCommentResultContract> Ask(
             IUpdateStorageItemHiddenCommentRequestContract input)
         {
             _logger.LogInformation($"UpdateStorageItemHiddenCommentLogger starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input);
+            var result = await DoNext(input);
             _logger.LogInformation($"UpdateStorageItemHiddenCommentLogger ends on: {DateTime.Now}");
             return result;
         }

@@ -8,18 +8,17 @@ using Nano35.Contracts.Storage.Models;
 namespace Nano35.Storage.Api.Requests.UpdateStorageItemHiddenComment
 {
     public class UpdateStorageItemHiddenCommentRequest :
-        IPipelineNode<
-            IUpdateStorageItemHiddenCommentRequestContract, 
-            IUpdateStorageItemHiddenCommentResultContract>
+        EndPointNodeBase<IUpdateStorageItemHiddenCommentRequestContract, IUpdateStorageItemHiddenCommentResultContract>
     {
         private readonly IBus _bus;
+        
         public UpdateStorageItemHiddenCommentRequest(
             IBus bus)
         {
             _bus = bus;
         }
         
-        public async Task<IUpdateStorageItemHiddenCommentResultContract> Ask(
+        public override async Task<IUpdateStorageItemHiddenCommentResultContract> Ask(
             IUpdateStorageItemHiddenCommentRequestContract input)
         {
             var client = _bus.CreateRequestClient<IUpdateStorageItemHiddenCommentRequestContract>(TimeSpan.FromSeconds(10));

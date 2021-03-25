@@ -19,10 +19,6 @@ namespace Nano35.Storage.Api.Requests.UpdateCategoryParentCategoryId
         public override async Task<IUpdateCategoryParentCategoryIdResultContract> Ask(
             IUpdateCategoryParentCategoryIdRequestContract input)
         {
-            if (false)
-            {
-                return new UpdateCategoryParentCategoryIdValidatorErrorResult() {Message = "Ошибка валидации"};
-            }
             return await DoNext(input);
         }
     }
