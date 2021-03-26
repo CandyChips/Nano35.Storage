@@ -49,7 +49,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedCreateComingOnHttpContext(
                         new LoggedCreateComingRequest(logger,
                             new ValidatedCreateComingRequest(
-                                new CreateComingRequest(bus)))).Ask(body);
+                                new CreateComingUseCase(bus)))).Ask(body);
         }
         
         [HttpGet]
@@ -66,7 +66,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedGetAllComingsOnHttpContext(
                         new LoggedGetAllComingsRequest(logger,
                             new ValidatedGetAllComingsRequest(
-                                new GetAllComingsRequest(bus)))).Ask(query);
+                                new GetAllComingsUseCase(bus)))).Ask(query);
         }
         
         [HttpGet]
@@ -83,7 +83,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedGetAllComingDetailsOnHttpContext(
                 new LoggedGetAllComingDetailsRequest(logger,
                     new ValidatedGetAllComingDetailsRequest(
-                        new GetAllComingDetailsRequest(bus)))).Ask(query);
+                        new GetAllComingDetailsUseCase(bus)))).Ask(query);
         }
         
         [HttpPost]
@@ -100,7 +100,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedCreateMoveOnHttpContext(
                         new LoggedCreateMoveRequest(logger,
                             new ValidatedCreateMoveRequest(
-                                new CreateMoveRequest(bus)))).Ask(body);
+                                new CreateMoveUseCase(bus)))).Ask(body);
         }
 
         [HttpGet]
@@ -116,7 +116,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedGetAllMovesOnHttpContext(
                 new LoggedGetAllMovesRequest(logger,
                     new ValidatedGetAllMovesRequest(
-                        new GetAllMovesRequest(bus)))).Ask(body);
+                        new GetAllMovesUseCase(bus)))).Ask(body);
         }
         
         [HttpGet]
@@ -133,7 +133,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedGetAllMoveDetailsOnHttpContext(
                 new LoggedGetAllMoveDetailsRequest(logger,
                     new ValidatedGetAllMoveDetailsRequest(
-                        new GetAllMoveDetailsRequest(bus)))).Ask(query);
+                        new GetAllMoveDetailsUseCase(bus)))).Ask(query);
         }
         
         [HttpPost]
@@ -150,7 +150,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedCreateSelleOnHttpContext(
                         new LoggedCreateSelleRequest(logger,
                             new ValidatedCreateSelleRequest(
-                                new CreateSelleRequest(bus)))).Ask(body);
+                                new CreateSelleUseCase(bus)))).Ask(body);
         }
 
         [HttpGet]
@@ -164,7 +164,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedGetAllSellsOnHttpContext(
                 new LoggedGetAllSellsRequest(logger,
                     new ValidatedGetAllSellsRequest(
-                        new GetAllSellsRequest(bus)))).Ask(body);
+                        new GetAllSellsUseCase(bus)))).Ask(body);
         }
 
         
@@ -182,7 +182,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedGetAllSelleDetailsOnHttpContext(
                 new LoggedGetAllSelleDetailsRequest(logger,
                     new ValidatedGetAllSelleDetailsRequest(
-                        new GetAllSelleDetailsRequest(bus)))).Ask(query);
+                        new GetAllSelleDetailsUseCase(bus)))).Ask(query);
         }
         
         [HttpPost]
@@ -199,7 +199,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedCreateCancellationOnHttpContext(
                         new LoggedCreateCancellationRequest(logger,
                             new ValidatedCreateCancellationRequest(
-                                new CreateCancellationRequest(bus)))).Ask(body);
+                                new CreateCancellationUseCase(bus)))).Ask(body);
         }
 
         [HttpGet]
@@ -213,7 +213,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedGetAllCancellationsOnHttpContext(
                 new LoggedGetAllCancellationsRequest(logger,
                     new ValidatedGetAllCancellationsRequest(
-                        new GetAllCancellationsRequest(bus)))).Ask(body);
+                        new GetAllCancellationsUseCase(bus)))).Ask(body);
         }
 
         
@@ -231,7 +231,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedGetAllCancellationDetailsOnHttpContext(
                 new LoggedGetAllCancellationDetailsRequest(logger,
                     new ValidatedGetAllCancellationDetailsRequest(
-                        new GetAllCancellationDetailsRequest(bus)))).Ask(query);
+                        new GetAllCancellationDetailsUseCase(bus)))).Ask(query);
         }
         
         [HttpGet]
@@ -248,7 +248,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedGetAllPlacesOnStorageOnHttpContext(
                         new LoggedGetAllPlacesOnStorageRequest(logger,
                             new ValidatedGetAllPlacesOnStorageRequest(
-                                new GetAllPlacesOnStorageRequest(bus)))).Ask(body);
+                                new GetAllPlacesOnStorageUseCase(bus)))).Ask(body);
         }
     }
 }

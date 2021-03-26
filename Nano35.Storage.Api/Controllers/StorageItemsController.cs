@@ -45,7 +45,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedGetAllStorageItemsOnHttpContext(
                         new LoggedGetAllStorageItemsRequest(logger,
                             new ValidatedGetAllStorageItemsRequest(
-                                new GetAllStorageItemsRequest(bus)))).Ask(header);
+                                new GetAllStorageItemsUseCase(bus)))).Ask(header);
         }
     
         [HttpGet]
@@ -60,7 +60,7 @@ namespace Nano35.Storage.Api.Controllers
 
             return await new ConvertedGetAllStorageItemConditionsOnHttpContext(
                         new LoggedGetAllStorageItemConditionsRequest(logger,
-                            new GetAllStorageItemConditionsRequest(bus))).Ask(
+                            new GetAllStorageItemConditionsUseCase(bus))).Ask(
                                 new GetAllStorageItemConditionsHttpQuery());
         }
     
@@ -78,7 +78,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedGetStorageItemByIdOnHttpContext(
                         new LoggedGetStorageItemByIdRequest(logger,
                             new ValidatedGetStorageItemByIdRequest(
-                                new GetStorageItemByIdRequest(bus)))).Ask(query);
+                                new GetStorageItemByIdUseCase(bus)))).Ask(query);
         }
         
         [HttpPost]
@@ -95,7 +95,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedCreateStorageItemOnHttpContext(
                         new LoggedCreateStorageItemRequest(logger,
                             new ValidatedCreateStorageItemRequest(
-                                new CreateStorageItemRequest(bus)))).Ask(body);
+                                new CreateStorageItemUseCase(bus)))).Ask(body);
         }
         
         [HttpPatch]
@@ -113,7 +113,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedUpdateStorageItemArticleOnHttpContext(
                         new LoggedUpdateStorageItemArticleRequest(logger,  
                             new ValidatedUpdateStorageItemArticleRequest(
-                                new UpdateStorageItemArticleRequest(bus)))).Ask(body);
+                                new UpdateStorageItemArticleUseCase(bus)))).Ask(body);
         }
         
         [HttpPatch]
@@ -131,7 +131,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedUpdateStorageItemCommentOnHttpContext(
                         new LoggedUpdateStorageItemCommentRequest(logger,  
                             new ValidatedUpdateStorageItemCommentRequest(
-                                new UpdateStorageItemCommentRequest(bus)))).Ask(body);
+                                new UpdateStorageItemCommentUseCase(bus)))).Ask(body);
         }
         
         [HttpPatch]
@@ -148,7 +148,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedUpdateStorageItemConditionOnHttpContext(
                         new LoggedUpdateStorageItemConditionRequest(logger,  
                             new ValidatedUpdateStorageItemConditionRequest(
-                                new UpdateStorageItemConditionRequest(bus)))).Ask(body);
+                                new UpdateStorageItemConditionUseCase(bus)))).Ask(body);
         }
         
         [HttpPatch]
@@ -165,7 +165,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedUpdateStorageItemHiddenCommentOnHttpContext(
                         new LoggedUpdateStorageItemHiddenCommentRequest(logger,  
                             new ValidatedUpdateStorageItemHiddenCommentRequest(
-                                new UpdateStorageItemHiddenCommentRequest(bus)))).Ask(body);
+                                new UpdateStorageItemHiddenCommentUseCase(bus)))).Ask(body);
         }
         
         [HttpPatch]
@@ -183,7 +183,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedUpdateStorageItemPurchasePriceOnHttpContext(
                         new LoggedUpdateStorageItemPurchasePriceRequest(logger,  
                             new ValidatedUpdateStorageItemPurchasePriceRequest(
-                                new UpdateStorageItemPurchasePriceRequest(bus)))).Ask(body);
+                                new UpdateStorageItemPurchasePriceUseCase(bus)))).Ask(body);
         }
         
         [HttpPatch]
@@ -201,7 +201,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedUpdateStorageItemRetailPriceOnHttpContext(
                         new LoggedUpdateStorageItemRetailPriceRequest(logger,  
                             new ValidatedUpdateStorageItemRetailPriceRequest(
-                                new UpdateStorageItemRetailPriceRequest(bus)))).Ask(body);
+                                new UpdateStorageItemRetailPriceUseCase(bus)))).Ask(body);
         }
     }
 }

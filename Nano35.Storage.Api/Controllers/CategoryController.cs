@@ -41,7 +41,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedGetAllArticleCategoriesOnHttpContext(
                         new LoggedGetAllArticlesCategoriesRequest(logger,
                             new ValidatedGetAllArticlesCategoriesRequest(
-                                new GetAllArticlesCategoriesRequest(bus)))).Ask(query);
+                                new GetAllArticleCategoriesUseCase(bus)))).Ask(query);
             
         }
         
@@ -59,7 +59,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedCreateCategoryOnHttpContext(
                         new LoggedCreateCategoryRequest(logger,
                             new ValidatedCreateCategoryRequest(
-                                new CreateCategoryRequest(bus)))).Ask(body);
+                                new CreateCategoryUseCase(bus)))).Ask(body);
         }
         
         [HttpPatch]
@@ -77,7 +77,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedUpdateCategoryNameOnHttpContext(
                         new LoggedUpdateCategoryNameRequest(logger,  
                             new ValidatedUpdateCategoryNameRequest(
-                                new UpdateCategoryNameRequest(bus)))).Ask(body);
+                                new UpdateCategoryNameUseCase(bus)))).Ask(body);
         }
         
         [HttpPatch]
@@ -94,7 +94,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedUpdateCategoryParentCategoryIdOnHttpContext(
                         new LoggedUpdateCategoryParentCategoryIdRequest(logger,  
                             new ValidatedUpdateCategoryParentCategoryIdRequest(
-                                new UpdateCategoryParentCategoryIdRequest(bus)))).Ask(body);
+                                new UpdateCategoryParentCategoryIdUseCase(bus)))).Ask(body);
         }
     }
 }
