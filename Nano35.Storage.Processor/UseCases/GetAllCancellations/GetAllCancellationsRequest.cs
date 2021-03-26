@@ -22,8 +22,8 @@ namespace Nano35.Storage.Processor.UseCases.GetAllCancellations
             _context = context;
         }
         
-        public async Task<IGetAllCancellationsResultContract> Ask
-            (IGetAllCancellationsRequestContract input, 
+        public async Task<IGetAllCancellationsResultContract> Ask(
+            IGetAllCancellationsRequestContract input, 
             CancellationToken cancellationToken)
         {
             var result = await _context

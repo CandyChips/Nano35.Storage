@@ -20,12 +20,6 @@ namespace Nano35.Storage.Processor.UseCases.CreateComing
             _context = context;
         }
         
-        private class CreateComingSuccessResultContract : 
-            ICreateComingSuccessResultContract
-        {
-            
-        }
-        
         public async Task<ICreateComingResultContract> Ask(
             ICreateComingRequestContract input,
             CancellationToken cancellationToken)

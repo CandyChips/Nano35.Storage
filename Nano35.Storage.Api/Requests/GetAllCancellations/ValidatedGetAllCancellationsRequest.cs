@@ -10,30 +10,16 @@ namespace Nano35.Storage.Api.Requests.GetAllCancellations
     }
     
     public class ValidatedGetAllCancellationsRequest:
-        IPipelineNode<
-            IGetAllCancellationsRequestContract, 
-            IGetAllCancellationsResultContract>
+        PipeNodeBase<IGetAllCancellationsRequestContract, IGetAllCancellationsResultContract>
     {
-        private readonly IPipelineNode<
-            IGetAllCancellationsRequestContract, 
-            IGetAllCancellationsResultContract> _nextNode;
-
         public ValidatedGetAllCancellationsRequest(
-            IPipelineNode<
-                IGetAllCancellationsRequestContract,
-                IGetAllCancellationsResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IGetAllCancellationsRequestContract, IGetAllCancellationsResultContract> next) :
+            base(next) { }
 
-        public async Task<IGetAllCancellationsResultContract> Ask(
+        public override async Task<IGetAllCancellationsResultContract> Ask(
             IGetAllCancellationsRequestContract input)
         {
-            if (false)
-            {
-                return new GetAllCancellationsValidatorErrorResult() {Message = "Ошибка валидации"};
-            }
-            return await _nextNode.Ask(input);
+            return await DoNext(input);
         }
     }
 }

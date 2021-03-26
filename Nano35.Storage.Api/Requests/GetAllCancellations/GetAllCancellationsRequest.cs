@@ -8,18 +8,17 @@ using Nano35.Contracts.Storage.Models;
 namespace Nano35.Storage.Api.Requests.GetAllCancellations
 {
     public class GetAllCancellationsRequest :
-        IPipelineNode<
-            IGetAllCancellationsRequestContract,
-            IGetAllCancellationsResultContract>
+        EndPointNodeBase<IGetAllCancellationsRequestContract, IGetAllCancellationsResultContract>
     {
         private readonly IBus _bus;
+        
         public GetAllCancellationsRequest(
             IBus bus)
         {
             _bus = bus;
         }
         
-        public async Task<IGetAllCancellationsResultContract> Ask(
+        public override async Task<IGetAllCancellationsResultContract> Ask(
             IGetAllCancellationsRequestContract input)
         {
             var client = _bus.CreateRequestClient<IGetAllCancellationsRequestContract>(TimeSpan.FromSeconds(10));

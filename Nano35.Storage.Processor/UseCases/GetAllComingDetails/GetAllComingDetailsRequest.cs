@@ -32,10 +32,12 @@ namespace Nano35.Storage.Processor.UseCases.GetAllComingDetails
             IGetAllComingDetailsRequestContract input, 
             CancellationToken cancellationToken)
         {
-            var result = _context
-                .Comings
-                .FirstOrDefault(f => f.Id == input.ComingId)
-                ?.Details
+            var result = (await _context
+                    .Comings
+                    .FirstOrDefaultAsync(
+                        f => f.Id == input.ComingId,
+                        cancellationToken: cancellationToken))
+                .Details
                 .Select(a => new ComingDetailViewModel()
                 {
                     Count = a.Count,

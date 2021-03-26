@@ -10,11 +10,15 @@ using Nano35.Storage.Api.Requests.CreateCancellation;
 using Nano35.Storage.Api.Requests.CreateComing;
 using Nano35.Storage.Api.Requests.CreateMove;
 using Nano35.Storage.Api.Requests.CreateSelle;
+using Nano35.Storage.Api.Requests.GetAllCancellationDetails;
+using Nano35.Storage.Api.Requests.GetAllCancellations;
+using Nano35.Storage.Api.Requests.GetAllComingDetails;
 using Nano35.Storage.Api.Requests.GetAllComings;
+using Nano35.Storage.Api.Requests.GetAllMoveDetails;
 using Nano35.Storage.Api.Requests.GetAllMoves;
 using Nano35.Storage.Api.Requests.GetAllPlacesOnStorage;
+using Nano35.Storage.Api.Requests.GetAllSelleDetails;
 using Nano35.Storage.Api.Requests.GetAllSells;
-using Nano35.Storage.Api.Requests.GetComingDetailsById;
 
 namespace Nano35.Storage.Api.Controllers
 {
@@ -49,23 +53,6 @@ namespace Nano35.Storage.Api.Controllers
         }
         
         [HttpGet]
-        [Route("GetComingDetailsById")]
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetComingDetailsByIdSuccessHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetComingDetailsByIdErrorHttpResponse))] 
-        public async Task<IActionResult> GetComingDetailsById(
-            [FromQuery] GetComingDetailsByIdHttpQuery query)
-        {
-            var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetComingDetailsByIdRequest>)_services.GetService(typeof(ILogger<LoggedGetComingDetailsByIdRequest>));
-
-            return await new ConvertedGetComingDetailsByIdOnHttpContext(
-                        new LoggedGetComingDetailsByIdRequest(logger,
-                            new ValidatedGetComingDetailsByIdRequest(
-                                new GetComingDetailsByIdRequest(bus)))).Ask(query);
-        }
-        
-        [HttpGet]
         [Route("GetAllComings")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllComingsSuccessHttpResponse))]
@@ -80,6 +67,23 @@ namespace Nano35.Storage.Api.Controllers
                         new LoggedGetAllComingsRequest(logger,
                             new ValidatedGetAllComingsRequest(
                                 new GetAllComingsRequest(bus)))).Ask(query);
+        }
+        
+        [HttpGet]
+        [Route("GetComingDetails")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetComingDetailsByIdSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetComingDetailsByIdErrorHttpResponse))] 
+        public async Task<IActionResult> GetComingDetails(
+            [FromQuery] GetAllComingDetailsHttpQuery query)
+        {
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<LoggedGetAllComingDetailsRequest>)_services.GetService(typeof(ILogger<LoggedGetAllComingDetailsRequest>));
+
+            return await new ConvertedGetAllComingDetailsOnHttpContext(
+                new LoggedGetAllComingDetailsRequest(logger,
+                    new ValidatedGetAllComingDetailsRequest(
+                        new GetAllComingDetailsRequest(bus)))).Ask(query);
         }
         
         [HttpPost]
@@ -101,6 +105,8 @@ namespace Nano35.Storage.Api.Controllers
 
         [HttpGet]
         [Route("GetAllMoves")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllMovesSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllMovesErrorHttpResponse))] 
         public async Task<IActionResult> GetAllMoves(
             [FromQuery] GetAllMovesHttpQuery body)
         {
@@ -112,12 +118,22 @@ namespace Nano35.Storage.Api.Controllers
                     new ValidatedGetAllMovesRequest(
                         new GetAllMovesRequest(bus)))).Ask(body);
         }
-
+        
         [HttpGet]
-        [Route("GetAllMoveDetailsById")]
-        public async Task<IActionResult> GetAllMoveDetailsById()
+        [Route("GetAllMoveDetails")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllMoveDetailsSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllMoveDetailsErrorHttpResponse))] 
+        public async Task<IActionResult> GetAllMoveDetails(
+            [FromQuery] GetAllMoveDetailsHttpQuery query)
         {
-            return Ok();
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<LoggedGetAllMoveDetailsRequest>)_services.GetService(typeof(ILogger<LoggedGetAllMoveDetailsRequest>));
+
+            return await new ConvertedGetAllMoveDetailsOnHttpContext(
+                new LoggedGetAllMoveDetailsRequest(logger,
+                    new ValidatedGetAllMoveDetailsRequest(
+                        new GetAllMoveDetailsRequest(bus)))).Ask(query);
         }
         
         [HttpPost]
@@ -151,11 +167,71 @@ namespace Nano35.Storage.Api.Controllers
                         new GetAllSellsRequest(bus)))).Ask(body);
         }
 
+        
         [HttpGet]
-        [Route("GetAllSelleDetailsById")]
-        public async Task<IActionResult> GetAllSelleDetailsById()
+        [Route("GetAllSellDetails")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllSellDetailsSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllSellDetailsErrorHttpResponse))] 
+        public async Task<IActionResult> GetAllSellDetails(
+            [FromQuery] GetAllSellDetailsHttpQuery query)
         {
-            return Ok();
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<LoggedGetAllSelleDetailsRequest>)_services.GetService(typeof(ILogger<LoggedGetAllSelleDetailsRequest>));
+
+            return await new ConvertedGetAllSelleDetailsOnHttpContext(
+                new LoggedGetAllSelleDetailsRequest(logger,
+                    new ValidatedGetAllSelleDetailsRequest(
+                        new GetAllSelleDetailsRequest(bus)))).Ask(query);
+        }
+        
+        [HttpPost]
+        [Route("CreateCancellation")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateCancellationSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateCancellationErrorHttpResponse))] 
+        public async Task<IActionResult> CreateCancellation(
+            [FromBody] CreateCancellationHttpBody body)
+        {
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<LoggedCreateCancellationRequest>)_services.GetService(typeof(ILogger<LoggedCreateCancellationRequest>));
+            
+            return await new ConvertedCreateCancellationOnHttpContext(
+                        new LoggedCreateCancellationRequest(logger,
+                            new ValidatedCreateCancellationRequest(
+                                new CreateCancellationRequest(bus)))).Ask(body);
+        }
+
+        [HttpGet]
+        [Route("GetAllCancellations")]
+        public async Task<IActionResult> GetAllCancellations(
+            [FromQuery] GetAllCancellationsHttpQuery body)
+        {
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<LoggedGetAllCancellationsRequest>)_services.GetService(typeof(ILogger<LoggedGetAllCancellationsRequest>));
+            
+            return await new ConvertedGetAllCancellationsOnHttpContext(
+                new LoggedGetAllCancellationsRequest(logger,
+                    new ValidatedGetAllCancellationsRequest(
+                        new GetAllCancellationsRequest(bus)))).Ask(body);
+        }
+
+        
+        [HttpGet]
+        [Route("GetAllCancellationDetails")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllSellDetailsSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllSellDetailsErrorHttpResponse))] 
+        public async Task<IActionResult> GetAllCancellationDetails(
+            [FromQuery] GetAllCancellationDetailsHttpQuery query)
+        {
+            var bus = (IBus)_services.GetService(typeof(IBus));
+            var logger = (ILogger<LoggedGetAllCancellationDetailsRequest>)_services.GetService(typeof(ILogger<LoggedGetAllCancellationDetailsRequest>));
+
+            return await new ConvertedGetAllCancellationDetailsOnHttpContext(
+                new LoggedGetAllCancellationDetailsRequest(logger,
+                    new ValidatedGetAllCancellationDetailsRequest(
+                        new GetAllCancellationDetailsRequest(bus)))).Ask(query);
         }
         
         [HttpGet]
@@ -173,23 +249,6 @@ namespace Nano35.Storage.Api.Controllers
                         new LoggedGetAllPlacesOnStorageRequest(logger,
                             new ValidatedGetAllPlacesOnStorageRequest(
                                 new GetAllPlacesOnStorageRequest(bus)))).Ask(body);
-        }
-        
-        [HttpPost]
-        [Route("CreateCancellation")]
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateCancellationSuccessHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateCancellationErrorHttpResponse))] 
-        public async Task<IActionResult> CreateCancellation(
-            [FromBody] CreateCancellationHttpBody body)
-        {
-            var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedCreateCancellationRequest>)_services.GetService(typeof(ILogger<LoggedCreateCancellationRequest>));
-
-            return await new ConvertedCreateCancellationOnHttpContext(
-                        new LoggedCreateCancellationRequest(logger,
-                            new ValidatedCreateCancellationRequest(
-                                new CreateCancellationRequest(bus)))).Ask(body);
         }
     }
 }
