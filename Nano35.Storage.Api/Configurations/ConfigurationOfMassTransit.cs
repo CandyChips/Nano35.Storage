@@ -45,8 +45,12 @@ namespace Nano35.Storage.Api.Configurations
                     new Uri($"{ContractBase.RabbitMqLocation}/IGetAllArticlesModelsRequestContract"));
                 x.AddRequestClient<IGetAllStorageItemConditionsRequestContract>(
                     new Uri($"{ContractBase.RabbitMqLocation}/IGetAllStorageItemConditionsRequestContract"));
+                x.AddRequestClient<IGetAllWarehouseNamesRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/IGetAllWarehouseNamesRequestContract"));
                 x.AddRequestClient<IGetAllWarehousesOfItemRequestContract>(
                     new Uri($"{ContractBase.RabbitMqLocation}/IGetAllWarehousesOfItemRequestContract"));
+                x.AddRequestClient<IGetAllWarehouseOfStorageItemRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/IGetAllWarehouseOfStorageItemRequestContract"));
                 x.AddRequestClient<IGetAllWarehousesOfUnitRequestContract>(
                     new Uri($"{ContractBase.RabbitMqLocation}/IGetAllWarehousesOfUnitRequestContract"));
                 x.AddRequestClient<IUpdateArticleBrandRequestContract>(

@@ -1,36 +1,15 @@
-﻿using System;
-using System.Threading.Tasks;
-using MassTransit;
+﻿using MassTransit;
 using Nano35.Contracts.Storage.Artifacts;
 
 namespace Nano35.Storage.Api.Requests.CreateArticle
 {
     public class CreateArticleRequest :
-        EndPointNodeBase<ICreateArticleRequestContract, ICreateArticleResultContract>
+        MasstransitRequest<
+            ICreateArticleRequestContract,
+            ICreateArticleResultContract,
+            ICreateArticleSuccessResultContract,
+            ICreateArticleErrorResultContract>
     {
-        private readonly IBus _bus;
-        
-        public CreateArticleRequest(
-            IBus bus)
-        {
-            _bus = bus;
-        }
-        
-        public override async Task<ICreateArticleResultContract> Ask(
-            ICreateArticleRequestContract input)
-        {
-            var client = _bus.CreateRequestClient<ICreateArticleRequestContract>(TimeSpan.FromSeconds(10));
-            
-            var response = await client
-                .GetResponse<ICreateArticleSuccessResultContract, ICreateArticleErrorResultContract>(input);
-            
-            if (response.Is(out Response<ICreateArticleSuccessResultContract> successResponse))
-                return successResponse.Message;
-            
-            if (response.Is(out Response<ICreateArticleErrorResultContract> errorResponse))
-                return errorResponse.Message;
-            
-            throw new InvalidOperationException();
-        }
+        public CreateArticleRequest(IBus bus) : base(bus) {}
     }
 }

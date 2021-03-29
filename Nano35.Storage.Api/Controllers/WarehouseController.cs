@@ -19,6 +19,8 @@ using Nano35.Storage.Api.Requests.GetAllMoves;
 using Nano35.Storage.Api.Requests.GetAllPlacesOnStorage;
 using Nano35.Storage.Api.Requests.GetAllSelleDetails;
 using Nano35.Storage.Api.Requests.GetAllSells;
+using Nano35.Storage.Api.Requests.GetAllWarehouseNames;
+using Nano35.Storage.Api.Requests.GetAllWarehouseOfStorageItem;
 
 namespace Nano35.Storage.Api.Controllers
 {
@@ -49,7 +51,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedCreateComingOnHttpContext(
                         new LoggedCreateComingRequest(logger,
                             new ValidatedCreateComingRequest(
-                                new CreateComingRequest(bus)))).Ask(body);
+                                new CreateComingUseCase(bus)))).Ask(body);
         }
         
         [HttpGet]
@@ -66,7 +68,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedGetAllComingsOnHttpContext(
                         new LoggedGetAllComingsRequest(logger,
                             new ValidatedGetAllComingsRequest(
-                                new GetAllComingsRequest(bus)))).Ask(query);
+                                new GetAllComingsUseCase(bus)))).Ask(query);
         }
         
         [HttpGet]
@@ -83,7 +85,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedGetAllComingDetailsOnHttpContext(
                 new LoggedGetAllComingDetailsRequest(logger,
                     new ValidatedGetAllComingDetailsRequest(
-                        new GetAllComingDetailsRequest(bus)))).Ask(query);
+                        new GetAllComingDetailsUseCase(bus)))).Ask(query);
         }
         
         [HttpPost]
@@ -100,7 +102,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedCreateMoveOnHttpContext(
                         new LoggedCreateMoveRequest(logger,
                             new ValidatedCreateMoveRequest(
-                                new CreateMoveRequest(bus)))).Ask(body);
+                                new CreateMoveUseCase(bus)))).Ask(body);
         }
 
         [HttpGet]
@@ -116,7 +118,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedGetAllMovesOnHttpContext(
                 new LoggedGetAllMovesRequest(logger,
                     new ValidatedGetAllMovesRequest(
-                        new GetAllMovesRequest(bus)))).Ask(body);
+                        new GetAllMovesUseCase(bus)))).Ask(body);
         }
         
         [HttpGet]
@@ -133,7 +135,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedGetAllMoveDetailsOnHttpContext(
                 new LoggedGetAllMoveDetailsRequest(logger,
                     new ValidatedGetAllMoveDetailsRequest(
-                        new GetAllMoveDetailsRequest(bus)))).Ask(query);
+                        new GetAllMoveDetailsUseCase(bus)))).Ask(query);
         }
         
         [HttpPost]
@@ -150,7 +152,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedCreateSelleOnHttpContext(
                         new LoggedCreateSelleRequest(logger,
                             new ValidatedCreateSelleRequest(
-                                new CreateSelleRequest(bus)))).Ask(body);
+                                new CreateSelleUseCase(bus)))).Ask(body);
         }
 
         [HttpGet]
@@ -164,7 +166,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedGetAllSellsOnHttpContext(
                 new LoggedGetAllSellsRequest(logger,
                     new ValidatedGetAllSellsRequest(
-                        new GetAllSellsRequest(bus)))).Ask(body);
+                        new GetAllSellsUseCase(bus)))).Ask(body);
         }
 
         
@@ -182,7 +184,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedGetAllSelleDetailsOnHttpContext(
                 new LoggedGetAllSelleDetailsRequest(logger,
                     new ValidatedGetAllSelleDetailsRequest(
-                        new GetAllSelleDetailsRequest(bus)))).Ask(query);
+                        new GetAllSelleDetailsUseCase(bus)))).Ask(query);
         }
         
         [HttpPost]
@@ -199,7 +201,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedCreateCancellationOnHttpContext(
                         new LoggedCreateCancellationRequest(logger,
                             new ValidatedCreateCancellationRequest(
-                                new CreateCancellationRequest(bus)))).Ask(body);
+                                new CreateCancellationUseCase(bus)))).Ask(body);
         }
 
         [HttpGet]
@@ -213,7 +215,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedGetAllCancellationsOnHttpContext(
                 new LoggedGetAllCancellationsRequest(logger,
                     new ValidatedGetAllCancellationsRequest(
-                        new GetAllCancellationsRequest(bus)))).Ask(body);
+                        new GetAllCancellationsUseCase(bus)))).Ask(body);
         }
 
         
@@ -231,7 +233,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedGetAllCancellationDetailsOnHttpContext(
                 new LoggedGetAllCancellationDetailsRequest(logger,
                     new ValidatedGetAllCancellationDetailsRequest(
-                        new GetAllCancellationDetailsRequest(bus)))).Ask(query);
+                        new GetAllCancellationDetailsUseCase(bus)))).Ask(query);
         }
         
         [HttpGet]
@@ -248,7 +250,41 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedGetAllPlacesOnStorageOnHttpContext(
                         new LoggedGetAllPlacesOnStorageRequest(logger,
                             new ValidatedGetAllPlacesOnStorageRequest(
-                                new GetAllPlacesOnStorageRequest(bus)))).Ask(body);
+                                new GetAllPlacesOnStorageUseCase(bus)))).Ask(body);
+        }
+        
+        [HttpGet]
+        [Route("GetAllWarehouseNames")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllWarehouseNamesSuccessResultContract))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllWarehouseNamesErrorResultContract))] 
+        public async Task<IActionResult> GetAllWarehouseNames(
+            [FromQuery] GetAllWarehouseNamesHttpQuery body)
+        {
+            var bus = (IBus) _services.GetService(typeof(IBus));
+            var logger = (ILogger<LoggedGetAllWarehouseNamesRequest>) _services.GetService(typeof(ILogger<LoggedGetAllWarehouseNamesRequest>));
+
+            return await new ConvertedGetAllWarehouseNamesOnHttpContext(
+                new LoggedGetAllWarehouseNamesRequest(logger,
+                    new ValidatedGetAllWarehouseNamesRequest(
+                        new GetAllWarehouseNamesUseCase(bus)))).Ask(body);
+        }
+        
+        [HttpGet]
+        [Route("GetAllWarehouseOfStorageItem")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllWarehouseOfStorageItemSuccessResultContract))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllWarehouseOfStorageItemErrorResultContract))] 
+        public async Task<IActionResult> GetAllWarehouseOfStorageItem(
+            [FromQuery] GetAllWarehouseOfStorageItemHttpQuery body)
+        {
+            var bus = (IBus) _services.GetService(typeof(IBus));
+            var logger = (ILogger<LoggedGetAllWarehouseOfStorageItemRequest>) _services.GetService(typeof(ILogger<LoggedGetAllWarehouseOfStorageItemRequest>));
+
+            return await new ConvertedGetAllWarehouseOfStorageItemOnHttpContext(
+                new LoggedGetAllWarehouseOfStorageItemRequest(logger,
+                    new ValidatedGetAllWarehouseOfStorageItemRequest(
+                        new GetAllWarehouseOfStorageItemUseCase(bus)))).Ask(body);
         }
     }
 }

@@ -77,7 +77,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedGetAllArticlesOnHttpContext(
                         new LoggedGetAllArticlesRequest(logger,
                             new ValidatedGetAllArticlesRequest(
-                                new GetAllArticlesRequest(bus)))).Ask(query);
+                                new GetAllArticlesUseCase(bus)))).Ask(query);
             
         }
          
@@ -95,7 +95,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedGetAllArticleModelsOnHttpContext(
                         new LoggedGetAllArticlesModelsRequest(logger,
                             new ValidatedGetAllArticlesModelsRequest(
-                                new GetAllArticlesModelsRequest(bus)))).Ask(query);
+                                new GetAllArticlesModelsUseCase(bus)))).Ask(query);
         }
     
         [HttpGet]
@@ -112,7 +112,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedGetAllArticleBrandsOnHttpContext(
                         new LoggedGetAllArticlesBrandsRequest(logger,
                             new ValidatedGetAllArticlesBrandsRequest(
-                                new GetAllArticlesBrandsRequest(bus)))).Ask(query);
+                                new GetAllArticleBrandsUseCase(bus)))).Ask(query);
         }
     
         [HttpGet]
@@ -129,7 +129,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedGetArticleByIdOnHttpContext(
                         new LoggedGetArticleByIdRequest(logger,
                             new ValidatedGetArticleByIdRequest(
-                                new GetArticleByIdRequest(bus)))).Ask(query);
+                                new GetArticleByIdUseCase(bus)))).Ask(query);
             
         }
         
@@ -173,7 +173,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedCreateArticleOnHttpContext(
                         new LoggedCreateArticleRequest(logger,
                             new ValidatedCreateArticleRequest(
-                                new CreateArticleRequest(bus)))).Ask(body);
+                                new CreateArticleUseCase(bus)))).Ask(body);
         }
 
         [HttpPatch]
@@ -190,7 +190,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedUpdateArticleBrandOnHttpContext(
                         new LoggedUpdateArticleBrandRequest(logger,  
                             new ValidatedUpdateArticleBrandRequest(
-                                new UpdateArticleBrandRequest(bus)))).Ask(body);
+                                new UpdateArticleBrandUseCase(bus)))).Ask(body);
         }
         
         [HttpPatch]
@@ -207,7 +207,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedUpdateArticleCategoryOnHttpContext(
                         new LoggedUpdateArticleCategoryRequest(logger,  
                             new ValidatedUpdateArticleCategoryRequest(
-                                new UpdateArticleCategoryRequest(bus)))).Ask(body);
+                                new UpdateArticleCategoryUseCase(bus)))).Ask(body);
         }
         
         [HttpPatch]
@@ -225,7 +225,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedUpdateArticleInfoOnHttpContext(
                         new LoggedUpdateArticleInfoRequest(logger,  
                             new ValidatedUpdateArticleInfoRequest(
-                                new UpdateArticleInfoRequest(bus)))).Ask(body);
+                                new UpdateArticleInfoUseCase(bus)))).Ask(body);
         }
         
         [HttpPatch]
@@ -242,7 +242,7 @@ namespace Nano35.Storage.Api.Controllers
             return await new ConvertedUpdateArticleModelOnHttpContext(
                         new LoggedUpdateArticleModelRequest(logger,  
                             new ValidatedUpdateArticleModelRequest(
-                                new UpdateArticleModelRequest(bus)))).Ask(body);
+                                new UpdateArticleModelUseCase(bus)))).Ask(body);
         }
         
         [HttpDelete]

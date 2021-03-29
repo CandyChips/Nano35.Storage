@@ -1,38 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using MassTransit;
+﻿using MassTransit;
 using Nano35.Contracts.Storage.Artifacts;
-using Nano35.Contracts.Storage.Models;
 
 namespace Nano35.Storage.Api.Requests.GetAllMoves
 {
-    public class GetAllMovesRequest :
-        EndPointNodeBase<IGetAllMovesRequestContract, IGetAllMovesResultContract>
+    public class GetAllMovesRequest : 
+        MasstransitRequest<
+            IGetAllMovesRequestContract,
+            IGetAllMovesResultContract,
+            IGetAllMovesSuccessResultContract,
+            IGetAllMovesErrorResultContract>
     {
-        private readonly IBus _bus;
-        
-        public GetAllMovesRequest(
-            IBus bus)
-        {
-            _bus = bus;
-        }
-        
-        public override async Task<IGetAllMovesResultContract> Ask(
-            IGetAllMovesRequestContract input)
-        {
-            var client = _bus.CreateRequestClient<IGetAllMovesRequestContract>(TimeSpan.FromSeconds(10));
-            
-            var response = await client
-                .GetResponse<IGetAllMovesSuccessResultContract, IGetAllMovesErrorResultContract>(input);
-            
-            if (response.Is(out Response<IGetAllMovesSuccessResultContract> successResponse))
-                return successResponse.Message;
-            
-            if (response.Is(out Response<IGetAllMovesErrorResultContract> errorResponse))
-                return errorResponse.Message;
-            
-            throw new InvalidOperationException();
-        }
+        public GetAllMovesRequest(IBus bus) : base(bus) {}
     }
 }
