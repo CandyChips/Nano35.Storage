@@ -27,6 +27,8 @@ using Nano35.Storage.Processor.UseCases.GetAllSelleDetails;
 using Nano35.Storage.Processor.UseCases.GetAllSells;
 using Nano35.Storage.Processor.UseCases.GetAllStorageItemConditions;
 using Nano35.Storage.Processor.UseCases.GetAllStorageItems;
+using Nano35.Storage.Processor.UseCases.GetAllWarehouseNames;
+using Nano35.Storage.Processor.UseCases.GetAllWarehouseOfStorageItem;
 using Nano35.Storage.Processor.UseCases.GetAllWarehousesOfItem;
 using Nano35.Storage.Processor.UseCases.GetAllWarehousesOfUnit;
 using Nano35.Storage.Processor.UseCases.GetArticleById;
@@ -72,7 +74,9 @@ namespace Nano35.Storage.Processor.Configurations
                     cfg.ReceiveEndpoint("IGetAllArticlesBrandsRequestContract", e => { e.Consumer<GetAllArticlesBrandsConsumer>(provider); });
                     cfg.ReceiveEndpoint("IGetAllArticlesModelsRequestContract", e => { e.Consumer<GetAllArticlesModelsConsumer>(provider); });
                     cfg.ReceiveEndpoint("IGetAllStorageItemConditionsRequestContract", e => { e.Consumer<GetAllStorageItemConditionsConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IGetAllWarehouseNamesRequestContract", e => { e.Consumer<GetAllWarehouseNamesConsumer>(provider); });
                     cfg.ReceiveEndpoint("IGetAllWarehousesOfItemRequestContract", e => { e.Consumer<GetAllWarehousesOfItemConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IGetAllWarehouseOfStorageItemRequestContract", e => { e.Consumer<GetAllWarehouseOfStorageItemConsumer>(provider); });
                     cfg.ReceiveEndpoint("IGetAllWarehousesOfUnitRequestContract", e => { e.Consumer<GetAllWarehousesOfUnitConsumer>(provider); });
                     cfg.ReceiveEndpoint("IUpdateArticleBrandRequestContract", e => { e.Consumer<UpdateArticleBrandConsumer>(provider); });
                     cfg.ReceiveEndpoint("IUpdateArticleCategoryRequestContract", e => { e.Consumer<UpdateArticleCategoryConsumer>(provider); });
@@ -124,6 +128,8 @@ namespace Nano35.Storage.Processor.Configurations
                 x.AddConsumer<GetAllCancellationsConsumer>();
                 x.AddConsumer<GetAllCancellationDetailsConsumer>();
                 
+                x.AddConsumer<GetAllWarehouseNamesConsumer>();
+                x.AddConsumer<GetAllWarehouseOfStorageItemConsumer>();
                 x.AddConsumer<GetAllWarehousesOfUnitConsumer>();
                 x.AddConsumer<GetAllWarehousesOfItemConsumer>();
                 x.AddConsumer<GetAllPlacesOnStorageConsumer>();

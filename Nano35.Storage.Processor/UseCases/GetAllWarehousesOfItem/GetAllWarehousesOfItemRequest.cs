@@ -32,7 +32,10 @@ namespace Nano35.Storage.Processor.UseCases.GetAllWarehousesOfItem
         {
             var result = await _context
                 .Warehouses
-                .Where(c => c.StorageItemId == input.StorageItemId)
+                .Where(c => 
+                    c.StorageItemId == input.StorageItemId && 
+                    c.IsDeleted == false && 
+                    c.Count > 0)
                 .MapAllToAsync<IWarehouseOfItemViewModel>();
 
             return new GetAllWarehousesOfItemSuccessResultContract() {Data = result};

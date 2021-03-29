@@ -19,6 +19,8 @@ using Nano35.Storage.Api.Requests.GetAllMoves;
 using Nano35.Storage.Api.Requests.GetAllPlacesOnStorage;
 using Nano35.Storage.Api.Requests.GetAllSelleDetails;
 using Nano35.Storage.Api.Requests.GetAllSells;
+using Nano35.Storage.Api.Requests.GetAllWarehouseNames;
+using Nano35.Storage.Api.Requests.GetAllWarehouseOfStorageItem;
 
 namespace Nano35.Storage.Api.Controllers
 {
@@ -249,6 +251,40 @@ namespace Nano35.Storage.Api.Controllers
                         new LoggedGetAllPlacesOnStorageRequest(logger,
                             new ValidatedGetAllPlacesOnStorageRequest(
                                 new GetAllPlacesOnStorageUseCase(bus)))).Ask(body);
+        }
+        
+        [HttpGet]
+        [Route("GetAllWarehouseNames")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllWarehouseNamesSuccessResultContract))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllWarehouseNamesErrorResultContract))] 
+        public async Task<IActionResult> GetAllWarehouseNames(
+            [FromQuery] GetAllWarehouseNamesHttpQuery body)
+        {
+            var bus = (IBus) _services.GetService(typeof(IBus));
+            var logger = (ILogger<LoggedGetAllWarehouseNamesRequest>) _services.GetService(typeof(ILogger<LoggedGetAllWarehouseNamesRequest>));
+
+            return await new ConvertedGetAllWarehouseNamesOnHttpContext(
+                new LoggedGetAllWarehouseNamesRequest(logger,
+                    new ValidatedGetAllWarehouseNamesRequest(
+                        new GetAllWarehouseNamesUseCase(bus)))).Ask(body);
+        }
+        
+        [HttpGet]
+        [Route("GetAllWarehouseOfStorageItem")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllWarehouseOfStorageItemSuccessResultContract))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllWarehouseOfStorageItemErrorResultContract))] 
+        public async Task<IActionResult> GetAllWarehouseOfStorageItem(
+            [FromQuery] GetAllWarehouseOfStorageItemHttpQuery body)
+        {
+            var bus = (IBus) _services.GetService(typeof(IBus));
+            var logger = (ILogger<LoggedGetAllWarehouseOfStorageItemRequest>) _services.GetService(typeof(ILogger<LoggedGetAllWarehouseOfStorageItemRequest>));
+
+            return await new ConvertedGetAllWarehouseOfStorageItemOnHttpContext(
+                new LoggedGetAllWarehouseOfStorageItemRequest(logger,
+                    new ValidatedGetAllWarehouseOfStorageItemRequest(
+                        new GetAllWarehouseOfStorageItemUseCase(bus)))).Ask(body);
         }
     }
 }
