@@ -4,7 +4,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Nano35.Contracts;
 using Nano35.Contracts.Identity.Artifacts;
 using Nano35.Contracts.Instance.Artifacts;
-using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Storage.Processor.UseCases.CreateArticle;
 using Nano35.Storage.Processor.UseCases.CreateCancellation;
 using Nano35.Storage.Processor.UseCases.CreateCategory;
@@ -22,15 +21,14 @@ using Nano35.Storage.Processor.UseCases.GetAllComingDetails;
 using Nano35.Storage.Processor.UseCases.GetAllComings;
 using Nano35.Storage.Processor.UseCases.GetAllMoveDetails;
 using Nano35.Storage.Processor.UseCases.GetAllMoves;
-using Nano35.Storage.Processor.UseCases.GetAllPlacesOnStorage;
+using Nano35.Storage.Processor.UseCases.GetAllPlacesOfStorageItemOnInstance;
+using Nano35.Storage.Processor.UseCases.GetAllPlacesOfStorageItemOnUnit;
 using Nano35.Storage.Processor.UseCases.GetAllSelleDetails;
 using Nano35.Storage.Processor.UseCases.GetAllSells;
 using Nano35.Storage.Processor.UseCases.GetAllStorageItemConditions;
 using Nano35.Storage.Processor.UseCases.GetAllStorageItems;
-using Nano35.Storage.Processor.UseCases.GetAllWarehouseNames;
-using Nano35.Storage.Processor.UseCases.GetAllWarehouseOfStorageItem;
-using Nano35.Storage.Processor.UseCases.GetAllWarehousesOfItem;
-using Nano35.Storage.Processor.UseCases.GetAllWarehousesOfUnit;
+using Nano35.Storage.Processor.UseCases.GetAllStorageItemsOnInstance;
+using Nano35.Storage.Processor.UseCases.GetAllStorageItemsOnUnit;
 using Nano35.Storage.Processor.UseCases.GetArticleById;
 using Nano35.Storage.Processor.UseCases.GetStorageItemById;
 using Nano35.Storage.Processor.UseCases.UpdateArticleBrand;
@@ -74,10 +72,9 @@ namespace Nano35.Storage.Processor.Configurations
                     cfg.ReceiveEndpoint("IGetAllArticlesBrandsRequestContract", e => { e.Consumer<GetAllArticlesBrandsConsumer>(provider); });
                     cfg.ReceiveEndpoint("IGetAllArticlesModelsRequestContract", e => { e.Consumer<GetAllArticlesModelsConsumer>(provider); });
                     cfg.ReceiveEndpoint("IGetAllStorageItemConditionsRequestContract", e => { e.Consumer<GetAllStorageItemConditionsConsumer>(provider); });
-                    cfg.ReceiveEndpoint("IGetAllWarehouseNamesRequestContract", e => { e.Consumer<GetAllWarehouseNamesConsumer>(provider); });
-                    cfg.ReceiveEndpoint("IGetAllWarehousesOfItemRequestContract", e => { e.Consumer<GetAllWarehousesOfItemConsumer>(provider); });
-                    cfg.ReceiveEndpoint("IGetAllWarehouseOfStorageItemRequestContract", e => { e.Consumer<GetAllWarehouseOfStorageItemConsumer>(provider); });
-                    cfg.ReceiveEndpoint("IGetAllWarehousesOfUnitRequestContract", e => { e.Consumer<GetAllWarehousesOfUnitConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IGetAllStorageItemsOnInstanceRequestContract", e => { e.Consumer<GetAllStorageItemsOnInstanceConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IGetAllPlacesOfStorageItemOnUnitRequestContract", e => { e.Consumer<GetAllPlacesOfStorageItemOnUnitConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IGetAllStorageItemsOnUnitRequestContract", e => { e.Consumer<GetAllStorageItemsOnUnitConsumer>(provider); });
                     cfg.ReceiveEndpoint("IUpdateArticleBrandRequestContract", e => { e.Consumer<UpdateArticleBrandConsumer>(provider); });
                     cfg.ReceiveEndpoint("IUpdateArticleCategoryRequestContract", e => { e.Consumer<UpdateArticleCategoryConsumer>(provider); });
                     cfg.ReceiveEndpoint("IUpdateArticleInfoRequestContract", e => { e.Consumer<UpdateArticleInfoConsumer>(provider); });
@@ -88,7 +85,7 @@ namespace Nano35.Storage.Processor.Configurations
                     cfg.ReceiveEndpoint("IUpdateStorageItemHiddenCommentRequestContract", e => { e.Consumer<UpdateStorageItemHiddenCommentConsumer>(provider); });
                     cfg.ReceiveEndpoint("IUpdateStorageItemPurchasePriceRequestContract", e => { e.Consumer<UpdateStorageItemPurchasePriceConsumer>(provider); });
                     cfg.ReceiveEndpoint("IUpdateStorageItemRetailPriceRequestContract", e => { e.Consumer<UpdateStorageItemRetailPriceConsumer>(provider); });
-                    cfg.ReceiveEndpoint("IGetAllPlacesOnStorageContract", e => { e.Consumer<GetAllPlacesOnStorageConsumer>(provider); });
+                    cfg.ReceiveEndpoint("GetAllPlacesOfStorageItemOnInstanceContract", e => { e.Consumer<GetAllPlacesOfStorageItemOnInstanceConsumer>(provider); });
                     
                     cfg.ReceiveEndpoint("IGetAllArticlesCategoriesRequestContract", e => { e.Consumer<GetAllArticlesCategoriesConsumer>(provider); });
                     cfg.ReceiveEndpoint("ICreateCategoryRequestContract", e => { e.Consumer<CreateCategoryConsumer>(provider); });
@@ -128,11 +125,10 @@ namespace Nano35.Storage.Processor.Configurations
                 x.AddConsumer<GetAllCancellationsConsumer>();
                 x.AddConsumer<GetAllCancellationDetailsConsumer>();
                 
-                x.AddConsumer<GetAllWarehouseNamesConsumer>();
-                x.AddConsumer<GetAllWarehouseOfStorageItemConsumer>();
-                x.AddConsumer<GetAllWarehousesOfUnitConsumer>();
-                x.AddConsumer<GetAllWarehousesOfItemConsumer>();
-                x.AddConsumer<GetAllPlacesOnStorageConsumer>();
+                x.AddConsumer<GetAllPlacesOfStorageItemOnUnitConsumer>();
+                x.AddConsumer<GetAllStorageItemsOnUnitConsumer>();
+                x.AddConsumer<GetAllStorageItemsOnInstanceConsumer>();
+                x.AddConsumer<GetAllPlacesOfStorageItemOnInstanceConsumer>();
                 
                 x.AddConsumer<UpdateStorageItemRetailPriceConsumer>();
                 x.AddConsumer<UpdateStorageItemPurchasePriceConsumer>();
