@@ -39,17 +39,7 @@ namespace Nano35.Storage.Processor.UseCases
             throw new Exception();
         }
     }
-    
-    public class GetUnitStringById : 
-        MasstransitRequest
-        <IGetUnitStringByIdRequestContract, 
-         IGetUnitStringByIdResultContract,
-         IGetUnitStringByIdSuccessResultContract, 
-         IGetUnitStringByIdErrorResultContract>
-    {
-        public GetUnitStringById(IBus bus, IGetUnitStringByIdRequestContract request) : base(bus, request) {}
-    }
-    
+
     public class GetClientStringById : 
         MasstransitRequest
         <IGetClientStringByIdRequestContract, 

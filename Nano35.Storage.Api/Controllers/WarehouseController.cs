@@ -218,7 +218,6 @@ namespace Nano35.Storage.Api.Controllers
                     new ValidatedGetAllCancellationsRequest(
                         new GetAllCancellationsUseCase(bus)))).Ask(body);
         }
-
         
         [HttpGet]
         [Route("GetAllCancellationDetails")]
@@ -235,23 +234,6 @@ namespace Nano35.Storage.Api.Controllers
                 new LoggedGetAllCancellationDetailsRequest(logger,
                     new ValidatedGetAllCancellationDetailsRequest(
                         new GetAllCancellationDetailsUseCase(bus)))).Ask(query);
-        }
-        
-        [HttpGet]
-        [Route("GetAllStorageItemsOnInstance")]
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllStorageItemsOnInstanceSuccessResultContract))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllStorageItemsOnInstanceErrorResultContract))] 
-        public async Task<IActionResult> GetAllStorageItemsOnInstance(
-            [FromQuery] GetAllStorageItemsOnInstanceHttpQuery body)
-        {
-            var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetAllStorageItemsOnInstanceRequest>) _services.GetService(typeof(ILogger<LoggedGetAllStorageItemsOnInstanceRequest>));
-
-            return await new ConvertedGetAllStorageItemsOnInstanceOnHttpContext(
-                        new LoggedGetAllStorageItemsOnInstanceRequest(logger,
-                            new ValidatedGetAllStorageItemsOnInstanceRequest(
-                                new GetAllStorageItemsOnInstanceUseCase(bus)))).Ask(body);
         }
         
         [HttpGet]
@@ -289,6 +271,23 @@ namespace Nano35.Storage.Api.Controllers
         }
         
         [HttpGet]
+        [Route("GetAllStorageItemsOnInstance")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllStorageItemsOnInstanceSuccessResultContract))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllStorageItemsOnInstanceErrorResultContract))] 
+        public async Task<IActionResult> GetAllStorageItemsOnInstance(
+            [FromQuery] GetAllStorageItemsOnInstanceHttpQuery body)
+        {
+            var bus = (IBus) _services.GetService(typeof(IBus));
+            var logger = (ILogger<LoggedGetAllStorageItemsOnInstanceRequest>) _services.GetService(typeof(ILogger<LoggedGetAllStorageItemsOnInstanceRequest>));
+
+            return await new ConvertedGetAllStorageItemsOnInstanceOnHttpContext(
+                        new LoggedGetAllStorageItemsOnInstanceRequest(logger,
+                            new ValidatedGetAllStorageItemsOnInstanceRequest(
+                                new GetAllStorageItemsOnInstanceUseCase(bus)))).Ask(body);
+        }
+        
+        [HttpGet]
         [Route("GetAllStorageItemsOnUnit")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllStorageItemsOnUnitSuccessResultContract))]
@@ -300,9 +299,9 @@ namespace Nano35.Storage.Api.Controllers
             var logger = (ILogger<LoggedGetAllStorageItemsOnUnitRequest>) _services.GetService(typeof(ILogger<LoggedGetAllStorageItemsOnUnitRequest>));
 
             return await new ConvertedGetAllStorageItemsOnUnitOnHttpContext(
-                new LoggedGetAllStorageItemsOnUnitRequest(logger,
-                    new ValidatedGetAllStorageItemsOnUnitRequest(
-                        new GetAllStorageItemsOnUnitUseCase(bus)))).Ask(body);
+                        new LoggedGetAllStorageItemsOnUnitRequest(logger,
+                            new ValidatedGetAllStorageItemsOnUnitRequest(
+                                new GetAllStorageItemsOnUnitUseCase(bus)))).Ask(body);
         }
     }
 }

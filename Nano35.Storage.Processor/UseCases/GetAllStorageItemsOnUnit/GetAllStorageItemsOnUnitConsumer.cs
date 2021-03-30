@@ -21,23 +21,15 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemsOnUnit
         public async Task Consume(
             ConsumeContext<IGetAllStorageItemsOnUnitContract> context)
         {
-            // Setup configuration of pipeline
-            var bus = (IBus) _services.GetService(typeof(IBus));
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
             var logger = (ILogger<LoggedGetAllStorageItemsOnUnitRequest>) _services
                 .GetService(typeof(ILogger<LoggedGetAllStorageItemsOnUnitRequest>));
-
-            // Explore message of request
             var message = context.Message;
-
-            // Send request to pipeline
             var result =
                 await new LoggedGetAllStorageItemsOnUnitRequest(logger,
                     new ValidatedGetAllStorageItemsOnUnitRequest(
-                        new GetAllStorageItemsOnUnitRequest(dbContext,bus))
-                ).Ask(message, context.CancellationToken);
-            
-            // Check response of create article request
+                        new GetAllStorageItemsOnUnitRequest(dbContext)))
+                    .Ask(message, context.CancellationToken);
             switch (result)
             {
                 case IGetAllStorageItemsOnUnitSuccessResultContract:
