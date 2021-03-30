@@ -24,7 +24,6 @@ namespace Nano35.Storage.Api.Requests.GetAllArticleBrands
             var converted = new GetAllArticlesBrandsRequestContract()
             {
                 CategoryId = input.CategoryId,
-                InstanceId = input.InstanceId
             };
 
             var response = await DoNext(converted);

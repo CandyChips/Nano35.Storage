@@ -16,11 +16,12 @@ using Nano35.Storage.Api.Requests.GetAllComingDetails;
 using Nano35.Storage.Api.Requests.GetAllComings;
 using Nano35.Storage.Api.Requests.GetAllMoveDetails;
 using Nano35.Storage.Api.Requests.GetAllMoves;
-using Nano35.Storage.Api.Requests.GetAllPlacesOnStorage;
+using Nano35.Storage.Api.Requests.GetAllPlacesOfStorageItemOnInstance;
+using Nano35.Storage.Api.Requests.GetAllPlacesOfStorageItemOnUnit;
 using Nano35.Storage.Api.Requests.GetAllSelleDetails;
 using Nano35.Storage.Api.Requests.GetAllSells;
-using Nano35.Storage.Api.Requests.GetAllWarehouseNames;
-using Nano35.Storage.Api.Requests.GetAllWarehouseOfStorageItem;
+using Nano35.Storage.Api.Requests.GetAllStorageItemsOnInstance;
+using Nano35.Storage.Api.Requests.GetAllStorageItemsOnUnit;
 
 namespace Nano35.Storage.Api.Controllers
 {
@@ -237,54 +238,71 @@ namespace Nano35.Storage.Api.Controllers
         }
         
         [HttpGet]
-        [Route("GetAllPlacesOnStorage")]
+        [Route("GetAllStorageItemsOnInstance")]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllPlacesOnStorageSuccessResultContract))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllPlacesOnStorageErrorResultContract))] 
-        public async Task<IActionResult> GetAllPlacesOnStorage(
-            [FromQuery] GetAllPlacesOnStorageHttpContext body)
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllStorageItemsOnInstanceSuccessResultContract))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllStorageItemsOnInstanceErrorResultContract))] 
+        public async Task<IActionResult> GetAllStorageItemsOnInstance(
+            [FromQuery] GetAllStorageItemsOnInstanceHttpQuery body)
         {
             var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetAllPlacesOnStorageRequest>) _services.GetService(typeof(ILogger<LoggedGetAllPlacesOnStorageRequest>));
+            var logger = (ILogger<LoggedGetAllStorageItemsOnInstanceRequest>) _services.GetService(typeof(ILogger<LoggedGetAllStorageItemsOnInstanceRequest>));
 
-            return await new ConvertedGetAllPlacesOnStorageOnHttpContext(
-                        new LoggedGetAllPlacesOnStorageRequest(logger,
-                            new ValidatedGetAllPlacesOnStorageRequest(
-                                new GetAllPlacesOnStorageUseCase(bus)))).Ask(body);
+            return await new ConvertedGetAllStorageItemsOnInstanceOnHttpContext(
+                        new LoggedGetAllStorageItemsOnInstanceRequest(logger,
+                            new ValidatedGetAllStorageItemsOnInstanceRequest(
+                                new GetAllStorageItemsOnInstanceUseCase(bus)))).Ask(body);
         }
         
         [HttpGet]
-        [Route("GetAllWarehouseNames")]
+        [Route("GetAllPlacesOfStorageItemOnUnit")]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllWarehouseNamesSuccessResultContract))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllWarehouseNamesErrorResultContract))] 
-        public async Task<IActionResult> GetAllWarehouseNames(
-            [FromQuery] GetAllWarehouseNamesHttpQuery body)
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllPlacesOfStorageItemOnUnitSuccessResultContract))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllPlacesOfStorageItemOnUnitErrorResultContract))] 
+        public async Task<IActionResult> GetAllPlacesOfStorageItemOnUnit(
+            [FromQuery] GetAllPlacesOfStorageItemOnUnitHttpQuery body)
         {
             var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetAllWarehouseNamesRequest>) _services.GetService(typeof(ILogger<LoggedGetAllWarehouseNamesRequest>));
+            var logger = (ILogger<LoggedGetAllPlacesOfStorageItemOnUnitRequest>) _services.GetService(typeof(ILogger<LoggedGetAllPlacesOfStorageItemOnInstanceRequest>));
 
-            return await new ConvertedGetAllWarehouseNamesOnHttpContext(
-                new LoggedGetAllWarehouseNamesRequest(logger,
-                    new ValidatedGetAllWarehouseNamesRequest(
-                        new GetAllWarehouseNamesUseCase(bus)))).Ask(body);
+            return await new ConvertedGetAllPlacesOfStorageItemOnUnitOnHttpContext(
+                new LoggedGetAllPlacesOfStorageItemOnUnitRequest(logger,
+                    new ValidatedGetAllPlacesOfStorageItemOnUnitRequest(
+                        new GetAllPlacesOfStorageItemOnUnitUseCase(bus)))).Ask(body);
         }
         
         [HttpGet]
-        [Route("GetAllWarehouseOfStorageItem")]
+        [Route("GetAllPlacesOfStorageItemOnInstance")]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllWarehouseOfStorageItemSuccessResultContract))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllWarehouseOfStorageItemErrorResultContract))] 
-        public async Task<IActionResult> GetAllWarehouseOfStorageItem(
-            [FromQuery] GetAllWarehouseOfStorageItemHttpQuery body)
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllPlacesOfStorageItemOnInstanceSuccessResultContract))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllPlacesOfStorageItemOnInstanceErrorResultContract))] 
+        public async Task<IActionResult> GetAllPlacesOfStorageItemOnInstance(
+            [FromQuery] GetAllPlacesOfStorageItemOnInstanceHttpQuery body)
         {
             var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetAllWarehouseOfStorageItemRequest>) _services.GetService(typeof(ILogger<LoggedGetAllWarehouseOfStorageItemRequest>));
+            var logger = (ILogger<LoggedGetAllPlacesOfStorageItemOnInstanceRequest>) _services.GetService(typeof(ILogger<LoggedGetAllPlacesOfStorageItemOnInstanceRequest>));
 
-            return await new ConvertedGetAllWarehouseOfStorageItemOnHttpContext(
-                new LoggedGetAllWarehouseOfStorageItemRequest(logger,
-                    new ValidatedGetAllWarehouseOfStorageItemRequest(
-                        new GetAllWarehouseOfStorageItemUseCase(bus)))).Ask(body);
+            return await new ConvertedGetAllPlacesOfStorageItemOnInstanceOnHttpContext(
+                new LoggedGetAllPlacesOfStorageItemOnInstanceRequest(logger,
+                    new ValidatedGetAllPlacesOfStorageItemOnInstanceRequest(
+                        new GetAllPlacesOfStorageItemOnInstanceUseCase(bus)))).Ask(body);
+        }
+        
+        [HttpGet]
+        [Route("GetAllStorageItemsOnUnit")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllStorageItemsOnUnitSuccessResultContract))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllStorageItemsOnUnitErrorResultContract))] 
+        public async Task<IActionResult> GetAllStorageItemsOnUnit(
+            [FromQuery] GetAllStorageItemsOnUnitHttpQuery body)
+        {
+            var bus = (IBus) _services.GetService(typeof(IBus));
+            var logger = (ILogger<LoggedGetAllStorageItemsOnUnitRequest>) _services.GetService(typeof(ILogger<LoggedGetAllStorageItemsOnUnitRequest>));
+
+            return await new ConvertedGetAllStorageItemsOnUnitOnHttpContext(
+                new LoggedGetAllStorageItemsOnUnitRequest(logger,
+                    new ValidatedGetAllStorageItemsOnUnitRequest(
+                        new GetAllStorageItemsOnUnitUseCase(bus)))).Ask(body);
         }
     }
 }

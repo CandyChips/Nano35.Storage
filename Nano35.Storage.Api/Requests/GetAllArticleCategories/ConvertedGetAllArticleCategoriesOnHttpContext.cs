@@ -19,7 +19,6 @@ namespace Nano35.Storage.Api.Requests.GetAllArticleCategories
         {
             var converted = new GetAllArticlesCategoriesRequestContract()
             {
-                InstanceId = input.InstanceId,
                 ParentId = input.ParentId
             };
 

@@ -32,7 +32,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllArticleCategories
             (IGetAllArticlesCategoriesRequestContract input, CancellationToken cancellationToken)
         {
             var result = input.ParentId == Guid.Empty
-                ? await _context.Categories.Where(c => c.InstanceId == input.InstanceId && c.ParentCategoryId == null)
+                ? await _context.Categories.Where(c => c.ParentCategoryId == input.ParentId && c.ParentCategoryId == null)
                     .MapAllToAsync<CategoryViewModel>()
                 : await _context.Categories.Where(c => c.ParentCategoryId == input.ParentId)
                     .MapAllToAsync<CategoryViewModel>();

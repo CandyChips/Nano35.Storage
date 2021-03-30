@@ -23,7 +23,7 @@ namespace Nano35.Storage.Api.Requests.GetAllArticleModels
         {
             var converted = new GetAllArticlesModelsRequestContract()
             {
-                InstanceId = input.InstanceId
+                CategoryId = input.CategoryId
             };
 
             var response = await DoNext(converted);
