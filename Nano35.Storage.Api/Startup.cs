@@ -35,7 +35,7 @@ namespace Nano35.Storage.Api
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Nano35.Storage.Api v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Nano35.RepairOrders.Api v1"));
             }
 
             app.UseHttpsRedirection();
@@ -43,6 +43,7 @@ namespace Nano35.Storage.Api
             app.UseRouting();
 
             app.UseAuthorization();
+
 
             app.UseEndpoints(endpoints =>
             {
