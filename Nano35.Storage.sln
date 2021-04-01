@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nano35.Storage.Processor", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nano35.Storage.Api", "Nano35.Storage.Api\Nano35.Storage.Api.csproj", "{AA3B3D76-74B8-4585-8267-C28B4311BF56}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nano35.Storage.Projection", "Nano35.Storage.Projection\Nano35.Storage.Projection.csproj", "{BFFED497-7C59-488E-B306-9AED9B4A5AE6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,5 +46,17 @@ Global
 		{AA3B3D76-74B8-4585-8267-C28B4311BF56}.Release|x64.Build.0 = Release|Any CPU
 		{AA3B3D76-74B8-4585-8267-C28B4311BF56}.Release|x86.ActiveCfg = Release|Any CPU
 		{AA3B3D76-74B8-4585-8267-C28B4311BF56}.Release|x86.Build.0 = Release|Any CPU
+		{BFFED497-7C59-488E-B306-9AED9B4A5AE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFFED497-7C59-488E-B306-9AED9B4A5AE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFFED497-7C59-488E-B306-9AED9B4A5AE6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{BFFED497-7C59-488E-B306-9AED9B4A5AE6}.Debug|x64.Build.0 = Debug|Any CPU
+		{BFFED497-7C59-488E-B306-9AED9B4A5AE6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BFFED497-7C59-488E-B306-9AED9B4A5AE6}.Debug|x86.Build.0 = Debug|Any CPU
+		{BFFED497-7C59-488E-B306-9AED9B4A5AE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFFED497-7C59-488E-B306-9AED9B4A5AE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFFED497-7C59-488E-B306-9AED9B4A5AE6}.Release|x64.ActiveCfg = Release|Any CPU
+		{BFFED497-7C59-488E-B306-9AED9B4A5AE6}.Release|x64.Build.0 = Release|Any CPU
+		{BFFED497-7C59-488E-B306-9AED9B4A5AE6}.Release|x86.ActiveCfg = Release|Any CPU
+		{BFFED497-7C59-488E-B306-9AED9B4A5AE6}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

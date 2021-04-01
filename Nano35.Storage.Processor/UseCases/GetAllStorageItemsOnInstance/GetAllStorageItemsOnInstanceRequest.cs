@@ -45,19 +45,23 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemsOnInstance
                 {
                     var res = new StorageItemOnInstanceViewModel()
                     {
-                        Count = a.Count
+                        Count = a.Select(s => s.Count).Sum()
                     };
                     var getAllStorageItems = new GetAllStorageItems(_bus,
-                        new GetAllStorageItemsRequestContract() {InstanceId = a.InstanceId});
+                        new GetAllStorageItemsRequestContract() {InstanceId = a.Key.InstanceId});
                     res.Item = getAllStorageItems.GetResponse().Result switch
                     {
-                        IGetAllStorageItemsSuccessResultContract success =>
-                            success.Data.MapTo<StorageItemWarehouseView>(),
+                        IGetAllStorageItemsSuccessResultContract success => success.Data.MapTo<StorageItemWarehouseView>(),
                         _ => throw new Exception()
                     };
                     var getUnitStringById = new GetUnitStringById(_bus,
-                        new GetUnitStringByIdRequestContract() {UnitId = a.UnitId});
+                        new GetUnitStringByIdRequestContract() {UnitId = a.First().UnitId});
                     res.Unit = getUnitStringById.GetResponse().Result switch
+                    {
+                        IGetUnitStringByIdSuccessResultContract success => success.Data,
+                        _ => throw new Exception()
+                    };
+                    res = new StorageItemOnInstanceViewModel()
                     {
                         Count = a.Sum(s => s.Count),
                         Item = new StorageItemWarehouseView()

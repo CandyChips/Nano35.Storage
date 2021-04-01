@@ -21,11 +21,7 @@ namespace Nano35.Storage.Api.Controllers
     {
         private readonly IServiceProvider _services;
         
-        public CategoryController(
-            IServiceProvider services)
-        {
-            _services = services;
-        }
+        public CategoryController(IServiceProvider services) { _services = services; }
     
         [HttpGet]
         [Route("GetAllArticleCategories")]

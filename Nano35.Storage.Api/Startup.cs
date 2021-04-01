@@ -11,16 +11,17 @@ namespace Nano35.Storage.Api
 {
     public class Startup
     {
-        public IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; }
         
-        public Startup(IConfiguration configuration)
+        public Startup()
         {
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder().AddJsonFile("ServicesConfig.json");
+            Configuration = builder.Build();
         }
         
         public void ConfigureServices(IServiceCollection services)
         {
-            new Configurator(services, new AuthenticationConfiguration()).Configure();
+            new Configurator(services, new AuthenticationConfiguration(Configuration)).Configure();
             new Configurator(services, new CorsConfiguration()).Configure();
             new Configurator(services, new SwaggerConfiguration()).Configure();
             new Configurator(services, new MassTransitConfiguration()).Configure();
@@ -34,10 +35,7 @@ namespace Nano35.Storage.Api
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => 
-                    c.SwaggerEndpoint(
-                        "/swagger/v1/swagger.json", 
-                        "Nano35.Storage.Api v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Nano35.Storage.Api v1"));
             }
 
             app.UseHttpsRedirection();

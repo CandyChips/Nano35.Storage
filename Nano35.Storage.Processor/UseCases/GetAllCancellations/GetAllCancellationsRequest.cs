@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Contracts.Storage.Models;
+using Nano35.Storage.Processor.Requests;
 using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.UseCases.GetAllCancellations

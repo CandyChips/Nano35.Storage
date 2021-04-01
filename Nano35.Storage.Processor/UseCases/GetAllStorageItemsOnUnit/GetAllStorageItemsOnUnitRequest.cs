@@ -19,11 +19,13 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemsOnUnit
             IGetAllStorageItemsOnUnitResultContract>
     {
         private readonly ApplicationContext _context;
+        private readonly IBus _bus;
 
         public GetAllStorageItemsOnUnitRequest(
-            ApplicationContext context)
+            ApplicationContext context, IBus bus)
         {
             _context = context;
+            _bus = bus;
         }
         
         public async Task<IGetAllStorageItemsOnUnitResultContract> Ask
@@ -43,7 +45,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemsOnUnit
                     {
                         Count = a.Count,
                     };
-                    var getAllStorageItems = new GetAllStorageItems(_bus,
+                    var getAllStorageItems = new GetAllStorageItemsOnInstance.GetAllStorageItems(_bus,
                         new GetAllStorageItemsRequestContract() {InstanceId = a.InstanceId});
                     res.Item = getAllStorageItems.GetResponse().Result switch
                     {

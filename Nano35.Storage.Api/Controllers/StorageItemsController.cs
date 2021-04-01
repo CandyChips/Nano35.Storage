@@ -25,11 +25,7 @@ namespace Nano35.Storage.Api.Controllers
     {
         private readonly IServiceProvider _services;
 
-        public StorageItemsController(
-            IServiceProvider services)
-        {
-            _services = services;
-        }
+        public StorageItemsController(IServiceProvider services) { _services = services; }
         
         [HttpGet]
         [Route("GetAllStorageItems")]
@@ -106,7 +102,6 @@ namespace Nano35.Storage.Api.Controllers
         public async Task<IActionResult> UpdateStorageItemArticle(
             [FromBody] UpdateStorageItemArticleHttpBody body)
         {
-            
             var bus = (IBus) _services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedUpdateStorageItemArticleRequest>) _services.GetService(typeof(ILogger<LoggedUpdateStorageItemArticleRequest>));
 
@@ -124,7 +119,6 @@ namespace Nano35.Storage.Api.Controllers
         public async Task<IActionResult> UpdateStorageItemComment(
             [FromBody] UpdateStorageItemCommentHttpBody body)
         {
-            
             var bus = (IBus) _services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedUpdateStorageItemCommentRequest>) _services.GetService(typeof(ILogger<LoggedUpdateStorageItemCommentRequest>));
 
@@ -176,7 +170,6 @@ namespace Nano35.Storage.Api.Controllers
         public async Task<IActionResult> UpdateStorageItemPurchasePrice(
             [FromBody] UpdateStorageItemPurchasePriceHttpBody body)
         {
-            
             var bus = (IBus) _services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedUpdateStorageItemPurchasePriceRequest>) _services.GetService(typeof(ILogger<LoggedUpdateStorageItemPurchasePriceRequest>));
 
@@ -194,7 +187,6 @@ namespace Nano35.Storage.Api.Controllers
         public async Task<IActionResult> UpdateStorageItemRetailPrice(
             [FromBody] UpdateStorageItemRetailPriceHttpBody body)
         {
-            
             var bus = (IBus) _services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedUpdateStorageItemRetailPriceRequest>) _services.GetService(typeof(ILogger<LoggedUpdateStorageItemRetailPriceRequest>));
 

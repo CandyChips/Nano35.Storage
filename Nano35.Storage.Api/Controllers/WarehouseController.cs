@@ -32,11 +32,7 @@ namespace Nano35.Storage.Api.Controllers
     {
         private readonly IServiceProvider _services;
 
-        public WarehouseController(
-            IServiceProvider services)
-        {
-            _services = services;
-        }
+        public WarehouseController(IServiceProvider services) { _services = services; }
 
         [HttpPost]
         [Route("CreateComing")]
@@ -158,6 +154,8 @@ namespace Nano35.Storage.Api.Controllers
 
         [HttpGet]
         [Route("GetAllSells")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllSellsSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllSellsErrorHttpResponse))] 
         public async Task<IActionResult> GetAllSells(
             [FromQuery] GetAllSellsHttpQuery body)
         {
@@ -207,6 +205,8 @@ namespace Nano35.Storage.Api.Controllers
 
         [HttpGet]
         [Route("GetAllCancellations")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllCancellationsSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllCancellationsErrorHttpResponse))] 
         public async Task<IActionResult> GetAllCancellations(
             [FromQuery] GetAllCancellationsHttpQuery body)
         {

@@ -20,7 +20,7 @@ namespace Nano35.Storage.Api.Controllers
 {
     /// ToDo Hey Maslyonok
     /// <summary>
-    /// http://localhost:6003/articles/[action]
+    /// http://localhost:5003/articles/[action]
     /// </summary>
     [ApiController]
     [Route("[controller]")]
@@ -39,11 +39,7 @@ namespace Nano35.Storage.Api.Controllers
         /// Controller provide IServiceProvider from asp net core DI
         /// for registration services to pipe nodes
         /// </summary>
-        public ArticlesController(
-            IServiceProvider services)
-        {
-            _services = services;
-        }
+        public ArticlesController(IServiceProvider services) { _services = services; }
     
         /// ToDo Hey Maslyonok
         /// <summary>
@@ -243,13 +239,6 @@ namespace Nano35.Storage.Api.Controllers
                         new LoggedUpdateArticleModelRequest(logger,  
                             new ValidatedUpdateArticleModelRequest(
                                 new UpdateArticleModelUseCase(bus)))).Ask(body);
-        }
-        
-        [HttpDelete]
-        [Route("DeleteArticle")]
-        public async Task<IActionResult> DeleteArticle()
-        {
-            return Ok();
         }
     }
 }

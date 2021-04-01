@@ -26,10 +26,10 @@ namespace Nano35.Storage.Processor
                 {
                     var logger = services.GetRequiredService<ILogger<Program>>();
                     logger.LogError(ex, "An error occurred seeding the DB.");
-                    throw ex;
+                    throw;
                 }
             }
-            host.Run();
+            await host.RunAsync();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
