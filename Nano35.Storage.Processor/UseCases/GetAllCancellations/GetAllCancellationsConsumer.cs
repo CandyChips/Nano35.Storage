@@ -23,6 +23,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllCancellations
         {
             // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
+            var bus = (IBus) _services.GetService(typeof(IBus));
             var logger = (ILogger<LoggedGetAllCancellationsRequest>) _services
                 .GetService(typeof(ILogger<LoggedGetAllCancellationsRequest>));
 
@@ -33,7 +34,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllCancellations
             var result =
                 await new LoggedGetAllCancellationsRequest(logger,
                     new ValidatedGetAllCancellationsRequest(
-                        new GetAllCancellationsRequest(dbContext))
+                        new GetAllCancellationsRequest(dbContext, bus))
                 ).Ask(message, context.CancellationToken);
             
             // Check response of create article request

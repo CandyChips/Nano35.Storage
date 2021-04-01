@@ -14,6 +14,7 @@ namespace Nano35.Storage.Processor.Models
         public Guid InstanceId { get; set; }
         public string Number { get; set; }
         public DateTime Date { get; set; }
+        public string Comment { get; set; }
         
         //Foreign keys
         

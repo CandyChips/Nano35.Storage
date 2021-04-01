@@ -37,7 +37,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllPlacesOfStorageItemOnUnit
                     x.Count > 0)
                 .Select(a => new PlaceWithStorageItemOnUnit()
                 {
-                    Id = a.InstanceId,
+                    UnitId = a.UnitId,
                     Name = a.Name,
                     Count = a.Count,
                 })

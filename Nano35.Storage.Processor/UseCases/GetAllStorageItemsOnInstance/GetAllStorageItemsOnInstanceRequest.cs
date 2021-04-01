@@ -53,9 +53,10 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemsOnInstance
                     };
                     var getAllStorageItems = new GetAllStorageItems(_bus,
                         new GetAllStorageItemsRequestContract() {InstanceId = a.InstanceId});
-                    res.Id = getAllStorageItems.GetResponse().Result switch
+                    res.Item = getAllStorageItems.GetResponse().Result switch
                     {
-                        IGetAllStorageItemsSuccessResultContract success => success.Data.MapTo<StorageItemViewModel>(),
+                        IGetAllStorageItemsSuccessResultContract success =>
+                            success.Data.MapTo<StorageItemWarehouseView>(),
                         _ => throw new Exception()
                     };
                     var getUnitStringById = new GetUnitStringById(_bus,

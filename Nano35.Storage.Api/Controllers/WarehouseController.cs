@@ -263,7 +263,7 @@ namespace Nano35.Storage.Api.Controllers
             [FromQuery] GetAllPlacesOfStorageItemOnUnitHttpQuery body)
         {
             var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetAllPlacesOfStorageItemOnUnitRequest>) _services.GetService(typeof(ILogger<LoggedGetAllPlacesOfStorageItemOnInstanceRequest>));
+            var logger = (ILogger<LoggedGetAllPlacesOfStorageItemOnUnitRequest>) _services.GetService(typeof(ILogger<LoggedGetAllPlacesOfStorageItemOnUnitRequest>));
 
             return await new ConvertedGetAllPlacesOfStorageItemOnUnitOnHttpContext(
                 new LoggedGetAllPlacesOfStorageItemOnUnitRequest(logger,

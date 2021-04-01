@@ -48,7 +48,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllPlacesOfStorageItemOnInstance
                 {
                     var res = new PlaceWithStorageItemOnInstance()
                     {
-                        Id = a.UnitId,
+                        UnitId = a.UnitId,
                         Name = a.Name,
                         Count = a.Count
                     };
