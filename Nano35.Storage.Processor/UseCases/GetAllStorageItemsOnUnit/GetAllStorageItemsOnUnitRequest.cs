@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Contracts.Storage.Models;
+using Nano35.Storage.Processor.Requests;
 using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemsOnUnit
@@ -18,20 +19,11 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemsOnUnit
             IGetAllStorageItemsOnUnitResultContract>
     {
         private readonly ApplicationContext _context;
-        private readonly IBus _bus;
 
         public GetAllStorageItemsOnUnitRequest(
-            ApplicationContext context,
-            IBus bus)
+            ApplicationContext context)
         {
             _context = context;
-            _bus = bus;
-        }
-        
-        private class GetAllStorageItemsOnUnitSuccessResultContract : 
-            IGetAllStorageItemsOnUnitSuccessResultContract
-        {
-            public List<StorageItemOnUnitViewModel> Contains { get; set; }
         }
         
         public async Task<IGetAllStorageItemsOnUnitResultContract> Ask
@@ -47,7 +39,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemsOnUnit
             var result = queue
                 .Select(a =>
                 {
-                    var res = new StorageItemOnUnitViewModel()
+                    var res = new StorageItemOnUnitViewModel
                     {
                         Count = a.Count,
                     };
@@ -65,14 +57,4 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemsOnUnit
             return new GetAllStorageItemsOnUnitSuccessResultContract() {Contains = result};
         }
     }   
-    
-    public class GetAllStorageItems : 
-        MasstransitRequest
-        <IGetAllStorageItemsRequestContract, 
-            IGetAllStorageItemsResultContract,
-            IGetAllStorageItemsSuccessResultContract, 
-            IGetAllStorageItemsErrorResultContract>
-    {
-        public GetAllStorageItems(IBus bus, IGetAllStorageItemsRequestContract request) : base(bus, request) {}
-    }
 }

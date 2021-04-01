@@ -24,8 +24,7 @@ namespace Nano35.Storage.Api.Requests.GetAllStorageItemsOnInstance
         {
             var converted = new GetAllStorageItemsOnInstanceContract()
             {
-                InstanceId = input.InstanceId,
-                
+                InstanceId = input.InstanceId
             };
 
             var response = await DoNext(converted);

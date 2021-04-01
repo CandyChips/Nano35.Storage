@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Contracts.Storage.Models;
+using Nano35.Storage.Processor.Requests;
 using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemsOnInstance
@@ -28,12 +29,6 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemsOnInstance
             _bus = bus;
         }
         
-        private class GetAllStorageItemsOnInstanceSuccessResultContract : 
-            IGetAllStorageItemsOnInstanceSuccessResultContract
-        {
-            public List<StorageItemOnInstanceViewModel> Contains { get; set; }
-        }
-        
         public async Task<IGetAllStorageItemsOnInstanceResultContract> Ask
             (IGetAllStorageItemsOnInstanceContract input, 
             CancellationToken cancellationToken)
@@ -45,6 +40,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemsOnInstance
 
 
             var result = queue
+                .GroupBy(g => g.StorageItem, e => e)
                 .Select(a =>
                 {
                     var res = new StorageItemOnInstanceViewModel()
@@ -63,11 +59,15 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemsOnInstance
                         new GetUnitStringByIdRequestContract() {UnitId = a.UnitId});
                     res.Unit = getUnitStringById.GetResponse().Result switch
                     {
-                        IGetUnitStringByIdSuccessResultContract success => success.Data,
-                        IGetUnitStringByIdErrorResultContract => "",
-                        _ => ""
+                        Count = a.Sum(s => s.Count),
+                        Item = new StorageItemWarehouseView()
+                        {
+                            Id = a.Key.Id,
+                            Name = a.Key.ToString(),
+                            PurchasePrice = (double) (a.Key.PurchasePrice),
+                            RetailPrice = (double) (a.Key.RetailPrice),
+                        }
                     };
-
                     return res;
                 }).ToList();
 
