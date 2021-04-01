@@ -32,17 +32,21 @@ namespace Nano35.Storage.Processor.UseCases.CreateCancellation
             ICreateCancellationRequestContract input,
             CancellationToken cancellationToken)
         {
+
             var cancellation = new Cancellation()
             {
                 Id = input.NewId,
                 Date = DateTime.Now,
-                Number = input.Number
+                Number = input.Number,
+                InstanceId = input.InstanceId,
+                Comment = input.Comment
             };
 
             var cancellationDetails = input.Details
                 .Select(a => new CancelationDetail()
                 {
                     CancellationsId = input.NewId,
+                    Cancellation = cancellation,
                     StorageItemId = a.StorageItemId,
                     Count = a.Count, 
                     FromPlace = a.PlaceOnStorage,

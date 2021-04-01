@@ -42,14 +42,15 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemsOnUnit
                     var res = new StorageItemOnUnitViewModel
                     {
                         Count = a.Count,
-                        Item = new StorageItemWarehouseView()
-                        {
-                            Id = a.StorageItem.Id,
-                            Name = a.StorageItem.ToString(),
-                            PurchasePrice = (double) (a.StorageItem.PurchasePrice),
-                            RetailPrice = (double) (a.StorageItem.RetailPrice),
-                        }
                     };
+                    var getAllStorageItems = new GetAllStorageItems(_bus,
+                        new GetAllStorageItemsRequestContract() {InstanceId = a.InstanceId});
+                    res.Item = getAllStorageItems.GetResponse().Result switch
+                    {
+                        IGetAllStorageItemsSuccessResultContract success => success.Data.MapTo<StorageItemWarehouseView>(),
+                        _ => throw new Exception()
+                    };
+
                     return res;
                 }).ToList();
 

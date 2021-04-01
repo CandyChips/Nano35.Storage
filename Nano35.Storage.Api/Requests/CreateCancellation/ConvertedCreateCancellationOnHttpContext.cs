@@ -6,6 +6,7 @@ using Nano35.Contracts.Storage.Artifacts;
 using Nano35.HttpContext.identity;
 using Nano35.HttpContext.storage;
 using Nano35.Contracts.Storage.Models;
+using CreateCancellationDetailViewModel = Nano35.Contracts.Storage.Models.CreateCancellationDetailViewModel;
 
 namespace Nano35.Storage.Api.Requests.CreateCancellation
 {
@@ -28,7 +29,14 @@ namespace Nano35.Storage.Api.Requests.CreateCancellation
                 InstanceId = input.InstanceId,
                 NewId = input.NewId,
                 Number = input.Number,
-                UnitId = input.UnitId
+                UnitId = input.UnitId,
+                Details = input.Details.Select(a => new CreateCancellationDetailViewModel()
+                {
+                    NewId = a.NewId,
+                    Count = a.Count,
+                    PlaceOnStorage = a.PlaceOnStorage,
+                    StorageItemId = a.StorageItemId
+                }).ToList()
             };
 
             var response = await DoNext(converted);

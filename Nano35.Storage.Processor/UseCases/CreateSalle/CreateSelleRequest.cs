@@ -40,7 +40,8 @@ namespace Nano35.Storage.Processor.UseCases.CreateSalle
                 CashOperationId = cashOperationId,
                 ClientId = input.ClientId,
                 Date = DateTime.Now,
-                Number = input.Number
+                Number = input.Number,
+                InstanceId = input.InstanceId
             };
 
             var selleDetails = input.Details
