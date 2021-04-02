@@ -3,12 +3,6 @@ using Nano35.Contracts.Storage.Artifacts;
 
 namespace Nano35.Storage.Api.Requests.GetArticleById
 {
-    public class GetArticleByIdValidatorErrorResult : 
-        IGetArticleByIdErrorResultContract
-    {
-        public string Message { get; set; }
-    }
-    
     public class ValidatedGetArticleByIdRequest:
         PipeNodeBase<IGetArticleByIdRequestContract, IGetArticleByIdResultContract>
     {
@@ -19,10 +13,6 @@ namespace Nano35.Storage.Api.Requests.GetArticleById
         public override async Task<IGetArticleByIdResultContract> Ask(
             IGetArticleByIdRequestContract input)
         {
-            if (false)
-            {
-                return new GetArticleByIdValidatorErrorResult() {Message = "Ошибка валидации"};
-            }
             return await DoNext(input);
         }
     }

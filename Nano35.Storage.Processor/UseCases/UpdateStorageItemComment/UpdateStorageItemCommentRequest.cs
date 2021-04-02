@@ -7,9 +7,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.UpdateStorageItemComment
 {
     public class UpdateStorageItemCommentRequest :
-        IPipelineNode<
-            IUpdateStorageItemCommentRequestContract, 
-            IUpdateStorageItemCommentResultContract>
+        EndPointNodeBase<IUpdateStorageItemCommentRequestContract, IUpdateStorageItemCommentResultContract>
     {
         private readonly ApplicationContext _context;
 
@@ -19,13 +17,7 @@ namespace Nano35.Storage.Processor.UseCases.UpdateStorageItemComment
             _context = context;
         }
         
-        private class UpdateStorageItemCommentSuccessResultContract : 
-            IUpdateStorageItemCommentSuccessResultContract
-        {
-            
-        }
-        
-        public async Task<IUpdateStorageItemCommentResultContract> Ask(
+        public override async Task<IUpdateStorageItemCommentResultContract> Ask(
             IUpdateStorageItemCommentRequestContract input,
             CancellationToken cancellationToken)
         {

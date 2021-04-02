@@ -4,7 +4,9 @@ using MassTransit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Nano35.Contracts.Storage.Artifacts;
 using Nano35.HttpContext.storage;
+using Nano35.Storage.Api.Requests;
 using Nano35.Storage.Api.Requests.CreateStorageItem;
 using Nano35.Storage.Api.Requests.GetAllStorageItemConditions;
 using Nano35.Storage.Api.Requests.GetAllStorageItems;
@@ -36,10 +38,10 @@ namespace Nano35.Storage.Api.Controllers
             [FromQuery] GetAllStorageItemsQuery header)
         {
             var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetAllStorageItemsRequest>) _services.GetService(typeof(ILogger<LoggedGetAllStorageItemsRequest>));
+            var logger = (ILogger<IGetAllStorageItemsRequestContract>) _services.GetService(typeof(ILogger<IGetAllStorageItemsRequestContract>));
 
-            return await new ConvertedGetAllStorageItemsOnHttpContext(
-                        new LoggedGetAllStorageItemsRequest(logger,
+            return await new CanonicalizedGetAllStorageItemsRequest(
+                        new LoggedPipeNode<IGetAllStorageItemsRequestContract, IGetAllStorageItemsResultContract>(logger,
                             new ValidatedGetAllStorageItemsRequest(
                                 new GetAllStorageItemsUseCase(bus)))).Ask(header);
         }
@@ -52,10 +54,10 @@ namespace Nano35.Storage.Api.Controllers
         public async Task<IActionResult> GetAllStorageItemConditions()
         {
             var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetAllStorageItemConditionsRequest>) _services.GetService(typeof(ILogger<LoggedGetAllStorageItemConditionsRequest>));
+            var logger = (ILogger<IGetAllStorageItemConditionsRequestContract>) _services.GetService(typeof(ILogger<IGetAllStorageItemConditionsRequestContract>));
 
-            return await new ConvertedGetAllStorageItemConditionsOnHttpContext(
-                        new LoggedGetAllStorageItemConditionsRequest(logger,
+            return await new CanonicalizedGetAllStorageItemConditionsRequest(
+                        new LoggedPipeNode<IGetAllStorageItemConditionsRequestContract, IGetAllStorageItemConditionsResultContract>(logger,
                             new GetAllStorageItemConditionsUseCase(bus))).Ask(
                                 new GetAllStorageItemConditionsHttpQuery());
         }
@@ -69,10 +71,10 @@ namespace Nano35.Storage.Api.Controllers
             [FromQuery] GetStorageItemByIdHttpQuery query)
         {
             var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetStorageItemByIdRequest>) _services.GetService(typeof(ILogger<LoggedGetStorageItemByIdRequest>));
+            var logger = (ILogger<IGetStorageItemByIdRequestContract>) _services.GetService(typeof(ILogger<IGetStorageItemByIdRequestContract>));
 
-            return await new ConvertedGetStorageItemByIdOnHttpContext(
-                        new LoggedGetStorageItemByIdRequest(logger,
+            return await new CanonicalizedGetStorageItemByIdRequest(
+                        new LoggedPipeNode<IGetStorageItemByIdRequestContract, IGetStorageItemByIdResultContract>(logger,
                             new ValidatedGetStorageItemByIdRequest(
                                 new GetStorageItemByIdUseCase(bus)))).Ask(query);
         }
@@ -86,10 +88,10 @@ namespace Nano35.Storage.Api.Controllers
             [FromBody] CreateStorageItemHttpBody body)
         {
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedCreateStorageItemRequest>) _services.GetService(typeof(ILogger<LoggedCreateStorageItemRequest>));
+            var logger = (ILogger<ICreateStorageItemRequestContract>) _services.GetService(typeof(ILogger<ICreateStorageItemRequestContract>));
 
-            return await new ConvertedCreateStorageItemOnHttpContext(
-                        new LoggedCreateStorageItemRequest(logger,
+            return await new CanonicalizedCreateStorageItemRequest(
+                        new LoggedPipeNode<ICreateStorageItemRequestContract, ICreateStorageItemResultContract>(logger,
                             new ValidatedCreateStorageItemRequest(
                                 new CreateStorageItemUseCase(bus)))).Ask(body);
         }
@@ -103,10 +105,10 @@ namespace Nano35.Storage.Api.Controllers
             [FromBody] UpdateStorageItemArticleHttpBody body)
         {
             var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedUpdateStorageItemArticleRequest>) _services.GetService(typeof(ILogger<LoggedUpdateStorageItemArticleRequest>));
+            var logger = (ILogger<IUpdateStorageItemArticleRequestContract>) _services.GetService(typeof(ILogger<IUpdateStorageItemArticleRequestContract>));
 
-            return await new ConvertedUpdateStorageItemArticleOnHttpContext(
-                        new LoggedUpdateStorageItemArticleRequest(logger,  
+            return await new CanonicalizedUpdateStorageItemArticleRequest(
+                        new LoggedPipeNode<IUpdateStorageItemArticleRequestContract, IUpdateStorageItemArticleResultContract>(logger,  
                             new ValidatedUpdateStorageItemArticleRequest(
                                 new UpdateStorageItemArticleUseCase(bus)))).Ask(body);
         }
@@ -120,10 +122,10 @@ namespace Nano35.Storage.Api.Controllers
             [FromBody] UpdateStorageItemCommentHttpBody body)
         {
             var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedUpdateStorageItemCommentRequest>) _services.GetService(typeof(ILogger<LoggedUpdateStorageItemCommentRequest>));
+            var logger = (ILogger<IUpdateStorageItemCommentRequestContract>) _services.GetService(typeof(ILogger<IUpdateStorageItemCommentRequestContract>));
 
-            return await new ConvertedUpdateStorageItemCommentOnHttpContext(
-                        new LoggedUpdateStorageItemCommentRequest(logger,  
+            return await new CanonicalizedUpdateStorageItemCommentRequest(
+                        new LoggedPipeNode<IUpdateStorageItemCommentRequestContract, IUpdateStorageItemCommentResultContract>(logger,  
                             new ValidatedUpdateStorageItemCommentRequest(
                                 new UpdateStorageItemCommentUseCase(bus)))).Ask(body);
         }
@@ -137,10 +139,10 @@ namespace Nano35.Storage.Api.Controllers
             [FromBody] UpdateStorageItemConditionHttpBody body)
         {
             var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedUpdateStorageItemConditionRequest>) _services.GetService(typeof(ILogger<LoggedUpdateStorageItemConditionRequest>));
+            var logger = (ILogger<IUpdateStorageItemConditionRequestContract>) _services.GetService(typeof(ILogger<IUpdateStorageItemConditionRequestContract>));
 
-            return await new ConvertedUpdateStorageItemConditionOnHttpContext(
-                        new LoggedUpdateStorageItemConditionRequest(logger,  
+            return await new CanonicalizedUpdateStorageItemConditionRequest(
+                        new LoggedPipeNode<IUpdateStorageItemConditionRequestContract, IUpdateStorageItemConditionResultContract>(logger,  
                             new ValidatedUpdateStorageItemConditionRequest(
                                 new UpdateStorageItemConditionUseCase(bus)))).Ask(body);
         }
@@ -154,10 +156,10 @@ namespace Nano35.Storage.Api.Controllers
             [FromBody] UpdateStorageItemHiddenCommentHttpBody body)
         {
             var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedUpdateStorageItemHiddenCommentRequest>) _services.GetService(typeof(ILogger<LoggedUpdateStorageItemHiddenCommentRequest>));
+            var logger = (ILogger<IUpdateStorageItemHiddenCommentRequestContract>) _services.GetService(typeof(ILogger<IUpdateStorageItemHiddenCommentRequestContract>));
 
-            return await new ConvertedUpdateStorageItemHiddenCommentOnHttpContext(
-                        new LoggedUpdateStorageItemHiddenCommentRequest(logger,  
+            return await new CanonicalizedUpdateStorageItemHiddenCommentRequest(
+                        new LoggedPipeNode<IUpdateStorageItemHiddenCommentRequestContract, IUpdateStorageItemHiddenCommentResultContract>(logger,  
                             new ValidatedUpdateStorageItemHiddenCommentRequest(
                                 new UpdateStorageItemHiddenCommentUseCase(bus)))).Ask(body);
         }
@@ -171,10 +173,10 @@ namespace Nano35.Storage.Api.Controllers
             [FromBody] UpdateStorageItemPurchasePriceHttpBody body)
         {
             var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedUpdateStorageItemPurchasePriceRequest>) _services.GetService(typeof(ILogger<LoggedUpdateStorageItemPurchasePriceRequest>));
+            var logger = (ILogger<IUpdateStorageItemPurchasePriceRequestContract>) _services.GetService(typeof(ILogger<IUpdateStorageItemPurchasePriceRequestContract>));
 
-            return await new ConvertedUpdateStorageItemPurchasePriceOnHttpContext(
-                        new LoggedUpdateStorageItemPurchasePriceRequest(logger,  
+            return await new CanonicalizedUpdateStorageItemPurchasePriceRequest(
+                        new LoggedPipeNode<IUpdateStorageItemPurchasePriceRequestContract, IUpdateStorageItemPurchasePriceResultContract>(logger,  
                             new ValidatedUpdateStorageItemPurchasePriceRequest(
                                 new UpdateStorageItemPurchasePriceUseCase(bus)))).Ask(body);
         }
@@ -188,10 +190,10 @@ namespace Nano35.Storage.Api.Controllers
             [FromBody] UpdateStorageItemRetailPriceHttpBody body)
         {
             var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedUpdateStorageItemRetailPriceRequest>) _services.GetService(typeof(ILogger<LoggedUpdateStorageItemRetailPriceRequest>));
+            var logger = (ILogger<IUpdateStorageItemRetailPriceRequestContract>) _services.GetService(typeof(ILogger<IUpdateStorageItemRetailPriceRequestContract>));
 
-            return await new ConvertedUpdateStorageItemRetailPriceOnHttpContext(
-                        new LoggedUpdateStorageItemRetailPriceRequest(logger,  
+            return await new CanonicalizedUpdateStorageItemRetailPriceRequest(
+                        new LoggedPipeNode<IUpdateStorageItemRetailPriceRequestContract, IUpdateStorageItemRetailPriceResultContract>(logger,  
                             new ValidatedUpdateStorageItemRetailPriceRequest(
                                 new UpdateStorageItemRetailPriceUseCase(bus)))).Ask(body);
         }

@@ -4,38 +4,18 @@ using Nano35.Contracts.Storage.Artifacts;
 
 namespace Nano35.Storage.Processor.UseCases.UpdateArticleModel
 {
-    public class UpdateArticleModelValidatorErrorResult : 
-        IUpdateArticleModelErrorResultContract
-    {
-        public string Message { get; set; }
-    }
-    
     public class ValidatedUpdateArticleModelRequest:
-        IPipelineNode<
-            IUpdateArticleModelRequestContract,
-            IUpdateArticleModelResultContract>
+        PipeNodeBase<IUpdateArticleModelRequestContract, IUpdateArticleModelResultContract>
     {
-        private readonly IPipelineNode<
-            IUpdateArticleModelRequestContract, 
-            IUpdateArticleModelResultContract> _nextNode;
-
         public ValidatedUpdateArticleModelRequest(
-            IPipelineNode<
-                IUpdateArticleModelRequestContract,
-                IUpdateArticleModelResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IUpdateArticleModelRequestContract, IUpdateArticleModelResultContract> next) :
+            base(next) { }
 
-        public async Task<IUpdateArticleModelResultContract> Ask(
+        public override async Task<IUpdateArticleModelResultContract> Ask(
             IUpdateArticleModelRequestContract input,
             CancellationToken cancellationToken)
         {
-            if (false)
-            {
-                return new UpdateArticleModelValidatorErrorResult() {Message = "Ошибка валидации"};
-            }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

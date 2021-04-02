@@ -9,9 +9,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.GetAllArticleModels
 {
     public class GetAllArticlesModelsRequest :
-        IPipelineNode<
-            IGetAllArticlesModelsRequestContract,
-            IGetAllArticlesModelsResultContract>
+        EndPointNodeBase<IGetAllArticlesModelsRequestContract, IGetAllArticlesModelsResultContract>
     {
         private readonly ApplicationContext _context;
 
@@ -21,13 +19,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllArticleModels
             _context = context;
         }
         
-        private class GetAllArticlesModelsSuccessResultContract : 
-            IGetAllArticlesModelsSuccessResultContract
-        {
-            public List<string> Data { get; set; }
-        }
-        
-        public async Task<IGetAllArticlesModelsResultContract> Ask
+        public override async Task<IGetAllArticlesModelsResultContract> Ask
             (IGetAllArticlesModelsRequestContract input, CancellationToken cancellationToken)
         {
             var result = await _context

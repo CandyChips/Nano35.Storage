@@ -3,12 +3,6 @@ using Nano35.Contracts.Storage.Artifacts;
 
 namespace Nano35.Storage.Api.Requests.GetAllCancellations
 {
-    public class GetAllCancellationsValidatorErrorResult : 
-        IGetAllCancellationsErrorResultContract
-    {
-        public string Message { get; set; }
-    }
-    
     public class ValidatedGetAllCancellationsRequest:
         PipeNodeBase<IGetAllCancellationsRequestContract, IGetAllCancellationsResultContract>
     {

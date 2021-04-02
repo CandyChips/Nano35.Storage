@@ -4,38 +4,18 @@ using Nano35.Contracts.Storage.Artifacts;
 
 namespace Nano35.Storage.Processor.UseCases.GetAllPlacesOfStorageItemOnInstance
 {
-    public class GetAllPlacesOfStorageItemOnInstanceValidatorErrorResult :
-        IGetAllPlacesOfStorageItemOnInstanceErrorResultContract
-    {
-        public string Message { get; set; }
-    }
-    
     public class ValidatedGetAllPlacesOfStorageItemOnInstanceRequest:
-        IPipelineNode<
-            IGetAllPlacesOfStorageItemOnInstanceContract, 
-            IGetAllPlacesOfStorageItemOnInstanceResultContract>
+        PipeNodeBase<IGetAllPlacesOfStorageItemOnInstanceContract, IGetAllPlacesOfStorageItemOnInstanceResultContract>
     {
-        private readonly IPipelineNode<
-            IGetAllPlacesOfStorageItemOnInstanceContract, 
-            IGetAllPlacesOfStorageItemOnInstanceResultContract> _nextNode;
-
         public ValidatedGetAllPlacesOfStorageItemOnInstanceRequest(
-            IPipelineNode<
-                IGetAllPlacesOfStorageItemOnInstanceContract,
-                IGetAllPlacesOfStorageItemOnInstanceResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IGetAllPlacesOfStorageItemOnInstanceContract, IGetAllPlacesOfStorageItemOnInstanceResultContract> next) :
+            base(next) { }
 
-        public async Task<IGetAllPlacesOfStorageItemOnInstanceResultContract> Ask(
+        public override async Task<IGetAllPlacesOfStorageItemOnInstanceResultContract> Ask(
             IGetAllPlacesOfStorageItemOnInstanceContract input,
             CancellationToken cancellationToken)
         {
-            if (false)
-            {
-                return new GetAllPlacesOfStorageItemOnInstanceValidatorErrorResult() {Message = "Ошибка валидации"};
-            }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

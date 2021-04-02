@@ -7,9 +7,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.UpdateStorageItemArticle
 {
     public class UpdateStorageItemArticleRequest :
-        IPipelineNode<
-            IUpdateStorageItemArticleRequestContract, 
-            IUpdateStorageItemArticleResultContract>
+        EndPointNodeBase<IUpdateStorageItemArticleRequestContract, IUpdateStorageItemArticleResultContract>
     {
         private readonly ApplicationContext _context;
 
@@ -19,13 +17,7 @@ namespace Nano35.Storage.Processor.UseCases.UpdateStorageItemArticle
             _context = context;
         }
         
-        private class UpdateStorageItemArticleSuccessResultContract : 
-            IUpdateStorageItemArticleSuccessResultContract
-        {
-            
-        }
-        
-        public async Task<IUpdateStorageItemArticleResultContract> Ask(
+        public override async Task<IUpdateStorageItemArticleResultContract> Ask(
             IUpdateStorageItemArticleRequestContract input,
             CancellationToken cancellationToken)
         {

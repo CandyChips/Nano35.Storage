@@ -21,23 +21,13 @@ namespace Nano35.Storage.Processor.UseCases.CreateCancellation
         public async Task Consume(
             ConsumeContext<ICreateCancellationRequestContract> context)
         {
-            // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<LoggedCreateCancellatioRequest>) _services
-                .GetService(typeof(ILogger<LoggedCreateCancellatioRequest>));
-
-            // Explore message of request
+            var logger = (ILogger<ICreateCancellationRequestContract>) _services.GetService(typeof(ILogger<ICreateCancellationRequestContract>));
             var message = context.Message;
-
-            // Send request to pipeline
-            var result =
-                await new LoggedCreateCancellatioRequest(logger,
+            var result = await new LoggedPipeNode<ICreateCancellationRequestContract, ICreateCancellationResultContract>(logger,
                     new ValidatedCreateCancellationRequest(
-                        new TransactedCreateCancellationRequest(dbContext,
-                            new CreateCancellationRequest(dbContext)))
-                ).Ask(message, context.CancellationToken);
-            
-            // Check response of create article request
+                        new TransactedPipeNode<ICreateCancellationRequestContract, ICreateCancellationResultContract>(dbContext,
+                            new CreateCancellationRequest(dbContext)))).Ask(message, context.CancellationToken);
             switch (result)
             {
                 case ICreateCancellationSuccessResultContract:

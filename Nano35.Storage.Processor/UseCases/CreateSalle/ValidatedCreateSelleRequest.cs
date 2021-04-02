@@ -4,38 +4,18 @@ using Nano35.Contracts.Storage.Artifacts;
 
 namespace Nano35.Storage.Processor.UseCases.CreateSalle
 {
-    public class CreateSelleValidatorErrorResult : 
-        ICreateSelleErrorResultContract
-    {
-        public string Message { get; set; }
-    }
-    
     public class ValidatedCreateSelleRequest:
-        IPipelineNode<
-            ICreateSelleRequestContract,
-            ICreateSelleResultContract>
+        PipeNodeBase<ICreateSelleRequestContract, ICreateSelleResultContract>
     {
-        private readonly IPipelineNode<
-            ICreateSelleRequestContract, 
-            ICreateSelleResultContract> _nextNode;
-
         public ValidatedCreateSelleRequest(
-            IPipelineNode<
-                ICreateSelleRequestContract,
-                ICreateSelleResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<ICreateSelleRequestContract, ICreateSelleResultContract> next) :
+            base(next) { }
 
-        public async Task<ICreateSelleResultContract> Ask(
+        public override async Task<ICreateSelleResultContract> Ask(
             ICreateSelleRequestContract input,
             CancellationToken cancellationToken)
         {
-            if (false)
-            {
-                return new CreateSelleValidatorErrorResult() {Message = "Ошибка валидации"};
-            }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

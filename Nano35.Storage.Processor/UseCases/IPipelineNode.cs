@@ -7,11 +7,6 @@ using Nano35.Contracts.Instance.Artifacts;
 
 namespace Nano35.Storage.Processor.UseCases
 {
-    public interface IPipelineNode<TIn, TOut>
-    {
-        Task<TOut> Ask(TIn input, CancellationToken cancellationToken);
-    }
-
     // Contract request reduction
     // TMessage -> TResponse => ( TSuccess / TError )
     public abstract class MasstransitRequest<TMessage, TResponse, TSuccess, TError> 
@@ -38,6 +33,11 @@ namespace Nano35.Storage.Processor.UseCases
                 return errorResponse.Message;
             throw new Exception();
         }
+    }
+    
+    public interface IPipeNode<in TIn, TOut>
+    {
+        Task<TOut> Ask(TIn input, CancellationToken cancellationToken);
     }
 
     public class GetClientStringById : 

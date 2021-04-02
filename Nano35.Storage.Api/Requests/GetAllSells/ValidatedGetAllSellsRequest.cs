@@ -3,12 +3,6 @@ using Nano35.Contracts.Storage.Artifacts;
 
 namespace Nano35.Storage.Api.Requests.GetAllSells
 {
-    public class GetAllSellsValidatorErrorResult : 
-        IGetAllSellsErrorResultContract
-    {
-        public string Message { get; set; }
-    }
-    
     public class ValidatedGetAllSellsRequest:
         PipeNodeBase<IGetAllSellsRequestContract, IGetAllSellsResultContract>
     {

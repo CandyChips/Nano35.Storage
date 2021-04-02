@@ -10,9 +10,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.GetAllCancellationDetails
 {
     public class GetAllCancellationDetailsRequest :
-        IPipelineNode<
-            IGetAllCancellationDetailsRequestContract,
-            IGetAllCancellationDetailsResultContract>
+        EndPointNodeBase<IGetAllCancellationDetailsRequestContract, IGetAllCancellationDetailsResultContract>
     {
         private readonly ApplicationContext _context;
 
@@ -22,7 +20,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllCancellationDetails
             _context = context;
         }
         
-        public async Task<IGetAllCancellationDetailsResultContract> Ask(
+        public override async Task<IGetAllCancellationDetailsResultContract> Ask(
             IGetAllCancellationDetailsRequestContract input, 
             CancellationToken cancellationToken)
         {

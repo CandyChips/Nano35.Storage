@@ -21,22 +21,13 @@ namespace Nano35.Storage.Processor.UseCases.GetStorageItemById
         public async Task Consume(
             ConsumeContext<IGetStorageItemByIdRequestContract> context)
         {
-            // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<LoggedGetStorageItemByIdRequest>) _services
-                .GetService(typeof(ILogger<LoggedGetStorageItemByIdRequest>));
-
-            // Explore message of request
+            var logger = (ILogger<IGetStorageItemByIdRequestContract>) _services.GetService(typeof(ILogger<IGetStorageItemByIdRequestContract>));
             var message = context.Message;
-
-            // Send request to pipeline
             var result =
-                await new LoggedGetStorageItemByIdRequest(logger,
+                await new LoggedPipeNode<IGetStorageItemByIdRequestContract, IGetStorageItemByIdResultContract>(logger,
                     new ValidatedGetStorageItemByIdRequest(
-                        new GetStorageItemByIdRequest(dbContext))
-                ).Ask(message, context.CancellationToken);
-            
-            // Check response of create article request
+                        new GetStorageItemByIdRequest(dbContext))).Ask(message, context.CancellationToken);
             switch (result)
             {
                 case IGetStorageItemByIdSuccessResultContract:

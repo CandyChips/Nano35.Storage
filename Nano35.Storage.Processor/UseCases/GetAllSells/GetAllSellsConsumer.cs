@@ -24,15 +24,14 @@ namespace Nano35.Storage.Processor.UseCases.GetAllSells
             // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
             var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetAllSellsRequest>) _services
-                .GetService(typeof(ILogger<LoggedGetAllSellsRequest>));
+            var logger = (ILogger<IGetAllSellsRequestContract>) _services.GetService(typeof(ILogger<IGetAllSellsRequestContract>));
 
             // Explore message of request
             var message = context.Message;
 
             // Send request to pipeline
             var result =
-                await new LoggedGetAllSellsRequest(logger,
+                await new LoggedPipeNode<IGetAllSellsRequestContract, IGetAllSellsResultContract>(logger,
                     new ValidatedGetAllSellsRequest(
                         new GetAllSellsRequest(dbContext, bus))
                 ).Ask(message, context.CancellationToken);

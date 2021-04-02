@@ -14,9 +14,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.GetAllSells
 {
     public class GetAllSellsRequest :
-        IPipelineNode<
-            IGetAllSellsRequestContract,
-            IGetAllSellsResultContract>
+        EndPointNodeBase<IGetAllSellsRequestContract, IGetAllSellsResultContract>
     {
         private readonly ApplicationContext _context;
         private readonly IBus _bus;
@@ -28,14 +26,8 @@ namespace Nano35.Storage.Processor.UseCases.GetAllSells
             _context = context;
             _bus = bus;
         }
-        
-        private class GetAllSellsSuccessResultContract : 
-            IGetAllSellsSuccessResultContract
-        {
-            public List<SelleViewModel> Data { get; set; }
-        }
 
-        public async Task<IGetAllSellsResultContract> Ask
+        public override async Task<IGetAllSellsResultContract> Ask
             (IGetAllSellsRequestContract input, CancellationToken cancellationToken)
         {
             var queue = await _context

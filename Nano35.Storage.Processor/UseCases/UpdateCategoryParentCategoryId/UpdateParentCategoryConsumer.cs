@@ -21,21 +21,14 @@ namespace Nano35.Storage.Processor.UseCases.UpdateCategoryParentCategoryId
         public async Task Consume(
             ConsumeContext<IUpdateCategoryParentCategoryIdRequestContract> context)
         {
-            // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<LoggedUpdateCategoryParentCategoryIdRequest>) _services.GetService(typeof(ILogger<LoggedUpdateCategoryParentCategoryIdRequest>));
-
-            // Explore message of request
+            var logger = (ILogger<IUpdateCategoryParentCategoryIdRequestContract>) _services.GetService(typeof(ILogger<IUpdateCategoryParentCategoryIdRequestContract>));
             var message = context.Message;
-
-            // Send request to pipeline
             var result =
-                await new LoggedUpdateCategoryParentCategoryIdRequest(logger,
+                await new LoggedPipeNode<IUpdateCategoryParentCategoryIdRequestContract, IUpdateCategoryParentCategoryIdResultContract>(logger,
                     new ValidatedUpdateCategoryParentCategoryIdRequest(
-                        new UpdateCategoryParentCategoryIdRequest(dbContext))
-                ).Ask(message, context.CancellationToken);
-            
-            // Check response of create article request
+                        new TransactedPipeNode<IUpdateCategoryParentCategoryIdRequestContract, IUpdateCategoryParentCategoryIdResultContract>(dbContext, 
+                            new UpdateCategoryParentCategoryIdRequest(dbContext)))).Ask(message, context.CancellationToken);
             switch (result)
             {
                 case IUpdateCategoryParentCategoryIdSuccessResultContract:

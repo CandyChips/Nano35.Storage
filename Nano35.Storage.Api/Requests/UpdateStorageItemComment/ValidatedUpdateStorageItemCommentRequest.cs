@@ -3,12 +3,6 @@ using Nano35.Contracts.Storage.Artifacts;
 
 namespace Nano35.Storage.Api.Requests.UpdateStorageItemComment
 {
-    public class UpdateStorageItemCommentValidatorErrorResult : 
-        IUpdateStorageItemCommentErrorResultContract
-    {
-        public string Message { get; set; }
-    }
-    
     public class ValidatedUpdateStorageItemCommentRequest:
         PipeNodeBase<IUpdateStorageItemCommentRequestContract, IUpdateStorageItemCommentResultContract>
     {

@@ -4,38 +4,18 @@ using Nano35.Contracts.Storage.Artifacts;
 
 namespace Nano35.Storage.Processor.UseCases.GetAllComings
 {
-    public class GetAllComingsValidatorErrorResult :
-        IGetAllComingsErrorResultContract
-    {
-        public string Message { get; set; }
-    }
-    
     public class ValidatedGetAllComingsRequest:
-        IPipelineNode<
-            IGetAllComingsRequestContract, 
-            IGetAllComingsResultContract>
+        PipeNodeBase<IGetAllComingsRequestContract, IGetAllComingsResultContract>
     {
-        private readonly IPipelineNode<
-            IGetAllComingsRequestContract, 
-            IGetAllComingsResultContract> _nextNode;
-
         public ValidatedGetAllComingsRequest(
-            IPipelineNode<
-                IGetAllComingsRequestContract,
-                IGetAllComingsResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IGetAllComingsRequestContract, IGetAllComingsResultContract> next) :
+            base(next) { }
 
-        public async Task<IGetAllComingsResultContract> Ask(
+        public override async Task<IGetAllComingsResultContract> Ask(
             IGetAllComingsRequestContract input,
             CancellationToken cancellationToken)
         {
-            if (false)
-            {
-                return new GetAllComingsValidatorErrorResult() {Message = "Ошибка валидации"};
-            }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

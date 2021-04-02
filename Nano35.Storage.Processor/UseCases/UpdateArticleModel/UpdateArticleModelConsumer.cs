@@ -21,22 +21,15 @@ namespace Nano35.Storage.Processor.UseCases.UpdateArticleModel
         public async Task Consume(
             ConsumeContext<IUpdateArticleModelRequestContract> context)
         {
-            // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<LoggedUpdateArticleModelRequest>) _services
-                .GetService(typeof(ILogger<LoggedUpdateArticleModelRequest>));
-
-            // Explore message of request
+            var logger = (ILogger<IUpdateArticleModelRequestContract>) _services
+                .GetService(typeof(ILogger<IUpdateArticleModelRequestContract>));
             var message = context.Message;
-
-            // Send request to pipeline
             var result =
-                await new LoggedUpdateArticleModelRequest(logger,
+                await new LoggedPipeNode<IUpdateArticleModelRequestContract, IUpdateArticleModelResultContract>(logger,
                     new ValidatedUpdateArticleModelRequest(
-                        new UpdateArticleModelRequest(dbContext))
-                ).Ask(message, context.CancellationToken);
-            
-            // Check response of create article request
+                        new TransactedPipeNode<IUpdateArticleModelRequestContract, IUpdateArticleModelResultContract>(dbContext, 
+                            new UpdateArticleModelRequest(dbContext)))).Ask(message, context.CancellationToken);
             switch (result)
             {
                 case IUpdateArticleModelSuccessResultContract:

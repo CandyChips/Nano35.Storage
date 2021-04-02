@@ -3,12 +3,6 @@ using Nano35.Contracts.Storage.Artifacts;
 
 namespace Nano35.Storage.Api.Requests.GetAllMoveDetails
 {
-    public class GetAllMoveDetailsValidatorErrorResult : 
-        IGetAllMoveDetailsErrorResultContract
-    {
-        public string Message { get; set; }
-    }
-    
     public class ValidatedGetAllMoveDetailsRequest:
         PipeNodeBase<IGetAllMoveDetailsRequestContract, IGetAllMoveDetailsResultContract>
     {
@@ -19,10 +13,6 @@ namespace Nano35.Storage.Api.Requests.GetAllMoveDetails
         public override async Task<IGetAllMoveDetailsResultContract> Ask(
             IGetAllMoveDetailsRequestContract input)
         {
-            if (false)
-            {
-                return new GetAllMoveDetailsValidatorErrorResult() {Message = "Ошибка валидации"};
-            }
             return await DoNext(input);
         }
     }

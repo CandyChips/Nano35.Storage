@@ -9,14 +9,14 @@ using Nano35.Contracts.Storage.Models;
 
 namespace Nano35.Storage.Api.Requests.UpdateStorageItemComment
 {
-    public class ConvertedUpdateStorageItemCommentOnHttpContext : 
+    public class CanonicalizedUpdateStorageItemCommentRequest : 
         PipeInConvert
         <UpdateStorageItemCommentHttpBody, 
             IActionResult,
             IUpdateStorageItemCommentRequestContract, 
             IUpdateStorageItemCommentResultContract>
     {
-        public ConvertedUpdateStorageItemCommentOnHttpContext(
+        public CanonicalizedUpdateStorageItemCommentRequest(
             IPipeNode<IUpdateStorageItemCommentRequestContract, IUpdateStorageItemCommentResultContract> next) :
             base(next) {}
 

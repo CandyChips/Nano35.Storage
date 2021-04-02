@@ -10,9 +10,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.CreateSalle
 {
     public class CreateSelleRequest :
-        IPipelineNode<
-            ICreateSelleRequestContract, 
-            ICreateSelleResultContract>
+        EndPointNodeBase<ICreateSelleRequestContract, ICreateSelleResultContract>
     {
         private readonly ApplicationContext _context;
 
@@ -22,13 +20,7 @@ namespace Nano35.Storage.Processor.UseCases.CreateSalle
             _context = context;
         }
         
-        private class CreateSelleSuccessResultContract : 
-            ICreateSelleSuccessResultContract
-        {
-            
-        }
-        
-        public async Task<ICreateSelleResultContract> Ask(
+        public override async Task<ICreateSelleResultContract> Ask(
             ICreateSelleRequestContract input,
             CancellationToken cancellationToken)
         {

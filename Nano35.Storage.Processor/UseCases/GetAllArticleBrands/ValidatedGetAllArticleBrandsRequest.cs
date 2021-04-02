@@ -4,38 +4,18 @@ using Nano35.Contracts.Storage.Artifacts;
 
 namespace Nano35.Storage.Processor.UseCases.GetAllArticleBrands
 {
-    public class GetAllArticlesBrandsValidatorErrorResult :
-        IGetAllArticlesBrandsErrorResultContract
-    {
-        public string Message { get; set; }
-    }
-    
     public class ValidatedGetAllArticlesBrandsRequest:
-        IPipelineNode<
-            IGetAllArticlesBrandsRequestContract, 
-            IGetAllArticlesBrandsResultContract>
+        PipeNodeBase<IGetAllArticlesBrandsRequestContract, IGetAllArticlesBrandsResultContract>
     {
-        private readonly IPipelineNode<
-            IGetAllArticlesBrandsRequestContract, 
-            IGetAllArticlesBrandsResultContract> _nextNode;
-
         public ValidatedGetAllArticlesBrandsRequest(
-            IPipelineNode<
-                IGetAllArticlesBrandsRequestContract,
-                IGetAllArticlesBrandsResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IGetAllArticlesBrandsRequestContract, IGetAllArticlesBrandsResultContract> next) :
+            base(next) { }
 
-        public async Task<IGetAllArticlesBrandsResultContract> Ask(
+        public override async Task<IGetAllArticlesBrandsResultContract> Ask(
             IGetAllArticlesBrandsRequestContract input,
             CancellationToken cancellationToken)
         {
-            if (false)
-            {
-                return new GetAllArticlesBrandsValidatorErrorResult() {Message = "Ошибка валидации"};
-            }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

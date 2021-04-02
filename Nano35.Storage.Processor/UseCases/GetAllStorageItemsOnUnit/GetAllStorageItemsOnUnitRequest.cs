@@ -14,9 +14,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemsOnUnit
 {
     public class GetAllStorageItemsOnUnitRequest :
-        IPipelineNode<
-            IGetAllStorageItemsOnUnitContract,
-            IGetAllStorageItemsOnUnitResultContract>
+        EndPointNodeBase<IGetAllStorageItemsOnUnitContract, IGetAllStorageItemsOnUnitResultContract>
     {
         private readonly ApplicationContext _context;
         private readonly IBus _bus;
@@ -28,7 +26,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemsOnUnit
             _bus = bus;
         }
         
-        public async Task<IGetAllStorageItemsOnUnitResultContract> Ask
+        public override async Task<IGetAllStorageItemsOnUnitResultContract> Ask
             (IGetAllStorageItemsOnUnitContract input, 
             CancellationToken cancellationToken)
         {

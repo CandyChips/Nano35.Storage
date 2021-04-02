@@ -3,12 +3,6 @@ using Nano35.Contracts.Storage.Artifacts;
 
 namespace Nano35.Storage.Api.Requests.CreateMove
 {
-    public class CreateMoveValidatorErrorResult : 
-        ICreateMoveErrorResultContract
-    {
-        public string Message { get; set; }
-    }
-    
     public class ValidatedCreateMoveRequest:
         PipeNodeBase<ICreateMoveRequestContract, ICreateMoveResultContract>
     {
@@ -19,10 +13,6 @@ namespace Nano35.Storage.Api.Requests.CreateMove
         public override async Task<ICreateMoveResultContract> Ask(
             ICreateMoveRequestContract input)
         {
-            if (false)
-            {
-                return new CreateMoveValidatorErrorResult() {Message = "Ошибка валидации"};
-            }
             return await DoNext(input);
         }
     }

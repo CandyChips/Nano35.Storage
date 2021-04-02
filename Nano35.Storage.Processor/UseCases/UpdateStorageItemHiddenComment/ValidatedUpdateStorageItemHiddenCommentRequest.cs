@@ -4,38 +4,18 @@ using Nano35.Contracts.Storage.Artifacts;
 
 namespace Nano35.Storage.Processor.UseCases.UpdateStorageItemHiddenComment
 {
-    public class UpdateStorageItemHiddenCommentValidatorErrorResult : 
-        IUpdateStorageItemHiddenCommentErrorResultContract
-    {
-        public string Message { get; set; }
-    }
-    
     public class ValidatedUpdateStorageItemHiddenCommentRequest:
-        IPipelineNode<
-            IUpdateStorageItemHiddenCommentRequestContract,
-            IUpdateStorageItemHiddenCommentResultContract>
+        PipeNodeBase<IUpdateStorageItemHiddenCommentRequestContract, IUpdateStorageItemHiddenCommentResultContract>
     {
-        private readonly IPipelineNode<
-            IUpdateStorageItemHiddenCommentRequestContract, 
-            IUpdateStorageItemHiddenCommentResultContract> _nextNode;
-
         public ValidatedUpdateStorageItemHiddenCommentRequest(
-            IPipelineNode<
-                IUpdateStorageItemHiddenCommentRequestContract,
-                IUpdateStorageItemHiddenCommentResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IUpdateStorageItemHiddenCommentRequestContract, IUpdateStorageItemHiddenCommentResultContract> next) :
+            base(next) { }
 
-        public async Task<IUpdateStorageItemHiddenCommentResultContract> Ask(
+        public override async Task<IUpdateStorageItemHiddenCommentResultContract> Ask(
             IUpdateStorageItemHiddenCommentRequestContract input,
             CancellationToken cancellationToken)
         {
-            if (false)
-            {
-                return new UpdateStorageItemHiddenCommentValidatorErrorResult() {Message = "Ошибка валидации"};
-            }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

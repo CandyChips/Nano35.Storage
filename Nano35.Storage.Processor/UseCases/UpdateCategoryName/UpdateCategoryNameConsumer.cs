@@ -21,21 +21,14 @@ namespace Nano35.Storage.Processor.UseCases.UpdateCategoryName
         public async Task Consume(
             ConsumeContext<IUpdateCategoryNameRequestContract> context)
         {
-            // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<LoggedUpdateCategoryNameRequest>) _services.GetService(typeof(ILogger<LoggedUpdateCategoryNameRequest>));
-
-            // Explore message of request
+            var logger = (ILogger<IUpdateCategoryNameRequestContract>) _services.GetService(typeof(ILogger<IUpdateCategoryNameRequestContract>));
             var message = context.Message;
-
-            // Send request to pipeline
             var result =
-                await new LoggedUpdateCategoryNameRequest(logger,
+                await new LoggedPipeNode<IUpdateCategoryNameRequestContract, IUpdateCategoryNameResultContract>(logger,
                     new ValidatedUpdateCategoryNameRequest(
-                        new UpdateCategoryNameRequest(dbContext))
-                ).Ask(message, context.CancellationToken);
-            
-            // Check response of create article request
+                        new TransactedPipeNode<IUpdateCategoryNameRequestContract, IUpdateCategoryNameResultContract>(dbContext, 
+                            new UpdateCategoryNameRequest(dbContext)))).Ask(message, context.CancellationToken);
             switch (result)
             {
                 case IUpdateCategoryNameSuccessResultContract:

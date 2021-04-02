@@ -3,12 +3,6 @@ using Nano35.Contracts.Storage.Artifacts;
 
 namespace Nano35.Storage.Api.Requests.UpdateStorageItemCondition
 {
-    public class UpdateStorageItemConditionValidatorErrorResult : 
-        IUpdateStorageItemConditionErrorResultContract
-    {
-        public string Message { get; set; }
-    }
-    
     public class ValidatedUpdateStorageItemConditionRequest:
         PipeNodeBase<IUpdateStorageItemConditionRequestContract, IUpdateStorageItemConditionResultContract>
     {

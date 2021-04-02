@@ -10,9 +10,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.CreateCancellation
 {
     public class CreateCancellationRequest :
-        IPipelineNode<
-            ICreateCancellationRequestContract, 
-            ICreateCancellationResultContract>
+        EndPointNodeBase<ICreateCancellationRequestContract, ICreateCancellationResultContract>
     {
         private readonly ApplicationContext _context;
 
@@ -22,13 +20,7 @@ namespace Nano35.Storage.Processor.UseCases.CreateCancellation
             _context = context;
         }
         
-        private class CreateCancellationSuccessResultContract : 
-            ICreateCancellationSuccessResultContract
-        {
-            
-        }
-        
-        public async Task<ICreateCancellationResultContract> Ask(
+        public override async Task<ICreateCancellationResultContract> Ask(
             ICreateCancellationRequestContract input,
             CancellationToken cancellationToken)
         {

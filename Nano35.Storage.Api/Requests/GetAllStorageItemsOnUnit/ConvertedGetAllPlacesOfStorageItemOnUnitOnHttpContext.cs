@@ -9,14 +9,14 @@ using Nano35.Contracts.Storage.Models;
 
 namespace Nano35.Storage.Api.Requests.GetAllStorageItemsOnInstance
 {
-    public class ConvertedGetAllStorageItemsOnUnitOnHttpContext : 
+    public class CanonicalizedGetAllStorageItemsOnUnitRequest : 
         PipeInConvert
         <GetAllStorageItemsOnUnitHttpQuery, 
             IActionResult,
             IGetAllStorageItemsOnUnitContract, 
             IGetAllStorageItemsOnUnitResultContract>
     {
-        public ConvertedGetAllStorageItemsOnUnitOnHttpContext(
+        public CanonicalizedGetAllStorageItemsOnUnitRequest(
             IPipeNode<IGetAllStorageItemsOnUnitContract, IGetAllStorageItemsOnUnitResultContract> next) :
             base(next) {}
 

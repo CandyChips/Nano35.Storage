@@ -21,22 +21,13 @@ namespace Nano35.Storage.Processor.UseCases.GetArticleById
         public async Task Consume(
             ConsumeContext<IGetArticleByIdRequestContract> context)
         {
-            // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<LoggedGetArticleByIdRequest>) _services
-                .GetService(typeof(ILogger<LoggedGetArticleByIdRequest>));
-
-            // Explore message of request
+            var logger = (ILogger<IGetArticleByIdRequestContract>) _services.GetService(typeof(ILogger<IGetArticleByIdRequestContract>));
             var message = context.Message;
-
-            // Send request to pipeline
             var result =
-                await new LoggedGetArticleByIdRequest(logger,
+                await new LoggedPipeNode<IGetArticleByIdRequestContract, IGetArticleByIdResultContract>(logger,
                     new ValidatedGetArticleByIdRequest(
-                        new GetArticleByIdRequest(dbContext))
-                ).Ask(message, context.CancellationToken);
-            
-            // Check response of create article request
+                        new GetArticleByIdRequest(dbContext))).Ask(message, context.CancellationToken);
             switch (result)
             {
                 case IGetArticleByIdSuccessResultContract:

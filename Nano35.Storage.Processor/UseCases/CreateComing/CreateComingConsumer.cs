@@ -21,23 +21,13 @@ namespace Nano35.Storage.Processor.UseCases.CreateComing
         public async Task Consume(
             ConsumeContext<ICreateComingRequestContract> context)
         {
-            // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<LoggedCreateComingRequest>) _services
-                .GetService(typeof(ILogger<LoggedCreateComingRequest>));
-
-            // Explore message of request
+            var logger = (ILogger<ICreateComingRequestContract>) _services.GetService(typeof(ILogger<ICreateComingRequestContract>));
             var message = context.Message;
-
-            // Send request to pipeline
-            var result =
-                await new LoggedCreateComingRequest(logger,
+            var result = await new LoggedPipeNode<ICreateComingRequestContract, ICreateComingResultContract>(logger,
                     new ValidatedCreateComingRequest(
-                        new TransactedCreateComingRequest(dbContext,
-                            new CreateComingRequest(dbContext)))
-                ).Ask(message, context.CancellationToken);
-            
-            // Check response of create article request
+                        new TransactedPipeNode<ICreateComingRequestContract, ICreateComingResultContract>(dbContext,
+                            new CreateComingRequest(dbContext)))).Ask(message, context.CancellationToken);
             switch (result)
             {
                 case ICreateComingSuccessResultContract:

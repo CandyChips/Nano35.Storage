@@ -13,9 +13,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.GetAllPlacesOfStorageItemOnInstance
 {
     public class GetAllPlacesOfStorageItemOnInstanceRequest :
-        IPipelineNode<
-            IGetAllPlacesOfStorageItemOnInstanceContract,
-            IGetAllPlacesOfStorageItemOnInstanceResultContract>
+        EndPointNodeBase<IGetAllPlacesOfStorageItemOnInstanceContract, IGetAllPlacesOfStorageItemOnInstanceResultContract>
     {
         private readonly ApplicationContext _context;
         private readonly IBus _bus;
@@ -28,13 +26,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllPlacesOfStorageItemOnInstance
             _bus = bus;
         }
         
-        private class GetAllPlacesOfStorageItemOnInstanceSuccessResultContract : 
-            IGetAllPlacesOfStorageItemOnInstanceSuccessResultContract
-        {
-            public List<PlaceWithStorageItemOnInstance> Contains { get; set; }
-        }
-        
-        public async Task<IGetAllPlacesOfStorageItemOnInstanceResultContract> Ask
+        public override async Task<IGetAllPlacesOfStorageItemOnInstanceResultContract> Ask
             (IGetAllPlacesOfStorageItemOnInstanceContract input, 
             CancellationToken cancellationToken)
         {

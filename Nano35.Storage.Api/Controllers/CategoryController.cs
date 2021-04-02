@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.HttpContext.instance;
 using Nano35.HttpContext.storage;
+using Nano35.Storage.Api.Requests;
 using Nano35.Storage.Api.Requests.CreateCategory;
 using Nano35.Storage.Api.Requests.GetAllArticleCategories;
 using Nano35.Storage.Api.Requests.UpdateCategoryName;
@@ -32,10 +33,10 @@ namespace Nano35.Storage.Api.Controllers
             [FromQuery] GetAllArticlesCategoriesHttpQuery query)
         {
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetAllArticlesCategoriesRequest>)_services.GetService(typeof(ILogger<LoggedGetAllArticlesCategoriesRequest>));
+            var logger = (ILogger<IGetAllArticlesCategoriesRequestContract>)_services.GetService(typeof(ILogger<IGetAllArticlesCategoriesRequestContract>));
 
-            return await new ConvertedGetAllArticleCategoriesOnHttpContext(
-                        new LoggedGetAllArticlesCategoriesRequest(logger,
+            return await new CanonicalizedGetAllArticleCategoriesRequest(
+                        new LoggedPipeNode<IGetAllArticlesCategoriesRequestContract, IGetAllArticlesCategoriesResultContract>(logger,
                             new ValidatedGetAllArticlesCategoriesRequest(
                                 new GetAllArticleCategoriesUseCase(bus)))).Ask(query);
             
@@ -50,10 +51,10 @@ namespace Nano35.Storage.Api.Controllers
             [FromBody] CreateCategoryHttpBody body)
         {
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedCreateCategoryRequest>)_services.GetService(typeof(ILogger<LoggedCreateCategoryRequest>));
+            var logger = (ILogger<ICreateCategoryRequestContract>)_services.GetService(typeof(ILogger<ICreateCategoryRequestContract>));
 
-            return await new ConvertedCreateCategoryOnHttpContext(
-                        new LoggedCreateCategoryRequest(logger,
+            return await new CanonicalizedCreateCategoryRequest(
+                        new LoggedPipeNode<ICreateCategoryRequestContract, ICreateCategoryResultContract>(logger,
                             new ValidatedCreateCategoryRequest(
                                 new CreateCategoryUseCase(bus)))).Ask(body);
         }
@@ -68,10 +69,10 @@ namespace Nano35.Storage.Api.Controllers
         {
             
             var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedUpdateCategoryNameRequest>) _services.GetService(typeof(ILogger<LoggedUpdateCategoryNameRequest>));
+            var logger = (ILogger<IUpdateCategoryNameRequestContract>) _services.GetService(typeof(ILogger<IUpdateCategoryNameRequestContract>));
 
-            return await new ConvertedUpdateCategoryNameOnHttpContext(
-                        new LoggedUpdateCategoryNameRequest(logger,  
+            return await new CanonicalizedUpdateCategoryNameRequest(
+                        new LoggedPipeNode<IUpdateCategoryNameRequestContract, IUpdateCategoryNameResultContract>(logger,  
                             new ValidatedUpdateCategoryNameRequest(
                                 new UpdateCategoryNameUseCase(bus)))).Ask(body);
         }
@@ -85,10 +86,10 @@ namespace Nano35.Storage.Api.Controllers
             [FromBody] UpdateCategoryParentCategoryHttpBody body)
         {
             var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedUpdateCategoryParentCategoryIdRequest>) _services.GetService(typeof(ILogger<LoggedUpdateCategoryParentCategoryIdRequest>));
+            var logger = (ILogger<IUpdateCategoryParentCategoryIdRequestContract>) _services.GetService(typeof(ILogger<IUpdateCategoryParentCategoryIdRequestContract>));
 
-            return await new ConvertedUpdateCategoryParentCategoryIdOnHttpContext(
-                        new LoggedUpdateCategoryParentCategoryIdRequest(logger,  
+            return await new CanonicalizedUpdateCategoryParentCategoryIdRequest(
+                        new LoggedPipeNode<IUpdateCategoryParentCategoryIdRequestContract, IUpdateCategoryParentCategoryIdResultContract>(logger,  
                             new ValidatedUpdateCategoryParentCategoryIdRequest(
                                 new UpdateCategoryParentCategoryIdUseCase(bus)))).Ask(body);
         }

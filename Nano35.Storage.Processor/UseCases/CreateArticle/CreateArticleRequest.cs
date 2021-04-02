@@ -8,9 +8,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.CreateArticle
 {
     public class CreateArticleRequest :
-        IPipelineNode<
-            ICreateArticleRequestContract,
-            ICreateArticleResultContract>
+        EndPointNodeBase<ICreateArticleRequestContract, ICreateArticleResultContract>
     {
         private readonly ApplicationContext _context;
 
@@ -20,13 +18,7 @@ namespace Nano35.Storage.Processor.UseCases.CreateArticle
             _context = context;
         }
         
-        private class CreateArticleSuccessResultContract : 
-            ICreateArticleSuccessResultContract
-        {
-            
-        }
-        
-        public async Task<ICreateArticleResultContract> Ask(
+        public override async Task<ICreateArticleResultContract> Ask(
             ICreateArticleRequestContract input,
             CancellationToken cancellationToken)
         {

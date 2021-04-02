@@ -21,22 +21,12 @@ namespace Nano35.Storage.Processor.UseCases.GetAllArticleBrands
         public async Task Consume(
             ConsumeContext<IGetAllArticlesBrandsRequestContract> context)
         {
-            // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<LoggedGetAllArticlesBrandsRequest>) _services
-                .GetService(typeof(ILogger<LoggedGetAllArticlesBrandsRequest>));
-
-            // Explore message of request
+            var logger = (ILogger<IGetAllArticlesBrandsRequestContract>) _services.GetService(typeof(ILogger<IGetAllArticlesBrandsRequestContract>));
             var message = context.Message;
-
-            // Send request to pipeline
-            var result =
-                await new LoggedGetAllArticlesBrandsRequest(logger,
+            var result = await new LoggedPipeNode<IGetAllArticlesBrandsRequestContract, IGetAllArticlesBrandsResultContract>(logger,
                     new ValidatedGetAllArticlesBrandsRequest(
-                        new GetAllArticlesBrandsRequest(dbContext))
-                ).Ask(message, context.CancellationToken);
-            
-            // Check response of create article request
+                        new GetAllArticlesBrandsRequest(dbContext))).Ask(message, context.CancellationToken);
             switch (result)
             {
                 case IGetAllArticlesBrandsSuccessResultContract:

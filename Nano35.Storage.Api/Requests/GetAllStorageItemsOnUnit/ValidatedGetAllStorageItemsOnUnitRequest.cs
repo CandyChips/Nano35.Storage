@@ -3,12 +3,6 @@ using Nano35.Contracts.Storage.Artifacts;
 
 namespace Nano35.Storage.Api.Requests.GetAllStorageItemsOnUnit
 {
-    public class GetAllStorageItemsOnUnitValidatorErrorResult : 
-        IGetAllStorageItemsOnUnitErrorResultContract
-    {
-        public string Message { get; set; }
-    }
-    
     public class ValidatedGetAllStorageItemsOnUnitRequest:
         PipeNodeBase<
             IGetAllStorageItemsOnUnitContract, 
@@ -23,10 +17,6 @@ namespace Nano35.Storage.Api.Requests.GetAllStorageItemsOnUnit
         public override async Task<IGetAllStorageItemsOnUnitResultContract> Ask(
             IGetAllStorageItemsOnUnitContract input)
         {
-            if (false)
-            {
-                return new GetAllStorageItemsOnUnitValidatorErrorResult() {Message = "Ошибка валидации"};
-            }
             return await DoNext(input);
         }
     }

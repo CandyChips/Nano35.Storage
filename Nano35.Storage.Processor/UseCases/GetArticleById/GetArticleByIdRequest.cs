@@ -8,9 +8,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.GetArticleById
 {
     public class GetArticleByIdRequest :
-        IPipelineNode<
-            IGetArticleByIdRequestContract,
-            IGetArticleByIdResultContract>
+        EndPointNodeBase<IGetArticleByIdRequestContract, IGetArticleByIdResultContract>
     {
         private readonly ApplicationContext _context;
 
@@ -20,13 +18,7 @@ namespace Nano35.Storage.Processor.UseCases.GetArticleById
             _context = context;
         }
         
-        private class GetArticleByIdSuccessResultContract : 
-            IGetArticleByIdSuccessResultContract
-        {
-            public ArticleViewModel Data { get; set; }
-        }
-        
-        public async Task<IGetArticleByIdResultContract> Ask(
+        public override async Task<IGetArticleByIdResultContract> Ask(
             IGetArticleByIdRequestContract input, 
             CancellationToken cancellationToken)
         {

@@ -21,23 +21,13 @@ namespace Nano35.Storage.Processor.UseCases.CreateSalle
         public async Task Consume(
             ConsumeContext<ICreateSelleRequestContract> context)
         {
-            // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<LoggedCreateSelleRequest>) _services
-                .GetService(typeof(ILogger<LoggedCreateSelleRequest>));
-
-            // Explore message of request
+            var logger = (ILogger<ICreateSelleRequestContract>) _services.GetService(typeof(ILogger<ICreateSelleRequestContract>));
             var message = context.Message;
-
-            // Send request to pipeline
-            var result =
-                await new LoggedCreateSelleRequest(logger,
+            var result = await new LoggedPipeNode<ICreateSelleRequestContract, ICreateSelleResultContract>(logger,
                     new ValidatedCreateSelleRequest(
-                        new TransactedCreateSelleRequest(dbContext,
-                            new CreateSelleRequest(dbContext)))
-                ).Ask(message, context.CancellationToken);
-            
-            // Check response of create article request
+                        new TransactedPipeNode<ICreateSelleRequestContract, ICreateSelleResultContract>(dbContext,
+                            new CreateSelleRequest(dbContext)))).Ask(message, context.CancellationToken);
             switch (result)
             {
                 case ICreateSelleSuccessResultContract:

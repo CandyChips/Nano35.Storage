@@ -7,9 +7,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.UpdateCategoryName
 {
     public class UpdateCategoryNameRequest :
-        IPipelineNode<
-            IUpdateCategoryNameRequestContract, 
-            IUpdateCategoryNameResultContract>
+        EndPointNodeBase<IUpdateCategoryNameRequestContract, IUpdateCategoryNameResultContract>
     {
         private readonly ApplicationContext _context;
 
@@ -19,13 +17,7 @@ namespace Nano35.Storage.Processor.UseCases.UpdateCategoryName
             _context = context;
         }
         
-        private class UpdateCategoryNameSuccessResultContract : 
-            IUpdateCategoryNameSuccessResultContract
-        {
-            
-        }
-        
-        public async Task<IUpdateCategoryNameResultContract> Ask(
+        public override async Task<IUpdateCategoryNameResultContract> Ask(
             IUpdateCategoryNameRequestContract input,
             CancellationToken cancellationToken)
         {

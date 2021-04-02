@@ -4,38 +4,18 @@ using Nano35.Contracts.Storage.Artifacts;
 
 namespace Nano35.Storage.Processor.UseCases.GetArticleById
 {
-    public class GetArticleByIdValidatorErrorResult :
-        IGetArticleByIdErrorResultContract
-    {
-        public string Message { get; set; }
-    }
-    
     public class ValidatedGetArticleByIdRequest:
-        IPipelineNode<
-            IGetArticleByIdRequestContract, 
-            IGetArticleByIdResultContract>
+        PipeNodeBase<IGetArticleByIdRequestContract, IGetArticleByIdResultContract>
     {
-        private readonly IPipelineNode<
-            IGetArticleByIdRequestContract, 
-            IGetArticleByIdResultContract> _nextNode;
-
         public ValidatedGetArticleByIdRequest(
-            IPipelineNode<
-                IGetArticleByIdRequestContract,
-                IGetArticleByIdResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IGetArticleByIdRequestContract, IGetArticleByIdResultContract> next) :
+            base(next) { }
 
-        public async Task<IGetArticleByIdResultContract> Ask(
+        public override async Task<IGetArticleByIdResultContract> Ask(
             IGetArticleByIdRequestContract input,
             CancellationToken cancellationToken)
         {
-            if (false)
-            {
-                return new GetArticleByIdValidatorErrorResult() {Message = "Ошибка валидации"};
-            }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

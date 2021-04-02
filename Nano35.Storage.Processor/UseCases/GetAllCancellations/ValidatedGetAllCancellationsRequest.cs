@@ -4,38 +4,18 @@ using Nano35.Contracts.Storage.Artifacts;
 
 namespace Nano35.Storage.Processor.UseCases.GetAllCancellations
 {
-    public class GetAllCancellationsValidatorErrorResult :
-        IGetAllCancellationsErrorResultContract
-    {
-        public string Message { get; set; }
-    }
-    
     public class ValidatedGetAllCancellationsRequest:
-        IPipelineNode<
-            IGetAllCancellationsRequestContract, 
-            IGetAllCancellationsResultContract>
+        PipeNodeBase<IGetAllCancellationsRequestContract, IGetAllCancellationsResultContract>
     {
-        private readonly IPipelineNode<
-            IGetAllCancellationsRequestContract, 
-            IGetAllCancellationsResultContract> _nextNode;
-
         public ValidatedGetAllCancellationsRequest(
-            IPipelineNode<
-                IGetAllCancellationsRequestContract,
-                IGetAllCancellationsResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IGetAllCancellationsRequestContract, IGetAllCancellationsResultContract> next) :
+            base(next) { }
 
-        public async Task<IGetAllCancellationsResultContract> Ask(
+        public override async Task<IGetAllCancellationsResultContract> Ask(
             IGetAllCancellationsRequestContract input,
             CancellationToken cancellationToken)
         {
-            if (false)
-            {
-                return new GetAllCancellationsValidatorErrorResult() {Message = "Ошибка валидации"};
-            }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

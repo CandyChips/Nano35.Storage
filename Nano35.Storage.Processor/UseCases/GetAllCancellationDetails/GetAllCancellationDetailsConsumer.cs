@@ -21,22 +21,12 @@ namespace Nano35.Storage.Processor.UseCases.GetAllCancellationDetails
         public async Task Consume(
             ConsumeContext<IGetAllCancellationDetailsRequestContract> context)
         {
-            // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<LoggedGetAllCancellationDetailsRequest>) _services
-                .GetService(typeof(ILogger<LoggedGetAllCancellationDetailsRequest>));
-
-            // Explore message of request
+            var logger = (ILogger<IGetAllCancellationDetailsRequestContract>) _services.GetService(typeof(ILogger<IGetAllCancellationDetailsRequestContract>));
             var message = context.Message;
-
-            // Send request to pipeline
-            var result =
-                await new LoggedGetAllCancellationDetailsRequest(logger,
+            var result = await new LoggedPipeNode<IGetAllCancellationDetailsRequestContract, IGetAllCancellationDetailsResultContract>(logger,
                     new ValidatedGetAllCancellationDetailsRequest(
-                        new GetAllCancellationDetailsRequest(dbContext))
-                ).Ask(message, context.CancellationToken);
-            
-            // Check response of create article request
+                        new GetAllCancellationDetailsRequest(dbContext))).Ask(message, context.CancellationToken);
             switch (result)
             {
                 case IGetAllCancellationDetailsSuccessResultContract:

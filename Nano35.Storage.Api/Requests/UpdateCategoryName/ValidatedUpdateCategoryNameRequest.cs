@@ -3,12 +3,6 @@ using Nano35.Contracts.Storage.Artifacts;
 
 namespace Nano35.Storage.Api.Requests.UpdateCategoryName
 {
-    public class UpdateCategoryNameValidatorErrorResult : 
-        IUpdateCategoryNameErrorResultContract
-    {
-        public string Message { get; set; }
-    }
-    
     public class ValidatedUpdateCategoryNameRequest:
         PipeNodeBase<IUpdateCategoryNameRequestContract, IUpdateCategoryNameResultContract>
     {

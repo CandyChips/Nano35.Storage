@@ -14,9 +14,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.GetAllComings
 {
     public class GetAllComingsRequest :
-        IPipelineNode<
-            IGetAllComingsRequestContract,
-            IGetAllComingsResultContract>
+        EndPointNodeBase<IGetAllComingsRequestContract, IGetAllComingsResultContract>
     {
         private readonly ApplicationContext _context;
         private readonly IBus _bus;
@@ -29,13 +27,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllComings
             _bus = bus;
         }
         
-        private class GetAllComingsSuccessResultContract : 
-            IGetAllComingsSuccessResultContract
-        {
-            public List<ComingViewModel> Data { get; set; }
-        }
-
-        public async Task<IGetAllComingsResultContract> Ask
+        public override async Task<IGetAllComingsResultContract> Ask
             (IGetAllComingsRequestContract input, CancellationToken cancellationToken)
         {
             var comings = await _context

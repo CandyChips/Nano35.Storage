@@ -10,9 +10,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.GetAllPlacesOfStorageItemOnUnit
 {
     public class GetAllPlacesOfStorageItemOnUnitRequest :
-        IPipelineNode<
-            IGetAllPlacesOfStorageItemOnUnitRequestContract,
-            IGetAllPlacesOfStorageItemOnUnitResultContract>
+        EndPointNodeBase<IGetAllPlacesOfStorageItemOnUnitRequestContract, IGetAllPlacesOfStorageItemOnUnitResultContract>
     {
         private readonly ApplicationContext _context;
         private readonly IBus _bus;
@@ -25,7 +23,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllPlacesOfStorageItemOnUnit
             _bus = bus;
         }
 
-        public async Task<IGetAllPlacesOfStorageItemOnUnitResultContract> Ask(
+        public override async Task<IGetAllPlacesOfStorageItemOnUnitResultContract> Ask(
             IGetAllPlacesOfStorageItemOnUnitRequestContract input, 
             CancellationToken cancellationToken)
         {

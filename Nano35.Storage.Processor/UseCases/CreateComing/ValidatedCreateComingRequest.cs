@@ -4,31 +4,18 @@ using Nano35.Contracts.Storage.Artifacts;
 
 namespace Nano35.Storage.Processor.UseCases.CreateComing
 {
-    public class CreateComingValidatorErrorResult : ICreateComingErrorResultContract
-    {
-        public string Message { get; set; }
-    }
-    
     public class ValidatedCreateComingRequest:
-        IPipelineNode<ICreateComingRequestContract, ICreateComingResultContract>
+        PipeNodeBase<ICreateComingRequestContract, ICreateComingResultContract>
     {
-        private readonly IPipelineNode<ICreateComingRequestContract, ICreateComingResultContract> _nextNode;
-
         public ValidatedCreateComingRequest(
-            IPipelineNode<ICreateComingRequestContract, ICreateComingResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<ICreateComingRequestContract, ICreateComingResultContract> next) :
+            base(next) { }
 
-        public async Task<ICreateComingResultContract> Ask(
+        public override async Task<ICreateComingResultContract> Ask(
             ICreateComingRequestContract input,
             CancellationToken cancellationToken)
         {
-            if (false)
-            {
-                return new CreateComingValidatorErrorResult() {Message = "Ошибка валидации"};
-            }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

@@ -3,13 +3,6 @@ using Nano35.Contracts.Storage.Artifacts;
 
 namespace Nano35.Storage.Api.Requests.GetAllMoves
 {
-    public class GetAllMovesValidatorErrorResult : 
-            
-        IGetAllMovesErrorResultContract
-    {
-        public string Message { get; set; }
-    }
-    
     public class ValidatedGetAllMovesRequest:
         PipeNodeBase<IGetAllMovesRequestContract, IGetAllMovesResultContract>
     {

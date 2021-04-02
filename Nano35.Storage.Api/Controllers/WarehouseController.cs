@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.HttpContext.storage;
+using Nano35.Storage.Api.Requests;
 using Nano35.Storage.Api.Requests.CreateCancellation;
 using Nano35.Storage.Api.Requests.CreateComing;
 using Nano35.Storage.Api.Requests.CreateMove;
@@ -43,10 +44,10 @@ namespace Nano35.Storage.Api.Controllers
             [FromBody] CreateComingHttpBody body)
         {
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedCreateComingRequest>)_services.GetService(typeof(ILogger<LoggedCreateComingRequest>));
+            var logger = (ILogger<ICreateComingRequestContract>)_services.GetService(typeof(ILogger<ICreateComingRequestContract>));
             
-            return await new ConvertedCreateComingOnHttpContext(
-                        new LoggedCreateComingRequest(logger,
+            return await new CanonicalizedCreateComingRequest(
+                        new LoggedPipeNode<ICreateComingRequestContract, ICreateComingResultContract>(logger,
                             new ValidatedCreateComingRequest(
                                 new CreateComingUseCase(bus)))).Ask(body);
         }
@@ -60,10 +61,10 @@ namespace Nano35.Storage.Api.Controllers
             [FromHeader] GetAllComingsHttpQuery query)
         {
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetAllComingsRequest>)_services.GetService(typeof(ILogger<LoggedGetAllComingsRequest>));
+            var logger = (ILogger<IGetAllComingsRequestContract>)_services.GetService(typeof(ILogger<IGetAllComingsRequestContract>));
 
-            return await new ConvertedGetAllComingsOnHttpContext(
-                        new LoggedGetAllComingsRequest(logger,
+            return await new CanonicalizedGetAllComingsRequest(
+                        new LoggedPipeNode<IGetAllComingsRequestContract, IGetAllComingsResultContract>(logger,
                             new ValidatedGetAllComingsRequest(
                                 new GetAllComingsUseCase(bus)))).Ask(query);
         }
@@ -77,10 +78,10 @@ namespace Nano35.Storage.Api.Controllers
             [FromQuery] GetAllComingDetailsHttpQuery query)
         {
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetAllComingDetailsRequest>)_services.GetService(typeof(ILogger<LoggedGetAllComingDetailsRequest>));
+            var logger = (ILogger<IGetAllComingDetailsRequestContract>)_services.GetService(typeof(ILogger<IGetAllComingDetailsRequestContract>));
 
-            return await new ConvertedGetAllComingDetailsOnHttpContext(
-                new LoggedGetAllComingDetailsRequest(logger,
+            return await new CanonicalizedGetAllComingDetailsRequest(
+                new LoggedPipeNode<IGetAllComingDetailsRequestContract, IGetAllComingDetailsResultContract>(logger,
                     new ValidatedGetAllComingDetailsRequest(
                         new GetAllComingDetailsUseCase(bus)))).Ask(query);
         }
@@ -94,12 +95,12 @@ namespace Nano35.Storage.Api.Controllers
             [FromBody] CreateMoveHttpBody body)
         {
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedCreateMoveRequest>)_services.GetService(typeof(ILogger<LoggedCreateMoveRequest>));
+            var logger = (ILogger<ICreateMoveRequestContract>)_services.GetService(typeof(ILogger<ICreateMoveRequestContract>));
             
-            return await new ConvertedCreateMoveOnHttpContext(
-                        new LoggedCreateMoveRequest(logger,
-                            new ValidatedCreateMoveRequest(
-                                new CreateMoveUseCase(bus)))).Ask(body);
+            return await new CanonicalizedCreateMoveRequest(
+                new LoggedPipeNode<ICreateMoveRequestContract, ICreateMoveResultContract>(logger,
+                    new ValidatedCreateMoveRequest(
+                        new CreateMoveUseCase(bus)))).Ask(body);
         }
 
         [HttpGet]
@@ -110,10 +111,10 @@ namespace Nano35.Storage.Api.Controllers
             [FromQuery] GetAllMovesHttpQuery body)
         {
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetAllMovesRequest>)_services.GetService(typeof(ILogger<LoggedGetAllMovesRequest>));
+            var logger = (ILogger<IGetAllMovesRequestContract>)_services.GetService(typeof(ILogger<IGetAllMovesRequestContract>));
             
-            return await new ConvertedGetAllMovesOnHttpContext(
-                new LoggedGetAllMovesRequest(logger,
+            return await new CanonicalizedGetAllMovesRequest(
+                new LoggedPipeNode<IGetAllMovesRequestContract, IGetAllMovesResultContract>(logger,
                     new ValidatedGetAllMovesRequest(
                         new GetAllMovesUseCase(bus)))).Ask(body);
         }
@@ -127,10 +128,10 @@ namespace Nano35.Storage.Api.Controllers
             [FromQuery] GetAllMoveDetailsHttpQuery query)
         {
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetAllMoveDetailsRequest>)_services.GetService(typeof(ILogger<LoggedGetAllMoveDetailsRequest>));
+            var logger = (ILogger<IGetAllMoveDetailsRequestContract>)_services.GetService(typeof(ILogger<IGetAllMoveDetailsRequestContract>));
 
-            return await new ConvertedGetAllMoveDetailsOnHttpContext(
-                new LoggedGetAllMoveDetailsRequest(logger,
+            return await new CanonicalizedGetAllMoveDetailsRequest(
+                new LoggedPipeNode<IGetAllMoveDetailsRequestContract, IGetAllMoveDetailsResultContract>(logger,
                     new ValidatedGetAllMoveDetailsRequest(
                         new GetAllMoveDetailsUseCase(bus)))).Ask(query);
         }
@@ -144,12 +145,12 @@ namespace Nano35.Storage.Api.Controllers
             [FromBody] CreateSelleHttpBody body)
         {
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedCreateSelleRequest>)_services.GetService(typeof(ILogger<LoggedCreateSelleRequest>));
+            var logger = (ILogger<ICreateSelleRequestContract>)_services.GetService(typeof(ILogger<ICreateSelleRequestContract>));
             
-            return await new ConvertedCreateSelleOnHttpContext(
-                        new LoggedCreateSelleRequest(logger,
-                            new ValidatedCreateSelleRequest(
-                                new CreateSelleUseCase(bus)))).Ask(body);
+            return await new CanonicalizedCreateSelleRequest(
+                new LoggedPipeNode<ICreateSelleRequestContract, ICreateSelleResultContract>(logger,
+                    new ValidatedCreateSelleRequest(
+                        new CreateSelleUseCase(bus)))).Ask(body);
         }
 
         [HttpGet]
@@ -160,10 +161,10 @@ namespace Nano35.Storage.Api.Controllers
             [FromQuery] GetAllSellsHttpQuery body)
         {
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetAllSellsRequest>)_services.GetService(typeof(ILogger<LoggedGetAllSellsRequest>));
+            var logger = (ILogger<IGetAllSellsRequestContract>)_services.GetService(typeof(ILogger<IGetAllSellsRequestContract>));
             
             return await new ConvertedGetAllSellsOnHttpContext(
-                new LoggedGetAllSellsRequest(logger,
+                new LoggedPipeNode<IGetAllSellsRequestContract, IGetAllSellsResultContract>(logger,
                     new ValidatedGetAllSellsRequest(
                         new GetAllSellsUseCase(bus)))).Ask(body);
         }
@@ -178,10 +179,10 @@ namespace Nano35.Storage.Api.Controllers
             [FromQuery] GetAllSellDetailsHttpQuery query)
         {
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetAllSelleDetailsRequest>)_services.GetService(typeof(ILogger<LoggedGetAllSelleDetailsRequest>));
+            var logger = (ILogger<IGetAllSelleDetailsRequestContract>)_services.GetService(typeof(ILogger<IGetAllSelleDetailsRequestContract>));
 
-            return await new ConvertedGetAllSelleDetailsOnHttpContext(
-                new LoggedGetAllSelleDetailsRequest(logger,
+            return await new CanonicalizedGetAllSelleDetailsRequest(
+                new LoggedPipeNode<IGetAllSelleDetailsRequestContract, IGetAllSelleDetailsResultContract>(logger,
                     new ValidatedGetAllSelleDetailsRequest(
                         new GetAllSelleDetailsUseCase(bus)))).Ask(query);
         }
@@ -195,10 +196,10 @@ namespace Nano35.Storage.Api.Controllers
             [FromBody] CreateCancellationHttpBody body)
         {
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedCreateCancellationRequest>)_services.GetService(typeof(ILogger<LoggedCreateCancellationRequest>));
+            var logger = (ILogger<ICreateCancellationRequestContract>)_services.GetService(typeof(ILogger<ICreateCancellationRequestContract>));
             
             return await new ConvertedCreateCancellationOnHttpContext(
-                        new LoggedCreateCancellationRequest(logger,
+                        new LoggedPipeNode<ICreateCancellationRequestContract, ICreateCancellationResultContract>(logger,
                             new ValidatedCreateCancellationRequest(
                                 new CreateCancellationUseCase(bus)))).Ask(body);
         }
@@ -211,10 +212,10 @@ namespace Nano35.Storage.Api.Controllers
             [FromQuery] GetAllCancellationsHttpQuery body)
         {
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetAllCancellationsRequest>)_services.GetService(typeof(ILogger<LoggedGetAllCancellationsRequest>));
+            var logger = (ILogger<IGetAllCancellationsRequestContract>)_services.GetService(typeof(ILogger<IGetAllCancellationsRequestContract>));
             
-            return await new ConvertedGetAllCancellationsOnHttpContext(
-                new LoggedGetAllCancellationsRequest(logger,
+            return await new CanonicalizedGetAllCancellationsRequest(
+                new LoggedPipeNode<IGetAllCancellationsRequestContract, IGetAllCancellationsResultContract>(logger,
                     new ValidatedGetAllCancellationsRequest(
                         new GetAllCancellationsUseCase(bus)))).Ask(body);
         }
@@ -222,16 +223,16 @@ namespace Nano35.Storage.Api.Controllers
         [HttpGet]
         [Route("GetAllCancellationDetails")]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllSellDetailsSuccessHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllSellDetailsErrorHttpResponse))] 
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllCancellationDetailsSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllCancellationDetailsErrorHttpResponse))] 
         public async Task<IActionResult> GetAllCancellationDetails(
             [FromQuery] GetAllCancellationDetailsHttpQuery query)
         {
             var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetAllCancellationDetailsRequest>)_services.GetService(typeof(ILogger<LoggedGetAllCancellationDetailsRequest>));
+            var logger = (ILogger<IGetAllCancellationDetailsRequestContract>)_services.GetService(typeof(ILogger<IGetAllCancellationDetailsRequestContract>));
 
-            return await new ConvertedGetAllCancellationDetailsOnHttpContext(
-                new LoggedGetAllCancellationDetailsRequest(logger,
+            return await new CanonicalizedGetAllCancellationDetailsRequest(
+                new LoggedPipeNode<IGetAllCancellationDetailsRequestContract, IGetAllCancellationDetailsResultContract>(logger,
                     new ValidatedGetAllCancellationDetailsRequest(
                         new GetAllCancellationDetailsUseCase(bus)))).Ask(query);
         }
@@ -245,10 +246,10 @@ namespace Nano35.Storage.Api.Controllers
             [FromQuery] GetAllPlacesOfStorageItemOnUnitHttpQuery body)
         {
             var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetAllPlacesOfStorageItemOnUnitRequest>) _services.GetService(typeof(ILogger<LoggedGetAllPlacesOfStorageItemOnUnitRequest>));
+            var logger = (ILogger<IGetAllPlacesOfStorageItemOnUnitRequestContract>) _services.GetService(typeof(ILogger<IGetAllPlacesOfStorageItemOnUnitRequestContract>));
 
-            return await new ConvertedGetAllPlacesOfStorageItemOnUnitOnHttpContext(
-                new LoggedGetAllPlacesOfStorageItemOnUnitRequest(logger,
+            return await new CanonicalizedGetAllPlacesOfStorageItemOnUnitRequest(
+                new LoggedPipeNode<IGetAllPlacesOfStorageItemOnUnitRequestContract, IGetAllPlacesOfStorageItemOnUnitResultContract>(logger,
                     new ValidatedGetAllPlacesOfStorageItemOnUnitRequest(
                         new GetAllPlacesOfStorageItemOnUnitUseCase(bus)))).Ask(body);
         }
@@ -262,10 +263,10 @@ namespace Nano35.Storage.Api.Controllers
             [FromQuery] GetAllPlacesOfStorageItemOnInstanceHttpQuery body)
         {
             var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetAllPlacesOfStorageItemOnInstanceRequest>) _services.GetService(typeof(ILogger<LoggedGetAllPlacesOfStorageItemOnInstanceRequest>));
+            var logger = (ILogger<IGetAllPlacesOfStorageItemOnInstanceContract>) _services.GetService(typeof(ILogger<IGetAllPlacesOfStorageItemOnInstanceContract>));
 
-            return await new ConvertedGetAllPlacesOfStorageItemOnInstanceOnHttpContext(
-                new LoggedGetAllPlacesOfStorageItemOnInstanceRequest(logger,
+            return await new CanonicalizedGetAllPlacesOfStorageItemOnInstanceRequest(
+                new LoggedPipeNode<IGetAllPlacesOfStorageItemOnInstanceContract, IGetAllPlacesOfStorageItemOnInstanceResultContract>(logger,
                     new ValidatedGetAllPlacesOfStorageItemOnInstanceRequest(
                         new GetAllPlacesOfStorageItemOnInstanceUseCase(bus)))).Ask(body);
         }
@@ -279,12 +280,12 @@ namespace Nano35.Storage.Api.Controllers
             [FromQuery] GetAllStorageItemsOnInstanceHttpQuery body)
         {
             var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetAllStorageItemsOnInstanceRequest>) _services.GetService(typeof(ILogger<LoggedGetAllStorageItemsOnInstanceRequest>));
+            var logger = (ILogger<IGetAllStorageItemsOnInstanceContract>) _services.GetService(typeof(ILogger<IGetAllStorageItemsOnInstanceContract>));
 
-            return await new ConvertedGetAllStorageItemsOnInstanceOnHttpContext(
-                        new LoggedGetAllStorageItemsOnInstanceRequest(logger,
-                            new ValidatedGetAllStorageItemsOnInstanceRequest(
-                                new GetAllStorageItemsOnInstanceUseCase(bus)))).Ask(body);
+            return await new CanonicalizedGetAllStorageItemsOnInstanceRequest(
+                new LoggedPipeNode<IGetAllStorageItemsOnInstanceContract, IGetAllStorageItemsOnInstanceResultContract>(logger,
+                    new ValidatedGetAllStorageItemsOnInstanceRequest(
+                        new GetAllStorageItemsOnInstanceUseCase(bus)))).Ask(body);
         }
         
         [HttpGet]
@@ -296,12 +297,12 @@ namespace Nano35.Storage.Api.Controllers
             [FromQuery] GetAllStorageItemsOnUnitHttpQuery body)
         {
             var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetAllStorageItemsOnUnitRequest>) _services.GetService(typeof(ILogger<LoggedGetAllStorageItemsOnUnitRequest>));
+            var logger = (ILogger<IGetAllStorageItemsOnUnitContract>) _services.GetService(typeof(ILogger<IGetAllStorageItemsOnUnitContract>));
 
-            return await new ConvertedGetAllStorageItemsOnUnitOnHttpContext(
-                        new LoggedGetAllStorageItemsOnUnitRequest(logger,
-                            new ValidatedGetAllStorageItemsOnUnitRequest(
-                                new GetAllStorageItemsOnUnitUseCase(bus)))).Ask(body);
+            return await new CanonicalizedGetAllStorageItemsOnUnitRequest(
+                new LoggedPipeNode<IGetAllStorageItemsOnUnitContract, IGetAllStorageItemsOnUnitResultContract>(logger,
+                    new ValidatedGetAllStorageItemsOnUnitRequest(
+                        new GetAllStorageItemsOnUnitUseCase(bus)))).Ask(body);
         }
     }
 }

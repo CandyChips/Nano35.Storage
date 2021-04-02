@@ -3,12 +3,6 @@ using Nano35.Contracts.Storage.Artifacts;
 
 namespace Nano35.Storage.Api.Requests.CreateStorageItem
 {
-    public class CreateStorageItemValidatorErrorResult : 
-        ICreateStorageItemErrorResultContract
-    {
-        public string Message { get; set; }
-    }
-    
     public class ValidatedCreateStorageItemRequest:
         PipeNodeBase<ICreateStorageItemRequestContract, ICreateStorageItemResultContract>
     {
@@ -19,10 +13,6 @@ namespace Nano35.Storage.Api.Requests.CreateStorageItem
         public override async Task<ICreateStorageItemResultContract> Ask(
             ICreateStorageItemRequestContract input)
         {
-            if (false)
-            {
-                return new CreateStorageItemValidatorErrorResult() {Message = "Ошибка валидации"};
-            }
             return await DoNext(input);
         }
     }

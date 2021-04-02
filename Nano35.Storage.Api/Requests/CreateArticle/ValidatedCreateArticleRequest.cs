@@ -3,12 +3,6 @@ using Nano35.Contracts.Storage.Artifacts;
 
 namespace Nano35.Storage.Api.Requests.CreateArticle
 {
-    public class CreateArticleValidatorErrorResult : 
-        ICreateArticleErrorResultContract
-    {
-        public string Message { get; set; }
-    }
-    
     public class ValidatedCreateArticleRequest:
         PipeNodeBase<ICreateArticleRequestContract, ICreateArticleResultContract>
     {
@@ -19,10 +13,6 @@ namespace Nano35.Storage.Api.Requests.CreateArticle
         public override async Task<ICreateArticleResultContract> Ask(
             ICreateArticleRequestContract input)
         {
-            if (false)
-            {
-                return new CreateArticleValidatorErrorResult() {Message = "Ошибка валидации"};
-            }
             return await DoNext(input);
         }
     }

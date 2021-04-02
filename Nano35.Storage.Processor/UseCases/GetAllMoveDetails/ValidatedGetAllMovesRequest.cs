@@ -4,38 +4,18 @@ using Nano35.Contracts.Storage.Artifacts;
 
 namespace Nano35.Storage.Processor.UseCases.GetAllMoveDetails
 {
-    public class GetAllMoveDetailsValidatorErrorResult :
-        IGetAllMoveDetailsErrorResultContract
-    {
-        public string Message { get; set; }
-    }
-    
     public class ValidatedGetAllMoveDetailsRequest:
-        IPipelineNode<
-            IGetAllMoveDetailsRequestContract, 
-            IGetAllMoveDetailsResultContract>
+        PipeNodeBase<IGetAllMoveDetailsRequestContract, IGetAllMoveDetailsResultContract>
     {
-        private readonly IPipelineNode<
-            IGetAllMoveDetailsRequestContract, 
-            IGetAllMoveDetailsResultContract> _nextNode;
-
         public ValidatedGetAllMoveDetailsRequest(
-            IPipelineNode<
-                IGetAllMoveDetailsRequestContract,
-                IGetAllMoveDetailsResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IGetAllMoveDetailsRequestContract, IGetAllMoveDetailsResultContract> next) :
+            base(next) { }
 
-        public async Task<IGetAllMoveDetailsResultContract> Ask(
+        public override async Task<IGetAllMoveDetailsResultContract> Ask(
             IGetAllMoveDetailsRequestContract input,
             CancellationToken cancellationToken)
         {
-            if (false)
-            {
-                return new GetAllMoveDetailsValidatorErrorResult() {Message = "Ошибка валидации"};
-            }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

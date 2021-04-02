@@ -8,9 +8,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemConditions
 {
     public class GetAllStorageItemConditionsRequest :
-        IPipelineNode<
-            IGetAllStorageItemConditionsRequestContract,
-            IGetAllStorageItemConditionsResultContract>
+        EndPointNodeBase<IGetAllStorageItemConditionsRequestContract, IGetAllStorageItemConditionsResultContract>
     {
         private readonly ApplicationContext _context;
 
@@ -20,13 +18,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemConditions
             _context = context;
         }
         
-        private class GetAllStorageItemConditionsSuccessResultContract : 
-            IGetAllStorageItemConditionsSuccessResultContract
-        {
-            public List<StorageItemConditionViewModel> Data { get; set; }
-        }
-        
-        public async Task<IGetAllStorageItemConditionsResultContract> Ask
+        public override async Task<IGetAllStorageItemConditionsResultContract> Ask
             (IGetAllStorageItemConditionsRequestContract input, 
             CancellationToken cancellationToken)
         {
