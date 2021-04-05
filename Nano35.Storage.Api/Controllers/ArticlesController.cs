@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using FluentValidation;
 using MassTransit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -69,13 +70,14 @@ namespace Nano35.Storage.Api.Controllers
             // Setup configuration of pipeline
             var bus = (IBus)_services.GetService(typeof(IBus));
             var logger = (ILogger<IGetAllArticlesRequestContract>)_services.GetService(typeof(ILogger<IGetAllArticlesRequestContract>));
+            var validator = (IValidator<IGetAllArticlesRequestContract>)_services.GetService(typeof(IValidator<IGetAllArticlesRequestContract>));
             
             // ToDo Hey Maslyonok
             // Building pipeline
             return await new CanonicalizedGetAllArticlesRequest(
-                        new LoggedPipeNode<IGetAllArticlesRequestContract, IGetAllArticlesResultContract>(logger,
-                            new ValidatedGetAllArticlesRequest(
-                                new GetAllArticlesUseCase(bus)))).Ask(query);
+                new LoggedPipeNode<IGetAllArticlesRequestContract, IGetAllArticlesResultContract>(logger,
+                    new ValidatedPipeNode<IGetAllArticlesRequestContract, IGetAllArticlesResultContract>(validator,
+                        new GetAllArticlesUseCase(bus)))).Ask(query);
             
         }
          
@@ -87,13 +89,13 @@ namespace Nano35.Storage.Api.Controllers
         public async Task<IActionResult> GetAllArticleModels(
             [FromQuery] GetAllArticleModelsHttpQuery query)
         {
-            var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<IGetAllArticlesModelsRequestContract>)_services.GetService(typeof(ILogger<IGetAllArticlesModelsRequestContract>));
-
             return await new CanonicalizedGetAllArticleModelsRequest(
-                        new LoggedPipeNode<IGetAllArticlesModelsRequestContract, IGetAllArticlesModelsResultContract>(logger,
-                            new ValidatedGetAllArticlesModelsRequest(
-                                new GetAllArticlesModelsUseCase(bus)))).Ask(query);
+                new LoggedPipeNode<IGetAllArticlesModelsRequestContract, IGetAllArticlesModelsResultContract>(
+                    _services.GetService(typeof(ILogger<IGetAllArticlesModelsRequestContract>)) as ILogger<IGetAllArticlesModelsRequestContract>,
+                    new ValidatedPipeNode<IGetAllArticlesModelsRequestContract, IGetAllArticlesModelsResultContract>(
+                        _services.GetService(typeof(IValidator<IGetAllArticlesModelsRequestContract>)) as IValidator<IGetAllArticlesModelsRequestContract>,
+                        new GetAllArticlesModelsUseCase(
+                            _services.GetService(typeof(IBus)) as IBus)))).Ask(query);
         }
     
         [HttpGet]
@@ -104,13 +106,13 @@ namespace Nano35.Storage.Api.Controllers
         public async Task<IActionResult> GetAllArticleBrands(
             [FromQuery] GetAllArticlesBrandsHttpQuery query)
         {
-            var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<IGetAllArticlesBrandsRequestContract>) _services.GetService(typeof(ILogger<IGetAllArticlesBrandsRequestContract>));
-
             return await new CanonicalizedGetAllArticleBrandsRequest(
-                        new LoggedPipeNode<IGetAllArticlesBrandsRequestContract, IGetAllArticlesBrandsResultContract>(logger,
-                            new ValidatedGetAllArticlesBrandsRequest(
-                                new GetAllArticleBrandsUseCase(bus)))).Ask(query);
+                new LoggedPipeNode<IGetAllArticlesBrandsRequestContract, IGetAllArticlesBrandsResultContract>(
+                    _services.GetService(typeof(ILogger<IGetAllArticlesBrandsRequestContract>)) as ILogger<IGetAllArticlesBrandsRequestContract>,
+                    new ValidatedPipeNode<IGetAllArticlesBrandsRequestContract, IGetAllArticlesBrandsResultContract>(
+                        _services.GetService(typeof(IValidator<IGetAllArticlesBrandsRequestContract>)) as IValidator<IGetAllArticlesBrandsRequestContract>,
+                        new GetAllArticleBrandsUseCase(
+                            _services.GetService(typeof(IBus)) as IBus)))).Ask(query);
         }
     
         [HttpGet]
@@ -121,14 +123,12 @@ namespace Nano35.Storage.Api.Controllers
         public async Task<IActionResult> GetArticleById(
             [FromQuery] GetArticleByIdHttpQuery query)
         {
-            var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<IGetArticleByIdRequestContract>) _services.GetService(typeof(ILogger<IGetArticleByIdRequestContract>));
-
             return await new CanonicalizedGetArticleByIdRequest(
-                        new LoggedPipeNode<IGetArticleByIdRequestContract, IGetArticleByIdResultContract>(logger,
-                            new ValidatedGetArticleByIdRequest(
-                                new GetArticleByIdUseCase(bus)))).Ask(query);
-            
+                new LoggedPipeNode<IGetArticleByIdRequestContract, IGetArticleByIdResultContract>(
+                    _services.GetService(typeof(ILogger<IGetArticleByIdRequestContract>)) as ILogger<IGetArticleByIdRequestContract>,
+                    new ValidatedPipeNode<IGetArticleByIdRequestContract, IGetArticleByIdResultContract>(
+                        _services.GetService(typeof(IValidator<IGetArticleByIdRequestContract>)) as IValidator<IGetArticleByIdRequestContract>,
+                        new GetArticleByIdUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(query);
         }
         
         /// <summary>
@@ -165,13 +165,12 @@ namespace Nano35.Storage.Api.Controllers
         public async Task<IActionResult> CreateArticle(
             [FromBody] CreateArticleHttpBody body)
         {
-            var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<ICreateArticleRequestContract>)_services.GetService(typeof(ILogger<ICreateArticleRequestContract>));
-
             return await new CanonicalizedCreateArticleRequest(
-                        new LoggedPipeNode<ICreateArticleRequestContract, ICreateArticleResultContract>(logger,
-                            new ValidatedCreateArticleRequest(
-                                new CreateArticleUseCase(bus)))).Ask(body);
+                new LoggedPipeNode<ICreateArticleRequestContract, ICreateArticleResultContract>(
+                    _services.GetService(typeof(ILogger<ICreateArticleRequestContract>)) as ILogger<ICreateArticleRequestContract>,
+                    new ValidatedPipeNode<ICreateArticleRequestContract, ICreateArticleResultContract>(
+                        _services.GetService(typeof(IValidator<ICreateArticleRequestContract>)) as IValidator<ICreateArticleRequestContract>,
+                        new CreateArticleUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(body);
         }
 
         [HttpPatch]
@@ -182,13 +181,12 @@ namespace Nano35.Storage.Api.Controllers
         public async Task<IActionResult> UpdateArticleBrand(
             [FromBody] UpdateArticleBrandHttpBody body)
         {
-            var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<IUpdateArticleBrandRequestContract>) _services.GetService(typeof(ILogger<IUpdateArticleBrandRequestContract>));
-
             return await new CanonicalizedUpdateArticleBrandRequest(
-                        new LoggedPipeNode<IUpdateArticleBrandRequestContract, IUpdateArticleBrandResultContract>(logger,  
-                            new ValidatedUpdateArticleBrandRequest(
-                                new UpdateArticleBrandUseCase(bus)))).Ask(body);
+                new LoggedPipeNode<IUpdateArticleBrandRequestContract, IUpdateArticleBrandResultContract>(
+                    _services.GetService(typeof(ILogger<IUpdateArticleBrandRequestContract>)) as ILogger<IUpdateArticleBrandRequestContract>,  
+                    new ValidatedPipeNode<IUpdateArticleBrandRequestContract, IUpdateArticleBrandResultContract>(
+                        _services.GetService(typeof(IValidator<IUpdateArticleBrandRequestContract>)) as IValidator<IUpdateArticleBrandRequestContract>,
+                        new UpdateArticleBrandUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(body);
         }
         
         [HttpPatch]
@@ -199,13 +197,12 @@ namespace Nano35.Storage.Api.Controllers
         public async Task<IActionResult> UpdateArticleCategory(
             [FromBody] UpdateArticleCategoryHttpBody body)
         {
-            var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<IUpdateArticleCategoryRequestContract>) _services.GetService(typeof(ILogger<IUpdateArticleCategoryRequestContract>));
-
             return await new CanonicalizedUpdateArticleCategoryRequest(
-                        new LoggedPipeNode<IUpdateArticleCategoryRequestContract, IUpdateArticleCategoryResultContract>(logger,  
-                            new ValidatedUpdateArticleCategoryRequest(
-                                new UpdateArticleCategoryUseCase(bus)))).Ask(body);
+                new LoggedPipeNode<IUpdateArticleCategoryRequestContract, IUpdateArticleCategoryResultContract>(
+                    _services.GetService(typeof(ILogger<IUpdateArticleCategoryRequestContract>)) as ILogger<IUpdateArticleCategoryRequestContract>,  
+                    new ValidatedPipeNode<IUpdateArticleCategoryRequestContract, IUpdateArticleCategoryResultContract>(
+                        _services.GetService(typeof(IValidator<IUpdateArticleCategoryRequestContract>)) as IValidator<IUpdateArticleCategoryRequestContract>,
+                        new UpdateArticleCategoryUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(body);
         }
         
         [HttpPatch]
@@ -216,14 +213,12 @@ namespace Nano35.Storage.Api.Controllers
         public async Task<IActionResult> UpdateArticleInfo(
             [FromBody] UpdateArticleInfoHttpBody body)
         {
-            
-            var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<IUpdateArticleInfoRequestContract>) _services.GetService(typeof(ILogger<IUpdateArticleInfoRequestContract>));
-
             return await new CanonicalizedUpdateArticleInfoRequest(
-                        new LoggedPipeNode<IUpdateArticleInfoRequestContract, IUpdateArticleInfoResultContract>(logger,  
-                            new ValidatedUpdateArticleInfoRequest(
-                                new UpdateArticleInfoUseCase(bus)))).Ask(body);
+                new LoggedPipeNode<IUpdateArticleInfoRequestContract, IUpdateArticleInfoResultContract>(
+                    _services.GetService(typeof(ILogger<IUpdateArticleInfoRequestContract>)) as ILogger<IUpdateArticleInfoRequestContract>,  
+                    new ValidatedPipeNode<IUpdateArticleInfoRequestContract, IUpdateArticleInfoResultContract>(
+                        _services.GetService(typeof(IValidator<IUpdateArticleInfoRequestContract>)) as IValidator<IUpdateArticleInfoRequestContract>,
+                        new UpdateArticleInfoUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(body);
         }
         
         [HttpPatch]
@@ -234,13 +229,12 @@ namespace Nano35.Storage.Api.Controllers
         public async Task<IActionResult> UpdateArticleModel(
             [FromBody] UpdateArticleModelHttpBody body)
         {
-            var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<IUpdateArticleModelRequestContract>) _services.GetService(typeof(ILogger<IUpdateArticleModelRequestContract>));
-
             return await new CanonicalizedUpdateArticleModelRequest(
-                        new LoggedPipeNode<IUpdateArticleModelRequestContract, IUpdateArticleModelResultContract>(logger,  
-                            new ValidatedUpdateArticleModelRequest(
-                                new UpdateArticleModelUseCase(bus)))).Ask(body);
+                new LoggedPipeNode<IUpdateArticleModelRequestContract, IUpdateArticleModelResultContract>(
+                    _services.GetService(typeof(ILogger<IUpdateArticleModelRequestContract>)) as ILogger<IUpdateArticleModelRequestContract>,  
+                    new ValidatedPipeNode<IUpdateArticleModelRequestContract, IUpdateArticleModelResultContract>(
+                        _services.GetService(typeof(IValidator<IUpdateArticleModelRequestContract>)) as IValidator<IUpdateArticleModelRequestContract>,
+                        new UpdateArticleModelUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(body);
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Contracts.Storage.Models;
