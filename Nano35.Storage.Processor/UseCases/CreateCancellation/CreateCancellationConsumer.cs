@@ -32,7 +32,7 @@ namespace Nano35.Storage.Processor.UseCases.CreateCancellation
             // Send request to pipeline
             var result =
                 await new LoggedCreateCancellatioRequest(logger,
-                    new ValidatedCreateCancellationRequest(
+                    new ValidatedCreateCancellationRequest(dbContext,
                         new TransactedCreateCancellationRequest(dbContext,
                             new CreateCancellationRequest(dbContext)))
                 ).Ask(message, context.CancellationToken);

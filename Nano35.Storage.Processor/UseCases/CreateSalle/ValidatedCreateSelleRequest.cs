@@ -1,6 +1,9 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Nano35.Contracts.Storage.Artifacts;
+using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.UseCases.CreateSalle
 {
@@ -15,15 +18,18 @@ namespace Nano35.Storage.Processor.UseCases.CreateSalle
             ICreateSelleRequestContract,
             ICreateSelleResultContract>
     {
+        private readonly ApplicationContext _context;
         private readonly IPipelineNode<
             ICreateSelleRequestContract, 
             ICreateSelleResultContract> _nextNode;
 
         public ValidatedCreateSelleRequest(
+            ApplicationContext context,
             IPipelineNode<
                 ICreateSelleRequestContract,
                 ICreateSelleResultContract> nextNode)
-        {
+        { 
+            _context = context;
             _nextNode = nextNode;
         }
 
@@ -31,9 +37,17 @@ namespace Nano35.Storage.Processor.UseCases.CreateSalle
             ICreateSelleRequestContract input,
             CancellationToken cancellationToken)
         {
-            if (false)
+            var count = _context
+                .Warehouses
+                .FirstOrDefaultAsync(a =>
+                    a.StorageItemId == input.Details.FirstOrDefault().StorageItemId,
+                    cancellationToken: cancellationToken)
+                .Result
+                .Count;
+            
+            if (input.Details.FirstOrDefault().Count > count)
             {
-                return new CreateSelleValidatorErrorResult() {Message = "Ошибка валидации"};
+                return new CreateSelleValidatorErrorResult() {Message = "Невозможно списать больше чем есть в ячейке"};
             }
             return await _nextNode.Ask(input, cancellationToken);
         }

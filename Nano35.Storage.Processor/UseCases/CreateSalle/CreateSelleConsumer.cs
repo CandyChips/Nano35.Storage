@@ -32,7 +32,7 @@ namespace Nano35.Storage.Processor.UseCases.CreateSalle
             // Send request to pipeline
             var result =
                 await new LoggedCreateSelleRequest(logger,
-                    new ValidatedCreateSelleRequest(
+                    new ValidatedCreateSelleRequest(dbContext,
                         new TransactedCreateSelleRequest(dbContext,
                             new CreateSelleRequest(dbContext)))
                 ).Ask(message, context.CancellationToken);
