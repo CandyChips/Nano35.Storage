@@ -34,8 +34,7 @@ namespace Nano35.Storage.Processor.UseCases.CreateCancellation
                 await new LoggedCreateCancellatioRequest(logger,
                     new ValidatedCreateCancellationRequest(dbContext,
                         new TransactedCreateCancellationRequest(dbContext,
-                            new CreateCancellationRequest(dbContext)))
-                ).Ask(message, context.CancellationToken);
+                            new CreateCancellationRequest(dbContext)))).Ask(message, context.CancellationToken);
             
             // Check response of create article request
             switch (result)

@@ -33,8 +33,7 @@ namespace Nano35.Storage.Processor.UseCases.UpdateStorageItemHiddenComment
             var result =
                 await new LoggedUpdateStorageItemHiddenCommentRequest(logger,
                     new ValidatedUpdateStorageItemHiddenCommentRequest(
-                        new UpdateStorageItemHiddenCommentRequest(dbContext))
-                ).Ask(message, context.CancellationToken);
+                        new UpdateStorageItemHiddenCommentRequest(dbContext))).Ask(message, context.CancellationToken);
             
             // Check response of create HiddenComment request
             switch (result)

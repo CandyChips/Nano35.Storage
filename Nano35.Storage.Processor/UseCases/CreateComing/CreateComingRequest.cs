@@ -10,7 +10,9 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.CreateComing
 {
     public class CreateComingRequest :
-        IPipelineNode<ICreateComingRequestContract, ICreateComingResultContract>
+        EndPointNodeBase<
+            ICreateComingRequestContract,
+            ICreateComingResultContract>
     {
         private readonly ApplicationContext _context;
 
@@ -20,7 +22,7 @@ namespace Nano35.Storage.Processor.UseCases.CreateComing
             _context = context;
         }
         
-        public async Task<ICreateComingResultContract> Ask(
+        public override async Task<ICreateComingResultContract> Ask(
             ICreateComingRequestContract input,
             CancellationToken cancellationToken)
         {

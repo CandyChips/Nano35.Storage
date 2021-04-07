@@ -11,23 +11,16 @@ namespace Nano35.Storage.Processor.UseCases.UpdateStorageItemRetailPrice
     }
     
     public class ValidatedUpdateStorageItemRetailPriceRequest:
-        IPipelineNode<
+        PipeNodeBase<
             IUpdateStorageItemRetailPriceRequestContract,
             IUpdateStorageItemRetailPriceResultContract>
     {
-        private readonly IPipelineNode<
-            IUpdateStorageItemRetailPriceRequestContract, 
-            IUpdateStorageItemRetailPriceResultContract> _nextNode;
-
         public ValidatedUpdateStorageItemRetailPriceRequest(
-            IPipelineNode<
-                IUpdateStorageItemRetailPriceRequestContract,
-                IUpdateStorageItemRetailPriceResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IUpdateStorageItemRetailPriceRequestContract,
+                IUpdateStorageItemRetailPriceResultContract> next) : base(next)
+        { }
 
-        public async Task<IUpdateStorageItemRetailPriceResultContract> Ask(
+        public override async Task<IUpdateStorageItemRetailPriceResultContract> Ask(
             IUpdateStorageItemRetailPriceRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -35,7 +28,7 @@ namespace Nano35.Storage.Processor.UseCases.UpdateStorageItemRetailPrice
             {
                 return new UpdateStorageItemRetailPriceValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

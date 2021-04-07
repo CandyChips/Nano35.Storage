@@ -33,8 +33,7 @@ namespace Nano35.Storage.Processor.UseCases.UpdateStorageItemCondition
             var result =
                 await new LoggedUpdateStorageItemConditionRequest(logger,
                     new ValidatedUpdateStorageItemConditionRequest(
-                        new UpdateStorageItemConditionRequest(dbContext))
-                ).Ask(message, context.CancellationToken);
+                        new UpdateStorageItemConditionRequest(dbContext))).Ask(message, context.CancellationToken);
             
             // Check response of create Condition request
             switch (result)

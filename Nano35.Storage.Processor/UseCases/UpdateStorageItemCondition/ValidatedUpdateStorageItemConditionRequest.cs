@@ -11,23 +11,16 @@ namespace Nano35.Storage.Processor.UseCases.UpdateStorageItemCondition
     }
     
     public class ValidatedUpdateStorageItemConditionRequest:
-        IPipelineNode<
+        PipeNodeBase<
             IUpdateStorageItemConditionRequestContract,
             IUpdateStorageItemConditionResultContract>
     {
-        private readonly IPipelineNode<
-            IUpdateStorageItemConditionRequestContract, 
-            IUpdateStorageItemConditionResultContract> _nextNode;
-
         public ValidatedUpdateStorageItemConditionRequest(
-            IPipelineNode<
-                IUpdateStorageItemConditionRequestContract,
-                IUpdateStorageItemConditionResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IUpdateStorageItemConditionRequestContract,
+                IUpdateStorageItemConditionResultContract> next) : base(next)
+        { }
 
-        public async Task<IUpdateStorageItemConditionResultContract> Ask(
+        public override async Task<IUpdateStorageItemConditionResultContract> Ask(
             IUpdateStorageItemConditionRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -35,7 +28,7 @@ namespace Nano35.Storage.Processor.UseCases.UpdateStorageItemCondition
             {
                 return new UpdateStorageItemConditionValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

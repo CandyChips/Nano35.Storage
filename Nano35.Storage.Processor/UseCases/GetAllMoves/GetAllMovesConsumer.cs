@@ -31,8 +31,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllMoves
             var result =
                 await new LoggedGetAllMovesRequest(logger,
                     new ValidatedGetAllMovesRequest(
-                        new GetAllMovesRequest(dbContext, bus))
-                ).Ask(message, context.CancellationToken);
+                        new GetAllMovesRequest(dbContext, bus))).Ask(message, context.CancellationToken);
             
             switch (result)
             {

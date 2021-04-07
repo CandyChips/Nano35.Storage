@@ -11,23 +11,17 @@ namespace Nano35.Storage.Processor.UseCases.UpdateArticleCategory
     }
     
     public class ValidatedUpdateArticleCategoryRequest:
-        IPipelineNode<
+        PipeNodeBase<
             IUpdateArticleCategoryRequestContract,
             IUpdateArticleCategoryResultContract>
     {
-        private readonly IPipelineNode<
-            IUpdateArticleCategoryRequestContract, 
-            IUpdateArticleCategoryResultContract> _nextNode;
-
         public ValidatedUpdateArticleCategoryRequest(
-            IPipelineNode<
-                IUpdateArticleCategoryRequestContract,
-                IUpdateArticleCategoryResultContract> nextNode)
+            IPipeNode<IUpdateArticleCategoryRequestContract,
+                IUpdateArticleCategoryResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
         }
 
-        public async Task<IUpdateArticleCategoryResultContract> Ask(
+        public override async Task<IUpdateArticleCategoryResultContract> Ask(
             IUpdateArticleCategoryRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -35,7 +29,7 @@ namespace Nano35.Storage.Processor.UseCases.UpdateArticleCategory
             {
                 return new UpdateArticleCategoryValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

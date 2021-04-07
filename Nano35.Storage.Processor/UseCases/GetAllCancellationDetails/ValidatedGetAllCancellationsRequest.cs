@@ -11,27 +11,20 @@ namespace Nano35.Storage.Processor.UseCases.GetAllCancellationDetails
     }
     
     public class ValidatedGetAllCancellationDetailsRequest:
-        IPipelineNode<
+        PipeNodeBase<
             IGetAllCancellationDetailsRequestContract, 
             IGetAllCancellationDetailsResultContract>
     {
-        private readonly IPipelineNode<
-            IGetAllCancellationDetailsRequestContract, 
-            IGetAllCancellationDetailsResultContract> _nextNode;
-
         public ValidatedGetAllCancellationDetailsRequest(
-            IPipelineNode<
-                IGetAllCancellationDetailsRequestContract,
-                IGetAllCancellationDetailsResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IGetAllCancellationDetailsRequestContract,
+                IGetAllCancellationDetailsResultContract> next) : base(next)
+        { }
 
-        public async Task<IGetAllCancellationDetailsResultContract> Ask(
+        public override async Task<IGetAllCancellationDetailsResultContract> Ask(
             IGetAllCancellationDetailsRequestContract input,
             CancellationToken cancellationToken)
         {
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

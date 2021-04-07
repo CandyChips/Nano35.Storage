@@ -14,7 +14,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemsOnInstance
 {
     public class GetAllStorageItemsOnInstanceRequest :
-        IPipelineNode<
+        EndPointNodeBase<
             IGetAllStorageItemsOnInstanceContract,
             IGetAllStorageItemsOnInstanceResultContract>
     {
@@ -29,7 +29,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemsOnInstance
             _bus = bus;
         }
         
-        public async Task<IGetAllStorageItemsOnInstanceResultContract> Ask
+        public override async Task<IGetAllStorageItemsOnInstanceResultContract> Ask
             (IGetAllStorageItemsOnInstanceContract input, 
             CancellationToken cancellationToken)
         {
@@ -47,7 +47,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemsOnInstance
                     {
                         Count = a.Count
                     };
-                    var getAllStorageItems = new GetAllStorageItems(_bus,
+                    var getAllStorageItems = new Requests.GetAllStorageItems(_bus,
                         new GetAllStorageItemsRequestContract() {InstanceId = a.InstanceId});
                     res.Item = getAllStorageItems.GetResponse().Result switch
                     {
@@ -73,15 +73,5 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemsOnInstance
 
             return new GetAllStorageItemsOnInstanceSuccessResultContract() {Contains = result};
         }
-    }   
-    
-    public class GetAllStorageItems : 
-        MasstransitRequest
-        <IGetAllStorageItemsRequestContract, 
-            IGetAllStorageItemsResultContract,
-            IGetAllStorageItemsSuccessResultContract, 
-            IGetAllStorageItemsErrorResultContract>
-    {
-        public GetAllStorageItems(IBus bus, IGetAllStorageItemsRequestContract request) : base(bus, request) {}
     }
 }

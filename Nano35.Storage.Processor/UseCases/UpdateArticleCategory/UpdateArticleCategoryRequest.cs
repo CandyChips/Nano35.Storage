@@ -7,7 +7,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.UpdateArticleCategory
 {
     public class UpdateArticleCategoryRequest :
-        IPipelineNode<
+        EndPointNodeBase<
             IUpdateArticleCategoryRequestContract, 
             IUpdateArticleCategoryResultContract>
     {
@@ -25,7 +25,7 @@ namespace Nano35.Storage.Processor.UseCases.UpdateArticleCategory
             
         }
         
-        public async Task<IUpdateArticleCategoryResultContract> Ask(
+        public override async Task<IUpdateArticleCategoryResultContract> Ask(
             IUpdateArticleCategoryRequestContract input,
             CancellationToken cancellationToken)
         {

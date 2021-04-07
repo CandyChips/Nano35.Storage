@@ -29,8 +29,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllPlacesOfStorageItemOnInstance
             var result =
                 await new LoggedGetAllPlacesOfStorageItemOnInstanceRequest(logger,
                     new ValidatedGetAllPlacesOfStorageItemOnInstanceRequest(
-                        new GetAllPlacesOfStorageItemOnInstanceRequest(dbContext, bus))
-                ).Ask(message, context.CancellationToken);
+                        new GetAllPlacesOfStorageItemOnInstanceRequest(dbContext, bus))).Ask(message, context.CancellationToken);
             switch (result)
             {
                 case IGetAllPlacesOfStorageItemOnInstanceSuccessResultContract:

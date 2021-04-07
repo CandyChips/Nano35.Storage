@@ -7,7 +7,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.UpdateStorageItemRetailPrice
 {
     public class UpdateStorageItemRetailPriceRequest :
-        IPipelineNode<
+        EndPointNodeBase<
             IUpdateStorageItemRetailPriceRequestContract, 
             IUpdateStorageItemRetailPriceResultContract>
     {
@@ -25,7 +25,7 @@ namespace Nano35.Storage.Processor.UseCases.UpdateStorageItemRetailPrice
             
         }
         
-        public async Task<IUpdateStorageItemRetailPriceResultContract> Ask(
+        public override async Task<IUpdateStorageItemRetailPriceResultContract> Ask(
             IUpdateStorageItemRetailPriceRequestContract input,
             CancellationToken cancellationToken)
         {

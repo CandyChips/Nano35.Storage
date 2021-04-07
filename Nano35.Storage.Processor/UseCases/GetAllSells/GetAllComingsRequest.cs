@@ -8,12 +8,13 @@ using Microsoft.EntityFrameworkCore;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Contracts.Storage.Models;
+using Nano35.Storage.Processor.Requests;
 using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.UseCases.GetAllSells
 {
     public class GetAllSellsRequest :
-        IPipelineNode<
+        EndPointNodeBase<
             IGetAllSellsRequestContract,
             IGetAllSellsResultContract>
     {
@@ -34,7 +35,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllSells
             public List<SelleViewModel> Data { get; set; }
         }
 
-        public async Task<IGetAllSellsResultContract> Ask
+        public override async Task<IGetAllSellsResultContract> Ask
             (IGetAllSellsRequestContract input, CancellationToken cancellationToken)
         {
             var queue = await _context

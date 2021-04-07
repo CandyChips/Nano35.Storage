@@ -13,33 +13,28 @@ namespace Nano35.Storage.Processor.UseCases.CreateStorageItem
     }
     
     public class TransactedCreateStorageItemRequest :
-        IPipelineNode<
+        PipeNodeBase<
             ICreateStorageItemRequestContract, 
             ICreateStorageItemResultContract>
     {
         private readonly ApplicationContext _context;
-        private readonly IPipelineNode<
-            ICreateStorageItemRequestContract,
-            ICreateStorageItemResultContract> _nextNode;
 
         public TransactedCreateStorageItemRequest(
             ApplicationContext context,
-            IPipelineNode<
-                ICreateStorageItemRequestContract, 
-                ICreateStorageItemResultContract> nextNode)
+            IPipeNode<ICreateStorageItemRequestContract,
+                ICreateStorageItemResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
             _context = context;
         }
 
-        public async Task<ICreateStorageItemResultContract> Ask(
+        public override async Task<ICreateStorageItemResultContract> Ask(
             ICreateStorageItemRequestContract input,
             CancellationToken cancellationToken)
         {
             var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
             try
             {
-                var response = await _nextNode.Ask(input, cancellationToken);
+                var response = await DoNext(input, cancellationToken);
                 await _context.SaveChangesAsync(cancellationToken);
                 await transaction.CommitAsync(cancellationToken);
                 return response;

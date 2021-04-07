@@ -11,23 +11,17 @@ namespace Nano35.Storage.Processor.UseCases.GetAllComings
     }
     
     public class ValidatedGetAllComingsRequest:
-        IPipelineNode<
+        PipeNodeBase<
             IGetAllComingsRequestContract, 
             IGetAllComingsResultContract>
     {
-        private readonly IPipelineNode<
-            IGetAllComingsRequestContract, 
-            IGetAllComingsResultContract> _nextNode;
-
         public ValidatedGetAllComingsRequest(
-            IPipelineNode<
-                IGetAllComingsRequestContract,
-                IGetAllComingsResultContract> nextNode)
+            IPipeNode<IGetAllComingsRequestContract,
+                IGetAllComingsResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
         }
 
-        public async Task<IGetAllComingsResultContract> Ask(
+        public override async Task<IGetAllComingsResultContract> Ask(
             IGetAllComingsRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -35,7 +29,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllComings
             {
                 return new GetAllComingsValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

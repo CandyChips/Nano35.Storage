@@ -33,8 +33,7 @@ namespace Nano35.Storage.Processor.UseCases.UpdateStorageItemArticle
             var result =
                 await new LoggedUpdateStorageItemArticleRequest(logger,
                     new ValidatedUpdateStorageItemArticleRequest(
-                        new UpdateStorageItemArticleRequest(dbContext))
-                ).Ask(message, context.CancellationToken);
+                        new UpdateStorageItemArticleRequest(dbContext))).Ask(message, context.CancellationToken);
             
             // Check response of create article request
             switch (result)

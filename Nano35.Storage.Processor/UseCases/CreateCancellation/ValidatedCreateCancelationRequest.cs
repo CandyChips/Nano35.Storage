@@ -14,26 +14,21 @@ namespace Nano35.Storage.Processor.UseCases.CreateCancellation
     }
     
     public class ValidatedCreateCancellationRequest:
-        IPipelineNode<
+        PipeNodeBase<
             ICreateCancellationRequestContract,
             ICreateCancellationResultContract>
     {
         private readonly ApplicationContext _context;
-        private readonly IPipelineNode<
-            ICreateCancellationRequestContract, 
-            ICreateCancellationResultContract> _nextNode;
 
         public ValidatedCreateCancellationRequest(
             ApplicationContext context,
-            IPipelineNode<
-                ICreateCancellationRequestContract,
-                ICreateCancellationResultContract> nextNode)
+            IPipeNode<ICreateCancellationRequestContract,
+                ICreateCancellationResultContract> next) : base(next)
         {
             _context = context;
-            _nextNode = nextNode;
         }
 
-        public async Task<ICreateCancellationResultContract> Ask(
+        public override async Task<ICreateCancellationResultContract> Ask(
             ICreateCancellationRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -49,7 +44,7 @@ namespace Nano35.Storage.Processor.UseCases.CreateCancellation
             {
                 return new CreateCancellationValidatorErrorResult() {Message = "евозможно списать больше чем есть в ячейке"};
             }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

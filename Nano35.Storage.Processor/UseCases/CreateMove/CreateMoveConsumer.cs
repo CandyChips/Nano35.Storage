@@ -34,8 +34,7 @@ namespace Nano35.Storage.Processor.UseCases.CreateMove
                 await new LoggedCreateMoveRequest(logger,
                     new ValidatedCreateMoveRequest(
                         new TransactedCreateMoveRequest(dbContext,
-                            new CreateMoveRequest(dbContext)))
-                ).Ask(message, context.CancellationToken);
+                            new CreateMoveRequest(dbContext)))).Ask(message, context.CancellationToken);
             
             // Check response of create article request
             switch (result)

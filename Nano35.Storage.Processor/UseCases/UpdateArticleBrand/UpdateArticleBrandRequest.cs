@@ -7,7 +7,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.UpdateArticleBrand
 {
     public class UpdateArticleBrandRequest :
-        IPipelineNode<
+        EndPointNodeBase<
             IUpdateArticleBrandRequestContract, 
             IUpdateArticleBrandResultContract>
     {
@@ -25,7 +25,7 @@ namespace Nano35.Storage.Processor.UseCases.UpdateArticleBrand
             
         }
         
-        public async Task<IUpdateArticleBrandResultContract> Ask(
+        public override async Task<IUpdateArticleBrandResultContract> Ask(
             IUpdateArticleBrandRequestContract input,
             CancellationToken cancellationToken)
         {

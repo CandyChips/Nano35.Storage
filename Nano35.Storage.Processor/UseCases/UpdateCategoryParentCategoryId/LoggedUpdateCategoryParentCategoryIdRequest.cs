@@ -7,31 +7,26 @@ using Nano35.Contracts.Storage.Artifacts;
 namespace Nano35.Storage.Processor.UseCases.UpdateCategoryParentCategoryId
 {
     public class LoggedUpdateCategoryParentCategoryIdRequest :
-        IPipelineNode<
+        PipeNodeBase<
             IUpdateCategoryParentCategoryIdRequestContract, 
             IUpdateCategoryParentCategoryIdResultContract>
     {
         private readonly ILogger<LoggedUpdateCategoryParentCategoryIdRequest> _logger;
-        private readonly IPipelineNode<
-            IUpdateCategoryParentCategoryIdRequestContract,
-            IUpdateCategoryParentCategoryIdResultContract> _nextNode;
 
         public LoggedUpdateCategoryParentCategoryIdRequest(
             ILogger<LoggedUpdateCategoryParentCategoryIdRequest> logger,
-            IPipelineNode<
-                IUpdateCategoryParentCategoryIdRequestContract, 
-                IUpdateCategoryParentCategoryIdResultContract> nextNode)
+            IPipeNode<IUpdateCategoryParentCategoryIdRequestContract,
+                IUpdateCategoryParentCategoryIdResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<IUpdateCategoryParentCategoryIdResultContract> Ask(
+        public override async Task<IUpdateCategoryParentCategoryIdResultContract> Ask(
             IUpdateCategoryParentCategoryIdRequestContract input,
             CancellationToken cancellationToken)
         {
             _logger.LogInformation($"UpdateCategoryParentCategoryIdLogger starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input, cancellationToken);
+            var result = await DoNext(input, cancellationToken);
             _logger.LogInformation($"UpdateCategoryParentCategoryIdLogger ends on: {DateTime.Now}");
             return result;
         }

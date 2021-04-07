@@ -7,31 +7,26 @@ using Nano35.Contracts.Storage.Artifacts;
 namespace Nano35.Storage.Processor.UseCases.GetAllComingDetails
 {
     public class LoggedGetAllComingDetailsRequest :
-        IPipelineNode<
+        PipeNodeBase<
             IGetAllComingDetailsRequestContract, 
             IGetAllComingDetailsResultContract>
     {
         private readonly ILogger<LoggedGetAllComingDetailsRequest> _logger;
-        private readonly IPipelineNode<
-            IGetAllComingDetailsRequestContract,
-            IGetAllComingDetailsResultContract> _nextNode;
 
         public LoggedGetAllComingDetailsRequest(
             ILogger<LoggedGetAllComingDetailsRequest> logger,
-            IPipelineNode<
-                IGetAllComingDetailsRequestContract,
-                IGetAllComingDetailsResultContract> nextNode)
+            IPipeNode<IGetAllComingDetailsRequestContract,
+                IGetAllComingDetailsResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<IGetAllComingDetailsResultContract> Ask(
+        public override async Task<IGetAllComingDetailsResultContract> Ask(
             IGetAllComingDetailsRequestContract input,
             CancellationToken cancellationToken)
         {
             _logger.LogInformation($"GetAllComingDetailsLogger starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input, cancellationToken);
+            var result = await DoNext(input, cancellationToken);
             _logger.LogInformation($"GetAllComingDetailsLogger ends on: {DateTime.Now}");
             _logger.LogInformation("");
             return result;

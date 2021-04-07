@@ -11,23 +11,16 @@ namespace Nano35.Storage.Processor.UseCases.UpdateCategoryName
     }
     
     public class ValidatedUpdateCategoryNameRequest:
-        IPipelineNode<
+        PipeNodeBase<
             IUpdateCategoryNameRequestContract,
             IUpdateCategoryNameResultContract>
     {
-        private readonly IPipelineNode<
-            IUpdateCategoryNameRequestContract, 
-            IUpdateCategoryNameResultContract> _nextNode;
-
         public ValidatedUpdateCategoryNameRequest(
-            IPipelineNode<
-                IUpdateCategoryNameRequestContract,
-                IUpdateCategoryNameResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IUpdateCategoryNameRequestContract,
+                IUpdateCategoryNameResultContract> next) : base(next)
+        { }
 
-        public async Task<IUpdateCategoryNameResultContract> Ask(
+        public override async Task<IUpdateCategoryNameResultContract> Ask(
             IUpdateCategoryNameRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -35,7 +28,7 @@ namespace Nano35.Storage.Processor.UseCases.UpdateCategoryName
             {
                 return new UpdateCategoryNameValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

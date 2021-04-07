@@ -7,31 +7,26 @@ using Nano35.Contracts.Storage.Artifacts;
 namespace Nano35.Storage.Processor.UseCases.GetAllCancellationDetails
 {
     public class LoggedGetAllCancellationDetailsRequest :
-        IPipelineNode<
+        PipeNodeBase<
             IGetAllCancellationDetailsRequestContract, 
             IGetAllCancellationDetailsResultContract>
     {
         private readonly ILogger<LoggedGetAllCancellationDetailsRequest> _logger;
-        private readonly IPipelineNode<
-            IGetAllCancellationDetailsRequestContract,
-            IGetAllCancellationDetailsResultContract> _nextNode;
 
         public LoggedGetAllCancellationDetailsRequest(
             ILogger<LoggedGetAllCancellationDetailsRequest> logger,
-            IPipelineNode<
-                IGetAllCancellationDetailsRequestContract,
-                IGetAllCancellationDetailsResultContract> nextNode)
+            IPipeNode<IGetAllCancellationDetailsRequestContract,
+                IGetAllCancellationDetailsResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<IGetAllCancellationDetailsResultContract> Ask(
+        public override async Task<IGetAllCancellationDetailsResultContract> Ask(
             IGetAllCancellationDetailsRequestContract input,
             CancellationToken cancellationToken)
         {
             _logger.LogInformation($"GetAllCancellationDetailsLogger starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input, cancellationToken);
+            var result = await DoNext(input, cancellationToken);
             _logger.LogInformation($"GetAllCancellationDetailsLogger ends on: {DateTime.Now}");
             return result;
         }

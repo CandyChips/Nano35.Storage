@@ -11,23 +11,16 @@ namespace Nano35.Storage.Processor.UseCases.GetAllSelleDetails
     }
     
     public class ValidatedGetAllSelleDetailsRequest:
-        IPipelineNode<
+        PipeNodeBase<
             IGetAllSelleDetailsRequestContract, 
             IGetAllSelleDetailsResultContract>
     {
-        private readonly IPipelineNode<
-            IGetAllSelleDetailsRequestContract, 
-            IGetAllSelleDetailsResultContract> _nextNode;
-
         public ValidatedGetAllSelleDetailsRequest(
-            IPipelineNode<
-                IGetAllSelleDetailsRequestContract,
-                IGetAllSelleDetailsResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
-
-        public async Task<IGetAllSelleDetailsResultContract> Ask(
+            IPipeNode<IGetAllSelleDetailsRequestContract,
+                IGetAllSelleDetailsResultContract> next) : base(next)
+        { }
+        
+        public override async Task<IGetAllSelleDetailsResultContract> Ask(
             IGetAllSelleDetailsRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -35,7 +28,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllSelleDetails
             {
                 return new GetAllSelleDetailsValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

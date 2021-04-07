@@ -11,23 +11,16 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItems
     }
     
     public class ValidatedGetAllStorageItemsRequest:
-        IPipelineNode<
+        PipeNodeBase<
             IGetAllStorageItemsRequestContract, 
             IGetAllStorageItemsResultContract>
     {
-        private readonly IPipelineNode<
-            IGetAllStorageItemsRequestContract, 
-            IGetAllStorageItemsResultContract> _nextNode;
-
         public ValidatedGetAllStorageItemsRequest(
-            IPipelineNode<
-                IGetAllStorageItemsRequestContract,
-                IGetAllStorageItemsResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IGetAllStorageItemsRequestContract,
+                IGetAllStorageItemsResultContract> next) : base(next)
+        { }
 
-        public async Task<IGetAllStorageItemsResultContract> Ask(
+        public override async Task<IGetAllStorageItemsResultContract> Ask(
             IGetAllStorageItemsRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -35,7 +28,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItems
             {
                 return new GetAllStorageItemsValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

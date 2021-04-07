@@ -11,7 +11,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.GetAllMoveDetails
 {
     public class GetAllMoveDetailsRequest :
-        IPipelineNode<
+        EndPointNodeBase<
             IGetAllMoveDetailsRequestContract,
             IGetAllMoveDetailsResultContract>
     {
@@ -26,7 +26,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllMoveDetails
             _bus = bus;
         }
 
-        public async Task<IGetAllMoveDetailsResultContract> Ask(
+        public override async Task<IGetAllMoveDetailsResultContract> Ask(
             IGetAllMoveDetailsRequestContract input, 
             CancellationToken cancellationToken)
         {

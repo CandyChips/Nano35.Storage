@@ -12,33 +12,28 @@ namespace Nano35.Storage.Processor.UseCases.UpdateStorageItemPurchasePrice
     }
     
     public class TransactedUpdateStorageItemPurchasePriceRequest :
-        IPipelineNode<
+        PipeNodeBase<
             IUpdateStorageItemPurchasePriceRequestContract, 
             IUpdateStorageItemPurchasePriceResultContract>
     {
         private readonly ApplicationContext _context;
-        private readonly IPipelineNode<
-            IUpdateStorageItemPurchasePriceRequestContract,
-            IUpdateStorageItemPurchasePriceResultContract> _nextNode;
 
         public TransactedUpdateStorageItemPurchasePriceRequest(
             ApplicationContext context,
-            IPipelineNode<
-                IUpdateStorageItemPurchasePriceRequestContract, 
-                IUpdateStorageItemPurchasePriceResultContract> nextNode)
+            IPipeNode<IUpdateStorageItemPurchasePriceRequestContract,
+                IUpdateStorageItemPurchasePriceResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
             _context = context;
         }
 
-        public async Task<IUpdateStorageItemPurchasePriceResultContract> Ask(
+        public override async Task<IUpdateStorageItemPurchasePriceResultContract> Ask(
             IUpdateStorageItemPurchasePriceRequestContract input,
             CancellationToken cancellationToken)
         {
             var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
             try
             {
-                var response = await _nextNode.Ask(input, cancellationToken);
+                var response = await DoNext(input, cancellationToken);
                 await _context.SaveChangesAsync(cancellationToken);
                 await transaction.CommitAsync(cancellationToken);
                 return response;

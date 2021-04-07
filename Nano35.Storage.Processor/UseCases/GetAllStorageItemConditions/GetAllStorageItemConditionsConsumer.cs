@@ -33,8 +33,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemConditions
             var result =
                 await new LoggedGetAllStorageItemConditionsRequest(logger,
                     new ValidatedGetAllStorageItemConditionsRequest(
-                        new GetAllStorageItemConditionsRequest(dbContext))
-                ).Ask(message, context.CancellationToken);
+                        new GetAllStorageItemConditionsRequest(dbContext))).Ask(message, context.CancellationToken);
             
             // Check response of create article request
             switch (result)

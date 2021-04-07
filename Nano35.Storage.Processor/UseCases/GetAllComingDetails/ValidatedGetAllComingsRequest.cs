@@ -11,27 +11,20 @@ namespace Nano35.Storage.Processor.UseCases.GetAllComingDetails
     }
     
     public class ValidatedGetAllComingDetailsRequest:
-        IPipelineNode<
+        PipeNodeBase<
             IGetAllComingDetailsRequestContract, 
             IGetAllComingDetailsResultContract>
     {
-        private readonly IPipelineNode<
-            IGetAllComingDetailsRequestContract, 
-            IGetAllComingDetailsResultContract> _nextNode;
-
         public ValidatedGetAllComingDetailsRequest(
-            IPipelineNode<
-                IGetAllComingDetailsRequestContract,
-                IGetAllComingDetailsResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IGetAllComingDetailsRequestContract,
+                IGetAllComingDetailsResultContract> next) : base(next)
+        { }
 
-        public async Task<IGetAllComingDetailsResultContract> Ask(
+        public override async Task<IGetAllComingDetailsResultContract> Ask(
             IGetAllComingDetailsRequestContract input,
             CancellationToken cancellationToken)
         {
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

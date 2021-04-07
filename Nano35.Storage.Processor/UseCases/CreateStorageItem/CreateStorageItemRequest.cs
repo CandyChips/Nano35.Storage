@@ -7,7 +7,9 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.CreateStorageItem
 {
     public class CreateStorageItemRequest :
-        IPipelineNode<ICreateStorageItemRequestContract, ICreateStorageItemResultContract>
+        EndPointNodeBase<
+            ICreateStorageItemRequestContract,
+            ICreateStorageItemResultContract>
     {
         private readonly ApplicationContext _context;
 
@@ -23,7 +25,7 @@ namespace Nano35.Storage.Processor.UseCases.CreateStorageItem
             
         }
         
-        public async Task<ICreateStorageItemResultContract> Ask(
+        public override async Task<ICreateStorageItemResultContract> Ask(
             ICreateStorageItemRequestContract input,
             CancellationToken cancellationToken)
         {

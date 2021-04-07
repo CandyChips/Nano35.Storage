@@ -33,8 +33,7 @@ namespace Nano35.Storage.Processor.UseCases.UpdateArticleBrand
             var result =
                 await new LoggedUpdateArticleBrandRequest(logger,
                     new ValidatedUpdateArticleBrandRequest(
-                        new UpdateArticleBrandRequest(dbContext))
-                ).Ask(message, context.CancellationToken);
+                        new UpdateArticleBrandRequest(dbContext))).Ask(message, context.CancellationToken);
             
             // Check response of create article request
             switch (result)

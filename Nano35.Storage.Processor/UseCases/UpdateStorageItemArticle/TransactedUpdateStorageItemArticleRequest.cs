@@ -12,33 +12,28 @@ namespace Nano35.Storage.Processor.UseCases.UpdateStorageItemArticle
     }
     
     public class TransactedUpdateStorageItemArticleRequest :
-        IPipelineNode<
+        PipeNodeBase<
             IUpdateStorageItemArticleRequestContract, 
             IUpdateStorageItemArticleResultContract>
     {
         private readonly ApplicationContext _context;
-        private readonly IPipelineNode<
-            IUpdateStorageItemArticleRequestContract,
-            IUpdateStorageItemArticleResultContract> _nextNode;
 
         public TransactedUpdateStorageItemArticleRequest(
             ApplicationContext context,
-            IPipelineNode<
-                IUpdateStorageItemArticleRequestContract, 
-                IUpdateStorageItemArticleResultContract> nextNode)
+            IPipeNode<IUpdateStorageItemArticleRequestContract,
+                IUpdateStorageItemArticleResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
             _context = context;
         }
 
-        public async Task<IUpdateStorageItemArticleResultContract> Ask(
+        public override async Task<IUpdateStorageItemArticleResultContract> Ask(
             IUpdateStorageItemArticleRequestContract input,
             CancellationToken cancellationToken)
         {
             var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
             try
             {
-                var response = await _nextNode.Ask(input, cancellationToken);
+                var response = await DoNext(input, cancellationToken);
                 await _context.SaveChangesAsync(cancellationToken);
                 await transaction.CommitAsync(cancellationToken);
                 return response;

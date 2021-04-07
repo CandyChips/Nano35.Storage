@@ -33,8 +33,7 @@ namespace Nano35.Storage.Processor.UseCases.UpdateArticleCategory
             var result =
                 await new LoggedUpdateArticleCategoryRequest(logger,
                     new ValidatedUpdateArticleCategoryRequest(
-                        new UpdateArticleCategoryRequest(dbContext))
-                ).Ask(message, context.CancellationToken);
+                        new UpdateArticleCategoryRequest(dbContext))).Ask(message, context.CancellationToken);
             
             // Check response of create article request
             switch (result)

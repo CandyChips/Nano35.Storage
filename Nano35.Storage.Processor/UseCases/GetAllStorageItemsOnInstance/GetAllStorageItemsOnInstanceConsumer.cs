@@ -31,8 +31,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemsOnInstance
             var result =
                 await new LoggedGetAllStorageItemsOnInstanceRequest(logger,
                     new ValidatedGetAllStorageItemsOnInstanceRequest(
-                        new GetAllStorageItemsOnInstanceRequest(dbContext, bus))
-                ).Ask(message, context.CancellationToken);
+                        new GetAllStorageItemsOnInstanceRequest(dbContext, bus))).Ask(message, context.CancellationToken);
             
             switch (result)
             {

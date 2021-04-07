@@ -12,7 +12,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.GetAllSelleDetails
 {
     public class GetAllSelleDetailsRequest :
-        IPipelineNode<
+        EndPointNodeBase<
             IGetAllSelleDetailsRequestContract,
             IGetAllSelleDetailsResultContract>
     {
@@ -33,7 +33,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllSelleDetails
             public List<SelleDetailViewModel> Data { get; set; }
         }
 
-        public async Task<IGetAllSelleDetailsResultContract> Ask
+        public override async Task<IGetAllSelleDetailsResultContract> Ask
             (IGetAllSelleDetailsRequestContract input, CancellationToken cancellationToken)
         {
             var result = await _context

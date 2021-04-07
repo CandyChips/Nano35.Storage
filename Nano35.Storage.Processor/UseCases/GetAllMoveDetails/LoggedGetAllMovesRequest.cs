@@ -7,31 +7,25 @@ using Nano35.Contracts.Storage.Artifacts;
 namespace Nano35.Storage.Processor.UseCases.GetAllMoveDetails
 {
     public class LoggedGetAllMoveDetailsRequest :
-        IPipelineNode<
+        PipeNodeBase<
             IGetAllMoveDetailsRequestContract, 
             IGetAllMoveDetailsResultContract>
     {
         private readonly ILogger<LoggedGetAllMoveDetailsRequest> _logger;
-        private readonly IPipelineNode<
-            IGetAllMoveDetailsRequestContract,
-            IGetAllMoveDetailsResultContract> _nextNode;
-
         public LoggedGetAllMoveDetailsRequest(
             ILogger<LoggedGetAllMoveDetailsRequest> logger,
-            IPipelineNode<
-                IGetAllMoveDetailsRequestContract,
-                IGetAllMoveDetailsResultContract> nextNode)
+            IPipeNode<IGetAllMoveDetailsRequestContract,
+                IGetAllMoveDetailsResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<IGetAllMoveDetailsResultContract> Ask(
+        public override async Task<IGetAllMoveDetailsResultContract> Ask(
             IGetAllMoveDetailsRequestContract input,
             CancellationToken cancellationToken)
         {
             _logger.LogInformation($"GetAllMoveDetailsLogger starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input, cancellationToken);
+            var result = await DoNext(input, cancellationToken);
             _logger.LogInformation($"GetAllMoveDetailsLogger ends on: {DateTime.Now}");
             return result;
         }

@@ -12,33 +12,28 @@ namespace Nano35.Storage.Processor.UseCases.CreateSalle
     }
     
     public class TransactedCreateSelleRequest :
-        IPipelineNode<
+        PipeNodeBase<
             ICreateSelleRequestContract, 
             ICreateSelleResultContract>
     {
         private readonly ApplicationContext _context;
-        private readonly IPipelineNode<
-            ICreateSelleRequestContract,
-            ICreateSelleResultContract> _nextNode;
 
         public TransactedCreateSelleRequest(
             ApplicationContext context,
-            IPipelineNode<
-                ICreateSelleRequestContract, 
-                ICreateSelleResultContract> nextNode)
+            IPipeNode<ICreateSelleRequestContract,
+                ICreateSelleResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
             _context = context;
         }
 
-        public async Task<ICreateSelleResultContract> Ask(
+        public override async Task<ICreateSelleResultContract> Ask(
             ICreateSelleRequestContract input,
             CancellationToken cancellationToken)
         {
             var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
             try
             {
-                var response = await _nextNode.Ask(input, cancellationToken);
+                var response = await DoNext(input, cancellationToken);
                 await _context.SaveChangesAsync(cancellationToken);
                 await transaction.CommitAsync(cancellationToken);
                 return response;

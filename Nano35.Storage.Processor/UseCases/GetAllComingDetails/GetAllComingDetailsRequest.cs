@@ -13,7 +13,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.GetAllComingDetails
 {
     public class GetAllComingDetailsRequest :
-        IPipelineNode<
+        EndPointNodeBase<
             IGetAllComingDetailsRequestContract,
             IGetAllComingDetailsResultContract>
     {
@@ -28,7 +28,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllComingDetails
             _bus = bus;
         }
 
-        public async Task<IGetAllComingDetailsResultContract> Ask(
+        public override async Task<IGetAllComingDetailsResultContract> Ask(
             IGetAllComingDetailsRequestContract input, 
             CancellationToken cancellationToken)
         {

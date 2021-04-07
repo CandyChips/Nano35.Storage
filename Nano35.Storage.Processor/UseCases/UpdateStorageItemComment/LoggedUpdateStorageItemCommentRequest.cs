@@ -7,31 +7,26 @@ using Nano35.Contracts.Storage.Artifacts;
 namespace Nano35.Storage.Processor.UseCases.UpdateStorageItemComment
 {
     public class LoggedUpdateStorageItemCommentRequest :
-        IPipelineNode<
+        PipeNodeBase<
             IUpdateStorageItemCommentRequestContract, 
             IUpdateStorageItemCommentResultContract>
     {
         private readonly ILogger<LoggedUpdateStorageItemCommentRequest> _logger;
-        private readonly IPipelineNode<
-            IUpdateStorageItemCommentRequestContract,
-            IUpdateStorageItemCommentResultContract> _nextNode;
 
         public LoggedUpdateStorageItemCommentRequest(
             ILogger<LoggedUpdateStorageItemCommentRequest> logger,
-            IPipelineNode<
-                IUpdateStorageItemCommentRequestContract, 
-                IUpdateStorageItemCommentResultContract> nextNode)
+            IPipeNode<IUpdateStorageItemCommentRequestContract,
+                IUpdateStorageItemCommentResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<IUpdateStorageItemCommentResultContract> Ask(
+        public override async Task<IUpdateStorageItemCommentResultContract> Ask(
             IUpdateStorageItemCommentRequestContract input,
             CancellationToken cancellationToken)
         {
             _logger.LogInformation($"UpdateStorageItemCommentLogger starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input, cancellationToken);
+            var result = await DoNext(input, cancellationToken);
             _logger.LogInformation($"UpdateStorageItemCommentLogger ends on: {DateTime.Now}");
             return result;
         }

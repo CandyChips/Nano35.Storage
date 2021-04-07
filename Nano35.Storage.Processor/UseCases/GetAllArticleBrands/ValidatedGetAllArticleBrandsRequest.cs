@@ -11,23 +11,16 @@ namespace Nano35.Storage.Processor.UseCases.GetAllArticleBrands
     }
     
     public class ValidatedGetAllArticlesBrandsRequest:
-        IPipelineNode<
+        PipeNodeBase<
             IGetAllArticlesBrandsRequestContract, 
             IGetAllArticlesBrandsResultContract>
     {
-        private readonly IPipelineNode<
-            IGetAllArticlesBrandsRequestContract, 
-            IGetAllArticlesBrandsResultContract> _nextNode;
-
         public ValidatedGetAllArticlesBrandsRequest(
-            IPipelineNode<
-                IGetAllArticlesBrandsRequestContract,
-                IGetAllArticlesBrandsResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IGetAllArticlesBrandsRequestContract,
+                IGetAllArticlesBrandsResultContract> next) : base(next)
+        { }
 
-        public async Task<IGetAllArticlesBrandsResultContract> Ask(
+        public override async Task<IGetAllArticlesBrandsResultContract> Ask(
             IGetAllArticlesBrandsRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -35,7 +28,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllArticleBrands
             {
                 return new GetAllArticlesBrandsValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

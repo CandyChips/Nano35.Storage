@@ -12,33 +12,28 @@ namespace Nano35.Storage.Processor.UseCases.UpdateCategoryName
     }
     
     public class TransactedUpdateCategoryNameRequest :
-        IPipelineNode<
+        PipeNodeBase<
             IUpdateCategoryNameRequestContract, 
             IUpdateCategoryNameResultContract>
     {
         private readonly ApplicationContext _context;
-        private readonly IPipelineNode<
-            IUpdateCategoryNameRequestContract,
-            IUpdateCategoryNameResultContract> _nextNode;
 
         public TransactedUpdateCategoryNameRequest(
             ApplicationContext context,
-            IPipelineNode<
-                IUpdateCategoryNameRequestContract, 
-                IUpdateCategoryNameResultContract> nextNode)
+            IPipeNode<IUpdateCategoryNameRequestContract,
+                IUpdateCategoryNameResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
             _context = context;
         }
 
-        public async Task<IUpdateCategoryNameResultContract> Ask(
+        public override async Task<IUpdateCategoryNameResultContract> Ask(
             IUpdateCategoryNameRequestContract input,
             CancellationToken cancellationToken)
         {
             var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
             try
             {
-                var response = await _nextNode.Ask(input, cancellationToken);
+                var response = await DoNext(input, cancellationToken);
                 await _context.SaveChangesAsync(cancellationToken);
                 await transaction.CommitAsync(cancellationToken);
                 return response;

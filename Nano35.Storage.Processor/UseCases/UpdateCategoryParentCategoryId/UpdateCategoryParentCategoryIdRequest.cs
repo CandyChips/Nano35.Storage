@@ -7,7 +7,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.UpdateCategoryParentCategoryId
 {
     public class UpdateCategoryParentCategoryIdRequest :
-        IPipelineNode<
+        EndPointNodeBase<
             IUpdateCategoryParentCategoryIdRequestContract, 
             IUpdateCategoryParentCategoryIdResultContract>
     {
@@ -25,7 +25,7 @@ namespace Nano35.Storage.Processor.UseCases.UpdateCategoryParentCategoryId
             
         }
         
-        public async Task<IUpdateCategoryParentCategoryIdResultContract> Ask(
+        public override async Task<IUpdateCategoryParentCategoryIdResultContract> Ask(
             IUpdateCategoryParentCategoryIdRequestContract input,
             CancellationToken cancellationToken)
         {

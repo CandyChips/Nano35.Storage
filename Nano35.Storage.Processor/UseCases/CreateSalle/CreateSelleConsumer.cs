@@ -34,8 +34,7 @@ namespace Nano35.Storage.Processor.UseCases.CreateSalle
                 await new LoggedCreateSelleRequest(logger,
                     new ValidatedCreateSelleRequest(dbContext,
                         new TransactedCreateSelleRequest(dbContext,
-                            new CreateSelleRequest(dbContext)))
-                ).Ask(message, context.CancellationToken);
+                            new CreateSelleRequest(dbContext)))).Ask(message, context.CancellationToken);
             
             // Check response of create article request
             switch (result)

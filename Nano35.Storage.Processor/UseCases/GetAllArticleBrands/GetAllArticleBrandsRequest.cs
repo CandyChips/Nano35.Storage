@@ -9,7 +9,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.GetAllArticleBrands
 {
     public class GetAllArticlesBrandsRequest :
-        IPipelineNode<
+        EndPointNodeBase<
             IGetAllArticlesBrandsRequestContract,
             IGetAllArticlesBrandsResultContract>
     {
@@ -27,7 +27,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllArticleBrands
             public List<string> Data { get; set; }
         }
         
-        public async Task<IGetAllArticlesBrandsResultContract> Ask(
+        public override async Task<IGetAllArticlesBrandsResultContract> Ask(
             IGetAllArticlesBrandsRequestContract input, 
             CancellationToken cancellationToken)
         {

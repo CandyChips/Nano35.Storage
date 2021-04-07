@@ -33,8 +33,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllArticles
             var result =
                 await new LoggedGetAllArticlesRequest(logger,
                     new ValidatedGetAllArticlesRequest(
-                        new GetAllArticlesRequest(dbContext))
-                ).Ask(message, context.CancellationToken);
+                        new GetAllArticlesRequest(dbContext))).Ask(message, context.CancellationToken);
             
             // Check response of create article request
             switch (result)

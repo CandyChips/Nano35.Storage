@@ -32,8 +32,7 @@ namespace Nano35.Storage.Processor.UseCases.UpdateCategoryParentCategoryId
             var result =
                 await new LoggedUpdateCategoryParentCategoryIdRequest(logger,
                     new ValidatedUpdateCategoryParentCategoryIdRequest(
-                        new UpdateCategoryParentCategoryIdRequest(dbContext))
-                ).Ask(message, context.CancellationToken);
+                        new UpdateCategoryParentCategoryIdRequest(dbContext))).Ask(message, context.CancellationToken);
             
             // Check response of create article request
             switch (result)

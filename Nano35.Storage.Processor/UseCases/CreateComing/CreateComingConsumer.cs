@@ -34,8 +34,7 @@ namespace Nano35.Storage.Processor.UseCases.CreateComing
                 await new LoggedCreateComingRequest(logger,
                     new ValidatedCreateComingRequest(
                         new TransactedCreateComingRequest(dbContext,
-                            new CreateComingRequest(dbContext)))
-                ).Ask(message, context.CancellationToken);
+                            new CreateComingRequest(dbContext)))).Ask(message, context.CancellationToken);
             
             // Check response of create article request
             switch (result)

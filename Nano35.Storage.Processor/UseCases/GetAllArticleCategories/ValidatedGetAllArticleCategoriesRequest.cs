@@ -11,23 +11,16 @@ namespace Nano35.Storage.Processor.UseCases.GetAllArticleCategories
     }
     
     public class ValidatedGetAllArticlesCategoriesRequest:
-        IPipelineNode<
+        PipeNodeBase<
             IGetAllArticlesCategoriesRequestContract, 
             IGetAllArticlesCategoriesResultContract>
     {
-        private readonly IPipelineNode<
-            IGetAllArticlesCategoriesRequestContract, 
-            IGetAllArticlesCategoriesResultContract> _nextNode;
-
         public ValidatedGetAllArticlesCategoriesRequest(
-            IPipelineNode<
-                IGetAllArticlesCategoriesRequestContract,
-                IGetAllArticlesCategoriesResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IGetAllArticlesCategoriesRequestContract,
+                IGetAllArticlesCategoriesResultContract> next) : base(next)
+        { }
 
-        public async Task<IGetAllArticlesCategoriesResultContract> Ask(
+        public override async Task<IGetAllArticlesCategoriesResultContract> Ask(
             IGetAllArticlesCategoriesRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -35,7 +28,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllArticleCategories
             {
                 return new GetAllArticlesCategoriesValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

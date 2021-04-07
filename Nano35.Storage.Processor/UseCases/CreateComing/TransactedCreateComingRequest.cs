@@ -13,33 +13,28 @@ namespace Nano35.Storage.Processor.UseCases.CreateComing
     }
     
     public class TransactedCreateComingRequest :
-        IPipelineNode<
+        PipeNodeBase<
             ICreateComingRequestContract, 
             ICreateComingResultContract>
     {
         private readonly ApplicationContext _context;
-        private readonly IPipelineNode<
-            ICreateComingRequestContract,
-            ICreateComingResultContract> _nextNode;
 
         public TransactedCreateComingRequest(
             ApplicationContext context,
-            IPipelineNode<
-                ICreateComingRequestContract, 
-                ICreateComingResultContract> nextNode)
+            IPipeNode<ICreateComingRequestContract,
+                ICreateComingResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
             _context = context;
         }
 
-        public async Task<ICreateComingResultContract> Ask(
+        public override async Task<ICreateComingResultContract> Ask(
             ICreateComingRequestContract input,
             CancellationToken cancellationToken)
         {
             var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
             try
             {
-                var response = await _nextNode.Ask(input, cancellationToken);
+                var response = await DoNext(input, cancellationToken);
                 await _context.SaveChangesAsync(cancellationToken);
                 await transaction.CommitAsync(cancellationToken);
                 return response;

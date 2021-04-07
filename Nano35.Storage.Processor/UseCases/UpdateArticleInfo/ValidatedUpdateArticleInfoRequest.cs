@@ -11,23 +11,16 @@ namespace Nano35.Storage.Processor.UseCases.UpdateArticleInfo
     }
     
     public class ValidatedUpdateArticleInfoRequest:
-        IPipelineNode<
+        PipeNodeBase<
             IUpdateArticleInfoRequestContract,
             IUpdateArticleInfoResultContract>
     {
-        private readonly IPipelineNode<
-            IUpdateArticleInfoRequestContract, 
-            IUpdateArticleInfoResultContract> _nextNode;
-
         public ValidatedUpdateArticleInfoRequest(
-            IPipelineNode<
-                IUpdateArticleInfoRequestContract,
-                IUpdateArticleInfoResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IUpdateArticleInfoRequestContract,
+                IUpdateArticleInfoResultContract> next) : base(next)
+        { }
 
-        public async Task<IUpdateArticleInfoResultContract> Ask(
+        public override async Task<IUpdateArticleInfoResultContract> Ask(
             IUpdateArticleInfoRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -35,7 +28,7 @@ namespace Nano35.Storage.Processor.UseCases.UpdateArticleInfo
             {
                 return new UpdateArticleInfoValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

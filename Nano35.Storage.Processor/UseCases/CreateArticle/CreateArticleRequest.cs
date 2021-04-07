@@ -8,7 +8,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.CreateArticle
 {
     public class CreateArticleRequest :
-        IPipelineNode<
+        EndPointNodeBase<
             ICreateArticleRequestContract,
             ICreateArticleResultContract>
     {
@@ -26,7 +26,7 @@ namespace Nano35.Storage.Processor.UseCases.CreateArticle
             
         }
         
-        public async Task<ICreateArticleResultContract> Ask(
+        public override async Task<ICreateArticleResultContract> Ask(
             ICreateArticleRequestContract input,
             CancellationToken cancellationToken)
         {

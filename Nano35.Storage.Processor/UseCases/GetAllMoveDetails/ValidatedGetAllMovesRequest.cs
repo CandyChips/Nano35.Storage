@@ -11,23 +11,16 @@ namespace Nano35.Storage.Processor.UseCases.GetAllMoveDetails
     }
     
     public class ValidatedGetAllMoveDetailsRequest:
-        IPipelineNode<
+        PipeNodeBase<
             IGetAllMoveDetailsRequestContract, 
             IGetAllMoveDetailsResultContract>
     {
-        private readonly IPipelineNode<
-            IGetAllMoveDetailsRequestContract, 
-            IGetAllMoveDetailsResultContract> _nextNode;
-
         public ValidatedGetAllMoveDetailsRequest(
-            IPipelineNode<
-                IGetAllMoveDetailsRequestContract,
-                IGetAllMoveDetailsResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IGetAllMoveDetailsRequestContract,
+                IGetAllMoveDetailsResultContract> next) : base(next)
+        { }
 
-        public async Task<IGetAllMoveDetailsResultContract> Ask(
+        public override async Task<IGetAllMoveDetailsResultContract> Ask(
             IGetAllMoveDetailsRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -35,7 +28,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllMoveDetails
             {
                 return new GetAllMoveDetailsValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

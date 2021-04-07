@@ -34,8 +34,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllSells
             var result =
                 await new LoggedGetAllSellsRequest(logger,
                     new ValidatedGetAllSellsRequest(
-                        new GetAllSellsRequest(dbContext, bus))
-                ).Ask(message, context.CancellationToken);
+                        new GetAllSellsRequest(dbContext, bus))).Ask(message, context.CancellationToken);
             
             // Check response of create article request
             switch (result)

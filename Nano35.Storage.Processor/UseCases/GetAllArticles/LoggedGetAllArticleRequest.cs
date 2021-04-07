@@ -7,31 +7,26 @@ using Nano35.Contracts.Storage.Artifacts;
 namespace Nano35.Storage.Processor.UseCases.GetAllArticles
 {
     public class LoggedGetAllArticlesRequest :
-        IPipelineNode<
+        PipeNodeBase<
             IGetAllArticlesRequestContract, 
             IGetAllArticlesResultContract>
     {
         private readonly ILogger<LoggedGetAllArticlesRequest> _logger;
-        private readonly IPipelineNode<
-            IGetAllArticlesRequestContract,
-            IGetAllArticlesResultContract> _nextNode;
 
         public LoggedGetAllArticlesRequest(
             ILogger<LoggedGetAllArticlesRequest> logger,
-            IPipelineNode<
-                IGetAllArticlesRequestContract,
-                IGetAllArticlesResultContract> nextNode)
+            IPipeNode<IGetAllArticlesRequestContract,
+                IGetAllArticlesResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<IGetAllArticlesResultContract> Ask(
+        public override async Task<IGetAllArticlesResultContract> Ask(
             IGetAllArticlesRequestContract input,
             CancellationToken cancellationToken)
         {
             _logger.LogInformation($"GetAllArticlesLogger starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input, cancellationToken);
+            var result = await DoNext(input, cancellationToken);
             _logger.LogInformation($"GetAllArticlesLogger ends on: {DateTime.Now}");
             _logger.LogInformation("");
             return result;

@@ -9,7 +9,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.GetAllStorageItems
 {
     public class GetAllStorageItemsRequest :
-        IPipelineNode<
+        EndPointNodeBase<
             IGetAllStorageItemsRequestContract,
             IGetAllStorageItemsResultContract>
     {
@@ -27,7 +27,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItems
             public List<StorageItemViewModel> Data { get; set; }
         }
         
-        public async Task<IGetAllStorageItemsResultContract> Ask
+        public override async Task<IGetAllStorageItemsResultContract> Ask
             (IGetAllStorageItemsRequestContract input, 
             CancellationToken cancellationToken)
         {

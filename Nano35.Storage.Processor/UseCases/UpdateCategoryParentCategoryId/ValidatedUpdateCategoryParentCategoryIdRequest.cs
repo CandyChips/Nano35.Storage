@@ -11,23 +11,16 @@ namespace Nano35.Storage.Processor.UseCases.UpdateCategoryParentCategoryId
     }
     
     public class ValidatedUpdateCategoryParentCategoryIdRequest:
-        IPipelineNode<
+        PipeNodeBase<
             IUpdateCategoryParentCategoryIdRequestContract,
             IUpdateCategoryParentCategoryIdResultContract>
     {
-        private readonly IPipelineNode<
-            IUpdateCategoryParentCategoryIdRequestContract, 
-            IUpdateCategoryParentCategoryIdResultContract> _nextNode;
-
         public ValidatedUpdateCategoryParentCategoryIdRequest(
-            IPipelineNode<
-                IUpdateCategoryParentCategoryIdRequestContract,
-                IUpdateCategoryParentCategoryIdResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IUpdateCategoryParentCategoryIdRequestContract,
+                IUpdateCategoryParentCategoryIdResultContract> next) : base(next)
+        { }
 
-        public async Task<IUpdateCategoryParentCategoryIdResultContract> Ask(
+        public override async Task<IUpdateCategoryParentCategoryIdResultContract> Ask(
             IUpdateCategoryParentCategoryIdRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -35,7 +28,7 @@ namespace Nano35.Storage.Processor.UseCases.UpdateCategoryParentCategoryId
             {
                 return new UpdateCategoryParentCategoryIdValidatorErrorResult() {Message = "Ошибка валидации"};
             }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

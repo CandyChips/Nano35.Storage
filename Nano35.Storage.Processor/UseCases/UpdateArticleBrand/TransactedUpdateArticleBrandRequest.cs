@@ -12,33 +12,28 @@ namespace Nano35.Storage.Processor.UseCases.UpdateArticleBrand
     }
     
     public class TransactedUpdateArticleBrandRequest :
-        IPipelineNode<
+        PipeNodeBase<
             IUpdateArticleBrandRequestContract, 
             IUpdateArticleBrandResultContract>
     {
         private readonly ApplicationContext _context;
-        private readonly IPipelineNode<
-            IUpdateArticleBrandRequestContract,
-            IUpdateArticleBrandResultContract> _nextNode;
 
         public TransactedUpdateArticleBrandRequest(
             ApplicationContext context,
-            IPipelineNode<
-                IUpdateArticleBrandRequestContract, 
-                IUpdateArticleBrandResultContract> nextNode)
+            IPipeNode<IUpdateArticleBrandRequestContract,
+                IUpdateArticleBrandResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
             _context = context;
         }
 
-        public async Task<IUpdateArticleBrandResultContract> Ask(
+        public override async Task<IUpdateArticleBrandResultContract> Ask(
             IUpdateArticleBrandRequestContract input,
             CancellationToken cancellationToken)
         {
             var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
             try
             {
-                var response = await _nextNode.Ask(input, cancellationToken);
+                var response = await DoNext(input, cancellationToken);
                 await _context.SaveChangesAsync(cancellationToken);
                 await transaction.CommitAsync(cancellationToken);
                 return response;

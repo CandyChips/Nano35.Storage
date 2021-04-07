@@ -32,8 +32,7 @@ namespace Nano35.Storage.Processor.UseCases.UpdateCategoryName
             var result =
                 await new LoggedUpdateCategoryNameRequest(logger,
                     new ValidatedUpdateCategoryNameRequest(
-                        new UpdateCategoryNameRequest(dbContext))
-                ).Ask(message, context.CancellationToken);
+                        new UpdateCategoryNameRequest(dbContext))).Ask(message, context.CancellationToken);
             
             // Check response of create article request
             switch (result)

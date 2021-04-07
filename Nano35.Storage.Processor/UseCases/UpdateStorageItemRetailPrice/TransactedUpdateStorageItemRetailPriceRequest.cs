@@ -12,33 +12,28 @@ namespace Nano35.Storage.Processor.UseCases.UpdateStorageItemRetailPrice
     }
     
     public class TransactedUpdateStorageItemRetailPriceRequest :
-        IPipelineNode<
+        PipeNodeBase<
             IUpdateStorageItemRetailPriceRequestContract, 
             IUpdateStorageItemRetailPriceResultContract>
     {
         private readonly ApplicationContext _context;
-        private readonly IPipelineNode<
-            IUpdateStorageItemRetailPriceRequestContract,
-            IUpdateStorageItemRetailPriceResultContract> _nextNode;
 
         public TransactedUpdateStorageItemRetailPriceRequest(
             ApplicationContext context,
-            IPipelineNode<
-                IUpdateStorageItemRetailPriceRequestContract, 
-                IUpdateStorageItemRetailPriceResultContract> nextNode)
+            IPipeNode<IUpdateStorageItemRetailPriceRequestContract,
+                IUpdateStorageItemRetailPriceResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
             _context = context;
         }
 
-        public async Task<IUpdateStorageItemRetailPriceResultContract> Ask(
+        public override async Task<IUpdateStorageItemRetailPriceResultContract> Ask(
             IUpdateStorageItemRetailPriceRequestContract input,
             CancellationToken cancellationToken)
         {
             var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
             try
             {
-                var response = await _nextNode.Ask(input, cancellationToken);
+                var response = await DoNext(input, cancellationToken);
                 await _context.SaveChangesAsync(cancellationToken);
                 await transaction.CommitAsync(cancellationToken);
                 return response;

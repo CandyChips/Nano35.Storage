@@ -10,7 +10,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.GetAllArticleCategories
 {
     public class GetAllArticlesCategoriesRequest :
-        IPipelineNode<
+        EndPointNodeBase<
             IGetAllArticlesCategoriesRequestContract,
             IGetAllArticlesCategoriesResultContract>
     {
@@ -28,7 +28,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllArticleCategories
             public List<CategoryViewModel> Data { get; set; }
         }
         
-        public async Task<IGetAllArticlesCategoriesResultContract> Ask
+        public override async Task<IGetAllArticlesCategoriesResultContract> Ask
             (IGetAllArticlesCategoriesRequestContract input, CancellationToken cancellationToken)
         {
             var result = input.ParentId == Guid.Empty

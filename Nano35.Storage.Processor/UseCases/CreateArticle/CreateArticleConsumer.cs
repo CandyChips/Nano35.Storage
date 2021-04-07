@@ -48,8 +48,7 @@ namespace Nano35.Storage.Processor.UseCases.CreateArticle
                 await new LoggedCreateArticleRequest(logger,
                 new ValidatedCreateArticleRequest(
                     new TransactedCreateArticleRequest(dbContext,
-                        new CreateArticleRequest(dbContext)
-                        ))).Ask(message, context.CancellationToken);
+                        new CreateArticleRequest(dbContext)))).Ask(message, context.CancellationToken);
             
             // Check response of create article request
             switch (result)

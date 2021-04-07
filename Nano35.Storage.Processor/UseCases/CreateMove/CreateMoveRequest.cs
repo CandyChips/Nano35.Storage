@@ -10,7 +10,9 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.CreateMove
 {
     public class CreateMoveRequest :
-        IPipelineNode<ICreateMoveRequestContract, ICreateMoveResultContract>
+        EndPointNodeBase<
+            ICreateMoveRequestContract,
+            ICreateMoveResultContract>
     {
         private readonly ApplicationContext _context;
 
@@ -26,7 +28,7 @@ namespace Nano35.Storage.Processor.UseCases.CreateMove
             
         }
         
-        public async Task<ICreateMoveResultContract> Ask(
+        public override async Task<ICreateMoveResultContract> Ask(
             ICreateMoveRequestContract input,
             CancellationToken cancellationToken)
         {

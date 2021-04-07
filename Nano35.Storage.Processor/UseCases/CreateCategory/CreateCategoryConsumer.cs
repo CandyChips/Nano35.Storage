@@ -33,8 +33,7 @@ namespace Nano35.Storage.Processor.UseCases.CreateCategory
                 await new LoggedCreateCategoryRequest(logger,
                     new ValidatedCreateCategoryRequest(
                         new TransactedCreateCategoryRequest(dbContext,
-                            new CreateCategoryRequest(dbContext)))
-                ).Ask(message, context.CancellationToken);
+                            new CreateCategoryRequest(dbContext)))).Ask(message, context.CancellationToken);
             
             // Check response of create article request
             switch (result)

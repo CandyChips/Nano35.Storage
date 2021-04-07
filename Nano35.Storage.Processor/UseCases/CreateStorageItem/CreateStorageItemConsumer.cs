@@ -34,8 +34,7 @@ namespace Nano35.Storage.Processor.UseCases.CreateStorageItem
                 await new LoggedCreateStorageItemRequest(logger,
                     new ValidatedCreateStorageItemRequest(
                         new TransactedCreateStorageItemRequest(dbContext,
-                            new CreateStorageItemRequest(dbContext)))
-                ).Ask(message, context.CancellationToken);
+                            new CreateStorageItemRequest(dbContext)))).Ask(message, context.CancellationToken);
             
             // Check response of create article request
             switch (result)

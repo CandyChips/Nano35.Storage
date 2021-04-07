@@ -1,34 +1,29 @@
-﻿using System.Threading;
+using System.Threading;
 using System.Threading.Tasks;
-using Nano35.Contracts.Storage.Artifacts;
+using Nano35.Contracts;
 using Nano35.Storage.Processor.Services;
 
-namespace Nano35.Storage.Processor.UseCases.CreateMove
+namespace Nano35.Storage.Processor.UseCases
 {
-    public class CreateMoveTransactionErrorResult :
-        ICreateMoveErrorResultContract
+    public class Error : IError
     {
         public string Message { get; set; }
     }
     
-    public class TransactedCreateMoveRequest :
-        PipeNodeBase<
-            ICreateMoveRequestContract, 
-            ICreateMoveResultContract>
+    public class TransactedPipeNode<TIn, TOut> : PipeNodeBase<TIn, TOut>
+        where TIn : IRequest
+        where TOut : IResponse
     {
         private readonly ApplicationContext _context;
 
-        public TransactedCreateMoveRequest(
+        public TransactedPipeNode(
             ApplicationContext context,
-            IPipeNode<ICreateMoveRequestContract,
-                ICreateMoveResultContract> next) : base(next)
+            IPipeNode<TIn, TOut> next) : base(next)
         {
             _context = context;
         }
 
-        public override async Task<ICreateMoveResultContract> Ask(
-            ICreateMoveRequestContract input,
-            CancellationToken cancellationToken)
+        public override async Task<TOut> Ask(TIn input, CancellationToken cancellationToken)
         {
             var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
             try
@@ -41,7 +36,7 @@ namespace Nano35.Storage.Processor.UseCases.CreateMove
             catch
             {
                 await transaction.RollbackAsync(cancellationToken).ConfigureAwait(false);
-                return new CreateMoveTransactionErrorResult{ Message = "Транзакция отменена"};
+                return (TOut) (IResponse) new Error() { Message = "Транзакция отменена"};
             }
         }
     }

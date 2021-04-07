@@ -7,31 +7,26 @@ using Nano35.Contracts.Storage.Artifacts;
 namespace Nano35.Storage.Processor.UseCases.UpdateStorageItemRetailPrice
 {
     public class LoggedUpdateStorageItemRetailPriceRequest :
-        IPipelineNode<
+        PipeNodeBase<
             IUpdateStorageItemRetailPriceRequestContract, 
             IUpdateStorageItemRetailPriceResultContract>
     {
         private readonly ILogger<LoggedUpdateStorageItemRetailPriceRequest> _logger;
-        private readonly IPipelineNode<
-            IUpdateStorageItemRetailPriceRequestContract,
-            IUpdateStorageItemRetailPriceResultContract> _nextNode;
 
         public LoggedUpdateStorageItemRetailPriceRequest(
             ILogger<LoggedUpdateStorageItemRetailPriceRequest> logger,
-            IPipelineNode<
-                IUpdateStorageItemRetailPriceRequestContract, 
-                IUpdateStorageItemRetailPriceResultContract> nextNode)
+            IPipeNode<IUpdateStorageItemRetailPriceRequestContract,
+                IUpdateStorageItemRetailPriceResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<IUpdateStorageItemRetailPriceResultContract> Ask(
+        public override async Task<IUpdateStorageItemRetailPriceResultContract> Ask(
             IUpdateStorageItemRetailPriceRequestContract input,
             CancellationToken cancellationToken)
         {
             _logger.LogInformation($"UpdateStorageItemRetailPriceLogger starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input, cancellationToken);
+            var result = await DoNext(input, cancellationToken);
             _logger.LogInformation($"UpdateStorageItemRetailPriceLogger ends on: {DateTime.Now}");
             return result;
         }

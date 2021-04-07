@@ -8,7 +8,9 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.CreateCategory
 {
     public class CreateCategoryRequest :
-        IPipelineNode<ICreateCategoryRequestContract, ICreateCategoryResultContract>
+        EndPointNodeBase<
+            ICreateCategoryRequestContract,
+            ICreateCategoryResultContract>
     {
         private readonly ApplicationContext _context;
 
@@ -24,7 +26,7 @@ namespace Nano35.Storage.Processor.UseCases.CreateCategory
             
         }
         
-        public async Task<ICreateCategoryResultContract> Ask(
+        public override async Task<ICreateCategoryResultContract> Ask(
             ICreateCategoryRequestContract input,
             CancellationToken cancellationToken)
         {

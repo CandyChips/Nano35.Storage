@@ -33,8 +33,7 @@ namespace Nano35.Storage.Processor.UseCases.UpdateStorageItemPurchasePrice
             var result =
                 await new LoggedUpdateStorageItemPurchasePriceRequest(logger,
                     new ValidatedUpdateStorageItemPurchasePriceRequest(
-                        new UpdateStorageItemPurchasePriceRequest(dbContext))
-                ).Ask(message, context.CancellationToken);
+                        new UpdateStorageItemPurchasePriceRequest(dbContext))).Ask(message, context.CancellationToken);
             
             // Check response of create PurchasePrice request
             switch (result)

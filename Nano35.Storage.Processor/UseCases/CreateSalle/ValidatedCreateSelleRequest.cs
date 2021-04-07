@@ -14,26 +14,21 @@ namespace Nano35.Storage.Processor.UseCases.CreateSalle
     }
     
     public class ValidatedCreateSelleRequest:
-        IPipelineNode<
+        PipeNodeBase<
             ICreateSelleRequestContract,
             ICreateSelleResultContract>
     {
         private readonly ApplicationContext _context;
-        private readonly IPipelineNode<
-            ICreateSelleRequestContract, 
-            ICreateSelleResultContract> _nextNode;
 
         public ValidatedCreateSelleRequest(
             ApplicationContext context,
-            IPipelineNode<
-                ICreateSelleRequestContract,
-                ICreateSelleResultContract> nextNode)
+            IPipeNode<ICreateSelleRequestContract,
+                ICreateSelleResultContract> next) : base(next)
         { 
             _context = context;
-            _nextNode = nextNode;
         }
 
-        public async Task<ICreateSelleResultContract> Ask(
+        public override async Task<ICreateSelleResultContract> Ask(
             ICreateSelleRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -49,7 +44,7 @@ namespace Nano35.Storage.Processor.UseCases.CreateSalle
             {
                 return new CreateSelleValidatorErrorResult() {Message = "Невозможно списать больше чем есть в ячейке"};
             }
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

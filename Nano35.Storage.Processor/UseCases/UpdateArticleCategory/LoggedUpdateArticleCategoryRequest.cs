@@ -7,31 +7,26 @@ using Nano35.Contracts.Storage.Artifacts;
 namespace Nano35.Storage.Processor.UseCases.UpdateArticleCategory
 {
     public class LoggedUpdateArticleCategoryRequest :
-        IPipelineNode<
+        PipeNodeBase<
             IUpdateArticleCategoryRequestContract, 
             IUpdateArticleCategoryResultContract>
     {
         private readonly ILogger<LoggedUpdateArticleCategoryRequest> _logger;
-        private readonly IPipelineNode<
-            IUpdateArticleCategoryRequestContract,
-            IUpdateArticleCategoryResultContract> _nextNode;
 
         public LoggedUpdateArticleCategoryRequest(
             ILogger<LoggedUpdateArticleCategoryRequest> logger,
-            IPipelineNode<
-                IUpdateArticleCategoryRequestContract, 
-                IUpdateArticleCategoryResultContract> nextNode)
+            IPipeNode<IUpdateArticleCategoryRequestContract,
+                IUpdateArticleCategoryResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<IUpdateArticleCategoryResultContract> Ask(
+        public override async Task<IUpdateArticleCategoryResultContract> Ask(
             IUpdateArticleCategoryRequestContract input,
             CancellationToken cancellationToken)
         {
             _logger.LogInformation($"UpdateArticleCategoryLogger starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input, cancellationToken);
+            var result = await DoNext(input, cancellationToken);
             _logger.LogInformation($"UpdateArticleCategoryLogger ends on: {DateTime.Now}");
             return result;
         }

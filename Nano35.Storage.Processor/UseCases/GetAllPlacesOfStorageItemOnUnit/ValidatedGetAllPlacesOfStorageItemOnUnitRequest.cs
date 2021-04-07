@@ -11,27 +11,20 @@ namespace Nano35.Storage.Processor.UseCases.GetAllPlacesOfStorageItemOnUnit
     }
     
     public class ValidatedGetAllPlacesOfStorageItemOnUnitRequest:
-        IPipelineNode<
+        PipeNodeBase<
             IGetAllPlacesOfStorageItemOnUnitRequestContract, 
             IGetAllPlacesOfStorageItemOnUnitResultContract>
     {
-        private readonly IPipelineNode<
-            IGetAllPlacesOfStorageItemOnUnitRequestContract, 
-            IGetAllPlacesOfStorageItemOnUnitResultContract> _nextNode;
-
         public ValidatedGetAllPlacesOfStorageItemOnUnitRequest(
-            IPipelineNode<
-                IGetAllPlacesOfStorageItemOnUnitRequestContract,
-                IGetAllPlacesOfStorageItemOnUnitResultContract> nextNode)
-        {
-            _nextNode = nextNode;
-        }
+            IPipeNode<IGetAllPlacesOfStorageItemOnUnitRequestContract,
+                IGetAllPlacesOfStorageItemOnUnitResultContract> next) : base(next)
+        { }
 
-        public async Task<IGetAllPlacesOfStorageItemOnUnitResultContract> Ask(
+        public override async Task<IGetAllPlacesOfStorageItemOnUnitResultContract> Ask(
             IGetAllPlacesOfStorageItemOnUnitRequestContract input,
             CancellationToken cancellationToken)
         {
-            return await _nextNode.Ask(input, cancellationToken);
+            return await DoNext(input, cancellationToken);
         }
     }
 }

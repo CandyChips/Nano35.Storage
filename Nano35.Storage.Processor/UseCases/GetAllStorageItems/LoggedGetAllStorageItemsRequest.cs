@@ -7,31 +7,26 @@ using Nano35.Contracts.Storage.Artifacts;
 namespace Nano35.Storage.Processor.UseCases.GetAllStorageItems
 {
     public class LoggedGetAllStorageItemsRequest :
-        IPipelineNode<
+        PipeNodeBase<
             IGetAllStorageItemsRequestContract, 
             IGetAllStorageItemsResultContract>
     {
         private readonly ILogger<LoggedGetAllStorageItemsRequest> _logger;
-        private readonly IPipelineNode<
-            IGetAllStorageItemsRequestContract,
-            IGetAllStorageItemsResultContract> _nextNode;
 
         public LoggedGetAllStorageItemsRequest(
             ILogger<LoggedGetAllStorageItemsRequest> logger,
-            IPipelineNode<
-                IGetAllStorageItemsRequestContract,
-                IGetAllStorageItemsResultContract> nextNode)
+            IPipeNode<IGetAllStorageItemsRequestContract,
+                IGetAllStorageItemsResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
             _logger = logger;
         }
 
-        public async Task<IGetAllStorageItemsResultContract> Ask(
+        public override async Task<IGetAllStorageItemsResultContract> Ask(
             IGetAllStorageItemsRequestContract input,
             CancellationToken cancellationToken)
         {
             _logger.LogInformation($"GetAllStorageItemsLogger starts on: {DateTime.Now}");
-            var result = await _nextNode.Ask(input, cancellationToken);
+            var result = await DoNext(input, cancellationToken);
             _logger.LogInformation($"GetAllStorageItemsLogger ends on: {DateTime.Now}");
             return result;
         }

@@ -13,33 +13,28 @@ namespace Nano35.Storage.Processor.UseCases.CreateArticle
     }
     
     public class TransactedCreateArticleRequest :
-        IPipelineNode<
+        PipeNodeBase<
             ICreateArticleRequestContract, 
             ICreateArticleResultContract>
     {
         private readonly ApplicationContext _context;
-        private readonly IPipelineNode<
-            ICreateArticleRequestContract,
-            ICreateArticleResultContract> _nextNode;
 
         public TransactedCreateArticleRequest(
             ApplicationContext context,
-            IPipelineNode<
-                ICreateArticleRequestContract, 
-                ICreateArticleResultContract> nextNode)
+            IPipeNode<ICreateArticleRequestContract,
+                ICreateArticleResultContract> next) : base(next)
         {
-            _nextNode = nextNode;
             _context = context;
         }
 
-        public async Task<ICreateArticleResultContract> Ask(
+        public override async Task<ICreateArticleResultContract> Ask(
             ICreateArticleRequestContract input,
             CancellationToken cancellationToken)
         {
             var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
             try
             {
-                var response = await _nextNode.Ask(input, cancellationToken);
+                var response = await DoNext(input, cancellationToken);
                 await _context.SaveChangesAsync(cancellationToken);
                 await transaction.CommitAsync(cancellationToken);
                 return response;
