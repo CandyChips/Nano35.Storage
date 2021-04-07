@@ -23,15 +23,15 @@ namespace Nano35.Storage.Processor.UseCases.UpdateStorageItemPurchasePrice
         {
             // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<LoggedUpdateStorageItemPurchasePriceRequest>) _services
-                .GetService(typeof(ILogger<LoggedUpdateStorageItemPurchasePriceRequest>));
+            var logger = (ILogger<IUpdateStorageItemPurchasePriceRequestContract>) _services
+                .GetService(typeof(ILogger<IUpdateStorageItemPurchasePriceRequestContract>));
 
             // Explore message of request
             var message = context.Message;
 
             // Send request to pipeline
             var result =
-                await new LoggedUpdateStorageItemPurchasePriceRequest(logger,
+                await new LoggedPipeNode<IUpdateStorageItemPurchasePriceRequestContract, IUpdateStorageItemPurchasePriceResultContract>(logger,
                     new ValidatedUpdateStorageItemPurchasePriceRequest(
                         new UpdateStorageItemPurchasePriceRequest(dbContext))).Ask(message, context.CancellationToken);
             

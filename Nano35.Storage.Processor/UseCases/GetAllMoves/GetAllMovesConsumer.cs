@@ -23,13 +23,13 @@ namespace Nano35.Storage.Processor.UseCases.GetAllMoves
         {
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
             var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetAllMovesRequest>) _services
-                .GetService(typeof(ILogger<LoggedGetAllMovesRequest>));
+            var logger = (ILogger<IGetAllMovesRequestContract>) _services
+                .GetService(typeof(ILogger<IGetAllMovesRequestContract>));
 
             var message = context.Message;
 
             var result =
-                await new LoggedGetAllMovesRequest(logger,
+                await new LoggedPipeNode<IGetAllMovesRequestContract, IGetAllMovesResultContract>(logger,
                     new ValidatedGetAllMovesRequest(
                         new GetAllMovesRequest(dbContext, bus))).Ask(message, context.CancellationToken);
             

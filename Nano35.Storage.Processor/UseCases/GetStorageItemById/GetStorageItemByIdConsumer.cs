@@ -23,15 +23,15 @@ namespace Nano35.Storage.Processor.UseCases.GetStorageItemById
         {
             // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<LoggedGetStorageItemByIdRequest>) _services
-                .GetService(typeof(ILogger<LoggedGetStorageItemByIdRequest>));
+            var logger = (ILogger<IGetStorageItemByIdRequestContract>) _services
+                .GetService(typeof(ILogger<IGetStorageItemByIdRequestContract>));
 
             // Explore message of request
             var message = context.Message;
 
             // Send request to pipeline
             var result =
-                await new LoggedGetStorageItemByIdRequest(logger,
+                await new LoggedPipeNode<IGetStorageItemByIdRequestContract, IGetStorageItemByIdResultContract>(logger,
                     new ValidatedGetStorageItemByIdRequest(
                         new GetStorageItemByIdRequest(dbContext))).Ask(message, context.CancellationToken);
             

@@ -23,11 +23,11 @@ namespace Nano35.Storage.Processor.UseCases.GetAllComings
         {
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
             var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetAllComingsRequest>) _services.GetService(typeof(ILogger<LoggedGetAllComingsRequest>));
+            var logger = (ILogger<IGetAllComingsRequestContract>) _services.GetService(typeof(ILogger<IGetAllComingsRequestContract>));
 
             var message = context.Message;
 
-            var result = await new LoggedGetAllComingsRequest(logger,
+            var result = await new LoggedPipeNode<IGetAllComingsRequestContract, IGetAllComingsResultContract>(logger,
                         new ValidatedGetAllComingsRequest(
                             new GetAllComingsRequest(dbContext, bus))).Ask(message, context.CancellationToken);
             

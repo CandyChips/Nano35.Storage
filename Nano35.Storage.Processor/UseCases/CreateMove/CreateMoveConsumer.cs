@@ -23,17 +23,17 @@ namespace Nano35.Storage.Processor.UseCases.CreateMove
         {
             // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<LoggedCreateMoveRequest>) _services
-                .GetService(typeof(ILogger<LoggedCreateMoveRequest>));
+            var logger = (ILogger<ICreateMoveRequestContract>) _services
+                .GetService(typeof(ILogger<ICreateMoveRequestContract>));
 
             // Explore message of request
             var message = context.Message;
 
             // Send request to pipeline
             var result =
-                await new LoggedCreateMoveRequest(logger,
+                await new LoggedPipeNode<ICreateMoveRequestContract, ICreateMoveResultContract>(logger,
                     new ValidatedCreateMoveRequest(
-                        new TransactedCreateMoveRequest(dbContext,
+                        new TransactedPipeNode<ICreateMoveRequestContract, ICreateMoveResultContract>(dbContext,
                             new CreateMoveRequest(dbContext)))).Ask(message, context.CancellationToken);
             
             // Check response of create article request

@@ -23,15 +23,15 @@ namespace Nano35.Storage.Processor.UseCases.UpdateArticleCategory
         {
             // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<LoggedUpdateArticleCategoryRequest>) _services
-                .GetService(typeof(ILogger<LoggedUpdateArticleCategoryRequest>));
+            var logger = (ILogger<IUpdateArticleCategoryRequestContract>) _services
+                .GetService(typeof(ILogger<IUpdateArticleCategoryRequestContract>));
 
             // Explore message of request
             var message = context.Message;
 
             // Send request to pipeline
             var result =
-                await new LoggedUpdateArticleCategoryRequest(logger,
+                await new LoggedPipeNode<IUpdateArticleCategoryRequestContract, IUpdateArticleCategoryResultContract>(logger,
                     new ValidatedUpdateArticleCategoryRequest(
                         new UpdateArticleCategoryRequest(dbContext))).Ask(message, context.CancellationToken);
             

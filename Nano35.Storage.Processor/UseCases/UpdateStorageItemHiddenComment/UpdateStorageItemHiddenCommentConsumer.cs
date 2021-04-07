@@ -23,15 +23,15 @@ namespace Nano35.Storage.Processor.UseCases.UpdateStorageItemHiddenComment
         {
             // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<LoggedUpdateStorageItemHiddenCommentRequest>) _services
-                .GetService(typeof(ILogger<LoggedUpdateStorageItemHiddenCommentRequest>));
+            var logger = (ILogger<IUpdateStorageItemHiddenCommentRequestContract>) _services
+                .GetService(typeof(ILogger<IUpdateStorageItemHiddenCommentRequestContract>));
 
             // Explore message of request
             var message = context.Message;
 
             // Send request to pipeline
             var result =
-                await new LoggedUpdateStorageItemHiddenCommentRequest(logger,
+                await new LoggedPipeNode<IUpdateStorageItemHiddenCommentRequestContract, IUpdateStorageItemHiddenCommentResultContract>(logger,
                     new ValidatedUpdateStorageItemHiddenCommentRequest(
                         new UpdateStorageItemHiddenCommentRequest(dbContext))).Ask(message, context.CancellationToken);
             

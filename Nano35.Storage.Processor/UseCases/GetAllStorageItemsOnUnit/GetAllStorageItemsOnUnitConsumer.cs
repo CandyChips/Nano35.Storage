@@ -23,12 +23,12 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemsOnUnit
         {
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
             var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetAllStorageItemsOnUnitRequest>) _services
-                .GetService(typeof(ILogger<LoggedGetAllStorageItemsOnUnitRequest>));
+            var logger = (ILogger<IGetAllStorageItemsOnUnitContract>) _services
+                .GetService(typeof(ILogger<IGetAllStorageItemsOnUnitContract>));
             var message = context.Message;
             
             var result =
-                await new LoggedGetAllStorageItemsOnUnitRequest(logger,
+                await new LoggedPipeNode<IGetAllStorageItemsOnUnitContract, IGetAllStorageItemsOnUnitResultContract>(logger,
                     new ValidatedGetAllStorageItemsOnUnitRequest(
                         new GetAllStorageItemsOnUnitRequest(dbContext, bus)))
                     .Ask(message, context.CancellationToken);

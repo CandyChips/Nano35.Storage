@@ -37,17 +37,17 @@ namespace Nano35.Storage.Processor.UseCases.CreateArticle
         {
             // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<LoggedCreateArticleRequest>) _services
-                .GetService(typeof(ILogger<LoggedCreateArticleRequest>));
+            var logger = (ILogger<ICreateArticleRequestContract>) _services
+                .GetService(typeof(ILogger<ICreateArticleRequestContract>));
 
             // Explore message of request
             var message = context.Message;
 
             // Send request to pipeline
             var result =
-                await new LoggedCreateArticleRequest(logger,
+                await new LoggedPipeNode<ICreateArticleRequestContract, ICreateArticleResultContract>(logger,
                 new ValidatedCreateArticleRequest(
-                    new TransactedCreateArticleRequest(dbContext,
+                    new TransactedPipeNode<ICreateArticleRequestContract, ICreateArticleResultContract>(dbContext,
                         new CreateArticleRequest(dbContext)))).Ask(message, context.CancellationToken);
             
             // Check response of create article request

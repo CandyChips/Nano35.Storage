@@ -22,17 +22,17 @@ namespace Nano35.Storage.Processor.UseCases.CreateCategory
         {
             // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<LoggedCreateCategoryRequest>) _services
-                .GetService(typeof(ILogger<LoggedCreateCategoryRequest>));
+            var logger = (ILogger<ICreateCategoryRequestContract>) _services
+                .GetService(typeof(ILogger<ICreateCategoryRequestContract>));
 
             // Explore message of request
             var message = context.Message;
 
             // Send request to pipeline
             var result =
-                await new LoggedCreateCategoryRequest(logger,
+                await new LoggedPipeNode<ICreateCategoryRequestContract, ICreateCategoryResultContract>(logger,
                     new ValidatedCreateCategoryRequest(
-                        new TransactedCreateCategoryRequest(dbContext,
+                        new TransactedPipeNode<ICreateCategoryRequestContract, ICreateCategoryResultContract>(dbContext,
                             new CreateCategoryRequest(dbContext)))).Ask(message, context.CancellationToken);
             
             // Check response of create article request

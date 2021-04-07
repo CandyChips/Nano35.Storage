@@ -23,15 +23,15 @@ namespace Nano35.Storage.Processor.UseCases.GetAllArticleCategories
         {
             // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<LoggedGetAllArticlesCategoriesRequest>) _services
-                .GetService(typeof(ILogger<LoggedGetAllArticlesCategoriesRequest>));
+            var logger = (ILogger<IGetAllArticlesCategoriesRequestContract>) _services
+                .GetService(typeof(ILogger<IGetAllArticlesCategoriesRequestContract>));
 
             // Explore message of request
             var message = context.Message;
 
             // Send request to pipeline
             var result =
-                await new LoggedGetAllArticlesCategoriesRequest(logger,
+                await new LoggedPipeNode<IGetAllArticlesCategoriesRequestContract, IGetAllArticlesCategoriesResultContract>(logger,
                     new ValidatedGetAllArticlesCategoriesRequest(
                         new GetAllArticlesCategoriesRequest(dbContext))).Ask(message, context.CancellationToken);
             

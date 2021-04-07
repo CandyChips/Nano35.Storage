@@ -23,17 +23,17 @@ namespace Nano35.Storage.Processor.UseCases.CreateComing
         {
             // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<LoggedCreateComingRequest>) _services
-                .GetService(typeof(ILogger<LoggedCreateComingRequest>));
+            var logger = (ILogger<ICreateComingRequestContract>) _services
+                .GetService(typeof(ILogger<ICreateComingRequestContract>));
 
             // Explore message of request
             var message = context.Message;
 
             // Send request to pipeline
             var result =
-                await new LoggedCreateComingRequest(logger,
+                await new LoggedPipeNode<ICreateComingRequestContract, ICreateComingResultContract>(logger,
                     new ValidatedCreateComingRequest(
-                        new TransactedCreateComingRequest(dbContext,
+                        new TransactedPipeNode<ICreateComingRequestContract, ICreateComingResultContract>(dbContext,
                             new CreateComingRequest(dbContext)))).Ask(message, context.CancellationToken);
             
             // Check response of create article request

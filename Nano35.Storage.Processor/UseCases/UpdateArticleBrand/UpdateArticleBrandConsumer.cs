@@ -23,15 +23,15 @@ namespace Nano35.Storage.Processor.UseCases.UpdateArticleBrand
         {
             // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<LoggedUpdateArticleBrandRequest>) _services
-                .GetService(typeof(ILogger<LoggedUpdateArticleBrandRequest>));
+            var logger = (ILogger<IUpdateArticleBrandRequestContract>) _services
+                .GetService(typeof(ILogger<IUpdateArticleBrandRequestContract>));
 
             // Explore message of request
             var message = context.Message;
 
             // Send request to pipeline
             var result =
-                await new LoggedUpdateArticleBrandRequest(logger,
+                await new LoggedPipeNode<IUpdateArticleBrandRequestContract, IUpdateArticleBrandResultContract>(logger,
                     new ValidatedUpdateArticleBrandRequest(
                         new UpdateArticleBrandRequest(dbContext))).Ask(message, context.CancellationToken);
             

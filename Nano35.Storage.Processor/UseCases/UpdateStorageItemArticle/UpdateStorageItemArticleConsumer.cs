@@ -23,15 +23,15 @@ namespace Nano35.Storage.Processor.UseCases.UpdateStorageItemArticle
         {
             // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<LoggedUpdateStorageItemArticleRequest>) _services
-                .GetService(typeof(ILogger<LoggedUpdateStorageItemArticleRequest>));
+            var logger = (ILogger<IUpdateStorageItemArticleRequestContract>) _services
+                .GetService(typeof(ILogger<IUpdateStorageItemArticleRequestContract>));
 
             // Explore message of request
             var message = context.Message;
 
             // Send request to pipeline
             var result =
-                await new LoggedUpdateStorageItemArticleRequest(logger,
+                await new LoggedPipeNode<IUpdateStorageItemArticleRequestContract, IUpdateStorageItemArticleResultContract>(logger,
                     new ValidatedUpdateStorageItemArticleRequest(
                         new UpdateStorageItemArticleRequest(dbContext))).Ask(message, context.CancellationToken);
             

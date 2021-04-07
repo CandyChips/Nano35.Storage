@@ -23,17 +23,17 @@ namespace Nano35.Storage.Processor.UseCases.CreateSalle
         {
             // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<LoggedCreateSelleRequest>) _services
-                .GetService(typeof(ILogger<LoggedCreateSelleRequest>));
+            var logger = (ILogger<ICreateSelleRequestContract>) _services
+                .GetService(typeof(ILogger<ICreateSelleRequestContract>));
 
             // Explore message of request
             var message = context.Message;
 
             // Send request to pipeline
             var result =
-                await new LoggedCreateSelleRequest(logger,
+                await new LoggedPipeNode<ICreateSelleRequestContract, ICreateSelleResultContract>(logger,
                     new ValidatedCreateSelleRequest(dbContext,
-                        new TransactedCreateSelleRequest(dbContext,
+                        new TransactedPipeNode<ICreateSelleRequestContract, ICreateSelleResultContract>(dbContext,
                             new CreateSelleRequest(dbContext)))).Ask(message, context.CancellationToken);
             
             // Check response of create article request
