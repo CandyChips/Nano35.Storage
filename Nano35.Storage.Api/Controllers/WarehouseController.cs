@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
+using FluentValidation;
 using MassTransit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.HttpContext.storage;
+using Nano35.Storage.Api.Requests;
 using Nano35.Storage.Api.Requests.CreateCancellation;
 using Nano35.Storage.Api.Requests.CreateComing;
 using Nano35.Storage.Api.Requests.CreateMove;
@@ -46,13 +48,12 @@ namespace Nano35.Storage.Api.Controllers
         public async Task<IActionResult> CreateComing(
             [FromBody] CreateComingHttpBody body)
         {
-            var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedCreateComingRequest>)_services.GetService(typeof(ILogger<LoggedCreateComingRequest>));
-            
             return await new ConvertedCreateComingOnHttpContext(
-                        new LoggedCreateComingRequest(logger,
-                            new ValidatedCreateComingRequest(
-                                new CreateComingUseCase(bus)))).Ask(body);
+                        new LoggedPipeNode<ICreateComingRequestContract, ICreateComingResultContract>(
+                            _services.GetService(typeof(ILogger<ICreateComingRequestContract>)) as ILogger<ICreateComingRequestContract>,
+                            new ValidatedPipeNode<ICreateComingRequestContract, ICreateComingResultContract>(
+                                _services.GetService(typeof(IValidator<ICreateComingRequestContract>)) as IValidator<ICreateComingRequestContract>,
+                                new CreateComingUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(body);
         }
         
         [HttpGet]
@@ -63,13 +64,12 @@ namespace Nano35.Storage.Api.Controllers
         public async Task<IActionResult> GetAllComings(
             [FromHeader] GetAllComingsHttpQuery query)
         {
-            var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetAllComingsRequest>)_services.GetService(typeof(ILogger<LoggedGetAllComingsRequest>));
-
             return await new ConvertedGetAllComingsOnHttpContext(
-                        new LoggedGetAllComingsRequest(logger,
-                            new ValidatedGetAllComingsRequest(
-                                new GetAllComingsUseCase(bus)))).Ask(query);
+                        new LoggedPipeNode<IGetAllComingsRequestContract, IGetAllComingsResultContract>(
+                            _services.GetService(typeof(ILogger<IGetAllComingsRequestContract>)) as ILogger<IGetAllComingsRequestContract>,
+                            new ValidatedPipeNode<IGetAllComingsRequestContract, IGetAllComingsResultContract>(
+                                _services.GetService(typeof(IValidator<IGetAllComingsRequestContract>)) as IValidator<IGetAllComingsRequestContract>,
+                                new GetAllComingsUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(query);
         }
         
         [HttpGet]
@@ -80,13 +80,12 @@ namespace Nano35.Storage.Api.Controllers
         public async Task<IActionResult> GetComingDetails(
             [FromQuery] GetAllComingDetailsHttpQuery query)
         {
-            var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetAllComingDetailsRequest>)_services.GetService(typeof(ILogger<LoggedGetAllComingDetailsRequest>));
-
             return await new ConvertedGetAllComingDetailsOnHttpContext(
-                new LoggedGetAllComingDetailsRequest(logger,
-                    new ValidatedGetAllComingDetailsRequest(
-                        new GetAllComingDetailsUseCase(bus)))).Ask(query);
+                new LoggedPipeNode<IGetAllComingDetailsRequestContract, IGetAllComingDetailsResultContract>(
+                    _services.GetService(typeof(ILogger<IGetAllComingDetailsRequestContract>)) as ILogger<IGetAllComingDetailsRequestContract>,
+                    new ValidatedPipeNode<IGetAllComingDetailsRequestContract, IGetAllComingDetailsResultContract>(
+                        _services.GetService(typeof(IValidator<IGetAllComingDetailsRequestContract>)) as IValidator<IGetAllComingDetailsRequestContract>,
+                        new GetAllComingDetailsUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(query);
         }
         
         [HttpPost]
@@ -97,13 +96,12 @@ namespace Nano35.Storage.Api.Controllers
         public async Task<IActionResult> CreateMove(
             [FromBody] CreateMoveHttpBody body)
         {
-            var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedCreateMoveRequest>)_services.GetService(typeof(ILogger<LoggedCreateMoveRequest>));
-            
             return await new ConvertedCreateMoveOnHttpContext(
-                        new LoggedCreateMoveRequest(logger,
-                            new ValidatedCreateMoveRequest(
-                                new CreateMoveUseCase(bus)))).Ask(body);
+                        new LoggedPipeNode<ICreateMoveRequestContract, ICreateMoveResultContract>(
+                            _services.GetService(typeof(ILogger<ICreateMoveRequestContract>)) as ILogger<ICreateMoveRequestContract>,
+                            new ValidatedPipeNode<ICreateMoveRequestContract, ICreateMoveResultContract>(
+                                _services.GetService(typeof(IValidator<ICreateMoveRequestContract>)) as IValidator<ICreateMoveRequestContract>,
+                                new CreateMoveUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(body);
         }
 
         [HttpGet]
@@ -113,13 +111,12 @@ namespace Nano35.Storage.Api.Controllers
         public async Task<IActionResult> GetAllMoves(
             [FromQuery] GetAllMovesHttpQuery body)
         {
-            var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetAllMovesRequest>)_services.GetService(typeof(ILogger<LoggedGetAllMovesRequest>));
-            
             return await new ConvertedGetAllMovesOnHttpContext(
-                new LoggedGetAllMovesRequest(logger,
-                    new ValidatedGetAllMovesRequest(
-                        new GetAllMovesUseCase(bus)))).Ask(body);
+                new LoggedPipeNode<IGetAllMovesRequestContract, IGetAllMovesResultContract>(
+                    _services.GetService(typeof(ILogger<IGetAllMovesRequestContract>)) as ILogger<IGetAllMovesRequestContract>,
+                    new ValidatedPipeNode<IGetAllMovesRequestContract, IGetAllMovesResultContract>(
+                        _services.GetService(typeof(IValidator<IGetAllMovesRequestContract>)) as IValidator<IGetAllMovesRequestContract>,
+                        new GetAllMovesUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(body);
         }
         
         [HttpGet]
@@ -130,13 +127,12 @@ namespace Nano35.Storage.Api.Controllers
         public async Task<IActionResult> GetAllMoveDetails(
             [FromQuery] GetAllMoveDetailsHttpQuery query)
         {
-            var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetAllMoveDetailsRequest>)_services.GetService(typeof(ILogger<LoggedGetAllMoveDetailsRequest>));
-
             return await new ConvertedGetAllMoveDetailsOnHttpContext(
-                new LoggedGetAllMoveDetailsRequest(logger,
-                    new ValidatedGetAllMoveDetailsRequest(
-                        new GetAllMoveDetailsUseCase(bus)))).Ask(query);
+                new LoggedPipeNode<IGetAllMoveDetailsRequestContract, IGetAllMoveDetailsResultContract>(
+                    _services.GetService(typeof(ILogger<IGetAllMoveDetailsRequestContract>)) as ILogger<IGetAllMoveDetailsRequestContract>,
+                    new ValidatedPipeNode<IGetAllMoveDetailsRequestContract, IGetAllMoveDetailsResultContract>(
+                        _services.GetService(typeof(IValidator<IGetAllMoveDetailsRequestContract>)) as IValidator<IGetAllMoveDetailsRequestContract>,
+                        new GetAllMoveDetailsUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(query);
         }
         
         [HttpPost]
@@ -147,13 +143,12 @@ namespace Nano35.Storage.Api.Controllers
         public async Task<IActionResult> CreateSelle(
             [FromBody] CreateSelleHttpBody body)
         {
-            var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedCreateSelleRequest>)_services.GetService(typeof(ILogger<LoggedCreateSelleRequest>));
-            
             return await new ConvertedCreateSelleOnHttpContext(
-                        new LoggedCreateSelleRequest(logger,
-                            new ValidatedCreateSelleRequest(
-                                new CreateSelleUseCase(bus)))).Ask(body);
+                        new LoggedPipeNode<ICreateSelleRequestContract, ICreateSelleResultContract>(
+                            _services.GetService(typeof(ILogger<ICreateSelleRequestContract>)) as ILogger<ICreateSelleRequestContract>,
+                            new ValidatedPipeNode<ICreateSelleRequestContract, ICreateSelleResultContract>(
+                                _services.GetService(typeof(IValidator<ICreateSelleRequestContract>)) as IValidator<ICreateSelleRequestContract>,
+                                new CreateSelleUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(body);
         }
 
         [HttpGet]
@@ -161,13 +156,12 @@ namespace Nano35.Storage.Api.Controllers
         public async Task<IActionResult> GetAllSells(
             [FromQuery] GetAllSellsHttpQuery body)
         {
-            var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetAllSellsRequest>)_services.GetService(typeof(ILogger<LoggedGetAllSellsRequest>));
-            
             return await new ConvertedGetAllSellsOnHttpContext(
-                new LoggedGetAllSellsRequest(logger,
-                    new ValidatedGetAllSellsRequest(
-                        new GetAllSellsUseCase(bus)))).Ask(body);
+                new LoggedPipeNode<IGetAllSellsRequestContract, IGetAllSellsResultContract>(
+                    _services.GetService(typeof(ILogger<IGetAllSellsRequestContract>)) as ILogger<IGetAllSellsRequestContract>,
+                    new ValidatedPipeNode<IGetAllSellsRequestContract, IGetAllSellsResultContract>(
+                        _services.GetService(typeof(IValidator<IGetAllSellsRequestContract>)) as IValidator<IGetAllSellsRequestContract>,
+                        new GetAllSellsUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(body);
         }
 
         
@@ -179,13 +173,12 @@ namespace Nano35.Storage.Api.Controllers
         public async Task<IActionResult> GetAllSellDetails(
             [FromQuery] GetAllSellDetailsHttpQuery query)
         {
-            var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetAllSelleDetailsRequest>)_services.GetService(typeof(ILogger<LoggedGetAllSelleDetailsRequest>));
-
             return await new ConvertedGetAllSelleDetailsOnHttpContext(
-                new LoggedGetAllSelleDetailsRequest(logger,
-                    new ValidatedGetAllSelleDetailsRequest(
-                        new GetAllSelleDetailsUseCase(bus)))).Ask(query);
+                new LoggedPipeNode<IGetAllSelleDetailsRequestContract, IGetAllSelleDetailsResultContract>(
+                    _services.GetService(typeof(ILogger<IGetAllSelleDetailsRequestContract>)) as ILogger<IGetAllSelleDetailsRequestContract>,
+                    new ValidatedPipeNode<IGetAllSelleDetailsRequestContract, IGetAllSelleDetailsResultContract>(
+                        _services.GetService(typeof(IValidator<IGetAllSelleDetailsRequestContract>)) as IValidator<IGetAllSelleDetailsRequestContract>,
+                        new GetAllSelleDetailsUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(query);
         }
         
         [HttpPost]
@@ -196,13 +189,12 @@ namespace Nano35.Storage.Api.Controllers
         public async Task<IActionResult> CreateCancellation(
             [FromBody] CreateCancellationHttpBody body)
         {
-            var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedCreateCancellationRequest>)_services.GetService(typeof(ILogger<LoggedCreateCancellationRequest>));
-            
             return await new ConvertedCreateCancellationOnHttpContext(
-                        new LoggedCreateCancellationRequest(logger,
-                            new ValidatedCreateCancellationRequest(
-                                new CreateCancellationUseCase(bus)))).Ask(body);
+                        new LoggedPipeNode<ICreateCancellationRequestContract, ICreateCancellationResultContract>(
+                            _services.GetService(typeof(ILogger<ICreateCancellationRequestContract>)) as ILogger<ICreateCancellationRequestContract>,
+                            new ValidatedPipeNode<ICreateCancellationRequestContract, ICreateCancellationResultContract>(
+                                _services.GetService(typeof(IValidator<ICreateCancellationRequestContract>)) as IValidator<ICreateCancellationRequestContract>,
+                                new CreateCancellationUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(body);
         }
 
         [HttpGet]
@@ -210,13 +202,12 @@ namespace Nano35.Storage.Api.Controllers
         public async Task<IActionResult> GetAllCancellations(
             [FromQuery] GetAllCancellationsHttpQuery body)
         {
-            var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetAllCancellationsRequest>)_services.GetService(typeof(ILogger<LoggedGetAllCancellationsRequest>));
-            
             return await new ConvertedGetAllCancellationsOnHttpContext(
-                new LoggedGetAllCancellationsRequest(logger,
-                    new ValidatedGetAllCancellationsRequest(
-                        new GetAllCancellationsUseCase(bus)))).Ask(body);
+                new LoggedPipeNode<IGetAllCancellationsRequestContract, IGetAllCancellationsResultContract>(
+                    _services.GetService(typeof(ILogger<IGetAllCancellationsRequestContract>)) as ILogger<IGetAllCancellationsRequestContract>,
+                    new ValidatedPipeNode<IGetAllCancellationsRequestContract, IGetAllCancellationsResultContract>(
+                        _services.GetService(typeof(IValidator<IGetAllCancellationsRequestContract>)) as IValidator<IGetAllCancellationsRequestContract>,
+                        new GetAllCancellationsUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(body);
         }
         
         [HttpGet]
@@ -227,13 +218,12 @@ namespace Nano35.Storage.Api.Controllers
         public async Task<IActionResult> GetAllCancellationDetails(
             [FromQuery] GetAllCancellationDetailsHttpQuery query)
         {
-            var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetAllCancellationDetailsRequest>)_services.GetService(typeof(ILogger<LoggedGetAllCancellationDetailsRequest>));
-
             return await new ConvertedGetAllCancellationDetailsOnHttpContext(
-                new LoggedGetAllCancellationDetailsRequest(logger,
-                    new ValidatedGetAllCancellationDetailsRequest(
-                        new GetAllCancellationDetailsUseCase(bus)))).Ask(query);
+                new LoggedPipeNode<IGetAllCancellationDetailsRequestContract, IGetAllCancellationDetailsResultContract>(
+                    _services.GetService(typeof(ILogger<IGetAllCancellationDetailsRequestContract>)) as ILogger<IGetAllCancellationDetailsRequestContract>,
+                    new ValidatedPipeNode<IGetAllCancellationDetailsRequestContract, IGetAllCancellationDetailsResultContract>(
+                        _services.GetService(typeof(IValidator<IGetAllCancellationDetailsRequestContract>)) as IValidator<IGetAllCancellationDetailsRequestContract>,
+                        new GetAllCancellationDetailsUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(query);
         }
         
         [HttpGet]
@@ -244,13 +234,12 @@ namespace Nano35.Storage.Api.Controllers
         public async Task<IActionResult> GetAllPlacesOfStorageItemOnUnit(
             [FromQuery] GetAllPlacesOfStorageItemOnUnitHttpQuery body)
         {
-            var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetAllPlacesOfStorageItemOnUnitRequest>) _services.GetService(typeof(ILogger<LoggedGetAllPlacesOfStorageItemOnUnitRequest>));
-
             return await new ConvertedGetAllPlacesOfStorageItemOnUnitOnHttpContext(
-                new LoggedGetAllPlacesOfStorageItemOnUnitRequest(logger,
-                    new ValidatedGetAllPlacesOfStorageItemOnUnitRequest(
-                        new GetAllPlacesOfStorageItemOnUnitUseCase(bus)))).Ask(body);
+                new LoggedPipeNode<IGetAllPlacesOfStorageItemOnUnitRequestContract, IGetAllPlacesOfStorageItemOnUnitResultContract>(
+                    _services.GetService(typeof(ILogger<IGetAllPlacesOfStorageItemOnUnitRequestContract>)) as ILogger<IGetAllPlacesOfStorageItemOnUnitRequestContract>,
+                    new ValidatedPipeNode<IGetAllPlacesOfStorageItemOnUnitRequestContract, IGetAllPlacesOfStorageItemOnUnitResultContract>(
+                        _services.GetService(typeof(IValidator<IGetAllPlacesOfStorageItemOnUnitRequestContract>)) as IValidator<IGetAllPlacesOfStorageItemOnUnitRequestContract>,
+                        new GetAllPlacesOfStorageItemOnUnitUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(body);
         }
         
         [HttpGet]
@@ -261,13 +250,12 @@ namespace Nano35.Storage.Api.Controllers
         public async Task<IActionResult> GetAllPlacesOfStorageItemOnInstance(
             [FromQuery] GetAllPlacesOfStorageItemOnInstanceHttpQuery body)
         {
-            var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetAllPlacesOfStorageItemOnInstanceRequest>) _services.GetService(typeof(ILogger<LoggedGetAllPlacesOfStorageItemOnInstanceRequest>));
-
             return await new ConvertedGetAllPlacesOfStorageItemOnInstanceOnHttpContext(
-                new LoggedGetAllPlacesOfStorageItemOnInstanceRequest(logger,
-                    new ValidatedGetAllPlacesOfStorageItemOnInstanceRequest(
-                        new GetAllPlacesOfStorageItemOnInstanceUseCase(bus)))).Ask(body);
+                new LoggedPipeNode<IGetAllPlacesOfStorageItemOnInstanceContract, IGetAllPlacesOfStorageItemOnInstanceResultContract>(
+                    _services.GetService(typeof(ILogger<IGetAllPlacesOfStorageItemOnInstanceContract>)) as ILogger<IGetAllPlacesOfStorageItemOnInstanceContract>,
+                    new ValidatedPipeNode<IGetAllPlacesOfStorageItemOnInstanceContract, IGetAllPlacesOfStorageItemOnInstanceResultContract>(
+                        _services.GetService(typeof(IValidator<IGetAllPlacesOfStorageItemOnInstanceContract>)) as IValidator<IGetAllPlacesOfStorageItemOnInstanceContract>,
+                        new GetAllPlacesOfStorageItemOnInstanceUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(body);
         }
         
         [HttpGet]
@@ -278,13 +266,12 @@ namespace Nano35.Storage.Api.Controllers
         public async Task<IActionResult> GetAllStorageItemsOnInstance(
             [FromQuery] GetAllStorageItemsOnInstanceHttpQuery body)
         {
-            var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetAllStorageItemsOnInstanceRequest>) _services.GetService(typeof(ILogger<LoggedGetAllStorageItemsOnInstanceRequest>));
-
             return await new ConvertedGetAllStorageItemsOnInstanceOnHttpContext(
-                        new LoggedGetAllStorageItemsOnInstanceRequest(logger,
-                            new ValidatedGetAllStorageItemsOnInstanceRequest(
-                                new GetAllStorageItemsOnInstanceUseCase(bus)))).Ask(body);
+                        new LoggedPipeNode<IGetAllStorageItemsOnInstanceContract, IGetAllStorageItemsOnInstanceResultContract>(
+                            _services.GetService(typeof(ILogger<IGetAllStorageItemsOnInstanceContract>)) as ILogger<IGetAllStorageItemsOnInstanceContract>,
+                            new ValidatedPipeNode<IGetAllStorageItemsOnInstanceContract, IGetAllStorageItemsOnInstanceResultContract>(
+                                _services.GetService(typeof(IValidator<IGetAllStorageItemsOnInstanceContract>)) as IValidator<IGetAllStorageItemsOnInstanceContract>,
+                                new GetAllStorageItemsOnInstanceUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(body);
         }
         
         [HttpGet]
@@ -295,13 +282,12 @@ namespace Nano35.Storage.Api.Controllers
         public async Task<IActionResult> GetAllStorageItemsOnUnit(
             [FromQuery] GetAllStorageItemsOnUnitHttpQuery body)
         {
-            var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetAllStorageItemsOnUnitRequest>) _services.GetService(typeof(ILogger<LoggedGetAllStorageItemsOnUnitRequest>));
-
             return await new ConvertedGetAllStorageItemsOnUnitOnHttpContext(
-                        new LoggedGetAllStorageItemsOnUnitRequest(logger,
-                            new ValidatedGetAllStorageItemsOnUnitRequest(
-                                new GetAllStorageItemsOnUnitUseCase(bus)))).Ask(body);
+                        new LoggedPipeNode<IGetAllStorageItemsOnUnitContract, IGetAllStorageItemsOnUnitResultContract>(
+                            _services.GetService(typeof(ILogger<IGetAllStorageItemsOnUnitContract>)) as ILogger<IGetAllStorageItemsOnUnitContract>,
+                            new ValidatedPipeNode<IGetAllStorageItemsOnUnitContract, IGetAllStorageItemsOnUnitResultContract>(
+                                _services.GetService(typeof(IValidator<IGetAllStorageItemsOnUnitContract>)) as IValidator<IGetAllStorageItemsOnUnitContract>,
+                                new GetAllStorageItemsOnUnitUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(body);
         }
     }
 }

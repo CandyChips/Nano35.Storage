@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using FluentValidation;
 using MassTransit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.HttpContext.instance;
 using Nano35.HttpContext.storage;
+using Nano35.Storage.Api.Requests;
 using Nano35.Storage.Api.Requests.CreateCategory;
 using Nano35.Storage.Api.Requests.GetAllArticleCategories;
 using Nano35.Storage.Api.Requests.UpdateCategoryName;
@@ -35,13 +37,12 @@ namespace Nano35.Storage.Api.Controllers
         public async Task<IActionResult> GetAllArticleCategories(
             [FromQuery] GetAllArticlesCategoriesHttpQuery query)
         {
-            var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetAllArticlesCategoriesRequest>)_services.GetService(typeof(ILogger<LoggedGetAllArticlesCategoriesRequest>));
-
             return await new ConvertedGetAllArticleCategoriesOnHttpContext(
-                        new LoggedGetAllArticlesCategoriesRequest(logger,
-                            new ValidatedGetAllArticlesCategoriesRequest(
-                                new GetAllArticleCategoriesUseCase(bus)))).Ask(query);
+                        new LoggedPipeNode<IGetAllArticlesCategoriesRequestContract, IGetAllArticlesCategoriesResultContract>(
+                            _services.GetService(typeof(ILogger<IGetAllArticlesCategoriesRequestContract>)) as ILogger<IGetAllArticlesCategoriesRequestContract>,
+                            new ValidatedPipeNode<IGetAllArticlesCategoriesRequestContract, IGetAllArticlesCategoriesResultContract>(
+                                _services.GetService(typeof(IValidator<IGetAllArticlesCategoriesRequestContract>)) as IValidator<IGetAllArticlesCategoriesRequestContract>,
+                                new GetAllArticleCategoriesUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(query);
             
         }
         
@@ -53,13 +54,12 @@ namespace Nano35.Storage.Api.Controllers
         public async Task<IActionResult> CreateCategory(
             [FromBody] CreateCategoryHttpBody body)
         {
-            var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedCreateCategoryRequest>)_services.GetService(typeof(ILogger<LoggedCreateCategoryRequest>));
-
             return await new ConvertedCreateCategoryOnHttpContext(
-                        new LoggedCreateCategoryRequest(logger,
-                            new ValidatedCreateCategoryRequest(
-                                new CreateCategoryUseCase(bus)))).Ask(body);
+                        new LoggedPipeNode<ICreateCategoryRequestContract, ICreateCategoryResultContract>(
+                            _services.GetService(typeof(ILogger<ICreateCategoryRequestContract>)) as ILogger<ICreateCategoryRequestContract>,
+                            new ValidatedPipeNode<ICreateCategoryRequestContract, ICreateCategoryResultContract>(
+                                _services.GetService(typeof(IValidator<ICreateCategoryRequestContract>)) as IValidator<ICreateCategoryRequestContract>,
+                                new CreateCategoryUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(body);
         }
         
         [HttpPatch]
@@ -70,14 +70,12 @@ namespace Nano35.Storage.Api.Controllers
         public async Task<IActionResult> UpdateCategoryName(
             [FromBody] UpdateCategoryNameHttpBody body)
         {
-            
-            var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedUpdateCategoryNameRequest>) _services.GetService(typeof(ILogger<LoggedUpdateCategoryNameRequest>));
-
             return await new ConvertedUpdateCategoryNameOnHttpContext(
-                        new LoggedUpdateCategoryNameRequest(logger,  
-                            new ValidatedUpdateCategoryNameRequest(
-                                new UpdateCategoryNameUseCase(bus)))).Ask(body);
+                        new LoggedPipeNode<IUpdateCategoryNameRequestContract, IUpdateCategoryNameResultContract>(
+                            _services.GetService(typeof(ILogger<IUpdateCategoryNameRequestContract>)) as ILogger<IUpdateCategoryNameRequestContract>, 
+                            new ValidatedPipeNode<IUpdateCategoryNameRequestContract, IUpdateCategoryNameResultContract>(
+                                _services.GetService(typeof(IValidator<IUpdateCategoryNameRequestContract>)) as IValidator<IUpdateCategoryNameRequestContract>,
+                                new UpdateCategoryNameUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(body);
         }
         
         [HttpPatch]
@@ -88,13 +86,12 @@ namespace Nano35.Storage.Api.Controllers
         public async Task<IActionResult> UpdateCategoryParentCategoryId(
             [FromBody] UpdateCategoryParentCategoryHttpBody body)
         {
-            var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedUpdateCategoryParentCategoryIdRequest>) _services.GetService(typeof(ILogger<LoggedUpdateCategoryParentCategoryIdRequest>));
-
             return await new ConvertedUpdateCategoryParentCategoryIdOnHttpContext(
-                        new LoggedUpdateCategoryParentCategoryIdRequest(logger,  
-                            new ValidatedUpdateCategoryParentCategoryIdRequest(
-                                new UpdateCategoryParentCategoryIdUseCase(bus)))).Ask(body);
+                        new LoggedPipeNode<IUpdateCategoryParentCategoryIdRequestContract, IUpdateCategoryParentCategoryIdResultContract>(
+                            _services.GetService(typeof(ILogger<IUpdateCategoryParentCategoryIdRequestContract>)) as ILogger<IUpdateCategoryParentCategoryIdRequestContract>,
+                            new ValidatedPipeNode<IUpdateCategoryParentCategoryIdRequestContract, IUpdateCategoryParentCategoryIdResultContract>(
+                                _services.GetService(typeof(IValidator<IUpdateCategoryParentCategoryIdRequestContract>)) as IValidator<IUpdateCategoryParentCategoryIdRequestContract>,
+                                new UpdateCategoryParentCategoryIdUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(body);
         }
     }
 }

@@ -32,8 +32,7 @@ namespace Nano35.Storage.Processor.UseCases.UpdateStorageItemHiddenComment
             // Send request to pipeline
             var result =
                 await new LoggedPipeNode<IUpdateStorageItemHiddenCommentRequestContract, IUpdateStorageItemHiddenCommentResultContract>(logger,
-                    new ValidatedUpdateStorageItemHiddenCommentRequest(
-                        new UpdateStorageItemHiddenCommentRequest(dbContext))).Ask(message, context.CancellationToken);
+                        new UpdateStorageItemHiddenCommentRequest(dbContext)).Ask(message, context.CancellationToken);
             
             // Check response of create HiddenComment request
             switch (result)

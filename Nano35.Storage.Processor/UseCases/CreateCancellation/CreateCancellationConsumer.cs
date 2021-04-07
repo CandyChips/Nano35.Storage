@@ -32,9 +32,8 @@ namespace Nano35.Storage.Processor.UseCases.CreateCancellation
             // Send request to pipeline
             var result =
                 await new LoggedPipeNode<ICreateCancellationRequestContract, ICreateCancellationResultContract>(logger,
-                    new ValidatedCreateCancellationRequest(dbContext,
                         new TransactedPipeNode<ICreateCancellationRequestContract, ICreateCancellationResultContract>(dbContext,
-                            new CreateCancellationRequest(dbContext)))).Ask(message, context.CancellationToken);
+                            new CreateCancellationRequest(dbContext))).Ask(message, context.CancellationToken);
             
             // Check response of create article request
             switch (result)

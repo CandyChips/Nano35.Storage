@@ -33,8 +33,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllSells
             // Send request to pipeline
             var result =
                 await new LoggedPipeNode<IGetAllSellsRequestContract, IGetAllSellsResultContract>(logger,
-                    new ValidatedGetAllSellsRequest(
-                        new GetAllSellsRequest(dbContext, bus))).Ask(message, context.CancellationToken);
+                        new GetAllSellsRequest(dbContext, bus)).Ask(message, context.CancellationToken);
             
             // Check response of create article request
             switch (result)

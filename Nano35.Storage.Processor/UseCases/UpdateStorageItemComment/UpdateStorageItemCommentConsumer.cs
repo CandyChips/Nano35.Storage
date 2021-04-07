@@ -32,8 +32,7 @@ namespace Nano35.Storage.Processor.UseCases.UpdateStorageItemComment
             // Send request to pipeline
             var result =
                 await new LoggedPipeNode<IUpdateStorageItemCommentRequestContract, IUpdateStorageItemCommentResultContract>(logger,
-                    new ValidatedUpdateStorageItemCommentRequest(
-                        new UpdateStorageItemCommentRequest(dbContext))).Ask(message, context.CancellationToken);
+                        new UpdateStorageItemCommentRequest(dbContext)).Ask(message, context.CancellationToken);
             
             // Check response of create Comment request
             switch (result)

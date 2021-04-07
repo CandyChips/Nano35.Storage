@@ -32,9 +32,8 @@ namespace Nano35.Storage.Processor.UseCases.CreateSalle
             // Send request to pipeline
             var result =
                 await new LoggedPipeNode<ICreateSelleRequestContract, ICreateSelleResultContract>(logger,
-                    new ValidatedCreateSelleRequest(dbContext,
                         new TransactedPipeNode<ICreateSelleRequestContract, ICreateSelleResultContract>(dbContext,
-                            new CreateSelleRequest(dbContext)))).Ask(message, context.CancellationToken);
+                            new CreateSelleRequest(dbContext))).Ask(message, context.CancellationToken);
             
             // Check response of create article request
             switch (result)

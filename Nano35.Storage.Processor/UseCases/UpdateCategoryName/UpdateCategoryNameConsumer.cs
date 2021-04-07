@@ -31,8 +31,7 @@ namespace Nano35.Storage.Processor.UseCases.UpdateCategoryName
             // Send request to pipeline
             var result =
                 await new LoggedPipeNode<IUpdateCategoryNameRequestContract, IUpdateCategoryNameResultContract>(logger,
-                    new ValidatedUpdateCategoryNameRequest(
-                        new UpdateCategoryNameRequest(dbContext))).Ask(message, context.CancellationToken);
+                        new UpdateCategoryNameRequest(dbContext)).Ask(message, context.CancellationToken);
             
             // Check response of create article request
             switch (result)

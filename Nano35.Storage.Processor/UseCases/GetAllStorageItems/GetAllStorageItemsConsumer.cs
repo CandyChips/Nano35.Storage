@@ -32,8 +32,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItems
             // Send request to pipeline
             var result =
                 await new LoggedPipeNode<IGetAllStorageItemsRequestContract, IGetAllStorageItemsResultContract>(logger,
-                    new ValidatedGetAllStorageItemsRequest(
-                        new GetAllStorageItemsRequest(dbContext))).Ask(message, context.CancellationToken);
+                        new GetAllStorageItemsRequest(dbContext)).Ask(message, context.CancellationToken);
             
             // Check response of create article request
             switch (result)

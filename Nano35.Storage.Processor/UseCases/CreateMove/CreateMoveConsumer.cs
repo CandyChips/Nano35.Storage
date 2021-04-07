@@ -32,9 +32,8 @@ namespace Nano35.Storage.Processor.UseCases.CreateMove
             // Send request to pipeline
             var result =
                 await new LoggedPipeNode<ICreateMoveRequestContract, ICreateMoveResultContract>(logger,
-                    new ValidatedCreateMoveRequest(
                         new TransactedPipeNode<ICreateMoveRequestContract, ICreateMoveResultContract>(dbContext,
-                            new CreateMoveRequest(dbContext)))).Ask(message, context.CancellationToken);
+                            new CreateMoveRequest(dbContext))).Ask(message, context.CancellationToken);
             
             // Check response of create article request
             switch (result)

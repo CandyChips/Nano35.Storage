@@ -32,8 +32,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllArticleBrands
             // Send request to pipeline
             var result =
                 await new LoggedPipeNode<IGetAllArticlesBrandsRequestContract, IGetAllArticlesBrandsResultContract>(logger,
-                    new ValidatedGetAllArticlesBrandsRequest(
-                        new GetAllArticlesBrandsRequest(dbContext))).Ask(message, context.CancellationToken);
+                        new GetAllArticlesBrandsRequest(dbContext)).Ask(message, context.CancellationToken);
             
             // Check response of create article request
             switch (result)

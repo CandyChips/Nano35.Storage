@@ -32,9 +32,8 @@ namespace Nano35.Storage.Processor.UseCases.CreateComing
             // Send request to pipeline
             var result =
                 await new LoggedPipeNode<ICreateComingRequestContract, ICreateComingResultContract>(logger,
-                    new ValidatedCreateComingRequest(
                         new TransactedPipeNode<ICreateComingRequestContract, ICreateComingResultContract>(dbContext,
-                            new CreateComingRequest(dbContext)))).Ask(message, context.CancellationToken);
+                            new CreateComingRequest(dbContext))).Ask(message, context.CancellationToken);
             
             // Check response of create article request
             switch (result)

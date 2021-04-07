@@ -32,8 +32,7 @@ namespace Nano35.Storage.Processor.UseCases.UpdateStorageItemCondition
             // Send request to pipeline
             var result =
                 await new LoggedPipeNode<IUpdateStorageItemConditionRequestContract, IUpdateStorageItemConditionResultContract>(logger,
-                    new ValidatedUpdateStorageItemConditionRequest(
-                        new UpdateStorageItemConditionRequest(dbContext))).Ask(message, context.CancellationToken);
+                        new UpdateStorageItemConditionRequest(dbContext)).Ask(message, context.CancellationToken);
             
             // Check response of create Condition request
             switch (result)

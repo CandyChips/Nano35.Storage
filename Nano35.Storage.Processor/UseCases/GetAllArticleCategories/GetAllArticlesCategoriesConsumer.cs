@@ -32,8 +32,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllArticleCategories
             // Send request to pipeline
             var result =
                 await new LoggedPipeNode<IGetAllArticlesCategoriesRequestContract, IGetAllArticlesCategoriesResultContract>(logger,
-                    new ValidatedGetAllArticlesCategoriesRequest(
-                        new GetAllArticlesCategoriesRequest(dbContext))).Ask(message, context.CancellationToken);
+                        new GetAllArticlesCategoriesRequest(dbContext)).Ask(message, context.CancellationToken);
             
             // Check response of create article request
             switch (result)

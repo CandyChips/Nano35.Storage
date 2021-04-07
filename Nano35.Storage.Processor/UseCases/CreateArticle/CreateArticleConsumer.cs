@@ -46,9 +46,8 @@ namespace Nano35.Storage.Processor.UseCases.CreateArticle
             // Send request to pipeline
             var result =
                 await new LoggedPipeNode<ICreateArticleRequestContract, ICreateArticleResultContract>(logger,
-                new ValidatedCreateArticleRequest(
                     new TransactedPipeNode<ICreateArticleRequestContract, ICreateArticleResultContract>(dbContext,
-                        new CreateArticleRequest(dbContext)))).Ask(message, context.CancellationToken);
+                        new CreateArticleRequest(dbContext))).Ask(message, context.CancellationToken);
             
             // Check response of create article request
             switch (result)

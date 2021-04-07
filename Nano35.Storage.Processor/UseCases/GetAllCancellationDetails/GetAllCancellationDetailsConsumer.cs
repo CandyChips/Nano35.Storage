@@ -32,8 +32,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllCancellationDetails
             // Send request to pipeline
             var result =
                 await new LoggedPipeNode<IGetAllCancellationDetailsRequestContract, IGetAllCancellationDetailsResultContract>(logger,
-                    new ValidatedGetAllCancellationDetailsRequest(
-                        new GetAllCancellationDetailsRequest(dbContext))).Ask(message, context.CancellationToken);
+                        new GetAllCancellationDetailsRequest(dbContext)).Ask(message, context.CancellationToken);
             
             // Check response of create article request
             switch (result)

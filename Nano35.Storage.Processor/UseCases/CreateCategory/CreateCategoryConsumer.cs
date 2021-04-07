@@ -31,9 +31,8 @@ namespace Nano35.Storage.Processor.UseCases.CreateCategory
             // Send request to pipeline
             var result =
                 await new LoggedPipeNode<ICreateCategoryRequestContract, ICreateCategoryResultContract>(logger,
-                    new ValidatedCreateCategoryRequest(
                         new TransactedPipeNode<ICreateCategoryRequestContract, ICreateCategoryResultContract>(dbContext,
-                            new CreateCategoryRequest(dbContext)))).Ask(message, context.CancellationToken);
+                            new CreateCategoryRequest(dbContext))).Ask(message, context.CancellationToken);
             
             // Check response of create article request
             switch (result)

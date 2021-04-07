@@ -32,8 +32,7 @@ namespace Nano35.Storage.Processor.UseCases.UpdateArticleInfo
             // Send request to pipeline
             var result =
                 await new LoggedPipeNode<IUpdateArticleInfoRequestContract, IUpdateArticleInfoResultContract>(logger,
-                    new ValidatedUpdateArticleInfoRequest(
-                        new UpdateArticleInfoRequest(dbContext))).Ask(message, context.CancellationToken);
+                        new UpdateArticleInfoRequest(dbContext)).Ask(message, context.CancellationToken);
             
             // Check response of create article request
             switch (result)

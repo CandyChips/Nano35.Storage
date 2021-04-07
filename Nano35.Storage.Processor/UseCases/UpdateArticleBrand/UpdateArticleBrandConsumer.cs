@@ -32,8 +32,7 @@ namespace Nano35.Storage.Processor.UseCases.UpdateArticleBrand
             // Send request to pipeline
             var result =
                 await new LoggedPipeNode<IUpdateArticleBrandRequestContract, IUpdateArticleBrandResultContract>(logger,
-                    new ValidatedUpdateArticleBrandRequest(
-                        new UpdateArticleBrandRequest(dbContext))).Ask(message, context.CancellationToken);
+                        new UpdateArticleBrandRequest(dbContext)).Ask(message, context.CancellationToken);
             
             // Check response of create article request
             switch (result)

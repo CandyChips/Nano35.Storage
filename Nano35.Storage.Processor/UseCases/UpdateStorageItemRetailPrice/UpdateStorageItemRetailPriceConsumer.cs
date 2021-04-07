@@ -32,8 +32,7 @@ namespace Nano35.Storage.Processor.UseCases.UpdateStorageItemRetailPrice
             // Send request to pipeline
             var result =
                 await new LoggedPipeNode<IUpdateStorageItemRetailPriceRequestContract, IUpdateStorageItemRetailPriceResultContract>(logger,
-                    new ValidatedUpdateStorageItemRetailPriceRequest(
-                        new UpdateStorageItemRetailPriceRequest(dbContext))).Ask(message, context.CancellationToken);
+                        new UpdateStorageItemRetailPriceRequest(dbContext)).Ask(message, context.CancellationToken);
             
             // Check response of create RetailPrice request
             switch (result)
