@@ -21,11 +21,11 @@ namespace Nano35.Storage.Processor.UseCases.GetAllArticleCategories
         public async Task Consume(
             ConsumeContext<IGetAllArticlesCategoriesRequestContract> context)
         {
-            var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<IGetAllArticlesCategoriesRequestContract>) _services.GetService(typeof(ILogger<IGetAllArticlesCategoriesRequestContract>));
-            var message = context.Message;
-            var result = await new LoggedPipeNode<IGetAllArticlesCategoriesRequestContract, IGetAllArticlesCategoriesResultContract>(logger,
-                new GetAllArticlesCategoriesRequest(dbContext)).Ask(message, context.CancellationToken);
+            var result = await new LoggedPipeNode<IGetAllArticlesCategoriesRequestContract, IGetAllArticlesCategoriesResultContract>(
+                _services.GetService(typeof(ILogger<IGetAllArticlesCategoriesRequestContract>)) as ILogger<IGetAllArticlesCategoriesRequestContract>,
+                new GetAllArticlesCategoriesRequest(
+                    _services.GetService(typeof(ApplicationContext)) as ApplicationContext))
+                .Ask(context.Message, context.CancellationToken);
             switch (result)
             {
                 case IGetAllArticlesCategoriesSuccessResultContract:

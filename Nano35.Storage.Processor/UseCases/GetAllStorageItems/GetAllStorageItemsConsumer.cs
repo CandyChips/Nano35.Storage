@@ -12,25 +12,16 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItems
     {
         private readonly IServiceProvider _services;
         
-        public GetAllStorageItemsConsumer(
-            IServiceProvider services)
-        {
-            _services = services;
-        }
+        public GetAllStorageItemsConsumer(IServiceProvider services) { _services = services; }
         
         public async Task Consume(
             ConsumeContext<IGetAllStorageItemsRequestContract> context)
         {
-            var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<IGetAllStorageItemsRequestContract>) _services
-                .GetService(typeof(ILogger<IGetAllStorageItemsRequestContract>));
-
-            var message = context.Message;
-
-            var result =
-                await new LoggedPipeNode<IGetAllStorageItemsRequestContract, IGetAllStorageItemsResultContract>(logger,
-                    new GetAllStorageItemsRequest(dbContext)).Ask(message, context.CancellationToken);
-            
+            var result = await new LoggedPipeNode<IGetAllStorageItemsRequestContract, IGetAllStorageItemsResultContract>(
+                _services.GetService(typeof(ILogger<IGetAllStorageItemsRequestContract>)) as ILogger<IGetAllStorageItemsRequestContract>,
+                new GetAllStorageItemsRequest(
+                    _services.GetService(typeof(ApplicationContext)) as ApplicationContext))
+                .Ask(context.Message, context.CancellationToken);
             switch (result)
             {
                 case IGetAllStorageItemsSuccessResultContract:

@@ -30,45 +30,35 @@ namespace Nano35.Storage.Processor.UseCases.GetAllSells
         public override async Task<IGetAllSellsResultContract> Ask
             (IGetAllSellsRequestContract input, CancellationToken cancellationToken)
         {
-            var queue = await _context
+            var sells = (await _context
                 .Sells
                 .Where(c => c.InstanceId == input.InstanceId)
-                .ToListAsync(cancellationToken);
-
-
-            var result = queue
+                .ToListAsync(cancellationToken))
                 .Select(a =>
-                {
-                    var res = new SelleViewModel()
+                    new SelleViewModel
                     {
                         Id = a.Id,
                         Number = a.Number,
                         Date = a.Date,
                         Cash = a.Details
                             .Select(f => f.Price * f.Count)
-                            .Sum()
-                    };
-                    var getClientStringById = new GetClientStringById(_bus,
-                        new GetClientStringByIdRequestContract() {ClientId = a.ClientId});
-                    res.Client = getClientStringById.GetResponse().Result switch
-                    {
-                        IGetClientStringByIdSuccessResultContract success => success.Data,
-                        IGetClientStringByIdErrorResultContract => "",
-                        _ => ""
-                    };
-                    var getUnitStringById = new GetUnitStringById(_bus,
-                        new GetUnitStringByIdRequestContract() {UnitId = a.Details.FirstOrDefault().FromUnitId});
-                    res.Unit = getUnitStringById.GetResponse().Result switch
-                    {
-                        IGetUnitStringByIdSuccessResultContract success => success.Data,
-                        IGetUnitStringByIdErrorResultContract => "",
-                        _ => ""
-                    };
-
-                    return res;
-                }).ToList();
+                            .Sum(),
+                        Client = new GetClientStringById(_bus, new GetClientStringByIdRequestContract() {ClientId = a.ClientId}).GetResponse()
+                                .Result switch
+                        {
+                            IGetClientStringByIdSuccessResultContract success => success.Data,
+                            _ => throw new Exception()
+                        },
+                        Unit = new GetUnitStringById(_bus, new GetUnitStringByIdRequestContract() {UnitId = a.Details.First().FromUnitId}).GetResponse()
+                                .Result switch
+                        {
+                            IGetUnitStringByIdSuccessResultContract success => success.Data,
+                            _ => throw new Exception()
+                        }
+                    })
+                .ToList();
             
-            return new GetAllSellsSuccessResultContract() {Data = result};
+            return new GetAllSellsSuccessResultContract() {Data = sells};
         }
     }   
 }

@@ -21,14 +21,11 @@ namespace Nano35.Storage.Processor.UseCases.GetAllPlacesOfStorageItemOnUnit
         public async Task Consume(
             ConsumeContext<IGetAllPlacesOfStorageItemOnUnitRequestContract> context)
         {
-            var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<IGetAllPlacesOfStorageItemOnUnitRequestContract>) _services.GetService(typeof(ILogger<IGetAllPlacesOfStorageItemOnUnitRequestContract>));
-
-            var message = context.Message;
-
-            var result = await new LoggedPipeNode<IGetAllPlacesOfStorageItemOnUnitRequestContract, IGetAllPlacesOfStorageItemOnUnitResultContract>(logger,
-                new GetAllPlacesOfStorageItemOnUnitRequest(dbContext, bus)).Ask(message, context.CancellationToken);
+            var result = await new LoggedPipeNode<IGetAllPlacesOfStorageItemOnUnitRequestContract, IGetAllPlacesOfStorageItemOnUnitResultContract>(
+                _services.GetService(typeof(ILogger<IGetAllPlacesOfStorageItemOnUnitRequestContract>)) as ILogger<IGetAllPlacesOfStorageItemOnUnitRequestContract>,
+                new GetAllPlacesOfStorageItemOnUnitRequest(
+                    _services.GetService(typeof(ApplicationContext)) as ApplicationContext, 
+                    _services.GetService(typeof(IBus)) as IBus)).Ask(context.Message, context.CancellationToken);
             
             switch (result)
             {

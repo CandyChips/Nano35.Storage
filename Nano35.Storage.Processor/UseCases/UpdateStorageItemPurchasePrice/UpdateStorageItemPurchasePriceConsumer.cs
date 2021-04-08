@@ -22,11 +22,10 @@ namespace Nano35.Storage.Processor.UseCases.UpdateStorageItemPurchasePrice
             ConsumeContext<IUpdateStorageItemPurchasePriceRequestContract> context)
         {
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<IUpdateStorageItemPurchasePriceRequestContract>) _services.GetService(typeof(ILogger<IUpdateStorageItemPurchasePriceRequestContract>));
-            var message = context.Message;
-            var result = await new LoggedPipeNode<IUpdateStorageItemPurchasePriceRequestContract, IUpdateStorageItemPurchasePriceResultContract>(logger,
+            var result = await new LoggedPipeNode<IUpdateStorageItemPurchasePriceRequestContract, IUpdateStorageItemPurchasePriceResultContract>(
+                _services.GetService(typeof(ILogger<IUpdateStorageItemPurchasePriceRequestContract>)) as ILogger<IUpdateStorageItemPurchasePriceRequestContract>,
                 new TransactedPipeNode<IUpdateStorageItemPurchasePriceRequestContract, IUpdateStorageItemPurchasePriceResultContract>(dbContext, 
-                    new UpdateStorageItemPurchasePriceRequest(dbContext))).Ask(message, context.CancellationToken);
+                    new UpdateStorageItemPurchasePriceRequest(dbContext))).Ask(context.Message, context.CancellationToken);
             switch (result)
             {
                 case IUpdateStorageItemPurchasePriceSuccessResultContract:

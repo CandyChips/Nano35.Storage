@@ -30,31 +30,25 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemsOnUnit
             IGetAllStorageItemsOnUnitContract input, 
             CancellationToken cancellationToken)
         {
-            var queue = await _context
+            var storageItems = (await _context
                 .Warehouses
-                .Where(c =>
-                    c.UnitId == input.UnitId).ToListAsync(cancellationToken);
-
-
-            var result = queue
+                .Where(c => c.UnitId == input.UnitId)
+                .ToListAsync(cancellationToken))
                 .Select(a =>
-                {
-                    var res = new StorageItemOnUnitViewModel
+                    new StorageItemOnUnitViewModel
                     {
                         Count = a.Count,
-                    };
-                    var getAllStorageItems = new GetAllStorageItemsOnInstance.GetAllStorageItems(_bus,
-                        new GetAllStorageItemsRequestContract() {InstanceId = a.InstanceId});
-                    res.Item = getAllStorageItems.GetResponse().Result switch
-                    {
-                        IGetAllStorageItemsSuccessResultContract success => success.Data.MapTo<StorageItemWarehouseView>(),
-                        _ => throw new Exception()
-                    };
+                        Item = new StorageItemWarehouseView()
+                        {
+                            Id = a.StorageItem.Id,
+                            Name = a.StorageItem.ToString(),
+                            PurchasePrice = (double) (a.StorageItem.PurchasePrice),
+                            RetailPrice = (double) (a.StorageItem.RetailPrice),
+                        },
+                    })
+                .ToList();
 
-                    return res;
-                }).ToList();
-
-            return new GetAllStorageItemsOnUnitSuccessResultContract() {Contains = result};
+            return new GetAllStorageItemsOnUnitSuccessResultContract() {Contains = storageItems};
         }
     }   
 }

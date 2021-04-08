@@ -31,35 +31,13 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemsOnInstance
             (IGetAllStorageItemsOnInstanceContract input, 
             CancellationToken cancellationToken)
         {
-            var queue = await _context
+            var storageItem = (await _context
                 .Warehouses
-                .Where(c =>
-                    c.InstanceId == input.InstanceId).ToListAsync(cancellationToken);
-
-
-            var result = queue
+                .Where(c => c.InstanceId == input.InstanceId)
+                .ToListAsync(cancellationToken))
                 .GroupBy(g => g.StorageItem, e => e)
                 .Select(a =>
-                {
-                    var res = new StorageItemOnInstanceViewModel()
-                    {
-                        Count = a.Select(s => s.Count).Sum()
-                    };
-                    var getAllStorageItems = new GetAllStorageItems(_bus,
-                        new GetAllStorageItemsRequestContract() {InstanceId = a.Key.InstanceId});
-                    res.Item = getAllStorageItems.GetResponse().Result switch
-                    {
-                        IGetAllStorageItemsSuccessResultContract success => success.Data.MapTo<StorageItemWarehouseView>(),
-                        _ => throw new Exception()
-                    };
-                    var getUnitStringById = new GetUnitStringById(_bus,
-                        new GetUnitStringByIdRequestContract() {UnitId = a.First().UnitId});
-                    res.Unit = getUnitStringById.GetResponse().Result switch
-                    {
-                        IGetUnitStringByIdSuccessResultContract success => success.Data,
-                        _ => throw new Exception()
-                    };
-                    res = new StorageItemOnInstanceViewModel()
+                    new StorageItemOnInstanceViewModel
                     {
                         Count = a.Sum(s => s.Count),
                         Item = new StorageItemWarehouseView()
@@ -68,22 +46,17 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemsOnInstance
                             Name = a.Key.ToString(),
                             PurchasePrice = (double) (a.Key.PurchasePrice),
                             RetailPrice = (double) (a.Key.RetailPrice),
-                        }
-                    };
-                    return res;
-                }).ToList();
+                        },
+                        Unit = new GetUnitStringById(_bus, new GetUnitStringByIdRequestContract() {UnitId = a.First().UnitId}).GetResponse()
+                                .Result switch
+                            {
+                                IGetUnitStringByIdSuccessResultContract success => success.Data,
+                                _ => throw new Exception()
+                            }
+                    })
+                .ToList();
 
-            return new GetAllStorageItemsOnInstanceSuccessResultContract() {Contains = result};
+            return new GetAllStorageItemsOnInstanceSuccessResultContract() {Contains = storageItem};
         }
     }   
-    
-    public class GetAllStorageItems : 
-        MasstransitRequest
-        <IGetAllStorageItemsRequestContract, 
-            IGetAllStorageItemsResultContract,
-            IGetAllStorageItemsSuccessResultContract, 
-            IGetAllStorageItemsErrorResultContract>
-    {
-        public GetAllStorageItems(IBus bus, IGetAllStorageItemsRequestContract request) : base(bus, request) {}
-    }
 }

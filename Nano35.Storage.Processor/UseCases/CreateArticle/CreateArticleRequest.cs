@@ -34,15 +34,17 @@ namespace Nano35.Storage.Processor.UseCases.CreateArticle
             
             await _context.AddAsync(article, cancellationToken);
 
-            if (input.Specs != null)
+            if (input.Specs.Any())
             {
-                var specs = input.Specs.Select(a => new Spec()
-                {
-                    ArticleId = input.NewId,
-                    InstanceId = input.InstanceId,
-                    Key = a.Key,
-                    Value = a.Value
-                });
+                var specs = input.Specs
+                    .Select(a =>
+                        new Spec()
+                        {
+                            ArticleId = input.NewId,
+                            InstanceId = input.InstanceId,
+                            Key = a.Key,
+                            Value = a.Value
+                        });
                 
                 await _context.Specs.AddRangeAsync(specs, cancellationToken);
             }
