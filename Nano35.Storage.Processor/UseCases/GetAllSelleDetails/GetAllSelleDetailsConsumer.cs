@@ -28,9 +28,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllSelleDetails
             var message = context.Message;
             var result =
                 await new LoggedPipeNode<IGetAllSelleDetailsRequestContract, IGetAllSelleDetailsResultContract>(logger,
-                    new ValidatedGetAllSelleDetailsRequest(
-                        new GetAllSelleDetailsRequest(dbContext, bus))
-                ).Ask(message, context.CancellationToken);
+                    new GetAllSelleDetailsRequest(dbContext, bus)).Ask(message, context.CancellationToken);
             switch (result)
             {
                 case IGetAllSelleDetailsSuccessResultContract:

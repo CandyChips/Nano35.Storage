@@ -26,8 +26,7 @@ namespace Nano35.Storage.Processor.UseCases.GetArticleById
             var message = context.Message;
             var result =
                 await new LoggedPipeNode<IGetArticleByIdRequestContract, IGetArticleByIdResultContract>(logger,
-                    new ValidatedGetArticleByIdRequest(
-                        new GetArticleByIdRequest(dbContext))).Ask(message, context.CancellationToken);
+                    new GetArticleByIdRequest(dbContext)).Ask(message, context.CancellationToken);
             switch (result)
             {
                 case IGetArticleByIdSuccessResultContract:

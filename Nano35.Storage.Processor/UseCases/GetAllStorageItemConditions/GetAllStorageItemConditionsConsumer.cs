@@ -25,8 +25,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemConditions
             var logger = (ILogger<IGetAllStorageItemConditionsRequestContract>) _services.GetService(typeof(ILogger<IGetAllStorageItemConditionsRequestContract>));
             var message = context.Message;
             var result = await new LoggedPipeNode<IGetAllStorageItemConditionsRequestContract, IGetAllStorageItemConditionsResultContract>(logger,
-                    new ValidatedGetAllStorageItemConditionsRequest(
-                        new GetAllStorageItemConditionsRequest(dbContext))).Ask(message, context.CancellationToken);
+                new GetAllStorageItemConditionsRequest(dbContext)).Ask(message, context.CancellationToken);
             switch (result)
             {
                 case IGetAllStorageItemConditionsSuccessResultContract:

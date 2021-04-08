@@ -26,9 +26,8 @@ namespace Nano35.Storage.Processor.UseCases.UpdateCategoryParentCategoryId
             var message = context.Message;
             var result =
                 await new LoggedPipeNode<IUpdateCategoryParentCategoryIdRequestContract, IUpdateCategoryParentCategoryIdResultContract>(logger,
-                    new ValidatedUpdateCategoryParentCategoryIdRequest(
-                        new TransactedPipeNode<IUpdateCategoryParentCategoryIdRequestContract, IUpdateCategoryParentCategoryIdResultContract>(dbContext, 
-                            new UpdateCategoryParentCategoryIdRequest(dbContext)))).Ask(message, context.CancellationToken);
+                    new TransactedPipeNode<IUpdateCategoryParentCategoryIdRequestContract, IUpdateCategoryParentCategoryIdResultContract>(dbContext, 
+                        new UpdateCategoryParentCategoryIdRequest(dbContext))).Ask(message, context.CancellationToken);
             switch (result)
             {
                 case IUpdateCategoryParentCategoryIdSuccessResultContract:

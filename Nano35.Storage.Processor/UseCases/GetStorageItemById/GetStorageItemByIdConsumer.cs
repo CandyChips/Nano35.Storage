@@ -26,8 +26,7 @@ namespace Nano35.Storage.Processor.UseCases.GetStorageItemById
             var message = context.Message;
             var result =
                 await new LoggedPipeNode<IGetStorageItemByIdRequestContract, IGetStorageItemByIdResultContract>(logger,
-                    new ValidatedGetStorageItemByIdRequest(
-                        new GetStorageItemByIdRequest(dbContext))).Ask(message, context.CancellationToken);
+                    new GetStorageItemByIdRequest(dbContext)).Ask(message, context.CancellationToken);
             switch (result)
             {
                 case IGetStorageItemByIdSuccessResultContract:

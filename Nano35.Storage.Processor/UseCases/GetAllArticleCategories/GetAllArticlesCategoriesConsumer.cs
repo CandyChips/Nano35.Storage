@@ -25,8 +25,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllArticleCategories
             var logger = (ILogger<IGetAllArticlesCategoriesRequestContract>) _services.GetService(typeof(ILogger<IGetAllArticlesCategoriesRequestContract>));
             var message = context.Message;
             var result = await new LoggedPipeNode<IGetAllArticlesCategoriesRequestContract, IGetAllArticlesCategoriesResultContract>(logger,
-                    new ValidatedGetAllArticlesCategoriesRequest(
-                        new GetAllArticlesCategoriesRequest(dbContext))).Ask(message, context.CancellationToken);
+                new GetAllArticlesCategoriesRequest(dbContext)).Ask(message, context.CancellationToken);
             switch (result)
             {
                 case IGetAllArticlesCategoriesSuccessResultContract:

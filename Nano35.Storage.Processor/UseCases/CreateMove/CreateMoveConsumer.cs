@@ -25,9 +25,8 @@ namespace Nano35.Storage.Processor.UseCases.CreateMove
             var logger = (ILogger<ICreateMoveRequestContract>) _services.GetService(typeof(ILogger<ICreateMoveRequestContract>));
             var message = context.Message;
             var result = await new LoggedPipeNode<ICreateMoveRequestContract, ICreateMoveResultContract>(logger,
-                    new ValidatedCreateMoveRequest(
-                        new TransactedPipeNode<ICreateMoveRequestContract, ICreateMoveResultContract>(dbContext,
-                            new CreateMoveRequest(dbContext)))).Ask(message, context.CancellationToken);
+                new TransactedPipeNode<ICreateMoveRequestContract, ICreateMoveResultContract>(dbContext,
+                    new CreateMoveRequest(dbContext))).Ask(message, context.CancellationToken);
             switch (result)
             {
                 case ICreateMoveSuccessResultContract:

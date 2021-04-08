@@ -84,7 +84,6 @@ namespace Nano35.Storage.Processor.Configurations
                     cfg.ReceiveEndpoint("IUpdateStorageItemConditionRequestContract", e => { e.Consumer<UpdateStorageItemConditionConsumer>(provider); });
                     cfg.ReceiveEndpoint("IUpdateStorageItemHiddenCommentRequestContract", e => { e.Consumer<UpdateStorageItemHiddenCommentConsumer>(provider); });
                     cfg.ReceiveEndpoint("IUpdateStorageItemPurchasePriceRequestContract", e => { e.Consumer<UpdateStorageItemPurchasePriceConsumer>(provider); });
-                    cfg.ReceiveEndpoint("IUpdateStorageItemRetailPriceRequestContract", e => { e.Consumer<UpdateStorageItemRetailPriceConsumer>(provider); });
                     cfg.ReceiveEndpoint("GetAllPlacesOfStorageItemOnInstanceContract", e => { e.Consumer<GetAllPlacesOfStorageItemOnInstanceConsumer>(provider); });
                     
                     cfg.ReceiveEndpoint("IGetAllArticlesCategoriesRequestContract", e => { e.Consumer<GetAllArticlesCategoriesConsumer>(provider); });
@@ -130,7 +129,6 @@ namespace Nano35.Storage.Processor.Configurations
                 x.AddConsumer<GetAllStorageItemsOnInstanceConsumer>();
                 x.AddConsumer<GetAllPlacesOfStorageItemOnInstanceConsumer>();
                 
-                x.AddConsumer<UpdateStorageItemRetailPriceConsumer>();
                 x.AddConsumer<UpdateStorageItemPurchasePriceConsumer>();
                 x.AddConsumer<UpdateStorageItemHiddenCommentConsumer>();
                 x.AddConsumer<UpdateStorageItemConditionConsumer>();

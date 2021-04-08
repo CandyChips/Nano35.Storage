@@ -25,9 +25,8 @@ namespace Nano35.Storage.Processor.UseCases.CreateCancellation
             var logger = (ILogger<ICreateCancellationRequestContract>) _services.GetService(typeof(ILogger<ICreateCancellationRequestContract>));
             var message = context.Message;
             var result = await new LoggedPipeNode<ICreateCancellationRequestContract, ICreateCancellationResultContract>(logger,
-                    new ValidatedCreateCancellationRequest(
-                        new TransactedPipeNode<ICreateCancellationRequestContract, ICreateCancellationResultContract>(dbContext,
-                            new CreateCancellationRequest(dbContext)))).Ask(message, context.CancellationToken);
+                new TransactedPipeNode<ICreateCancellationRequestContract, ICreateCancellationResultContract>(dbContext,
+                    new CreateCancellationRequest(dbContext))).Ask(message, context.CancellationToken);
             switch (result)
             {
                 case ICreateCancellationSuccessResultContract:

@@ -25,9 +25,8 @@ namespace Nano35.Storage.Processor.UseCases.CreateStorageItem
             var logger = (ILogger<ICreateStorageItemRequestContract>) _services.GetService(typeof(ILogger<ICreateStorageItemRequestContract>));
             var message = context.Message;
             var result = await new LoggedPipeNode<ICreateStorageItemRequestContract, ICreateStorageItemResultContract>(logger,
-                    new ValidatedCreateStorageItemRequest(
-                        new TransactedPipeNode<ICreateStorageItemRequestContract, ICreateStorageItemResultContract>(dbContext,
-                            new CreateStorageItemRequest(dbContext)))).Ask(message, context.CancellationToken);
+                new TransactedPipeNode<ICreateStorageItemRequestContract, ICreateStorageItemResultContract>(dbContext,
+                    new CreateStorageItemRequest(dbContext))).Ask(message, context.CancellationToken);
             switch (result)
             {
                 case ICreateStorageItemSuccessResultContract:

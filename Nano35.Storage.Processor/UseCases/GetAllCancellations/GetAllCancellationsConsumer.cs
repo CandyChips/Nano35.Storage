@@ -27,8 +27,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllCancellations
             var message = context.Message;
             var result =
                 await new LoggedPipeNode<IGetAllCancellationsRequestContract, IGetAllCancellationsResultContract>(logger,
-                    new ValidatedGetAllCancellationsRequest(
-                        new GetAllCancellationsRequest(dbContext, bus))
+                    new GetAllCancellationsRequest(dbContext, bus)
                 ).Ask(message, context.CancellationToken);
             switch (result)
             {

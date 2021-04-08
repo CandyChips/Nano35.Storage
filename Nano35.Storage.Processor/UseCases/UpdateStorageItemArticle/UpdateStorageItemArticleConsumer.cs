@@ -26,9 +26,8 @@ namespace Nano35.Storage.Processor.UseCases.UpdateStorageItemArticle
             var message = context.Message;
             var result =
                 await new LoggedPipeNode<IUpdateStorageItemArticleRequestContract, IUpdateStorageItemArticleResultContract>(logger,
-                    new ValidatedUpdateStorageItemArticleRequest(
-                        new TransactedPipeNode<IUpdateStorageItemArticleRequestContract, IUpdateStorageItemArticleResultContract>(dbContext, 
-                            new UpdateStorageItemArticleRequest(dbContext)))).Ask(message, context.CancellationToken);
+                    new TransactedPipeNode<IUpdateStorageItemArticleRequestContract, IUpdateStorageItemArticleResultContract>(dbContext, 
+                        new UpdateStorageItemArticleRequest(dbContext))).Ask(message, context.CancellationToken);
             switch (result)
             {
                 case IUpdateStorageItemArticleSuccessResultContract:

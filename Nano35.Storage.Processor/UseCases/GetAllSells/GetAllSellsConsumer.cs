@@ -21,22 +21,14 @@ namespace Nano35.Storage.Processor.UseCases.GetAllSells
         public async Task Consume(
             ConsumeContext<IGetAllSellsRequestContract> context)
         {
-            // Setup configuration of pipeline
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
             var bus = (IBus) _services.GetService(typeof(IBus));
             var logger = (ILogger<IGetAllSellsRequestContract>) _services.GetService(typeof(ILogger<IGetAllSellsRequestContract>));
-
-            // Explore message of request
             var message = context.Message;
-
-            // Send request to pipeline
             var result =
                 await new LoggedPipeNode<IGetAllSellsRequestContract, IGetAllSellsResultContract>(logger,
-                    new ValidatedGetAllSellsRequest(
-                        new GetAllSellsRequest(dbContext, bus))
-                ).Ask(message, context.CancellationToken);
+                    new GetAllSellsRequest(dbContext, bus)).Ask(message, context.CancellationToken);
             
-            // Check response of create article request
             switch (result)
             {
                 case IGetAllSellsSuccessResultContract:

@@ -28,8 +28,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllMoves
             var message = context.Message;
             var result =
                 await new LoggedPipeNode<IGetAllMovesRequestContract, IGetAllMovesResultContract>(logger,
-                    new ValidatedGetAllMovesRequest(
-                        new GetAllMovesRequest(dbContext, bus))).Ask(message, context.CancellationToken);
+                    new GetAllMovesRequest(dbContext, bus)).Ask(message, context.CancellationToken);
             switch (result)
             {
                 case IGetAllMovesSuccessResultContract:

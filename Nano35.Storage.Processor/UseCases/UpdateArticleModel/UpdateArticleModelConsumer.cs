@@ -27,9 +27,8 @@ namespace Nano35.Storage.Processor.UseCases.UpdateArticleModel
             var message = context.Message;
             var result =
                 await new LoggedPipeNode<IUpdateArticleModelRequestContract, IUpdateArticleModelResultContract>(logger,
-                    new ValidatedUpdateArticleModelRequest(
-                        new TransactedPipeNode<IUpdateArticleModelRequestContract, IUpdateArticleModelResultContract>(dbContext, 
-                            new UpdateArticleModelRequest(dbContext)))).Ask(message, context.CancellationToken);
+                    new TransactedPipeNode<IUpdateArticleModelRequestContract, IUpdateArticleModelResultContract>(dbContext, 
+                        new UpdateArticleModelRequest(dbContext))).Ask(message, context.CancellationToken);
             switch (result)
             {
                 case IUpdateArticleModelSuccessResultContract:

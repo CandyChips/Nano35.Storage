@@ -28,8 +28,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllPlacesOfStorageItemOnInstance
             var message = context.Message;
             var result =
                 await new LoggedPipeNode<IGetAllPlacesOfStorageItemOnInstanceContract, IGetAllPlacesOfStorageItemOnInstanceResultContract>(logger,
-                    new ValidatedGetAllPlacesOfStorageItemOnInstanceRequest(
-                        new GetAllPlacesOfStorageItemOnInstanceRequest(dbContext, bus))
+                    new GetAllPlacesOfStorageItemOnInstanceRequest(dbContext, bus)
                 ).Ask(message, context.CancellationToken);
             switch (result)
             {

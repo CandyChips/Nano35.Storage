@@ -25,9 +25,8 @@ namespace Nano35.Storage.Processor.UseCases.CreateSalle
             var logger = (ILogger<ICreateSelleRequestContract>) _services.GetService(typeof(ILogger<ICreateSelleRequestContract>));
             var message = context.Message;
             var result = await new LoggedPipeNode<ICreateSelleRequestContract, ICreateSelleResultContract>(logger,
-                    new ValidatedCreateSelleRequest(
-                        new TransactedPipeNode<ICreateSelleRequestContract, ICreateSelleResultContract>(dbContext,
-                            new CreateSelleRequest(dbContext)))).Ask(message, context.CancellationToken);
+                new TransactedPipeNode<ICreateSelleRequestContract, ICreateSelleResultContract>(dbContext,
+                    new CreateSelleRequest(dbContext))).Ask(message, context.CancellationToken);
             switch (result)
             {
                 case ICreateSelleSuccessResultContract:

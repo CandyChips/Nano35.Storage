@@ -26,8 +26,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemsOnInstance
             var logger = (ILogger<IGetAllStorageItemsOnInstanceContract>) _services.GetService(typeof(ILogger<IGetAllStorageItemsOnInstanceContract>));
             var message = context.Message;
             var result = await new LoggedPipeNode<IGetAllStorageItemsOnInstanceContract, IGetAllStorageItemsOnInstanceResultContract>(logger,
-                    new ValidatedGetAllStorageItemsOnInstanceRequest(
-                        new GetAllStorageItemsOnInstanceRequest(dbContext, bus))).Ask(message, context.CancellationToken);
+                new GetAllStorageItemsOnInstanceRequest(dbContext, bus)).Ask(message, context.CancellationToken);
             switch (result)
             {
                 case IGetAllStorageItemsOnInstanceSuccessResultContract:

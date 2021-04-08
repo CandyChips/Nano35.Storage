@@ -26,8 +26,8 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemsOnUnit
             _bus = bus;
         }
         
-        public override async Task<IGetAllStorageItemsOnUnitResultContract> Ask
-            (IGetAllStorageItemsOnUnitContract input, 
+        public override async Task<IGetAllStorageItemsOnUnitResultContract> Ask(
+            IGetAllStorageItemsOnUnitContract input, 
             CancellationToken cancellationToken)
         {
             var queue = await _context

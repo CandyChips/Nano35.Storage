@@ -26,9 +26,8 @@ namespace Nano35.Storage.Processor.UseCases.UpdateArticleBrand
             var message = context.Message;
             var result =
                 await new LoggedPipeNode<IUpdateArticleBrandRequestContract, IUpdateArticleBrandResultContract>(logger,
-                    new ValidatedUpdateArticleBrandRequest(
-                        new TransactedPipeNode<IUpdateArticleBrandRequestContract, IUpdateArticleBrandResultContract>(dbContext,
-                            new UpdateArticleBrandRequest(dbContext)))).Ask(message, context.CancellationToken);
+                    new TransactedPipeNode<IUpdateArticleBrandRequestContract, IUpdateArticleBrandResultContract>(dbContext,
+                        new UpdateArticleBrandRequest(dbContext))).Ask(message, context.CancellationToken);
             switch (result)
             {
                 case IUpdateArticleBrandSuccessResultContract:

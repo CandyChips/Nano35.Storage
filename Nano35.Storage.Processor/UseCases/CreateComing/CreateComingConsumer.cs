@@ -25,9 +25,8 @@ namespace Nano35.Storage.Processor.UseCases.CreateComing
             var logger = (ILogger<ICreateComingRequestContract>) _services.GetService(typeof(ILogger<ICreateComingRequestContract>));
             var message = context.Message;
             var result = await new LoggedPipeNode<ICreateComingRequestContract, ICreateComingResultContract>(logger,
-                    new ValidatedCreateComingRequest(
-                        new TransactedPipeNode<ICreateComingRequestContract, ICreateComingResultContract>(dbContext,
-                            new CreateComingRequest(dbContext)))).Ask(message, context.CancellationToken);
+                new TransactedPipeNode<ICreateComingRequestContract, ICreateComingResultContract>(dbContext,
+                    new CreateComingRequest(dbContext))).Ask(message, context.CancellationToken);
             switch (result)
             {
                 case ICreateComingSuccessResultContract:

@@ -25,8 +25,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllCancellationDetails
             var logger = (ILogger<IGetAllCancellationDetailsRequestContract>) _services.GetService(typeof(ILogger<IGetAllCancellationDetailsRequestContract>));
             var message = context.Message;
             var result = await new LoggedPipeNode<IGetAllCancellationDetailsRequestContract, IGetAllCancellationDetailsResultContract>(logger,
-                    new ValidatedGetAllCancellationDetailsRequest(
-                        new GetAllCancellationDetailsRequest(dbContext))).Ask(message, context.CancellationToken);
+                new GetAllCancellationDetailsRequest(dbContext)).Ask(message, context.CancellationToken);
             switch (result)
             {
                 case IGetAllCancellationDetailsSuccessResultContract:
