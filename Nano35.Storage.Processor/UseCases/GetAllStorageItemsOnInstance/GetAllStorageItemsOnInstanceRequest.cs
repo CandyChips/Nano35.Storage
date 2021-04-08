@@ -14,9 +14,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemsOnInstance
 {
     public class GetAllStorageItemsOnInstanceRequest :
-        EndPointNodeBase<
-            IGetAllStorageItemsOnInstanceContract,
-            IGetAllStorageItemsOnInstanceResultContract>
+        EndPointNodeBase<IGetAllStorageItemsOnInstanceContract, IGetAllStorageItemsOnInstanceResultContract>
     {
         private readonly ApplicationContext _context;
         private readonly IBus _bus;
@@ -33,45 +31,31 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemsOnInstance
             (IGetAllStorageItemsOnInstanceContract input, 
             CancellationToken cancellationToken)
         {
-            var queue = await _context
+            var result = (await _context
                 .Warehouses
-                .Where(c =>
-                    c.InstanceId == input.InstanceId).ToListAsync(cancellationToken);
-
-            var result = queue
+                .Where(c => c.InstanceId == input.InstanceId)
+                .ToListAsync(cancellationToken))
                 .GroupBy(g => g.StorageItem, e => e)
                 .Select(a =>
-                {
-                    var res = new StorageItemOnInstanceViewModel()
+                    new StorageItemOnInstanceViewModel
                     {
                         Count = a.Sum(s => s.Count),
-                    };
-                    var getAllStorageItems = new Requests.GetAllStorageItems(_bus,
-                        new GetAllStorageItemsRequestContract() {InstanceId = a.Key.InstanceId});
-                    res.Item = getAllStorageItems.GetResponse().Result switch
-                    {
-                        IGetAllStorageItemsSuccessResultContract success =>
-                            success.Data.MapTo<StorageItemWarehouseView>(),
-                        _ => throw new Exception()
-                    };
-                    var getUnitStringById = new GetUnitStringById(_bus,
-                        new GetUnitStringByIdRequestContract() {UnitId = a.FirstOrDefault().UnitId});
-                    res.Unit = getUnitStringById.GetResponse().Result switch
-                    {
-                        IGetUnitStringByIdSuccessResultContract success => success.Data,
-                        _ => throw new Exception()
-                    };
-                    res.Item = new StorageItemWarehouseView()
-                    {
-                        Id = a.Key.Id,
-                        Name = a.Key.ToString(),
-                        PurchasePrice = (double) (a.Key.PurchasePrice),
-                        RetailPrice = (double) (a.Key.RetailPrice),
-                    };
-                    return res;
-                }).ToList();
+                        Item = new StorageItemWarehouseView()
+                        {
+                            Id = a.Key.Id,
+                            Name = a.Key.ToString(),
+                            PurchasePrice = (double) (a.Key.PurchasePrice),
+                            RetailPrice = (double) (a.Key.RetailPrice),
+                        },
+                        Unit = new GetUnitStringById(_bus, new GetUnitStringByIdRequestContract() {UnitId = a.First().UnitId}).GetResponse().Result switch
+                        {
+                            IGetUnitStringByIdSuccessResultContract success => success.Data,
+                            _ => throw new Exception()
+                        }
+                    })
+                .ToList();
 
             return new GetAllStorageItemsOnInstanceSuccessResultContract() {Contains = result};
         }
-    }
+    }   
 }
