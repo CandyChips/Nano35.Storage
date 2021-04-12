@@ -69,7 +69,7 @@ namespace Nano35.Storage.Processor.UseCases.CreateSalle
                             a.Name == item.PlaceOnStorage &&
                             a.StorageItemId == item.StorageItemId &&
                             a.UnitId == input.UnitId, cancellationToken: cancellationToken));
-                    wh.Count += item.Count;
+                    wh.Count -= item.Count;
                 }
                 else
                 {
