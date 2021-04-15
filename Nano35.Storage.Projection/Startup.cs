@@ -11,7 +11,7 @@ namespace Nano35.Storage.Projection
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            //new Configurator(services, new CorsConfiguration()).Configure();
+            new Configurator(services, new CorsConfiguration()).Configure();
             new Configurator(services, new SwaggerConfiguration()).Configure();
             new Configurator(services, new MassTransitConfiguration()).Configure();
             new Configurator(services, new ConfigurationOfControllers()).Configure();
@@ -19,18 +19,24 @@ namespace Nano35.Storage.Projection
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
             {
-                app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Nano35.Storage.Projection v1"));
-            }
-
-            app.UseHttpsRedirection();
-
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Nano35.Instance.Api");
+            });
+            
             app.UseRouting();
-
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapHealthChecks("/health");
+                endpoints.MapControllers();
+                endpoints.MapGet("/", async context =>
+                {
+                    context.Response.Redirect("/swagger");
+                });
+            });
+            
         }
     }
 }
