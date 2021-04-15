@@ -22,8 +22,9 @@ namespace Nano35.Storage.Processor.UseCases.PresentationGetAllCategories
             _context = context;
         }
         
-        public override async Task<IPresentationGetAllCategoriesResultContract> Ask
-            (IPresentationGetAllCategoriesRequestContract input, CancellationToken cancellationToken)
+        public override async Task<IPresentationGetAllCategoriesResultContract> Ask(
+            IPresentationGetAllCategoriesRequestContract input, 
+            CancellationToken cancellationToken)
         {
             var result = await _context
                 .Categories
@@ -32,7 +33,7 @@ namespace Nano35.Storage.Processor.UseCases.PresentationGetAllCategories
                 {
                     Id = a.Id,
                     Name = a.Name, 
-                    ParentCategoryId = (Guid) a.ParentCategoryId
+                    ParentCategoryId = a.ParentCategoryId ?? Guid.Empty
                 })
                 .ToListAsync(cancellationToken: cancellationToken);
 

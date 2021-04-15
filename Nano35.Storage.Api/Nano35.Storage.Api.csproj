@@ -8,10 +8,10 @@
     <PackageReference Include="FluentValidation" Version="9.4.0" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="9.4.0" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="9.4.0" />
-    <PackageReference Include="MassTransit" Version="7.1.5-develop.3276" />
+    <PackageReference Include="MassTransit" Version="7.1.8" />
     <PackageReference Include="MassTransit.AspNetCore" Version="7.1.5-develop.3276" />
-    <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.1.5-develop.3276" />
-    <PackageReference Include="MassTransit.RabbitMQ" Version="7.1.5-develop.3276" />
+    <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.1.8" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="7.1.8" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.2" />
     <PackageReference Include="Nano35.Contracts" Version="2.2.9" />
     <PackageReference Include="Nano35.HttpContext" Version="1.7.4" />

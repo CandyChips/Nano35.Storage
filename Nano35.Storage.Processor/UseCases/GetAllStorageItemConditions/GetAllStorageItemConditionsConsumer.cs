@@ -12,11 +12,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemConditions
     {
         private readonly IServiceProvider _services;
         
-        public GetAllStorageItemConditionsConsumer(
-            IServiceProvider services)
-        {
-            _services = services;
-        }
+        public GetAllStorageItemConditionsConsumer(IServiceProvider services) { _services = services; }
 
         public async Task Consume(
             ConsumeContext<IGetAllStorageItemConditionsRequestContract> context)
