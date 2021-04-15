@@ -11,9 +11,9 @@ namespace Nano35.Storage.Projection
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            new Configurator(services, new CorsConfiguration()).Configure();
+            //new Configurator(services, new CorsConfiguration()).Configure();
             new Configurator(services, new SwaggerConfiguration()).Configure();
-            new Configurator(services, new MassTransitConfiguration()).Configure();
+            //new Configurator(services, new MassTransitConfiguration()).Configure();
             new Configurator(services, new ConfigurationOfControllers()).Configure();
         }
 

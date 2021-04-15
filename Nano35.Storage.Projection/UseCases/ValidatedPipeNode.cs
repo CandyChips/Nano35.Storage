@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using FluentValidation;
 using Nano35.Contracts;
 
-namespace Nano35.Storage.Api.Requests
+namespace Nano35.Storage.Projection.UseCases
 {
     public class Error : IError, IResponse
     {

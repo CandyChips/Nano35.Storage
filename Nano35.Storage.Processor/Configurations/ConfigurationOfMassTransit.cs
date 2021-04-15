@@ -31,6 +31,9 @@ using Nano35.Storage.Processor.UseCases.GetAllStorageItemsOnInstance;
 using Nano35.Storage.Processor.UseCases.GetAllStorageItemsOnUnit;
 using Nano35.Storage.Processor.UseCases.GetArticleById;
 using Nano35.Storage.Processor.UseCases.GetStorageItemById;
+using Nano35.Storage.Processor.UseCases.PresentationGetAllArticles;
+using Nano35.Storage.Processor.UseCases.PresentationGetAllCategories;
+using Nano35.Storage.Processor.UseCases.PresentationGetAllStorageItems;
 using Nano35.Storage.Processor.UseCases.UpdateArticleBrand;
 using Nano35.Storage.Processor.UseCases.UpdateArticleCategory;
 using Nano35.Storage.Processor.UseCases.UpdateArticleInfo;
@@ -107,7 +110,15 @@ namespace Nano35.Storage.Processor.Configurations
                     cfg.ReceiveEndpoint("IGetAllComingsRequestContract", e => { e.Consumer<GetAllComingsConsumer>(provider); });
                     cfg.ReceiveEndpoint("IGetAllComingDetailsRequestContract", e => { e.Consumer<GetAllComingDetailsConsumer>(provider); });
                     
+                    cfg.ReceiveEndpoint("IPresentationGetAllArticlesRequestContract", e => { e.Consumer<PresentationGetAllArticlesConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IPresentationGetAllCategoriesRequestContract", e => { e.Consumer<PresentationGetAllCategoriesConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IPresentationGetAllStorageItemsRequestContract", e => { e.Consumer<PresentationGetAllStorageItemsConsumer>(provider); });
+                    
                 }));
+                x.AddConsumer<PresentationGetAllArticlesConsumer>();
+                x.AddConsumer<PresentationGetAllCategoriesConsumer>();
+                x.AddConsumer<PresentationGetAllStorageItemsConsumer>();
+                
                 x.AddConsumer<CreateSelleConsumer>();
                 x.AddConsumer<GetAllSellsConsumer>();
                 x.AddConsumer<GetAllSelleDetailsConsumer>();
