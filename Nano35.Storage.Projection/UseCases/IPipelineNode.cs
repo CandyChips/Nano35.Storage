@@ -42,15 +42,7 @@ namespace Nano35.Storage.Projection.UseCases
     {
         public abstract Task<TOut> Ask(TIn input);
     }
-
-    /// <summary>
-    /// Contract request reduction
-    /// TMessage -> TResponse => ( TSuccess / TError )
-    /// </summary>
-    /// <typeparam name="TMessage">Is class and IRequest</typeparam>
-    /// <typeparam name="TResponse">Is class and IResponse</typeparam>
-    /// <typeparam name="TSuccess">Is class ISuccess and IResponse</typeparam>
-    /// <typeparam name="TError">Is class IError and IResponse</typeparam>
+    
     public abstract class MasstransitRequest<TMessage, TResponse, TSuccess, TError> 
         where TMessage : class, IRequest
         where TResponse : class, IResponse
@@ -73,17 +65,5 @@ namespace Nano35.Storage.Projection.UseCases
                 return errorResponse.Message;
             throw new Exception();
         }
-    }
-
-    public abstract class EndPointRequestNodeBase<TMessage, TResponse, TSuccess, TError>  : 
-        MasstransitRequest<TMessage, TResponse, TSuccess, TError>,
-        IPipeNode<TMessage, TResponse>
-        where TMessage : class, IRequest
-        where TResponse : class, IResponse
-        where TSuccess : class, ISuccess, TResponse
-        where TError : class, IError, TResponse
-    {
-        protected EndPointRequestNodeBase(IBus bus) : base(bus) {}
-        public async Task<TResponse> Ask(TMessage input) => await GetResponse(input);
     }
 }
