@@ -34,29 +34,24 @@ namespace Nano35.Storage.Processor.UseCases.CreateComing
             };
             
             var comingDetails = input.Details
-                .Select(a => new ComingDetail()
-                {
-                    ComingId = input.NewId,
-                    StorageItemId = a.StorageItemId, 
-                    ToPlace = a.PlaceOnStorage,
-                    Count = a.Count, 
-                    Price = a.Price,
-                    ToUnitId = input.UnitId
-                });
+                .Select(a =>
+                    new ComingDetail()
+                    {
+                        ComingId = input.NewId,
+                        StorageItemId = a.StorageItemId, 
+                        ToPlace = a.PlaceOnStorage,
+                        Count = a.Count, 
+                        Price = a.Price,
+                        ToUnitId = input.UnitId
+                    })
+                .ToList();
             
             foreach (var item in input.Details)
             {
-                if(_context.Warehouses
-                    .Any(a =>
-                        a.Name == item.PlaceOnStorage &&
-                        a.StorageItemId == item.StorageItemId && 
-                        a.UnitId == input.UnitId))
+                if(_context.Warehouses.Any(a => a.Name == item.PlaceOnStorage && a.StorageItemId == item.StorageItemId && a.UnitId == input.UnitId))
                 {
-                    var wh = (await _context.Warehouses
-                        .FirstOrDefaultAsync(a =>
-                            a.Name == item.PlaceOnStorage &&
-                            a.StorageItemId == item.StorageItemId &&
-                            a.UnitId == input.UnitId, cancellationToken: cancellationToken));
+                    var wh = await _context.Warehouses
+                        .FirstOrDefaultAsync(a => a.Name == item.PlaceOnStorage && a.StorageItemId == item.StorageItemId && a.UnitId == input.UnitId, cancellationToken: cancellationToken);
                     wh.Count += item.Count;
                 }
                 else

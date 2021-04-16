@@ -39,7 +39,8 @@ namespace Nano35.Storage.Api.Controllers
                     new ValidatedPipeNode<IGetAllArticlesCategoriesRequestContract, IGetAllArticlesCategoriesResultContract>(
                         _services.GetService(typeof(IValidator<IGetAllArticlesCategoriesRequestContract>)) as IValidator<IGetAllArticlesCategoriesRequestContract>,
                         new GetAllArticleCategoriesUseCase(
-                            _services.GetService(typeof(IBus)) as IBus)))).Ask(query);
+                            _services.GetService(typeof(IBus)) as IBus))))
+                .Ask(query);
         }
         
         [HttpPost]

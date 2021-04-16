@@ -21,21 +21,26 @@ namespace Nano35.Storage.Processor.UseCases.GetAllArticleCategories
             _context = context;
         }
         
-        public override async Task<IGetAllArticlesCategoriesResultContract> Ask
-            (IGetAllArticlesCategoriesRequestContract input, CancellationToken cancellationToken)
+        public override async Task<IGetAllArticlesCategoriesResultContract> Ask(
+            IGetAllArticlesCategoriesRequestContract input, CancellationToken cancellationToken)
         {
-            var result = input.ParentId == Guid.Empty
-                ? await _context.Categories
-                    .Where(c => c.ParentCategoryId == input.ParentId && c.ParentCategoryId == null)
+            List<CategoryViewModel> result;
+
+            if (input.ParentId == Guid.Empty)
+            {
+                result = await _context.Categories
+                    .Where(c => c.InstanceId == input.InstanceId && c.ParentCategory == null)
                     .Select(a =>
                         new CategoryViewModel()
                         {
                             Id = a.Id,
-                            Name = a.Name,
-                            ParentCategoryId = a.ParentCategoryId.Value
+                            Name = a.Name
                         })
-                    .ToListAsync(cancellationToken: cancellationToken)
-                : await _context.Categories
+                    .ToListAsync(cancellationToken: cancellationToken);
+            }
+            else
+            {
+                result = await _context.Categories
                     .Where(c => c.ParentCategoryId == input.ParentId)
                     .Select(a =>
                         new CategoryViewModel()
@@ -45,7 +50,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllArticleCategories
                             ParentCategoryId = a.ParentCategoryId.Value
                         })
                     .ToListAsync(cancellationToken: cancellationToken);
-
+            }
             return new GetAllArticlesCategoriesSuccessResultContract() {Data = result};
         }
     }   

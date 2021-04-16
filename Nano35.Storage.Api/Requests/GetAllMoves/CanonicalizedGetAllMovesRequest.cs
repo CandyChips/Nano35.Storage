@@ -25,7 +25,7 @@ namespace Nano35.Storage.Api.Requests.GetAllMoves
             var converted = new GetAllMovesRequestContract()
             {
                 InstanceId = input.InstanceId, 
-                UnitId = input.UnitId,
+                UnitId = input.UnitId
             };
 
             var response = await DoNext(converted);
