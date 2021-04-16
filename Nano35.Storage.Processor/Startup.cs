@@ -22,12 +22,9 @@ namespace Nano35.Storage.Processor
         {            
             new Configurator(services, new EntityFrameworkConfiguration(Configuration)).Configure();
             new Configurator(services, new MassTransitConfiguration()).Configure();
-            new Configurator(services, new AutoMapperConfiguration()).Configure();
+            new Configurator(services, new AuthenticationConfiguration()).Configure();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            
-        }
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env) { }
     }
 }

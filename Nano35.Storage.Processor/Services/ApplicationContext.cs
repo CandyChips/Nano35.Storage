@@ -1,6 +1,3 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Nano35.Storage.Processor.Models;
 
@@ -38,27 +35,22 @@ namespace Nano35.Storage.Processor.Services
             new ArticlesFluentContext().Configure(modelBuilder);
             new CategoriesFluentContext().Configure(modelBuilder);
             new ArticleSpecFluentContext().Configure(modelBuilder);
-            
             new StorageItemsFluentContext().Configure(modelBuilder);
             new StorageItemConditionsFluentContext().Configure(modelBuilder);
-            
             new WarehousesFluentContext().Configure(modelBuilder);
-            
             new CancellationsFluentContext().Configure(modelBuilder);
             new CancellationDetailFluentContext().Configure(modelBuilder);
-            
             new ComingFluentContext().Configure(modelBuilder);
             new ComingDetailFluentContext().Configure(modelBuilder);
-            
             new MoveFluentContext().Configure(modelBuilder);
             new MoveDetailFluentContext().Configure(modelBuilder);
-            
             new SelleFluentContext().Configure(modelBuilder);
             new SelleDetailFluentContext().Configure(modelBuilder);
             
             base.OnModelCreating(modelBuilder);
         }
-        public void Update()
+
+        private void Update()
         {
             Comings.Load();
             ComingDetails.Load();
@@ -78,41 +70,6 @@ namespace Nano35.Storage.Processor.Services
             StorageItems.Load();
             StorageItemConditions.Load();
             Warehouses.Load();
-        }
-    }
-    public class DataInitializer
-    {
-        public static async Task InitializeRolesAsync(
-            ApplicationContext modelBuilder)
-        {
-            if(!modelBuilder.StorageItemConditions.Any())
-            {
-
-                modelBuilder.StorageItemConditions.Add(new StorageItemCondition()
-                {
-                    Id = Guid.NewGuid(),
-                    IsDeleted = false,
-                    Name = "Новый"
-                });
-
-                modelBuilder.StorageItemConditions.Add(new StorageItemCondition()
-                {
-                    Id = Guid.NewGuid(),
-                    IsDeleted = false,
-                    Name = "С разбора"
-                });
-
-                modelBuilder.StorageItemConditions.Add(new StorageItemCondition()
-                {
-                    Id = Guid.NewGuid(),
-                    IsDeleted = false,
-                    Name = "Витринный образец"
-                });
-                
-                await modelBuilder
-                    .SaveChangesAsync()
-                    .ConfigureAwait(false);
-            }
         }
     }
 }
