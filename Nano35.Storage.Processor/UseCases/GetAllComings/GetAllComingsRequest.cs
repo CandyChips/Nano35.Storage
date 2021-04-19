@@ -52,8 +52,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllComings
                     res.Unit = getUnitStringRequest.GetResponse().Result switch
                     {
                         IGetUnitStringByIdSuccessResultContract success => success.Data,
-                        IGetUnitStringByIdErrorResultContract => "",
-                        _ => ""
+                        _ => throw new Exception()
                     };
                     
                     var getClientStringRequest = new GetClientStringById(_bus,
@@ -61,8 +60,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllComings
                     res.Client = getClientStringRequest.GetResponse().Result switch
                     {
                         IGetClientStringByIdSuccessResultContract success => success.Data,
-                        IGetClientStringByIdErrorResultContract => "",
-                        _ => ""
+                        _ => throw new Exception()
                     };
 
                     return res;

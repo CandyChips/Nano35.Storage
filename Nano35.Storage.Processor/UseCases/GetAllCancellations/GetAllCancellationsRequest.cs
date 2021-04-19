@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -49,8 +50,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllCancellations
                     res.Unit = getUnitStringById.GetResponse().Result switch
                     {
                         IGetUnitStringByIdSuccessResultContract success => success.Data,
-                        IGetUnitStringByIdErrorResultContract => "",
-                        _ => ""
+                        _ => throw new Exception()
                     };
 
                     return res;

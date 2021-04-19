@@ -30,6 +30,9 @@ using Nano35.Storage.Processor.UseCases.GetAllStorageItems;
 using Nano35.Storage.Processor.UseCases.GetAllStorageItemsOnInstance;
 using Nano35.Storage.Processor.UseCases.GetAllStorageItemsOnUnit;
 using Nano35.Storage.Processor.UseCases.GetArticleById;
+using Nano35.Storage.Processor.UseCases.GetCancellationById;
+using Nano35.Storage.Processor.UseCases.GetComingById;
+using Nano35.Storage.Processor.UseCases.GetSelleById;
 using Nano35.Storage.Processor.UseCases.GetStorageItemById;
 using Nano35.Storage.Processor.UseCases.PresentationGetAllArticles;
 using Nano35.Storage.Processor.UseCases.PresentationGetAllCategories;
@@ -96,6 +99,7 @@ namespace Nano35.Storage.Processor.Configurations
                     
                     cfg.ReceiveEndpoint("ICreateSelleRequestContract", e => { e.Consumer<CreateSelleConsumer>(provider); });
                     cfg.ReceiveEndpoint("IGetAllSellsRequestContract", e => { e.Consumer<GetAllSellsConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IGetSelleByIdRequestContract", e => { e.Consumer<GetSelleByIdConsumer>(provider); });
                     cfg.ReceiveEndpoint("IGetAllSelleDetailsRequestContract", e => { e.Consumer<GetAllSelleDetailsConsumer>(provider); });
                     
                     cfg.ReceiveEndpoint("ICreateMoveRequestContract", e => { e.Consumer<CreateMoveConsumer>(provider); });
@@ -104,10 +108,12 @@ namespace Nano35.Storage.Processor.Configurations
                     
                     cfg.ReceiveEndpoint("ICreateCancellationRequestContract", e => { e.Consumer<CreateCancellationConsumer>(provider); });
                     cfg.ReceiveEndpoint("IGetAllCancellationsRequestContract", e => { e.Consumer<GetAllCancellationsConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IGetCancellationByIdRequestContract", e => { e.Consumer<GetCancellationByIdConsumer>(provider); });
                     cfg.ReceiveEndpoint("IGetAllCancellationDetailsRequestContract", e => { e.Consumer<GetAllCancellationDetailsConsumer>(provider); });
                     
                     cfg.ReceiveEndpoint("ICreateComingRequestContract", e => { e.Consumer<CreateComingConsumer>(provider); });
                     cfg.ReceiveEndpoint("IGetAllComingsRequestContract", e => { e.Consumer<GetAllComingsConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IGetComingByIdRequestContract", e => { e.Consumer<GetComingByIdConsumer>(provider); });
                     cfg.ReceiveEndpoint("IGetAllComingDetailsRequestContract", e => { e.Consumer<GetAllComingDetailsConsumer>(provider); });
                     
                     cfg.ReceiveEndpoint("IPresentationGetAllArticlesRequestContract", e => { e.Consumer<PresentationGetAllArticlesConsumer>(provider); });
@@ -121,10 +127,12 @@ namespace Nano35.Storage.Processor.Configurations
                 
                 x.AddConsumer<CreateSelleConsumer>();
                 x.AddConsumer<GetAllSellsConsumer>();
+                x.AddConsumer<GetSelleByIdConsumer>();
                 x.AddConsumer<GetAllSelleDetailsConsumer>();
                 
                 x.AddConsumer<CreateComingConsumer>();
                 x.AddConsumer<GetAllComingsConsumer>();
+                x.AddConsumer<GetComingByIdConsumer>();
                 x.AddConsumer<GetAllComingDetailsConsumer>();
                 
                 x.AddConsumer<CreateMoveConsumer>();
@@ -133,6 +141,7 @@ namespace Nano35.Storage.Processor.Configurations
                 
                 x.AddConsumer<CreateCancellationConsumer>();
                 x.AddConsumer<GetAllCancellationsConsumer>();
+                x.AddConsumer<GetCancellationByIdConsumer>();
                 x.AddConsumer<GetAllCancellationDetailsConsumer>();
                 
                 x.AddConsumer<GetAllPlacesOfStorageItemOnUnitConsumer>();
