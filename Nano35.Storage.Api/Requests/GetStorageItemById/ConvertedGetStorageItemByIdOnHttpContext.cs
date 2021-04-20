@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +12,7 @@ namespace Nano35.Storage.Api.Requests.GetStorageItemById
 {
     public class ConvertedGetStorageItemByIdOnHttpContext : 
         PipeInConvert
-        <GetStorageItemByIdHttpQuery, 
+        <Guid, 
             IActionResult,
             IGetStorageItemByIdRequestContract, 
             IGetStorageItemByIdResultContract>
@@ -20,11 +21,11 @@ namespace Nano35.Storage.Api.Requests.GetStorageItemById
             IPipeNode<IGetStorageItemByIdRequestContract, IGetStorageItemByIdResultContract> next) :
             base(next) {}
 
-        public override async Task<IActionResult> Ask(GetStorageItemByIdHttpQuery input)
+        public override async Task<IActionResult> Ask(Guid id)
         {
             var converted = new GetStorageItemByIdRequestContract()
             {
-                Id = input.Id
+                Id = id
             };
 
             var response = await DoNext(converted);

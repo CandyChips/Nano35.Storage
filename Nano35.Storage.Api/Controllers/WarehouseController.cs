@@ -41,253 +41,283 @@ namespace Nano35.Storage.Api.Controllers
         }
 
         [HttpPost]
-        [Route("CreateComing")]
+        [Route("Coming")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateComingSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateComingErrorHttpResponse))] 
         public async Task<IActionResult> CreateComing(
             [FromBody] CreateComingHttpBody body)
         {
-            return await new ConvertedCreateComingOnHttpContext(
+            return await 
+                new ValidatedPipeNode<CreateComingHttpBody, IActionResult>(
+                    _services.GetService(typeof(IValidator<CreateComingHttpBody>)) as IValidator<CreateComingHttpBody>, 
+                    new ConvertedCreateComingOnHttpContext(
                         new LoggedPipeNode<ICreateComingRequestContract, ICreateComingResultContract>(
                             _services.GetService(typeof(ILogger<ICreateComingRequestContract>)) as ILogger<ICreateComingRequestContract>,
-                            new ValidatedPipeNode<ICreateComingRequestContract, ICreateComingResultContract>(
-                                _services.GetService(typeof(IValidator<ICreateComingRequestContract>)) as IValidator<ICreateComingRequestContract>,
-                                new CreateComingUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(body);
+                            new CreateComingUseCase(_services.GetService(typeof(IBus)) as IBus))))
+                    .Ask(body);
         }
         
         [HttpGet]
-        [Route("GetAllComings")]
+        [Route("Comings")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllComingsSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllComingsErrorHttpResponse))] 
         public async Task<IActionResult> GetAllComings(
             [FromHeader] GetAllComingsHttpQuery query)
         {
-            return await new ConvertedGetAllComingsOnHttpContext(
+            return await 
+                new ValidatedPipeNode<GetAllComingsHttpQuery, IActionResult>(
+                    _services.GetService(typeof(IValidator<GetAllComingsHttpQuery>)) as IValidator<GetAllComingsHttpQuery>, 
+                    new ConvertedGetAllComingsOnHttpContext(
                         new LoggedPipeNode<IGetAllComingsRequestContract, IGetAllComingsResultContract>(
                             _services.GetService(typeof(ILogger<IGetAllComingsRequestContract>)) as ILogger<IGetAllComingsRequestContract>,
-                            new ValidatedPipeNode<IGetAllComingsRequestContract, IGetAllComingsResultContract>(
-                                _services.GetService(typeof(IValidator<IGetAllComingsRequestContract>)) as IValidator<IGetAllComingsRequestContract>,
-                                new GetAllComingsUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(query);
+                            new GetAllComingsUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(query);
         }
         
         [HttpGet]
-        [Route("GetComingDetails")]
+        [Route("ComingDetails")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetComingDetailsByIdSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetComingDetailsByIdErrorHttpResponse))] 
         public async Task<IActionResult> GetComingDetails(
             [FromQuery] GetAllComingDetailsHttpQuery query)
         {
-            return await new ConvertedGetAllComingDetailsOnHttpContext(
-                new LoggedPipeNode<IGetAllComingDetailsRequestContract, IGetAllComingDetailsResultContract>(
-                    _services.GetService(typeof(ILogger<IGetAllComingDetailsRequestContract>)) as ILogger<IGetAllComingDetailsRequestContract>,
-                    new ValidatedPipeNode<IGetAllComingDetailsRequestContract, IGetAllComingDetailsResultContract>(
-                        _services.GetService(typeof(IValidator<IGetAllComingDetailsRequestContract>)) as IValidator<IGetAllComingDetailsRequestContract>,
-                        new GetAllComingDetailsUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(query);
+            return await 
+                new ValidatedPipeNode<GetAllComingDetailsHttpQuery, IActionResult>(
+                    _services.GetService(typeof(IValidator<GetAllComingDetailsHttpQuery>)) as IValidator<GetAllComingDetailsHttpQuery>, 
+                    new ConvertedGetAllComingDetailsOnHttpContext(
+                        new LoggedPipeNode<IGetAllComingDetailsRequestContract, IGetAllComingDetailsResultContract>(
+                            _services.GetService(typeof(ILogger<IGetAllComingDetailsRequestContract>)) as ILogger<IGetAllComingDetailsRequestContract>,
+                            new GetAllComingDetailsUseCase(_services.GetService(typeof(IBus)) as IBus))))
+                    .Ask(query);
         }
         
         [HttpPost]
-        [Route("CreateMove")]
+        [Route("Move")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateMoveSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateMoveErrorHttpResponse))] 
         public async Task<IActionResult> CreateMove(
             [FromBody] CreateMoveHttpBody body)
         {
-            return await new ConvertedCreateMoveOnHttpContext(
+            return await 
+                new ValidatedPipeNode<CreateMoveHttpBody, IActionResult>(
+                    _services.GetService(typeof(IValidator<CreateMoveHttpBody>)) as IValidator<CreateMoveHttpBody>, 
+                    new ConvertedCreateMoveOnHttpContext(
                         new LoggedPipeNode<ICreateMoveRequestContract, ICreateMoveResultContract>(
                             _services.GetService(typeof(ILogger<ICreateMoveRequestContract>)) as ILogger<ICreateMoveRequestContract>,
-                            new ValidatedPipeNode<ICreateMoveRequestContract, ICreateMoveResultContract>(
-                                _services.GetService(typeof(IValidator<ICreateMoveRequestContract>)) as IValidator<ICreateMoveRequestContract>,
-                                new CreateMoveUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(body);
+                            new CreateMoveUseCase(_services.GetService(typeof(IBus)) as IBus))))
+                    .Ask(body);
         }
 
         [HttpGet]
-        [Route("GetAllMoves")]
+        [Route("Moves")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllMovesSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllMovesErrorHttpResponse))] 
         public async Task<IActionResult> GetAllMoves(
             [FromQuery] GetAllMovesHttpQuery body)
         {
-            return await new ConvertedGetAllMovesOnHttpContext(
-                new LoggedPipeNode<IGetAllMovesRequestContract, IGetAllMovesResultContract>(
-                    _services.GetService(typeof(ILogger<IGetAllMovesRequestContract>)) as ILogger<IGetAllMovesRequestContract>,
-                    new ValidatedPipeNode<IGetAllMovesRequestContract, IGetAllMovesResultContract>(
-                        _services.GetService(typeof(IValidator<IGetAllMovesRequestContract>)) as IValidator<IGetAllMovesRequestContract>,
-                        new GetAllMovesUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(body);
+            return await 
+                new ValidatedPipeNode<GetAllMovesHttpQuery, IActionResult>(
+                    _services.GetService(typeof(IValidator<GetAllMovesHttpQuery>)) as IValidator<GetAllMovesHttpQuery>, 
+                    new ConvertedGetAllMovesOnHttpContext(
+                        new LoggedPipeNode<IGetAllMovesRequestContract, IGetAllMovesResultContract>(
+                            _services.GetService(typeof(ILogger<IGetAllMovesRequestContract>)) as ILogger<IGetAllMovesRequestContract>,
+                            new GetAllMovesUseCase(_services.GetService(typeof(IBus)) as IBus))))
+                    .Ask(body);
         }
         
         [HttpGet]
-        [Route("GetAllMoveDetails")]
+        [Route("MoveDetails")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllMoveDetailsSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllMoveDetailsErrorHttpResponse))] 
         public async Task<IActionResult> GetAllMoveDetails(
             [FromQuery] GetAllMoveDetailsHttpQuery query)
         {
-            return await new ConvertedGetAllMoveDetailsOnHttpContext(
-                new LoggedPipeNode<IGetAllMoveDetailsRequestContract, IGetAllMoveDetailsResultContract>(
-                    _services.GetService(typeof(ILogger<IGetAllMoveDetailsRequestContract>)) as ILogger<IGetAllMoveDetailsRequestContract>,
-                    new ValidatedPipeNode<IGetAllMoveDetailsRequestContract, IGetAllMoveDetailsResultContract>(
-                        _services.GetService(typeof(IValidator<IGetAllMoveDetailsRequestContract>)) as IValidator<IGetAllMoveDetailsRequestContract>,
-                        new GetAllMoveDetailsUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(query);
+            return await 
+                new ValidatedPipeNode<GetAllMoveDetailsHttpQuery, IActionResult>(
+                    _services.GetService(typeof(IValidator<GetAllMoveDetailsHttpQuery>)) as IValidator<GetAllMoveDetailsHttpQuery>, 
+                    new ConvertedGetAllMoveDetailsOnHttpContext(
+                        new LoggedPipeNode<IGetAllMoveDetailsRequestContract, IGetAllMoveDetailsResultContract>(
+                            _services.GetService(typeof(ILogger<IGetAllMoveDetailsRequestContract>)) as ILogger<IGetAllMoveDetailsRequestContract>,
+                            new GetAllMoveDetailsUseCase(_services.GetService(typeof(IBus)) as IBus))))
+                    .Ask(query);
         }
         
         [HttpPost]
-        [Route("CreateSelle")]
+        [Route("Selle")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateSelleSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateSelleErrorHttpResponse))] 
         public async Task<IActionResult> CreateSelle(
             [FromBody] CreateSelleHttpBody body)
         {
-            return await new ConvertedCreateSelleOnHttpContext(
+            return await 
+                new ValidatedPipeNode<CreateSelleHttpBody, IActionResult>(
+                    _services.GetService(typeof(IValidator<CreateSelleHttpBody>)) as IValidator<CreateSelleHttpBody>, 
+                    new ConvertedCreateSelleOnHttpContext(
                         new LoggedPipeNode<ICreateSelleRequestContract, ICreateSelleResultContract>(
                             _services.GetService(typeof(ILogger<ICreateSelleRequestContract>)) as ILogger<ICreateSelleRequestContract>,
-                            new ValidatedPipeNode<ICreateSelleRequestContract, ICreateSelleResultContract>(
-                                _services.GetService(typeof(IValidator<ICreateSelleRequestContract>)) as IValidator<ICreateSelleRequestContract>,
-                                new CreateSelleUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(body);
+                            new CreateSelleUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(body);
         }
 
         [HttpGet]
-        [Route("GetAllSells")]
+        [Route("Sells")]
         public async Task<IActionResult> GetAllSells(
             [FromQuery] GetAllSellsHttpQuery body)
         {
-            return await new ConvertedGetAllSellsOnHttpContext(
-                new LoggedPipeNode<IGetAllSellsRequestContract, IGetAllSellsResultContract>(
-                    _services.GetService(typeof(ILogger<IGetAllSellsRequestContract>)) as ILogger<IGetAllSellsRequestContract>,
-                    new ValidatedPipeNode<IGetAllSellsRequestContract, IGetAllSellsResultContract>(
-                        _services.GetService(typeof(IValidator<IGetAllSellsRequestContract>)) as IValidator<IGetAllSellsRequestContract>,
-                        new GetAllSellsUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(body);
+            return await 
+                new ValidatedPipeNode<GetAllSellsHttpQuery, IActionResult>(
+                    _services.GetService(typeof(IValidator<GetAllSellsHttpQuery>)) as IValidator<GetAllSellsHttpQuery>, 
+                    new ConvertedGetAllSellsOnHttpContext(
+                        new LoggedPipeNode<IGetAllSellsRequestContract, IGetAllSellsResultContract>(
+                            _services.GetService(typeof(ILogger<IGetAllSellsRequestContract>)) as ILogger<IGetAllSellsRequestContract>,
+                            new GetAllSellsUseCase(_services.GetService(typeof(IBus)) as IBus))))
+                    .Ask(body);
         }
 
         
         [HttpGet]
-        [Route("GetAllSellDetails")]
+        [Route("SellDetails")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllSellDetailsSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllSellDetailsErrorHttpResponse))] 
         public async Task<IActionResult> GetAllSellDetails(
             [FromQuery] GetAllSellDetailsHttpQuery query)
         {
-            return await new ConvertedGetAllSelleDetailsOnHttpContext(
-                new LoggedPipeNode<IGetAllSelleDetailsRequestContract, IGetAllSelleDetailsResultContract>(
-                    _services.GetService(typeof(ILogger<IGetAllSelleDetailsRequestContract>)) as ILogger<IGetAllSelleDetailsRequestContract>,
-                    new ValidatedPipeNode<IGetAllSelleDetailsRequestContract, IGetAllSelleDetailsResultContract>(
-                        _services.GetService(typeof(IValidator<IGetAllSelleDetailsRequestContract>)) as IValidator<IGetAllSelleDetailsRequestContract>,
-                        new GetAllSelleDetailsUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(query);
+            return await 
+                new ValidatedPipeNode<GetAllSellDetailsHttpQuery, IActionResult>(
+                    _services.GetService(typeof(IValidator<GetAllSellDetailsHttpQuery>)) as IValidator<GetAllSellDetailsHttpQuery>, 
+                    new ConvertedGetAllSelleDetailsOnHttpContext(
+                        new LoggedPipeNode<IGetAllSelleDetailsRequestContract, IGetAllSelleDetailsResultContract>(
+                            _services.GetService(typeof(ILogger<IGetAllSelleDetailsRequestContract>)) as ILogger<IGetAllSelleDetailsRequestContract>,
+                           new GetAllSelleDetailsUseCase(_services.GetService(typeof(IBus)) as IBus))))
+                    .Ask(query);
         }
         
         [HttpPost]
-        [Route("CreateCancellation")]
+        [Route("Cancellation")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateCancellationSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateCancellationErrorHttpResponse))] 
         public async Task<IActionResult> CreateCancellation(
             [FromBody] CreateCancellationHttpBody body)
         {
-            return await new ConvertedCreateCancellationOnHttpContext(
+            return await 
+                new ValidatedPipeNode<CreateCancellationHttpBody, IActionResult>(
+                    _services.GetService(typeof(IValidator<CreateCancellationHttpBody>)) as IValidator<CreateCancellationHttpBody>, 
+                    new ConvertedCreateCancellationOnHttpContext(
                         new LoggedPipeNode<ICreateCancellationRequestContract, ICreateCancellationResultContract>(
                             _services.GetService(typeof(ILogger<ICreateCancellationRequestContract>)) as ILogger<ICreateCancellationRequestContract>,
-                            new ValidatedPipeNode<ICreateCancellationRequestContract, ICreateCancellationResultContract>(
-                                _services.GetService(typeof(IValidator<ICreateCancellationRequestContract>)) as IValidator<ICreateCancellationRequestContract>,
-                                new CreateCancellationUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(body);
+                            new CreateCancellationUseCase(_services.GetService(typeof(IBus)) as IBus))))
+                    .Ask(body);
         }
 
         [HttpGet]
-        [Route("GetAllCancellations")]
+        [Route("Cancellations")]
         public async Task<IActionResult> GetAllCancellations(
             [FromQuery] GetAllCancellationsHttpQuery body)
         {
-            return await new ConvertedGetAllCancellationsOnHttpContext(
-                new LoggedPipeNode<IGetAllCancellationsRequestContract, IGetAllCancellationsResultContract>(
-                    _services.GetService(typeof(ILogger<IGetAllCancellationsRequestContract>)) as ILogger<IGetAllCancellationsRequestContract>,
-                    new ValidatedPipeNode<IGetAllCancellationsRequestContract, IGetAllCancellationsResultContract>(
-                        _services.GetService(typeof(IValidator<IGetAllCancellationsRequestContract>)) as IValidator<IGetAllCancellationsRequestContract>,
-                        new GetAllCancellationsUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(body);
+            return await 
+                new ValidatedPipeNode<GetAllCancellationsHttpQuery, IActionResult>(
+                    _services.GetService(typeof(IValidator<GetAllCancellationsHttpQuery>)) as IValidator<GetAllCancellationsHttpQuery>, 
+                    new ConvertedGetAllCancellationsOnHttpContext(
+                        new LoggedPipeNode<IGetAllCancellationsRequestContract, IGetAllCancellationsResultContract>(
+                            _services.GetService(typeof(ILogger<IGetAllCancellationsRequestContract>)) as ILogger<IGetAllCancellationsRequestContract>,
+                            new GetAllCancellationsUseCase(_services.GetService(typeof(IBus)) as IBus))))
+                    .Ask(body);
         }
         
         [HttpGet]
-        [Route("GetAllCancellationDetails")]
+        [Route("CancellationDetails")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllSellDetailsSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllSellDetailsErrorHttpResponse))] 
         public async Task<IActionResult> GetAllCancellationDetails(
             [FromQuery] GetAllCancellationDetailsHttpQuery query)
         {
-            return await new ConvertedGetAllCancellationDetailsOnHttpContext(
-                new LoggedPipeNode<IGetAllCancellationDetailsRequestContract, IGetAllCancellationDetailsResultContract>(
-                    _services.GetService(typeof(ILogger<IGetAllCancellationDetailsRequestContract>)) as ILogger<IGetAllCancellationDetailsRequestContract>,
-                    new ValidatedPipeNode<IGetAllCancellationDetailsRequestContract, IGetAllCancellationDetailsResultContract>(
-                        _services.GetService(typeof(IValidator<IGetAllCancellationDetailsRequestContract>)) as IValidator<IGetAllCancellationDetailsRequestContract>,
-                        new GetAllCancellationDetailsUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(query);
+            return await 
+                new ValidatedPipeNode<GetAllCancellationDetailsHttpQuery, IActionResult>(
+                    _services.GetService(typeof(IValidator<GetAllCancellationDetailsHttpQuery>)) as IValidator<GetAllCancellationDetailsHttpQuery>, 
+                    new ConvertedGetAllCancellationDetailsOnHttpContext(
+                        new LoggedPipeNode<IGetAllCancellationDetailsRequestContract, IGetAllCancellationDetailsResultContract>(
+                            _services.GetService(typeof(ILogger<IGetAllCancellationDetailsRequestContract>)) as ILogger<IGetAllCancellationDetailsRequestContract>,
+                            new GetAllCancellationDetailsUseCase(_services.GetService(typeof(IBus)) as IBus))))
+                    .Ask(query);
         }
         
         [HttpGet]
-        [Route("GetAllPlacesOfStorageItemOnUnit")]
+        [Route("PlacesOfStorageItemOnUnit")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllPlacesOfStorageItemOnUnitSuccessResultContract))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllPlacesOfStorageItemOnUnitErrorResultContract))] 
         public async Task<IActionResult> GetAllPlacesOfStorageItemOnUnit(
             [FromQuery] GetAllPlacesOfStorageItemOnUnitHttpQuery body)
         {
-            return await new ConvertedGetAllPlacesOfStorageItemOnUnitOnHttpContext(
-                new LoggedPipeNode<IGetAllPlacesOfStorageItemOnUnitRequestContract, IGetAllPlacesOfStorageItemOnUnitResultContract>(
-                    _services.GetService(typeof(ILogger<IGetAllPlacesOfStorageItemOnUnitRequestContract>)) as ILogger<IGetAllPlacesOfStorageItemOnUnitRequestContract>,
-                    new ValidatedPipeNode<IGetAllPlacesOfStorageItemOnUnitRequestContract, IGetAllPlacesOfStorageItemOnUnitResultContract>(
-                        _services.GetService(typeof(IValidator<IGetAllPlacesOfStorageItemOnUnitRequestContract>)) as IValidator<IGetAllPlacesOfStorageItemOnUnitRequestContract>,
-                        new GetAllPlacesOfStorageItemOnUnitUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(body);
+            return await 
+                new ValidatedPipeNode<GetAllPlacesOfStorageItemOnUnitHttpQuery, IActionResult>(
+                    _services.GetService(typeof(IValidator<GetAllPlacesOfStorageItemOnUnitHttpQuery>)) as IValidator<GetAllPlacesOfStorageItemOnUnitHttpQuery>, 
+                    new ConvertedGetAllPlacesOfStorageItemOnUnitOnHttpContext(
+                        new LoggedPipeNode<IGetAllPlacesOfStorageItemOnUnitRequestContract, IGetAllPlacesOfStorageItemOnUnitResultContract>(
+                            _services.GetService(typeof(ILogger<IGetAllPlacesOfStorageItemOnUnitRequestContract>)) as ILogger<IGetAllPlacesOfStorageItemOnUnitRequestContract>,
+                            new GetAllPlacesOfStorageItemOnUnitUseCase(_services.GetService(typeof(IBus)) as IBus))))
+                    .Ask(body);
         }
         
         [HttpGet]
-        [Route("GetAllPlacesOfStorageItemOnInstance")]
+        [Route("PlacesOfStorageItemOnInstance")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllPlacesOfStorageItemOnInstanceSuccessResultContract))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllPlacesOfStorageItemOnInstanceErrorResultContract))] 
         public async Task<IActionResult> GetAllPlacesOfStorageItemOnInstance(
             [FromQuery] GetAllPlacesOfStorageItemOnInstanceHttpQuery body)
         {
-            return await new ConvertedGetAllPlacesOfStorageItemOnInstanceOnHttpContext(
-                new LoggedPipeNode<IGetAllPlacesOfStorageItemOnInstanceContract, IGetAllPlacesOfStorageItemOnInstanceResultContract>(
-                    _services.GetService(typeof(ILogger<IGetAllPlacesOfStorageItemOnInstanceContract>)) as ILogger<IGetAllPlacesOfStorageItemOnInstanceContract>,
-                    new ValidatedPipeNode<IGetAllPlacesOfStorageItemOnInstanceContract, IGetAllPlacesOfStorageItemOnInstanceResultContract>(
-                        _services.GetService(typeof(IValidator<IGetAllPlacesOfStorageItemOnInstanceContract>)) as IValidator<IGetAllPlacesOfStorageItemOnInstanceContract>,
-                        new GetAllPlacesOfStorageItemOnInstanceUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(body);
+            return await 
+                new ValidatedPipeNode<GetAllPlacesOfStorageItemOnInstanceHttpQuery, IActionResult>(
+                    _services.GetService(typeof(IValidator<GetAllPlacesOfStorageItemOnInstanceHttpQuery>)) as IValidator<GetAllPlacesOfStorageItemOnInstanceHttpQuery>, 
+                    new ConvertedGetAllPlacesOfStorageItemOnInstanceOnHttpContext(
+                        new LoggedPipeNode<IGetAllPlacesOfStorageItemOnInstanceContract, IGetAllPlacesOfStorageItemOnInstanceResultContract>(
+                            _services.GetService(typeof(ILogger<IGetAllPlacesOfStorageItemOnInstanceContract>)) as ILogger<IGetAllPlacesOfStorageItemOnInstanceContract>,
+                            new GetAllPlacesOfStorageItemOnInstanceUseCase(_services.GetService(typeof(IBus)) as IBus))))
+                    .Ask(body);
         }
         
         [HttpGet]
-        [Route("GetAllStorageItemsOnInstance")]
+        [Route("StorageItemsOnInstance")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllStorageItemsOnInstanceSuccessResultContract))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllStorageItemsOnInstanceErrorResultContract))] 
         public async Task<IActionResult> GetAllStorageItemsOnInstance(
             [FromQuery] GetAllStorageItemsOnInstanceHttpQuery body)
         {
-            return await new ConvertedGetAllStorageItemsOnInstanceOnHttpContext(
+            return await 
+                new ValidatedPipeNode<GetAllStorageItemsOnInstanceHttpQuery, IActionResult>(
+                    _services.GetService(typeof(IValidator<GetAllStorageItemsOnInstanceHttpQuery>)) as IValidator<GetAllStorageItemsOnInstanceHttpQuery>, 
+                    new ConvertedGetAllStorageItemsOnInstanceOnHttpContext(
                         new LoggedPipeNode<IGetAllStorageItemsOnInstanceContract, IGetAllStorageItemsOnInstanceResultContract>(
                             _services.GetService(typeof(ILogger<IGetAllStorageItemsOnInstanceContract>)) as ILogger<IGetAllStorageItemsOnInstanceContract>,
-                            new ValidatedPipeNode<IGetAllStorageItemsOnInstanceContract, IGetAllStorageItemsOnInstanceResultContract>(
-                                _services.GetService(typeof(IValidator<IGetAllStorageItemsOnInstanceContract>)) as IValidator<IGetAllStorageItemsOnInstanceContract>,
-                                new GetAllStorageItemsOnInstanceUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(body);
+                            new GetAllStorageItemsOnInstanceUseCase(_services.GetService(typeof(IBus)) as IBus))))
+                .Ask(body);
         }
         
         [HttpGet]
-        [Route("GetAllStorageItemsOnUnit")]
+        [Route("StorageItemsOnUnit")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllStorageItemsOnUnitSuccessResultContract))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllStorageItemsOnUnitErrorResultContract))] 
         public async Task<IActionResult> GetAllStorageItemsOnUnit(
             [FromQuery] GetAllStorageItemsOnUnitHttpQuery body)
         {
-            return await new ConvertedGetAllStorageItemsOnUnitOnHttpContext(
+            return await
+                new ValidatedPipeNode<GetAllStorageItemsOnUnitHttpQuery, IActionResult>(
+                    _services.GetService(typeof(IValidator<GetAllStorageItemsOnUnitHttpQuery>)) as IValidator<GetAllStorageItemsOnUnitHttpQuery>, 
+                    new ConvertedGetAllStorageItemsOnUnitOnHttpContext(
                         new LoggedPipeNode<IGetAllStorageItemsOnUnitContract, IGetAllStorageItemsOnUnitResultContract>(
                             _services.GetService(typeof(ILogger<IGetAllStorageItemsOnUnitContract>)) as ILogger<IGetAllStorageItemsOnUnitContract>,
-                            new ValidatedPipeNode<IGetAllStorageItemsOnUnitContract, IGetAllStorageItemsOnUnitResultContract>(
-                                _services.GetService(typeof(IValidator<IGetAllStorageItemsOnUnitContract>)) as IValidator<IGetAllStorageItemsOnUnitContract>,
-                                new GetAllStorageItemsOnUnitUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(body);
+                            new GetAllStorageItemsOnUnitUseCase(_services.GetService(typeof(IBus)) as IBus))))
+                    .Ask(body);
         }
     }
 }

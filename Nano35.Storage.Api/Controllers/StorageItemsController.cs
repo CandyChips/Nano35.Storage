@@ -42,162 +42,155 @@ namespace Nano35.Storage.Api.Controllers
         public async Task<IActionResult> GetAllStorageItems(
             [FromQuery] GetAllStorageItemsQuery header)
         {
-            return await new ConvertedGetAllStorageItemsOnHttpContext(
+            return await 
+                new ValidatedPipeNode<GetAllStorageItemsQuery, IActionResult>(
+                    _services.GetService(typeof(IValidator<GetAllStorageItemsQuery>)) as IValidator<GetAllStorageItemsQuery>,
+                    new ConvertedGetAllStorageItemsOnHttpContext(
                         new LoggedPipeNode<IGetAllStorageItemsRequestContract, IGetAllStorageItemsResultContract>(
                             _services.GetService(typeof(ILogger<IGetAllStorageItemsRequestContract>)) as ILogger<IGetAllStorageItemsRequestContract>,
-                            new ValidatedPipeNode<IGetAllStorageItemsRequestContract, IGetAllStorageItemsResultContract>(
-                                _services.GetService(typeof(IValidator<IGetAllStorageItemsRequestContract>)) as IValidator<IGetAllStorageItemsRequestContract>,
-                                new GetAllStorageItemsUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(header);
+                            new GetAllStorageItemsUseCase(_services.GetService(typeof(IBus)) as IBus))))
+                    .Ask(header);
         }
-    
-        [HttpGet]
-        [Route("GetAllStorageItemConditions")]
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllStorageItemConditionsSuccessHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllStorageItemConditionsErrorHttpResponse))] 
-        public async Task<IActionResult> GetAllStorageItemConditions()
-        {
-            return await new ConvertedGetAllStorageItemConditionsOnHttpContext(
-                        new LoggedPipeNode<IGetAllStorageItemConditionsRequestContract, IGetAllStorageItemConditionsResultContract>(
-                            _services.GetService(typeof(ILogger<IGetAllStorageItemConditionsRequestContract>)) as ILogger<IGetAllStorageItemConditionsRequestContract>,
-                            new ValidatedPipeNode<IGetAllStorageItemConditionsRequestContract, IGetAllStorageItemConditionsResultContract>(
-                                _services.GetService(typeof(IValidator<IGetAllStorageItemConditionsRequestContract>)) as IValidator<IGetAllStorageItemConditionsRequestContract>,
-                                new GetAllStorageItemConditionsUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(
-                                new GetAllStorageItemConditionsHttpQuery());
-        }
-    
-        [HttpGet]
-        [Route("GetStorageItemById")]
+
+        [HttpGet("{id}")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetStorageItemByIdSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetStorageItemByIdErrorHttpResponse))] 
-        public async Task<IActionResult> GetStorageItemById(
-            [FromQuery] GetStorageItemByIdHttpQuery query)
+        public async Task<IActionResult> GetStorageItemById(Guid id)
         {
-            var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedGetStorageItemByIdRequest>) _services.GetService(typeof(ILogger<LoggedGetStorageItemByIdRequest>));
-
-            return await new ConvertedGetStorageItemByIdOnHttpContext(
+            return await 
+                new ValidatedPipeNode<Guid, IActionResult>(
+                    _services.GetService(typeof(IValidator<Guid>)) as IValidator<Guid>, 
+                    new ConvertedGetStorageItemByIdOnHttpContext(
                         new LoggedPipeNode<IGetStorageItemByIdRequestContract, IGetStorageItemByIdResultContract>(
                             _services.GetService(typeof(ILogger<IGetStorageItemByIdRequestContract>)) as ILogger<IGetStorageItemByIdRequestContract>,
-                            new ValidatedPipeNode<IGetStorageItemByIdRequestContract, IGetStorageItemByIdResultContract>(
-                                _services.GetService(typeof(IValidator<IGetStorageItemByIdRequestContract>)) as IValidator<IGetStorageItemByIdRequestContract>,
-                                new GetStorageItemByIdUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(query);
+                            new GetStorageItemByIdUseCase(_services.GetService(typeof(IBus)) as IBus))))
+                    .Ask(id);
         }
         
         [HttpPost]
-        [Route("CreateStorageItem")]
+        [Route("StorageItem")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateStorageItemSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateStorageItemErrorHttpResponse))] 
         public async Task<IActionResult> CreateStorageItem(
             [FromBody] CreateStorageItemHttpBody body)
         {
-            var bus = (IBus)_services.GetService(typeof(IBus));
-            var logger = (ILogger<LoggedCreateStorageItemRequest>) _services.GetService(typeof(ILogger<LoggedCreateStorageItemRequest>));
-
-            return await new ConvertedCreateStorageItemOnHttpContext(
+            return await
+                new ValidatedPipeNode<CreateStorageItemHttpBody, IActionResult>(
+                    _services.GetService(typeof(IValidator<CreateStorageItemHttpBody>)) as IValidator<CreateStorageItemHttpBody>,
+                    new ConvertedCreateStorageItemOnHttpContext(
                         new LoggedPipeNode<ICreateStorageItemRequestContract, ICreateStorageItemResultContract>(
                             _services.GetService(typeof(ILogger<ICreateStorageItemRequestContract>)) as ILogger<ICreateStorageItemRequestContract>,
-                            new ValidatedPipeNode<ICreateStorageItemRequestContract, ICreateStorageItemResultContract>(
-                                _services.GetService(typeof(IValidator<ICreateStorageItemRequestContract>)) as IValidator<ICreateStorageItemRequestContract>,
-                                new CreateStorageItemUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(body);
+                            new CreateStorageItemUseCase(_services.GetService(typeof(IBus)) as IBus))))
+                    .Ask(body);
         }
         
         [HttpPatch]
-        [Route("UpdateStorageItemArticle")]
+        [Route("Article")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateStorageItemArticleSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateStorageItemArticleErrorHttpResponse))] 
         public async Task<IActionResult> UpdateStorageItemArticle(
             [FromBody] UpdateStorageItemArticleHttpBody body)
         {
-            return await new ConvertedUpdateStorageItemArticleOnHttpContext(
+            return await 
+                new ValidatedPipeNode<UpdateStorageItemArticleHttpBody, IActionResult>(
+                    _services.GetService(typeof(IValidator<UpdateStorageItemArticleHttpBody>)) as IValidator<UpdateStorageItemArticleHttpBody>, 
+                    new ConvertedUpdateStorageItemArticleOnHttpContext(
                         new LoggedPipeNode<IUpdateStorageItemArticleRequestContract, IUpdateStorageItemArticleResultContract>(
                             _services.GetService(typeof(ILogger<IUpdateStorageItemArticleRequestContract>)) as ILogger<IUpdateStorageItemArticleRequestContract>,
-                            new ValidatedPipeNode<IUpdateStorageItemArticleRequestContract, IUpdateStorageItemArticleResultContract>(
-                                _services.GetService(typeof(IValidator<IUpdateStorageItemArticleRequestContract>)) as IValidator<IUpdateStorageItemArticleRequestContract>,
-                                new UpdateStorageItemArticleUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(body);
+                            new UpdateStorageItemArticleUseCase(_services.GetService(typeof(IBus)) as IBus))))
+                    .Ask(body);
         }
         
         [HttpPatch]
-        [Route("UpdateStorageItemComment")]
+        [Route("Comment")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateStorageItemCommentSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateStorageItemCommentErrorHttpResponse))] 
         public async Task<IActionResult> UpdateStorageItemComment(
             [FromBody] UpdateStorageItemCommentHttpBody body)
         {
-            return await new ConvertedUpdateStorageItemCommentOnHttpContext(
+            return await 
+                new ValidatedPipeNode<UpdateStorageItemCommentHttpBody, IActionResult>(
+                    _services.GetService(typeof(IValidator<UpdateStorageItemCommentHttpBody>)) as IValidator<UpdateStorageItemCommentHttpBody>, 
+                    new ConvertedUpdateStorageItemCommentOnHttpContext(
                         new LoggedPipeNode<IUpdateStorageItemCommentRequestContract, IUpdateStorageItemCommentResultContract>(
                             _services.GetService(typeof(ILogger<IUpdateStorageItemCommentRequestContract>)) as ILogger<IUpdateStorageItemCommentRequestContract>,
-                            new ValidatedPipeNode<IUpdateStorageItemCommentRequestContract, IUpdateStorageItemCommentResultContract>(
-                                _services.GetService(typeof(IValidator<IUpdateStorageItemCommentRequestContract>)) as IValidator<IUpdateStorageItemCommentRequestContract>,
-                                new UpdateStorageItemCommentUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(body);
+                            new UpdateStorageItemCommentUseCase(_services.GetService(typeof(IBus)) as IBus))))
+                    .Ask(body);
         }
         
         [HttpPatch]
-        [Route("UpdateStorageItemCondition")]
+        [Route("Condition")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateStorageItemConditionSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateStorageItemConditionErrorHttpResponse))] 
         public async Task<IActionResult> UpdateStorageItemCondition(
             [FromBody] UpdateStorageItemConditionHttpBody body)
         {
-            return await new ConvertedUpdateStorageItemConditionOnHttpContext(
+            return await 
+                new ValidatedPipeNode<UpdateStorageItemConditionHttpBody, IActionResult>(
+                    _services.GetService(typeof(IValidator<UpdateStorageItemConditionHttpBody>)) as IValidator<UpdateStorageItemConditionHttpBody>, 
+                    new ConvertedUpdateStorageItemConditionOnHttpContext(
                         new LoggedPipeNode<IUpdateStorageItemConditionRequestContract, IUpdateStorageItemConditionResultContract>(
                             _services.GetService(typeof(ILogger<IUpdateStorageItemConditionRequestContract>)) as ILogger<IUpdateStorageItemConditionRequestContract>,
-                            new ValidatedPipeNode<IUpdateStorageItemConditionRequestContract, IUpdateStorageItemConditionResultContract>(
-                                _services.GetService(typeof(IValidator<IUpdateStorageItemConditionRequestContract>)) as IValidator<IUpdateStorageItemConditionRequestContract>,
-                                new UpdateStorageItemConditionUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(body);
+                            new UpdateStorageItemConditionUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(body);
         }
         
         [HttpPatch]
-        [Route("UpdateStorageItemHiddenComment")]
+        [Route("HiddenComment")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateStorageItemHiddenCommentSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateStorageItemHiddenCommentErrorHttpResponse))] 
         public async Task<IActionResult> UpdateStorageItemHiddenComment(
             [FromBody] UpdateStorageItemHiddenCommentHttpBody body)
         {
-            return await new ConvertedUpdateStorageItemHiddenCommentOnHttpContext(
+            return await 
+                new ValidatedPipeNode<UpdateStorageItemHiddenCommentHttpBody, IActionResult>(
+                    _services.GetService(typeof(IValidator<UpdateStorageItemHiddenCommentHttpBody>)) as IValidator<UpdateStorageItemHiddenCommentHttpBody>,  
+                    new ConvertedUpdateStorageItemHiddenCommentOnHttpContext(
                         new LoggedPipeNode<IUpdateStorageItemHiddenCommentRequestContract, IUpdateStorageItemHiddenCommentResultContract>(
                             _services.GetService(typeof(ILogger<IUpdateStorageItemHiddenCommentRequestContract>)) as ILogger<IUpdateStorageItemHiddenCommentRequestContract>,
-                            new ValidatedPipeNode<IUpdateStorageItemHiddenCommentRequestContract, IUpdateStorageItemHiddenCommentResultContract>(
-                                _services.GetService(typeof(IValidator<IUpdateStorageItemHiddenCommentRequestContract>)) as IValidator<IUpdateStorageItemHiddenCommentRequestContract>, 
-                                new UpdateStorageItemHiddenCommentUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(body);
+                            new UpdateStorageItemHiddenCommentUseCase(_services.GetService(typeof(IBus)) as IBus))))
+                    .Ask(body);
         }
         
         [HttpPatch]
-        [Route("UpdateStorageItemPurchasePrice")]
+        [Route("PurchasePrice")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateStorageItemPurchasePriceSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateStorageItemPurchasePriceErrorHttpResponse))] 
         public async Task<IActionResult> UpdateStorageItemPurchasePrice(
             [FromBody] UpdateStorageItemPurchasePriceHttpBody body)
         {
-            return await new ConvertedUpdateStorageItemPurchasePriceOnHttpContext(
+            return await 
+                new ValidatedPipeNode<UpdateStorageItemPurchasePriceHttpBody, IActionResult>(
+                    _services.GetService(typeof(IValidator<UpdateStorageItemPurchasePriceHttpBody>)) as IValidator<UpdateStorageItemPurchasePriceHttpBody>, 
+                    new ConvertedUpdateStorageItemPurchasePriceOnHttpContext(
                         new LoggedPipeNode<IUpdateStorageItemPurchasePriceRequestContract, IUpdateStorageItemPurchasePriceResultContract>(
                             _services.GetService(typeof(ILogger<IUpdateStorageItemPurchasePriceRequestContract>)) as ILogger<IUpdateStorageItemPurchasePriceRequestContract>,
-                            new ValidatedPipeNode<IUpdateStorageItemPurchasePriceRequestContract, IUpdateStorageItemPurchasePriceResultContract>(
-                                _services.GetService(typeof(IValidator<IUpdateStorageItemPurchasePriceRequestContract>)) as IValidator<IUpdateStorageItemPurchasePriceRequestContract>,
-                                new UpdateStorageItemPurchasePriceUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(body);
+                            new UpdateStorageItemPurchasePriceUseCase(_services.GetService(typeof(IBus)) as IBus))))
+                    .Ask(body);
         }
         
         [HttpPatch]
-        [Route("UpdateStorageItemRetailPrice")]
+        [Route("RetailPrice")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateStorageItemRetailPriceSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateStorageItemRetailPriceErrorHttpResponse))] 
         public async Task<IActionResult> UpdateStorageItemRetailPrice(
             [FromBody] UpdateStorageItemRetailPriceHttpBody body)
         {
-            return await new ConvertedUpdateStorageItemRetailPriceOnHttpContext(
+            return await 
+                new ValidatedPipeNode<UpdateStorageItemRetailPriceHttpBody, IActionResult>(
+                    _services.GetService(typeof(IValidator<UpdateStorageItemRetailPriceHttpBody>)) as IValidator<UpdateStorageItemRetailPriceHttpBody>, 
+                    new ConvertedUpdateStorageItemRetailPriceOnHttpContext(
                         new LoggedPipeNode<IUpdateStorageItemRetailPriceRequestContract, IUpdateStorageItemRetailPriceResultContract>(
                             _services.GetService(typeof(ILogger<IUpdateStorageItemRetailPriceRequestContract>)) as ILogger<IUpdateStorageItemRetailPriceRequestContract>,
-                            new ValidatedPipeNode<IUpdateStorageItemRetailPriceRequestContract, IUpdateStorageItemRetailPriceResultContract>(
-                                _services.GetService(typeof(IValidator<IUpdateStorageItemRetailPriceRequestContract>)) as IValidator<IUpdateStorageItemRetailPriceRequestContract>,
-                                new UpdateStorageItemRetailPriceUseCase(_services.GetService(typeof(IBus)) as IBus)))).Ask(body);
+                            new UpdateStorageItemRetailPriceUseCase(_services.GetService(typeof(IBus)) as IBus))))
+                    .Ask(body);
         }
     }
 }
