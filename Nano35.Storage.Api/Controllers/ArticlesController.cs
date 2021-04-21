@@ -66,35 +66,23 @@ namespace Nano35.Storage.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllArticlesSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllArticlesErrorHttpResponse))] 
         public async Task<IActionResult> GetAllArticles(
-            [FromQuery] GetAllArticlesHttpQuery query)
-        {
-            return await 
-                new ValidatedPipeNode<GetAllArticlesHttpQuery, IActionResult>(
-                    _services.GetService(typeof(IValidator<GetAllArticlesHttpQuery>)) as IValidator<GetAllArticlesHttpQuery>, 
-                    new ConvertedGetAllArticlesOnHttpContext(
-                        new LoggedPipeNode<IGetAllArticlesRequestContract, IGetAllArticlesResultContract>(
-                            _services.GetService(typeof(ILogger<IGetAllArticlesRequestContract>)) as ILogger<IGetAllArticlesRequestContract>,
-                            new GetAllArticlesUseCase(_services.GetService(typeof(IBus)) as IBus))))
+            [FromQuery] GetAllArticlesHttpQuery query) =>
+            await new ConvertedGetAllArticlesOnHttpContext(
+                    new LoggedPipeNode<IGetAllArticlesRequestContract, IGetAllArticlesResultContract>(
+                        _services.GetService(typeof(ILogger<IGetAllArticlesRequestContract>)) as ILogger<IGetAllArticlesRequestContract>,
+                        new GetAllArticlesUseCase(_services.GetService(typeof(IBus)) as IBus)))
                 .Ask(query);
-            
-        }
 
         [HttpGet("{id}")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetArticleByIdSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetArticleByIdErrorHttpResponse))] 
-        public async Task<IActionResult> GetArticleById(Guid id)
-        {
-            return await 
-                new ValidatedPipeNode<Guid, IActionResult>(
-                    _services.GetService(typeof(IValidator<Guid>)) as IValidator<Guid>, 
-                    new ConvertedGetArticleByIdOnHttpContext(
-                        new LoggedPipeNode<IGetArticleByIdRequestContract, IGetArticleByIdResultContract>(
-                            _services.GetService(typeof(ILogger<IGetArticleByIdRequestContract>)) as ILogger<IGetArticleByIdRequestContract>,
-                            new GetArticleByIdUseCase(_services.GetService(typeof(IBus)) as IBus))))
-                    .Ask(id);
-            
-        }
+        public async Task<IActionResult> GetArticleById(Guid id) =>
+            await new ConvertedGetArticleByIdOnHttpContext(
+                    new LoggedPipeNode<IGetArticleByIdRequestContract, IGetArticleByIdResultContract>(
+                        _services.GetService(typeof(ILogger<IGetArticleByIdRequestContract>)) as ILogger<IGetArticleByIdRequestContract>,
+                        new GetArticleByIdUseCase(_services.GetService(typeof(IBus)) as IBus)))
+                .Ask(id);
         
         /// <summary>
         /// Creates a Article.
@@ -128,17 +116,12 @@ namespace Nano35.Storage.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateArticleSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateArticleErrorHttpResponse))] 
         public async Task<IActionResult> CreateArticle(
-            [FromBody] CreateArticleHttpBody body)
-        {
-            return await 
-                new ValidatedPipeNode<CreateArticleHttpBody, IActionResult>(
-                    _services.GetService(typeof(IValidator<CreateArticleHttpBody>)) as IValidator<CreateArticleHttpBody>,
-                    new ConvertedCreateArticleOnHttpContext(
-                        new LoggedPipeNode<ICreateArticleRequestContract, ICreateArticleResultContract>(
-                            _services.GetService(typeof(ILogger<ICreateArticleRequestContract>)) as ILogger<ICreateArticleRequestContract>,
-                            new CreateArticleUseCase(_services.GetService(typeof(IBus)) as IBus))))
-                    .Ask(body);
-        }
+            [FromBody] CreateArticleHttpBody body) =>
+            await new ConvertedCreateArticleOnHttpContext(
+                    new LoggedPipeNode<ICreateArticleRequestContract, ICreateArticleResultContract>(
+                        _services.GetService(typeof(ILogger<ICreateArticleRequestContract>)) as ILogger<ICreateArticleRequestContract>,
+                        new CreateArticleUseCase(_services.GetService(typeof(IBus)) as IBus)))
+                .Ask(body);
 
         [HttpPatch]
         [Route("Brand")]
@@ -146,17 +129,12 @@ namespace Nano35.Storage.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateArticleBrandSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateArticleBrandErrorHttpResponse))] 
         public async Task<IActionResult> UpdateArticleBrand(
-            [FromBody] UpdateArticleBrandHttpBody body)
-        {
-            return await 
-                new ValidatedPipeNode<UpdateArticleBrandHttpBody, IActionResult>(
-                    _services.GetService(typeof(IValidator<UpdateArticleBrandHttpBody>)) as IValidator<UpdateArticleBrandHttpBody>,
-                    new ConvertedUpdateArticleBrandOnHttpContext(
-                        new LoggedPipeNode<IUpdateArticleBrandRequestContract, IUpdateArticleBrandResultContract>(
-                                _services.GetService(typeof(ILogger<IUpdateArticleBrandRequestContract>)) as ILogger<IUpdateArticleBrandRequestContract>,
-                                new UpdateArticleBrandUseCase(_services.GetService(typeof(IBus)) as IBus))))
-                    .Ask(body);
-        }
+            [FromBody] UpdateArticleBrandHttpBody body) =>
+            await new ConvertedUpdateArticleBrandOnHttpContext(
+                    new LoggedPipeNode<IUpdateArticleBrandRequestContract, IUpdateArticleBrandResultContract>(
+                        _services.GetService(typeof(ILogger<IUpdateArticleBrandRequestContract>)) as ILogger<IUpdateArticleBrandRequestContract>,
+                        new UpdateArticleBrandUseCase(_services.GetService(typeof(IBus)) as IBus)))
+                .Ask(body);
         
         [HttpPatch]
         [Route("Category")]
@@ -164,17 +142,12 @@ namespace Nano35.Storage.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateArticleCategorySuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateArticleCategoryErrorHttpResponse))] 
         public async Task<IActionResult> UpdateArticleCategory(
-            [FromBody] UpdateArticleCategoryHttpBody body)
-        {
-            return await 
-                new ValidatedPipeNode<UpdateArticleCategoryHttpBody, IActionResult>(
-                    _services.GetService(typeof(IValidator<UpdateArticleCategoryHttpBody>)) as IValidator<UpdateArticleCategoryHttpBody>,
-                        new ConvertedUpdateArticleCategoryOnHttpContext(
-                        new LoggedPipeNode<IUpdateArticleCategoryRequestContract, IUpdateArticleCategoryResultContract>(
-                            _services.GetService(typeof(ILogger<IUpdateArticleCategoryRequestContract>)) as ILogger<IUpdateArticleCategoryRequestContract>,
-                            new UpdateArticleCategoryUseCase(_services.GetService(typeof(IBus)) as IBus))))
-                    .Ask(body);
-        }
+            [FromBody] UpdateArticleCategoryHttpBody body) =>
+            await new ConvertedUpdateArticleCategoryOnHttpContext(
+                    new LoggedPipeNode<IUpdateArticleCategoryRequestContract, IUpdateArticleCategoryResultContract>(
+                        _services.GetService(typeof(ILogger<IUpdateArticleCategoryRequestContract>)) as ILogger<IUpdateArticleCategoryRequestContract>,
+                        new UpdateArticleCategoryUseCase(_services.GetService(typeof(IBus)) as IBus)))
+                .Ask(body);
         
         [HttpPatch]
         [Route("Info")]
@@ -182,17 +155,12 @@ namespace Nano35.Storage.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateArticleInfoSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateArticleInfoErrorHttpResponse))] 
         public async Task<IActionResult> UpdateArticleInfo(
-            [FromBody] UpdateArticleInfoHttpBody body)
-        {
-            return await 
-                new ValidatedPipeNode<UpdateArticleInfoHttpBody, IActionResult>(
-                    _services.GetService(typeof(IValidator<UpdateArticleInfoHttpBody>)) as IValidator<UpdateArticleInfoHttpBody>,
-                    new ConvertedUpdateArticleInfoOnHttpContext(
-                        new LoggedPipeNode<IUpdateArticleInfoRequestContract, IUpdateArticleInfoResultContract>(
-                            _services.GetService(typeof(ILogger<IUpdateArticleInfoRequestContract>)) as ILogger<IUpdateArticleInfoRequestContract>,
-                            new UpdateArticleInfoUseCase(_services.GetService(typeof(IBus)) as IBus))))
+            [FromBody] UpdateArticleInfoHttpBody body) =>
+            await new ConvertedUpdateArticleInfoOnHttpContext(
+                    new LoggedPipeNode<IUpdateArticleInfoRequestContract, IUpdateArticleInfoResultContract>(
+                        _services.GetService(typeof(ILogger<IUpdateArticleInfoRequestContract>)) as ILogger<IUpdateArticleInfoRequestContract>,
+                        new UpdateArticleInfoUseCase(_services.GetService(typeof(IBus)) as IBus)))
                 .Ask(body);
-        }
         
         [HttpPatch]
         [Route("Model")]
@@ -200,17 +168,12 @@ namespace Nano35.Storage.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateArticleModelSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateArticleModelErrorHttpResponse))] 
         public async Task<IActionResult> UpdateArticleModel(
-            [FromBody] UpdateArticleModelHttpBody body)
-        {
-            return await 
-                new ValidatedPipeNode<UpdateArticleModelHttpBody, IActionResult>(
-                    _services.GetService(typeof(IValidator<UpdateArticleModelHttpBody>)) as IValidator<UpdateArticleModelHttpBody>,
-                    new ConvertedUpdateArticleModelOnHttpContext(
-                        new LoggedPipeNode<IUpdateArticleModelRequestContract, IUpdateArticleModelResultContract>(
-                            _services.GetService(typeof(ILogger<IUpdateArticleModelRequestContract>)) as ILogger<IUpdateArticleModelRequestContract>,
-                            new UpdateArticleModelUseCase(_services.GetService(typeof(IBus)) as IBus))))
-                    .Ask(body);
-        }
+            [FromBody] UpdateArticleModelHttpBody body) =>
+            await new ConvertedUpdateArticleModelOnHttpContext(
+                    new LoggedPipeNode<IUpdateArticleModelRequestContract, IUpdateArticleModelResultContract>(
+                        _services.GetService(typeof(ILogger<IUpdateArticleModelRequestContract>)) as ILogger<IUpdateArticleModelRequestContract>,
+                        new UpdateArticleModelUseCase(_services.GetService(typeof(IBus)) as IBus)))
+                .Ask(body);
         
         [HttpDelete]
         [Route("{id}")]

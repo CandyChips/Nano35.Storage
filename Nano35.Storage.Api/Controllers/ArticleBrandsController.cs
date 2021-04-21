@@ -31,19 +31,11 @@ namespace Nano35.Storage.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllArticleBrandsSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllArticleBrandsErrorHttpResponse))]
         public async Task<IActionResult> GetAllArticleBrands(
-            [FromQuery] GetAllArticlesBrandsHttpQuery query)
-        {
-            return await
-                new ValidatedPipeNode<GetAllArticlesBrandsHttpQuery, IActionResult>(
-                        _services.GetService(typeof(IValidator<GetAllArticlesBrandsHttpQuery>)) as
-                            IValidator<GetAllArticlesBrandsHttpQuery>,
-                        new ConvertedGetAllArticleBrandsOnHttpContext(
-                            new LoggedPipeNode<IGetAllArticlesBrandsRequestContract, IGetAllArticlesBrandsResultContract
-                            >(
-                                _services.GetService(typeof(ILogger<IGetAllArticlesBrandsRequestContract>)) as
-                                    ILogger<IGetAllArticlesBrandsRequestContract>,
-                                new GetAllArticleBrandsUseCase(_services.GetService(typeof(IBus)) as IBus))))
-                    .Ask(query);
-        }
+            [FromQuery] GetAllArticlesBrandsHttpQuery query) =>
+            await new ConvertedGetAllArticleBrandsOnHttpContext(
+                    new LoggedPipeNode<IGetAllArticlesBrandsRequestContract, IGetAllArticlesBrandsResultContract>(
+                        _services.GetService(typeof(ILogger<IGetAllArticlesBrandsRequestContract>)) as ILogger<IGetAllArticlesBrandsRequestContract>,
+                        new GetAllArticleBrandsUseCase(_services.GetService(typeof(IBus)) as IBus)))
+                .Ask(query);
     }
 }

@@ -30,20 +30,12 @@ namespace Nano35.Storage.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllArticleModelsSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllArticleModelsErrorHttpResponse))]
         public async Task<IActionResult> GetAllArticleModels(
-            [FromQuery] GetAllArticleModelsHttpQuery query)
-        {
-            return await
-                new ValidatedPipeNode<GetAllArticleModelsHttpQuery, IActionResult>(
-                        _services.GetService(typeof(IValidator<GetAllArticleModelsHttpQuery>)) as
-                            IValidator<GetAllArticleModelsHttpQuery>,
-                        new ConvertedGetAllArticleModelsOnHttpContext(
-                            new LoggedPipeNode<IGetAllArticlesModelsRequestContract, IGetAllArticlesModelsResultContract
-                            >(
-                                _services.GetService(typeof(ILogger<IGetAllArticlesModelsRequestContract>)) as
-                                    ILogger<IGetAllArticlesModelsRequestContract>,
-                                new GetAllArticlesModelsUseCase(_services.GetService(typeof(IBus)) as IBus))))
-                    .Ask(query);
-        }
+            [FromQuery] GetAllArticleModelsHttpQuery query) =>
+            await new ConvertedGetAllArticleModelsOnHttpContext(
+                    new LoggedPipeNode<IGetAllArticlesModelsRequestContract, IGetAllArticlesModelsResultContract>(
+                        _services.GetService(typeof(ILogger<IGetAllArticlesModelsRequestContract>)) as ILogger<IGetAllArticlesModelsRequestContract>,
+                        new GetAllArticlesModelsUseCase(_services.GetService(typeof(IBus)) as IBus)))
+                .Ask(query);
     }
 }
 
