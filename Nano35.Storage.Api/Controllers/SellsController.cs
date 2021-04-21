@@ -39,7 +39,6 @@ namespace Nano35.Storage.Api.Controllers
                     new CreateSelleUseCase(_services.GetService(typeof(IBus)) as IBus))).Ask(body);
 
         [HttpGet]
-        [Route("Sells")]
         public async Task<IActionResult> GetAllSells(
             [FromQuery] GetAllSellsHttpQuery body) =>
             await new ConvertedGetAllSellsOnHttpContext(
