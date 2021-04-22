@@ -38,12 +38,12 @@ namespace Nano35.Storage.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllComingsErrorHttpResponse))] 
         public async Task<IActionResult> GetAllComings([FromQuery] GetAllComingsHttpQuery query) =>
             await new CanonicalizedGetAllComingsRequest(
-                    new LoggedPipeNode<IGetAllComingsRequestContract, IGetAllComingsResultContract>(
-                        _services.GetService(typeof(ILogger<IGetAllComingsRequestContract>)) as ILogger<IGetAllComingsRequestContract>,
-                        new ValidatedPipeNode<IGetAllComingsRequestContract, IGetAllComingsResultContract>(
-                            _services.GetService(typeof(IValidator<IGetAllComingsRequestContract>)) as IValidator<IGetAllComingsRequestContract>,
-                            new GetAllComingsUseCase(
-                                _services.GetService(typeof(IBus)) as IBus))))
+                new LoggedPipeNode<IGetAllComingsRequestContract, IGetAllComingsResultContract>(
+                    _services.GetService(typeof(ILogger<IGetAllComingsRequestContract>)) as ILogger<IGetAllComingsRequestContract>,
+                    new ValidatedPipeNode<IGetAllComingsRequestContract, IGetAllComingsResultContract>(
+                        _services.GetService(typeof(IValidator<IGetAllComingsRequestContract>)) as IValidator<IGetAllComingsRequestContract>,
+                        new GetAllComingsUseCase(
+                            _services.GetService(typeof(IBus)) as IBus))))
                 .Ask(query);
 
         [HttpGet("{id}/Details")]
@@ -69,12 +69,12 @@ namespace Nano35.Storage.Api.Controllers
         public async Task<IActionResult> CreateComing([FromBody] CreateComingHttpBody body)
         {
             return await new CanonicalizedCreateComingRequest(
-                    new LoggedPipeNode<ICreateComingRequestContract, ICreateComingResultContract>(
-                        _services.GetService(typeof(ILogger<ICreateComingRequestContract>)) as ILogger<ICreateComingRequestContract>,
-                        new ValidatedPipeNode<ICreateComingRequestContract, ICreateComingResultContract>(
-                            _services.GetService(typeof(IValidator<ICreateComingRequestContract>)) as IValidator<ICreateComingRequestContract>,
-                            new CreateComingUseCase(
-                                _services.GetService(typeof(IBus)) as IBus))))
+                new LoggedPipeNode<ICreateComingRequestContract, ICreateComingResultContract>(
+                    _services.GetService(typeof(ILogger<ICreateComingRequestContract>)) as ILogger<ICreateComingRequestContract>,
+                    new ValidatedPipeNode<ICreateComingRequestContract, ICreateComingResultContract>(
+                        _services.GetService(typeof(IValidator<ICreateComingRequestContract>)) as IValidator<ICreateComingRequestContract>,
+                        new CreateComingUseCase(
+                            _services.GetService(typeof(IBus)) as IBus))))
                 .Ask(body);
         }
     }

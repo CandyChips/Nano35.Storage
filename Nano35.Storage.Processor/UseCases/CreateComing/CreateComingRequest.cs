@@ -68,20 +68,16 @@ namespace Nano35.Storage.Processor.UseCases.CreateComing
                     await _context.Warehouses.AddAsync(warehouse, cancellationToken);
                 }
             }
-            
-            var getUnitStringRequest = 
-                new CreateComingCashOperation(_bus,
+
+            new CreateComingCashOperation(_bus, 
                 new CreateComingCashOperationRequestContract()
-                    {NewId = Guid.NewGuid(),
-                     CashboxId = input.UnitId,
-                     ComingId = input.NewId,
-                     Cash = input.Details.Select(a => a.Price * a.Count).Sum(),
-                     Description = "Оплата оприходования."})
-                    .GetResponse().Result switch 
                 {
-                    ICreateComingCashOperationSuccessResultContract success => success,
-                    _ => throw new Exception()
-                };
+                    NewId = Guid.NewGuid(),
+                    CashboxId = input.UnitId,
+                    ComingId = input.NewId,
+                    Cash = input.Details.Select(a => a.Price * a.Count).Sum(),
+                    Description = "Оплата оприходования."
+                });
 
             await _context.Comings.AddAsync(coming, cancellationToken);
             
