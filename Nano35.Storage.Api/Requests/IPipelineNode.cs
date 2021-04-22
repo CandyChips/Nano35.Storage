@@ -26,8 +26,6 @@ namespace Nano35.Storage.Api.Requests
 
     public abstract class PipeNodeBase<TIn, TOut> : 
         IPipeNode<TIn, TOut>
-        where TIn : IRequest
-        where TOut : IResponse
     {
         private readonly IPipeNode<TIn, TOut> _next;
         protected PipeNodeBase(IPipeNode<TIn, TOut> next) { _next = next; }
