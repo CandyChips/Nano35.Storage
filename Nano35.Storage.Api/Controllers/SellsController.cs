@@ -28,11 +28,11 @@ namespace Nano35.Storage.Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class SellesController :
+    public class SellsController :
         ControllerBase
     {
         private readonly IServiceProvider _services;
-        public SellesController(IServiceProvider services) { _services = services; }
+        public SellsController(IServiceProvider services) { _services = services; }
     
         [HttpPost]
         [Produces("application/json")]

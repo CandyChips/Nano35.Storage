@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using MassTransit;
 using MassTransit.Initializers;
 using Microsoft.EntityFrameworkCore;
+using Nano35.Contracts.files;
+using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Contracts.Storage.Models;
 using Nano35.Storage.Processor.Services;
@@ -15,15 +18,18 @@ namespace Nano35.Storage.Processor.UseCases.PresentationGetAllStorageItems
         EndPointNodeBase<IPresentationGetAllStorageItemsRequestContract, IPresentationGetAllStorageItemsResultContract>
     {
         private readonly ApplicationContext _context;
+        private readonly IBus _bus;
 
         public PresentationGetAllStorageItemsRequest(
-            ApplicationContext context)
+            ApplicationContext context, IBus bus)
         {
             _context = context;
+            _bus = bus;
         }
         
-        public override async Task<IPresentationGetAllStorageItemsResultContract> Ask
-            (IPresentationGetAllStorageItemsRequestContract input, CancellationToken cancellationToken)
+        public override async Task<IPresentationGetAllStorageItemsResultContract> Ask(
+            IPresentationGetAllStorageItemsRequestContract input, 
+            CancellationToken cancellationToken)
         {
             var result = await _context
                 .StorageItems
@@ -33,12 +39,18 @@ namespace Nano35.Storage.Processor.UseCases.PresentationGetAllStorageItems
                     Id = a.Id,
                     ArticleId = a.ArticleId,
                     Comment = a.Comment,
-                    ConditionId = a.ConditionId,
-                    HiddenComment = a.HiddenComment,
                     PurchasePrice = a.PurchasePrice
                 })
-                .ToListAsync(cancellationToken: cancellationToken);
-
+                .ToListAsync(cancellationToken);
+            result.ForEach(e =>
+            {
+                var getClientStringRequest = new GetImagesOfStorageItem(_bus, new GetImagesOfStorageItemRequestContract() { StorageItemId = e.Id });
+                e.Images = getClientStringRequest.GetResponse().Result switch
+                {
+                    IGetImagesOfStorageItemSuccessResultContract success => success.Images,
+                    _ => throw new Exception()
+                };
+            });
             return new PresentationGetAllStorageItemsSuccessResultContract() {StorageItems = result};
         }
     }   

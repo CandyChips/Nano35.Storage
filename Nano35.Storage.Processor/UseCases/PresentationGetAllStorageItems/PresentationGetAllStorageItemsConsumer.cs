@@ -21,11 +21,12 @@ namespace Nano35.Storage.Processor.UseCases.PresentationGetAllStorageItems
         public async Task Consume(
             ConsumeContext<IPresentationGetAllStorageItemsRequestContract> context)
         {
-            var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<IPresentationGetAllStorageItemsRequestContract>) _services.GetService(typeof(ILogger<IPresentationGetAllStorageItemsRequestContract>));
-            var message = context.Message;
-            var result = await new LoggedPipeNode<IPresentationGetAllStorageItemsRequestContract, IPresentationGetAllStorageItemsResultContract>(logger,
-                new PresentationGetAllStorageItemsRequest(dbContext)).Ask(message, context.CancellationToken);
+            var result = await new LoggedPipeNode<IPresentationGetAllStorageItemsRequestContract, IPresentationGetAllStorageItemsResultContract>(
+                    _services.GetService(typeof(ILogger<IPresentationGetAllStorageItemsRequestContract>)) as ILogger<IPresentationGetAllStorageItemsRequestContract>,
+                new PresentationGetAllStorageItemsRequest(
+                    _services.GetService(typeof(ApplicationContext)) as ApplicationContext,
+                    _services.GetService(typeof(IBus)) as IBus))
+                .Ask(context.Message, context.CancellationToken);
             switch (result)
             {
                 case IPresentationGetAllStorageItemsSuccessResultContract:

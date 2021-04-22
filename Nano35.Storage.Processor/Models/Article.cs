@@ -11,11 +11,11 @@ namespace Nano35.Storage.Processor.Models
         ICastable
     {
         // Primary key
-        public Guid Id { get; set; }
-        public Guid InstanceId { get; set; }
+        public Guid Id { get; init; }
+        public Guid InstanceId { get; init; }
         
         // Data
-        public bool IsDeleted { get; set; }
+        public bool IsDeleted { get; init; }
         public string Model { get; set; }
         public string Brand { get; set; }
         public string Info { get; set; }
