@@ -11,22 +11,17 @@ namespace Nano35.Storage.Processor.UseCases.CreateStorageItem
         IConsumer<ICreateStorageItemRequestContract>
     {
         private readonly IServiceProvider _services;
-        
-        public CreateStorageItemConsumer(
-            IServiceProvider services)
-        {
-            _services = services;
-        }
-
-        public async Task Consume(
-            ConsumeContext<ICreateStorageItemRequestContract> context)
+        public CreateStorageItemConsumer(IServiceProvider services) { _services = services; }
+        public async Task Consume(ConsumeContext<ICreateStorageItemRequestContract> context)
         {
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<ICreateStorageItemRequestContract>) _services.GetService(typeof(ILogger<ICreateStorageItemRequestContract>));
-            var message = context.Message;
-            var result = await new LoggedPipeNode<ICreateStorageItemRequestContract, ICreateStorageItemResultContract>(logger,
-                new TransactedPipeNode<ICreateStorageItemRequestContract, ICreateStorageItemResultContract>(dbContext,
-                    new CreateStorageItemRequest(dbContext))).Ask(message, context.CancellationToken);
+            var result = await new LoggedPipeNode<ICreateStorageItemRequestContract, ICreateStorageItemResultContract>(
+                _services.GetService(typeof(ILogger<ICreateStorageItemRequestContract>)) as ILogger<ICreateStorageItemRequestContract>,
+                new TransactedPipeNode<ICreateStorageItemRequestContract, ICreateStorageItemResultContract>(
+                    dbContext,
+                    new CreateStorageItemRequest(
+                        dbContext)))
+                .Ask(context.Message, context.CancellationToken);
             switch (result)
             {
                 case ICreateStorageItemSuccessResultContract:

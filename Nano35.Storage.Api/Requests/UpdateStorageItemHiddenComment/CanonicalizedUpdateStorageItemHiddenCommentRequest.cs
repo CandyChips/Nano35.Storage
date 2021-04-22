@@ -25,7 +25,7 @@ namespace Nano35.Storage.Api.Requests.UpdateStorageItemHiddenComment
             var converted = new UpdateStorageItemHiddenCommentRequestContract()
             {
                 Id = input.Id,
-                HiddenComment = input.HiddenComment
+                HiddenComment = input.HiddenComment ?? ""
             };
 
             var response = await DoNext(converted);

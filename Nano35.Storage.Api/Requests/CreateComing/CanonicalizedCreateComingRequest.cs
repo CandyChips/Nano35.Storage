@@ -26,9 +26,9 @@ namespace Nano35.Storage.Api.Requests.CreateComing
             {
                 NewId = input.NewId,
                 InstanceId = input.InstanceId,
-                Number = input.Number,
+                Number = input.Number ?? "",
                 UnitId = input.UnitId,
-                Comment = input.Comment,
+                Comment = input.Comment ?? "",
                 Details = input.Details.Select(a => 
                     new CreateComingDetailViewModel()
                     {

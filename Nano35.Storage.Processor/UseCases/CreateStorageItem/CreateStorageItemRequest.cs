@@ -10,13 +10,7 @@ namespace Nano35.Storage.Processor.UseCases.CreateStorageItem
         EndPointNodeBase<ICreateStorageItemRequestContract, ICreateStorageItemResultContract>
     {
         private readonly ApplicationContext _context;
-
-        public CreateStorageItemRequest(
-            ApplicationContext context)
-        {
-            _context = context;
-        }
-        
+        public CreateStorageItemRequest(ApplicationContext context) { _context = context; }
         public override async Task<ICreateStorageItemResultContract> Ask(
             ICreateStorageItemRequestContract input,
             CancellationToken cancellationToken)
@@ -33,9 +27,7 @@ namespace Nano35.Storage.Processor.UseCases.CreateStorageItem
                 PurchasePrice = input.PurchasePrice,
                 RetailPrice = input.RetailPrice
             };
-            
             await _context.StorageItems.AddAsync(item, cancellationToken);
-                    
             return new CreateStorageItemSuccessResultContract();
         }
     }

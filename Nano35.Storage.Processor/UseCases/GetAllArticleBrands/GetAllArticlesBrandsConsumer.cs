@@ -11,21 +11,15 @@ namespace Nano35.Storage.Processor.UseCases.GetAllArticleBrands
         IConsumer<IGetAllArticlesBrandsRequestContract>
     {
         private readonly IServiceProvider _services;
-        
-        public GetAllArticlesBrandsConsumer(
-            IServiceProvider services)
-        {
-            _services = services;
-        }
-        
+        public GetAllArticlesBrandsConsumer(IServiceProvider services) { _services = services; }
         public async Task Consume(
             ConsumeContext<IGetAllArticlesBrandsRequestContract> context)
         {
-            var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<IGetAllArticlesBrandsRequestContract>) _services.GetService(typeof(ILogger<IGetAllArticlesBrandsRequestContract>));
-            var message = context.Message;
-            var result = await new LoggedPipeNode<IGetAllArticlesBrandsRequestContract, IGetAllArticlesBrandsResultContract>(logger,
-                new GetAllArticlesBrandsRequest(dbContext)).Ask(message, context.CancellationToken);
+            var result = await new LoggedPipeNode<IGetAllArticlesBrandsRequestContract, IGetAllArticlesBrandsResultContract>(
+                _services.GetService(typeof(ILogger<IGetAllArticlesBrandsRequestContract>)) as ILogger<IGetAllArticlesBrandsRequestContract>,
+                new GetAllArticlesBrandsRequest(
+                    _services.GetService(typeof(ApplicationContext)) as ApplicationContext))
+                .Ask(context.Message, context.CancellationToken);
             switch (result)
             {
                 case IGetAllArticlesBrandsSuccessResultContract:

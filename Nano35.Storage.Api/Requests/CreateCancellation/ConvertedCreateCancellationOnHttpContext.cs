@@ -25,16 +25,16 @@ namespace Nano35.Storage.Api.Requests.CreateCancellation
         {
             var converted = new CreateCancellationRequestContract()
             {
-                Comment = input.Comment,
+                Comment = input.Comment ?? "",
                 InstanceId = input.InstanceId,
                 NewId = input.NewId,
-                Number = input.Number,
+                Number = input.Number ?? "",
                 UnitId = input.UnitId,
                 Details = input.Details.Select(a => new CreateCancellationDetailViewModel()
                 {
                     NewId = a.NewId,
                     Count = a.Count,
-                    PlaceOnStorage = a.PlaceOnStorage,
+                    PlaceOnStorage = a.PlaceOnStorage ?? "",
                     StorageItemId = a.StorageItemId
                 }).ToList()
             };

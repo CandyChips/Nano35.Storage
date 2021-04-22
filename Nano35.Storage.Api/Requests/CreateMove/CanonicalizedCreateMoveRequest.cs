@@ -27,7 +27,7 @@ namespace Nano35.Storage.Api.Requests.CreateMove
                 FromUnitId = input.FromUnitId,
                 InstanceId = input.InstanceId,
                 NewId = input.NewId,
-                Number = input.Number,
+                Number = input.Number ?? "",
                 ToUnitId = input.ToUnitId,
                 Details = input.Details.Select(a => new CreateMoveDetailViewModel()
                 {

@@ -24,9 +24,9 @@ namespace Nano35.Storage.Api.Requests.CreateStorageItem
             var converted = new CreateStorageItemRequestContract()
             {
                 ArticleId = input.ArticleId,
-                Comment = input.Comment,
+                Comment = input.Comment ?? "",
                 ConditionId = input.ConditionId,
-                HiddenComment = input.HiddenComment,
+                HiddenComment = input.HiddenComment ?? "",
                 InstanceId = input.InstanceId,
                 NewId = input.NewId,
                 PurchasePrice = input.PurchasePrice,

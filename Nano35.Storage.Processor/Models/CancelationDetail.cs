@@ -7,17 +7,12 @@ namespace Nano35.Storage.Processor.Models
     public class CancelationDetail :
         ICastable
     {
-        // Primary key
         public Guid Id { get; set; }
-        
-        //Data
         public int Count { get; set; }
         public Guid CancellationsId { get; set; }
         public Guid StorageItemId { get; set; }
         public Guid FromUnitId { get; set; }
         public string FromPlace { get; set; }
-        
-        //Foreign values
         public WarehouseByItemOnStorage FromWarehouse { get; set; }
         public Cancellation Cancellation { get; set; }
     }

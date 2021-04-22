@@ -28,7 +28,7 @@ namespace Nano35.Storage.Processor.UseCases.CreateArticle
                 IsDeleted = false,
                 Model = input.Model,
                 Brand = input.Brand,
-                Info = input.Info,
+                Info = input.Info ?? "",
                 CategoryId = input.CategoryId,
             };
             

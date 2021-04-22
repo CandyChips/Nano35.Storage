@@ -18,15 +18,13 @@ namespace Nano35.Storage.Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class CategoryController :
+    public class CategoriesController :
         ControllerBase
     {
         private readonly IServiceProvider _services;
-        
-        public CategoryController(IServiceProvider services) { _services = services; }
+        public CategoriesController(IServiceProvider services) { _services = services; }
     
         [HttpGet]
-        [Route("GetAllArticleCategories")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllArticleCategoriesSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllArticleCategoriesErrorHttpResponse))] 
@@ -44,7 +42,6 @@ namespace Nano35.Storage.Api.Controllers
         }
         
         [HttpPost]
-        [Route("CreateCategory")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateCategorySuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateCategoryErrorHttpResponse))] 
@@ -57,11 +54,12 @@ namespace Nano35.Storage.Api.Controllers
                     new ValidatedPipeNode<ICreateCategoryRequestContract, ICreateCategoryResultContract>(
                         _services.GetService(typeof(IValidator<ICreateCategoryRequestContract>)) as IValidator<ICreateCategoryRequestContract>,
                         new CreateCategoryUseCase(
-                            _services.GetService(typeof(IBus)) as IBus)))).Ask(body);
+                            _services.GetService(typeof(IBus)) as IBus))))
+                .Ask(body);
         }
         
         [HttpPatch]
-        [Route("UpdateCategoryName")]
+        [Route("Name")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateCategoryNameSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateCategoryNameErrorHttpResponse))] 
@@ -74,11 +72,12 @@ namespace Nano35.Storage.Api.Controllers
                     new ValidatedPipeNode<IUpdateCategoryNameRequestContract, IUpdateCategoryNameResultContract>(
                         _services.GetService(typeof(IValidator<IUpdateCategoryNameRequestContract>)) as IValidator<IUpdateCategoryNameRequestContract>,
                         new UpdateCategoryNameUseCase(
-                            _services.GetService(typeof(IBus)) as IBus)))).Ask(body);
+                            _services.GetService(typeof(IBus)) as IBus))))
+                .Ask(body);
         }
         
         [HttpPatch]
-        [Route("UpdateCategoryParentCategoryId")]
+        [Route("ParentCategoryId")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateCategoryParentCategoryIdSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateCategoryParentCategoryIdErrorHttpResponse))] 
@@ -91,7 +90,8 @@ namespace Nano35.Storage.Api.Controllers
                     new ValidatedPipeNode<IUpdateCategoryParentCategoryIdRequestContract, IUpdateCategoryParentCategoryIdResultContract>(
                         _services.GetService(typeof(IValidator<IUpdateCategoryParentCategoryIdRequestContract>)) as IValidator<IUpdateCategoryParentCategoryIdRequestContract>,
                         new UpdateCategoryParentCategoryIdUseCase(
-                            _services.GetService(typeof(IBus)) as IBus)))).Ask(body);
+                            _services.GetService(typeof(IBus)) as IBus))))
+                .Ask(body);
         }
     }
 }

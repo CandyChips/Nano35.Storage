@@ -2,6 +2,7 @@ using System;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 using Nano35.Contracts;
+using Nano35.Contracts.Cashbox.Artifacts;
 using Nano35.Contracts.Identity.Artifacts;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Storage.Processor.UseCases.CreateArticle;
@@ -179,6 +180,7 @@ namespace Nano35.Storage.Processor.Configurations
                 x.AddRequestClient<IGetUnitStringByIdRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/ICreateClientRequestContract"));
                 x.AddRequestClient<IGetClientStringByIdRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/ICreateClientRequestContract"));
                 x.AddRequestClient<IGetUserByIdRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IGetUserByIdRequestContract"));
+                x.AddRequestClient<ICreateComingCashOperationRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/ICreateComingCashOperationRequestContract"));
             });
             services.AddMassTransitHostedService();
         }

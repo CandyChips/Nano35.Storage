@@ -19,8 +19,7 @@ namespace Nano35.Storage.Processor.Configurations
     public class AuthenticationConfiguration : 
         IConfigurationOfService
     {
-        public void AddToServices(
-            IServiceCollection services)
+        public void AddToServices(IServiceCollection services)
         {
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -36,7 +35,6 @@ namespace Nano35.Storage.Processor.Configurations
                         ValidateLifetime = false
                     };
                 });
-
         }
     }
 }

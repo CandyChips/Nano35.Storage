@@ -14,8 +14,7 @@ namespace Nano35.Storage.Processor.Configurations
         private readonly string _login;
         private readonly string _password;
         
-        public EntityFrameworkConfiguration(
-            IConfiguration configuration)
+        public EntityFrameworkConfiguration(IConfiguration configuration)
         {
             _dbServer = configuration["services:EntityFramework:Host"];
             _catalog = configuration["services:EntityFramework:Database"];
@@ -23,8 +22,15 @@ namespace Nano35.Storage.Processor.Configurations
             _password = configuration["services:EntityFramework:Password"];
         }
         
-        public void AddToServices(
-            IServiceCollection services)
+        public EntityFrameworkConfiguration(string host, string db, string login, string password)
+        {
+            _dbServer = host;
+            _catalog = db;
+            _login = login;
+            _password = password;
+        }
+        
+        public void AddToServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationContext>(options => 
                 options.UseSqlServer($"server={_dbServer}; Initial Catalog={_catalog}; User id={_login}; Password={_password};"));

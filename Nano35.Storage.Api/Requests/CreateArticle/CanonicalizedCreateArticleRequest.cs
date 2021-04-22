@@ -25,7 +25,7 @@ namespace Nano35.Storage.Api.Requests.CreateArticle
             {
                 Brand = input.Brand,
                 CategoryId = input.CategoryId,
-                Info = input.Info,
+                Info = input.Info ?? "",
                 InstanceId = input.InstanceId,
                 Model = input.Model,
                 NewId = input.NewId,

@@ -25,7 +25,7 @@ namespace Nano35.Storage.Api.Requests.UpdateStorageItemComment
             var converted = new UpdateStorageItemCommentRequestContract()
             {
                 Id = input.Id,
-                Comment = input.Comment
+                Comment = input.Comment ?? ""
             };
 
             var response = await DoNext(converted);

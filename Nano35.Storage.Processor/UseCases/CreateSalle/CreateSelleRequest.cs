@@ -2,9 +2,12 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
+using Nano35.Contracts.Cashbox.Artifacts;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Storage.Processor.Models;
+using Nano35.Storage.Processor.Requests;
 using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.UseCases.CreateSalle
@@ -13,11 +16,13 @@ namespace Nano35.Storage.Processor.UseCases.CreateSalle
         EndPointNodeBase<ICreateSelleRequestContract, ICreateSelleResultContract>
     {
         private readonly ApplicationContext _context;
+        private IBus _bus;
 
         public CreateSelleRequest(
-            ApplicationContext context)
+            ApplicationContext context, IBus bus)
         {
             _context = context;
+            _bus = bus;
         }
         
         public override async Task<ICreateSelleResultContract> Ask(
@@ -36,17 +41,17 @@ namespace Nano35.Storage.Processor.UseCases.CreateSalle
                 InstanceId = input.InstanceId
             };
 
-            var selleDetails = input.Details
-                .Select(a => new SelleDetail()
-                {
-                    Id = a.NewId,
-                    Count = a.Count,
-                    FromPlace = a.PlaceOnStorage,
-                    FromUnitId = input.UnitId,
-                    Price = a.Price,
-                    SelleId = input.NewId,
-                    StorageItemId = a.StorageItemId
-                });
+            var selleDetails = input
+                .Details
+                .Select(a => 
+                    new SelleDetail()
+                        {Id = a.NewId,
+                         Count = a.Count,
+                         FromPlace = a.PlaceOnStorage,
+                         FromUnitId = input.UnitId,
+                         Price = a.Price,
+                         SelleId = input.NewId,
+                         StorageItemId = a.StorageItemId});
             
             foreach (var item in input.Details)
             {
@@ -68,11 +73,23 @@ namespace Nano35.Storage.Processor.UseCases.CreateSalle
                     throw new NotImplementedException();
                 }
             }
-
+            
+            var getUnitStringRequest = 
+                new CreateSelleCashOperation(
+                    _bus,
+                    new CreateSelleCashOperationRequestContract()
+                        {NewId = Guid.NewGuid(),
+                         CashboxId = input.UnitId,
+                         SelleId = input.NewId,
+                         Cash = input.Details.Select(a => a.Price * a.Count).Sum(),
+                         Description = "Оплата оприходования."})
+                    .GetResponse().Result switch 
+                    {
+                        ICreateSelleCashOperationSuccessResultContract success => success,
+                        _ => throw new Exception()
+                    };
             await _context.Sells.AddAsync(selle, cancellationToken);
-            
             await _context.SelleDetails.AddRangeAsync(selleDetails, cancellationToken);
-            
             return new CreateSelleSuccessResultContract();
         }
     }
