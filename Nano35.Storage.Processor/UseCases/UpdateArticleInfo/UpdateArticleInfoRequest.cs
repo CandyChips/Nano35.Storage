@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Nano35.Contracts.Storage.Artifacts;
+using Nano35.Storage.Processor.Models;
 using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.UseCases.UpdateArticleInfo
@@ -23,7 +24,11 @@ namespace Nano35.Storage.Processor.UseCases.UpdateArticleInfo
         {
             var result = await (_context.Articles
                 .FirstOrDefaultAsync(a => a.Id == input.Id, cancellationToken));
-            result.Info = input.Info;
+            result = new Article()
+            {
+                Info = input.Info
+            };
+            _context.Update(result);
             return new UpdateArticleInfoSuccessResultContract();
         }
     }

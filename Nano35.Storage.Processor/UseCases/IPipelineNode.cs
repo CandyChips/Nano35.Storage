@@ -3,7 +3,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using MassTransit;
 using Nano35.Contracts;
+using Nano35.Contracts.files;
 using Nano35.Contracts.Instance.Artifacts;
+using Nano35.Contracts.Storage.Artifacts;
 
 namespace Nano35.Storage.Processor.UseCases
 {
@@ -43,21 +45,29 @@ namespace Nano35.Storage.Processor.UseCases
     public class GetClientStringById : 
         MasstransitRequest
         <IGetClientStringByIdRequestContract, 
-         IGetClientStringByIdResultContract,
-         IGetClientStringByIdSuccessResultContract, 
-         IGetClientStringByIdErrorResultContract>
+            IGetClientStringByIdResultContract,
+            IGetClientStringByIdSuccessResultContract, 
+            IGetClientStringByIdErrorResultContract>
     {
         public GetClientStringById(IBus bus, IGetClientStringByIdRequestContract request) : base(bus, request) {}
     }
-    
     public class GetWorkerStringById : 
         MasstransitRequest
         <IGetWorkerStringByIdRequestContract, 
-         IGetWorkerStringByIdResultContract,
-         IGetWorkerStringByIdSuccessResultContract, 
-         IGetWorkerStringByIdErrorResultContract>
+            IGetWorkerStringByIdResultContract,
+            IGetWorkerStringByIdSuccessResultContract, 
+            IGetWorkerStringByIdErrorResultContract>
     {
         public GetWorkerStringById(IBus bus, IGetWorkerStringByIdRequestContract request) : base(bus, request) {}
+    }
+    public class GetImagesOfStorageItem : 
+        MasstransitRequest
+        <IGetImagesOfStorageItemRequestContract, 
+            IGetImagesOfStorageItemResultContract,
+            IGetImagesOfStorageItemSuccessResultContract, 
+            IGetImagesOfStorageItemErrorResultContract>
+    {
+        public GetImagesOfStorageItem(IBus bus, IGetImagesOfStorageItemRequestContract request) : base(bus, request) {}
     }
     
     public class GetInstanceStringById : 

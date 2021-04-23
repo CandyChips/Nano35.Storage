@@ -21,12 +21,12 @@ namespace Nano35.Storage.Processor.UseCases.GetAllComingDetails
         public async Task Consume(
             ConsumeContext<IGetAllComingDetailsRequestContract> context)
         {
-            var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<IGetAllComingDetailsRequestContract>) _services.GetService(typeof(ILogger<IGetAllComingDetailsRequestContract>));
-            var message = context.Message;
-            var result = await new LoggedPipeNode<IGetAllComingDetailsRequestContract, IGetAllComingDetailsResultContract>(logger,
-                new GetAllComingDetailsRequest(dbContext, bus)).Ask(message, context.CancellationToken);
+            var result = await new LoggedPipeNode<IGetAllComingDetailsRequestContract, IGetAllComingDetailsResultContract>(
+                _services.GetService(typeof(ILogger<IGetAllComingDetailsRequestContract>)) as ILogger<IGetAllComingDetailsRequestContract>,
+                new GetAllComingDetailsRequest(
+                    _services.GetService(typeof(ApplicationContext)) as ApplicationContext, 
+                    _services.GetService(typeof(IBus)) as IBus))
+                .Ask(context.Message, context.CancellationToken);
             switch (result)
             {
                 case IGetAllComingDetailsSuccessResultContract:

@@ -39,7 +39,11 @@ namespace Nano35.Storage.Processor.Models
             MoveFromDetails = new List<MoveDetail>();
             MoveToDetails = new List<MoveDetail>();
         }
-        
+
+        public override string ToString()
+        {
+            return $@"{Name}";
+        }
     }
 
     public class WarehousesFluentContext
