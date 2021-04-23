@@ -53,6 +53,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllComings
                     {
                         IGetUnitStringByIdSuccessResultContract success => success.Data,
                         _ => throw new Exception()
+                        
                     };
                     
                     var getClientStringRequest = new GetClientStringById(_bus,

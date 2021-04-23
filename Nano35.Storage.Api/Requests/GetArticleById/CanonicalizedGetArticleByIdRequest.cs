@@ -12,7 +12,7 @@ namespace Nano35.Storage.Api.Requests.GetArticleById
 {
     public class CanonicalizedGetArticleByIdRequest : 
         PipeInConvert
-        <Guid, 
+        <GetArticleByIdHttpQuery, 
             IActionResult,
             IGetArticleByIdRequestContract, 
             IGetArticleByIdResultContract>
@@ -20,11 +20,11 @@ namespace Nano35.Storage.Api.Requests.GetArticleById
         public CanonicalizedGetArticleByIdRequest(IPipeNode<IGetArticleByIdRequestContract, IGetArticleByIdResultContract> next) :
             base(next) {}
 
-        public override async Task<IActionResult> Ask(Guid id)
+        public override async Task<IActionResult> Ask(GetArticleByIdHttpQuery input)
         {
             var converted = new GetArticleByIdRequestContract()
             {
-                Id = id
+                Id = input.Id
             };
 
             var response = await DoNext(converted);

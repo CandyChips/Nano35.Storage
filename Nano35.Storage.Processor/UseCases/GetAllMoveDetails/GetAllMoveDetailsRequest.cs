@@ -29,9 +29,8 @@ namespace Nano35.Storage.Processor.UseCases.GetAllMoveDetails
             CancellationToken cancellationToken)
         {
             var result = _context
-                .Moves
-                .FirstOrDefault(f => f.Id == input.MoveId)
-                ?.Details
+                .MoveDetails
+                .Where(f => f.MoveId == input.MoveId)
                 .Select(a => new MoveDetailViewModel()
                 {
                     FromPlaceOnStorage = a.FromWarehouse.ToString(),

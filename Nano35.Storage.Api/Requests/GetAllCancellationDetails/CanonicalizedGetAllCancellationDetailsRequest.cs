@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +12,7 @@ namespace Nano35.Storage.Api.Requests.GetAllCancellationDetails
 {
     public class CanonicalizedGetAllCancellationDetailsRequest : 
         PipeInConvert
-        <GetAllCancellationDetailsHttpQuery, 
+        <Guid, 
             IActionResult,
             IGetAllCancellationDetailsRequestContract, 
             IGetAllCancellationDetailsResultContract>
@@ -20,11 +21,11 @@ namespace Nano35.Storage.Api.Requests.GetAllCancellationDetails
             LoggedPipeNode<IGetAllCancellationDetailsRequestContract, IGetAllCancellationDetailsResultContract> next) :
             base(next) {}
 
-        public override async Task<IActionResult> Ask(GetAllCancellationDetailsHttpQuery input)
+        public override async Task<IActionResult> Ask(Guid input)
         {
             var converted = new GetAllCancellationDetailsRequestContract()
             {
-                CancellationId = input.CancellationId
+                CancellationId = input
             };
 
             var response = await DoNext(converted);

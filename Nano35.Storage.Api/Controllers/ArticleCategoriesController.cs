@@ -31,7 +31,7 @@ namespace Nano35.Storage.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllArticleCategoriesErrorHttpResponse))]
         public async Task<IActionResult> GetAllArticleCategories(
             [FromQuery] GetAllArticlesCategoriesHttpQuery query) =>
-            await new ConvertedGetAllArticleCategoriesOnHttpContext(
+            await new CanonicalizedGetAllArticleCategoriesRequest(
                     new LoggedPipeNode<IGetAllArticlesCategoriesRequestContract, IGetAllArticlesCategoriesResultContract>(
                         _services.GetService(typeof(ILogger<IGetAllArticlesCategoriesRequestContract>)) as ILogger<IGetAllArticlesCategoriesRequestContract>,
                         new GetAllArticleCategoriesUseCase(

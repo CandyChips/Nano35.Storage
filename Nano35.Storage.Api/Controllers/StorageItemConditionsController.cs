@@ -30,7 +30,7 @@ namespace Nano35.Storage.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllStorageItemConditionsSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllStorageItemConditionsErrorHttpResponse))] 
         public async Task<IActionResult> GetAllStorageItemConditions() =>
-            await new ConvertedGetAllStorageItemConditionsOnHttpContext(
+            await new CanonicalizedGetAllStorageItemConditionsRequest(
                     new LoggedPipeNode<IGetAllStorageItemConditionsRequestContract, IGetAllStorageItemConditionsResultContract>(
                         _services.GetService(typeof(ILogger<IGetAllStorageItemConditionsRequestContract>)) as ILogger<IGetAllStorageItemConditionsRequestContract>,
                         new GetAllStorageItemConditionsUseCase(_services.GetService(typeof(IBus)) as IBus)))

@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +12,7 @@ namespace Nano35.Storage.Api.Requests.GetAllMoveDetails
 {
     public class CanonicalizedGetAllMoveDetailsRequest : 
         PipeInConvert
-        <GetAllMoveDetailsHttpQuery, 
+        <Guid, 
             IActionResult,
             IGetAllMoveDetailsRequestContract, 
             IGetAllMoveDetailsResultContract>
@@ -20,11 +21,11 @@ namespace Nano35.Storage.Api.Requests.GetAllMoveDetails
             IPipeNode<IGetAllMoveDetailsRequestContract, IGetAllMoveDetailsResultContract> next) :
             base(next) {}
 
-        public override async Task<IActionResult> Ask(GetAllMoveDetailsHttpQuery input)
+        public override async Task<IActionResult> Ask(Guid input)
         {
             var converted = new GetAllMoveDetailsRequestContract()
             {
-                MoveId = input.MoveId
+                MoveId = input
             };
 
             var response = await DoNext(converted);

@@ -36,7 +36,7 @@ namespace Nano35.Storage.Api.Controllers
         public WarehouseController(IServiceProvider services) { _services = services; }
         
         [HttpGet]
-        [Route("GetAllPlacesOfStorageItemOnUnit")]
+        [Route("PlacesOfStorageItemOnUnit")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllPlacesOfStorageItemOnUnitSuccessResultContract))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllPlacesOfStorageItemOnUnitErrorResultContract))] 
@@ -51,7 +51,7 @@ namespace Nano35.Storage.Api.Controllers
                 .Ask(body);
         
         [HttpGet]
-        [Route("GetAllPlacesOfStorageItemOnInstance")]
+        [Route("PlacesOfStorageItemOnInstance")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllPlacesOfStorageItemOnInstanceSuccessResultContract))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllPlacesOfStorageItemOnInstanceErrorResultContract))] 
@@ -66,7 +66,7 @@ namespace Nano35.Storage.Api.Controllers
                 .Ask(body);
         
         [HttpGet]
-        [Route("GetAllStorageItemsOnInstance")]
+        [Route("StorageItemsOnInstance")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllStorageItemsOnInstanceSuccessResultContract))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllStorageItemsOnInstanceErrorResultContract))] 
@@ -81,7 +81,7 @@ namespace Nano35.Storage.Api.Controllers
                 .Ask(body);
         
         [HttpGet]
-        [Route("GetAllStorageItemsOnUnit")]
+        [Route("StorageItemsOnUnit")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllStorageItemsOnUnitSuccessResultContract))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllStorageItemsOnUnitErrorResultContract))] 

@@ -35,7 +35,6 @@ namespace Nano35.Storage.Processor.UseCases.CreateSalle
             {
                 Id = input.NewId,
                 CashOperationId = cashOperationId,
-                ClientId = input.ClientId,
                 Date = DateTime.Now,
                 Number = input.Number,
                 InstanceId = input.InstanceId
@@ -74,7 +73,7 @@ namespace Nano35.Storage.Processor.UseCases.CreateSalle
                 }
             }
             
-            var getUnitStringRequest = 
+            var CreateSelleCashRequest = 
                 new CreateSelleCashOperation(
                     _bus,
                     new CreateSelleCashOperationRequestContract()

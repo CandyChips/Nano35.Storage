@@ -4,9 +4,12 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MassTransit;
+using MassTransit.Initializers;
 using Microsoft.EntityFrameworkCore;
+using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Contracts.Storage.Models;
+using Nano35.Storage.Processor.Requests;
 using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.UseCases.GetAllMoves
@@ -28,11 +31,43 @@ namespace Nano35.Storage.Processor.UseCases.GetAllMoves
         public override async Task<IGetAllMovesResultContract> Ask
             (IGetAllMovesRequestContract input, CancellationToken cancellationToken)
         {
-            var result = await _context
+            var moves = await _context
                 .Moves
-                .Where(w => w.InstanceId == input.InstanceId)
-                .Select(a => new MoveViewModel() {})
-                .ToListAsync(cancellationToken: cancellationToken);
+                .Where(c => c.InstanceId == input.InstanceId)
+                .ToListAsync(cancellationToken);
+            
+            var result = moves
+                .Select(a =>
+                {
+                    var res = new MoveViewModel()
+                    {
+                        Id = a.Id,
+                        Number = a.Number,
+                        Date = a.Date
+                    };
+                    //.Details.FirstOrDefault(f => f.MoveId == a.Id).FromUnitId
+                    
+                    var getFromUnitStringRequest = new GetUnitStringById(_bus,
+                        new GetUnitStringByIdRequestContract() {UnitId = _context.MoveDetails.FirstOrDefault(h=> h.MoveId == a.Id).FromUnitId});
+                    res.FromUnit = getFromUnitStringRequest.GetResponse().Result switch
+                    {
+                        IGetUnitStringByIdSuccessResultContract success => success.Data,
+                        _ => throw new Exception()
+                        
+                    };
+                    
+                    var getToUnitStringRequest = new GetUnitStringById(_bus,
+                        new GetUnitStringByIdRequestContract() {UnitId = _context.MoveDetails.FirstOrDefault(h=> h.MoveId == a.Id).ToUnitId});
+                    res.ToUnit = getToUnitStringRequest.GetResponse().Result switch
+                    {
+                        IGetUnitStringByIdSuccessResultContract success => success.Data,
+                        _ => throw new Exception()
+                        
+                    };
+
+                    return res;
+                })
+                .ToList();
 
             return new GetAllMovesSuccessResultContract() {Data = result};
         }

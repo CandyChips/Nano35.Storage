@@ -43,12 +43,6 @@ namespace Nano35.Storage.Processor.UseCases.GetAllSells
                         Cash = a.Details
                             .Select(f => f.Price * f.Count)
                             .Sum(),
-                        Client = new GetClientStringById(_bus, new GetClientStringByIdRequestContract() {ClientId = a.ClientId}).GetResponse()
-                                .Result switch
-                        {
-                            IGetClientStringByIdSuccessResultContract success => success.Data,
-                            _ => throw new Exception()
-                        },
                         Unit = new GetUnitStringById(_bus, new GetUnitStringByIdRequestContract() {UnitId = a.Details.First().FromUnitId}).GetResponse()
                                 .Result switch
                         {

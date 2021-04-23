@@ -28,13 +28,12 @@ namespace Nano35.Storage.Api.Controllers
         }
 
         [HttpPost]
-        [Route("Coming")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateComingSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateComingErrorHttpResponse))] 
         public async Task<IActionResult> CreateComing(
             [FromBody] CreateComingHttpBody body) =>
-            await new ConvertedCreateComingOnHttpContext(
+            await new CanonicalizedCreateComingRequest(
                     new LoggedPipeNode<ICreateComingRequestContract, ICreateComingResultContract>(
                         _services.GetService(typeof(ILogger<ICreateComingRequestContract>)) as ILogger<ICreateComingRequestContract>,
                         new CreateComingUseCase(_services.GetService(typeof(IBus)) as IBus)))
@@ -46,23 +45,22 @@ namespace Nano35.Storage.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllComingsErrorHttpResponse))] 
         public async Task<IActionResult> GetAllComings(
             [FromHeader] GetAllComingsHttpQuery query) =>
-            await new ConvertedGetAllComingsOnHttpContext(
+            await new CanonicalizedGetAllComingsRequest(
                     new LoggedPipeNode<IGetAllComingsRequestContract, IGetAllComingsResultContract>(
                         _services.GetService(typeof(ILogger<IGetAllComingsRequestContract>)) as ILogger<IGetAllComingsRequestContract>,
                         new GetAllComingsUseCase(_services.GetService(typeof(IBus)) as IBus)))
                 .Ask(query);
         
         [HttpGet]
-        [Route("ComingDetails")]
+        [Route("{id}/Details")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetComingDetailsByIdSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetComingDetailsByIdErrorHttpResponse))] 
-        public async Task<IActionResult> GetComingDetails(
-            [FromQuery] GetAllComingDetailsHttpQuery query) => 
-            await new ConvertedGetAllComingDetailsOnHttpContext(
+        public async Task<IActionResult> GetComingDetails(Guid id) => 
+            await new CanonicalizedGetAllComingDetailsRequest(
                     new LoggedPipeNode<IGetAllComingDetailsRequestContract, IGetAllComingDetailsResultContract>(
                         _services.GetService(typeof(ILogger<IGetAllComingDetailsRequestContract>)) as ILogger<IGetAllComingDetailsRequestContract>,
                         new GetAllComingDetailsUseCase(_services.GetService(typeof(IBus)) as IBus)))
-                .Ask(query);
+                .Ask(id);
     }
 }

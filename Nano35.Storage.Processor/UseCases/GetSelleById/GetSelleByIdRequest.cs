@@ -48,13 +48,6 @@ namespace Nano35.Storage.Processor.UseCases.GetSelleById
                 _ => throw new Exception()
             };
                     
-            var getClientStringRequest = new GetClientStringById(_bus,
-                new GetClientStringByIdRequestContract() { ClientId = result.ClientId });
-            selle.Client = getClientStringRequest.GetResponse().Result switch
-            {
-                IGetClientStringByIdSuccessResultContract success => success.Data,
-                _ => throw new Exception()
-            };
 
             return new GetSelleByIdSuccessResultContract() {Selle = selle};
         }

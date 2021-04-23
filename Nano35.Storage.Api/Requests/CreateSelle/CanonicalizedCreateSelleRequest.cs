@@ -36,7 +36,6 @@ namespace Nano35.Storage.Api.Requests.CreateSelle
                 InstanceId = input.InstanceId,
                 NewId = input.NewId,
                 Number = input.Number ?? "",
-                ClientId = input.ClientId,
             };
 
             var response = await DoNext(converted);

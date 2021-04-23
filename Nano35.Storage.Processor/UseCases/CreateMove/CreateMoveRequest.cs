@@ -28,7 +28,8 @@ namespace Nano35.Storage.Processor.UseCases.CreateMove
             {
                 Id = input.NewId, 
                 Number = input.Number, 
-                Date = DateTime.Now
+                Date = DateTime.Now,
+                InstanceId = input.InstanceId
             };
 
             var moveDetails = input.Details
@@ -56,14 +57,14 @@ namespace Nano35.Storage.Processor.UseCases.CreateMove
                             a.Name == item.FromPlaceOnStorage &&
                             a.StorageItemId == item.StorageItemId &&
                             a.UnitId == input.FromUnitId, cancellationToken: cancellationToken));
-                    fromWh.Count += item.Count;
+                    fromWh.Count -= item.Count;
                     
                     var toWh = (await _context.Warehouses
                         .FirstOrDefaultAsync(a =>
                             a.Name == item.ToPlaceOnStorage &&
                             a.StorageItemId == item.StorageItemId &&
                             a.UnitId == input.ToUnitId, cancellationToken: cancellationToken));
-                    toWh.Count -= item.Count;
+                    toWh.Count += item.Count;
                 }
                 else
                 {

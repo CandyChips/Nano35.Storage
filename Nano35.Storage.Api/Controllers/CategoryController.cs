@@ -31,7 +31,7 @@ namespace Nano35.Storage.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateCategorySuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateCategoryErrorHttpResponse))] 
         public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryHttpBody body) =>
-            await new ConvertedCreateCategoryOnHttpContext(
+            await new CanonicalizedCreateCategoryRequest(
                     new LoggedPipeNode<ICreateCategoryRequestContract, ICreateCategoryResultContract>(
                         _services.GetService(typeof(ILogger<ICreateCategoryRequestContract>)) as ILogger<ICreateCategoryRequestContract>,
                         new CreateCategoryUseCase(
@@ -44,7 +44,7 @@ namespace Nano35.Storage.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateCategoryNameSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateCategoryNameErrorHttpResponse))] 
         public async Task<IActionResult> UpdateCategoryName([FromBody] UpdateCategoryNameHttpBody body) =>
-            await new ConvertedUpdateCategoryNameOnHttpContext(
+            await new CanonicalizedUpdateCategoryNameRequest(
                     new LoggedPipeNode<IUpdateCategoryNameRequestContract, IUpdateCategoryNameResultContract>(
                         _services.GetService(typeof(ILogger<IUpdateCategoryNameRequestContract>)) as ILogger<IUpdateCategoryNameRequestContract>,
                         new UpdateCategoryNameUseCase(
@@ -57,7 +57,7 @@ namespace Nano35.Storage.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateCategoryParentCategoryIdSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateCategoryParentCategoryIdErrorHttpResponse))] 
         public async Task<IActionResult> UpdateCategoryParentCategoryId([FromBody] UpdateCategoryParentCategoryHttpBody body) =>
-            await new ConvertedUpdateCategoryParentCategoryIdOnHttpContext(
+            await new CanonicalizedUpdateCategoryParentCategoryIdRequest(
                     new LoggedPipeNode<IUpdateCategoryParentCategoryIdRequestContract, IUpdateCategoryParentCategoryIdResultContract>(
                         _services.GetService(typeof(ILogger<IUpdateCategoryParentCategoryIdRequestContract>)) as ILogger<IUpdateCategoryParentCategoryIdRequestContract>,
                         new UpdateCategoryParentCategoryIdUseCase(
