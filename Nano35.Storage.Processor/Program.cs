@@ -19,7 +19,7 @@ namespace Nano35.Storage.Processor
 
                 try
                 {
-                    ApplicationContext context = services.GetRequiredService<ApplicationContext>();
+                    var context = services.GetRequiredService<ApplicationContext>();
                     await DataInitializer.InitializeRolesAsync(context);
                 }
                 catch (Exception ex)

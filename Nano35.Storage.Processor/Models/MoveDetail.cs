@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nano35.Contracts;
 
 namespace Nano35.Storage.Processor.Models
@@ -23,47 +24,34 @@ namespace Nano35.Storage.Processor.Models
         public WarehouseByItemOnStorage ToWarehouse { get; set; }
         public WarehouseByItemOnStorage FromWarehouse { get; set; }
         public Move Move { get; set; }
-    }
 
-    public class MoveDetailFluentContext
-    {
-        public void Configure(ModelBuilder modelBuilder)
+        public class Configuration : IEntityTypeConfiguration<MoveDetail>
         {
-            //Primary key
-            modelBuilder.Entity<MoveDetail>()
-                .HasKey(u => new {u.Id});  
-            
-            //Data
-            modelBuilder.Entity<MoveDetail>()
-                .Property(b => b.Count)
-                .IsRequired();
-
-            modelBuilder.Entity<MoveDetail>()
-                .Property(b => b.ToPlace)
-                .IsRequired();
-
-            modelBuilder.Entity<MoveDetail>()
-                .Property(b => b.FromPlace)
-                .IsRequired();
-
-            //Foreign keys
-            modelBuilder.Entity<MoveDetail>()
-                .HasOne(p => p.ToWarehouse)
-                .WithMany(p => p.MoveToDetails)
-                .OnDelete(DeleteBehavior.NoAction)
-                .HasForeignKey(p => new {p.StorageItemId, p.ToUnitId, p.ToPlace});
-
-            modelBuilder.Entity<MoveDetail>()
-                .HasOne(p => p.FromWarehouse)
-                .WithMany(p => p.MoveFromDetails)
-                .OnDelete(DeleteBehavior.NoAction)
-                .HasForeignKey(p => new {p.StorageItemId, p.FromUnitId, p.FromPlace});
-
-            modelBuilder.Entity<MoveDetail>()
-                .HasOne(p => p.Move)
-                .WithMany()
-                .OnDelete(DeleteBehavior.NoAction)
-                .HasForeignKey(p => new {p.MoveId});
+            public void Configure(EntityTypeBuilder<MoveDetail> builder)
+            {
+                builder.ToTable("MoveDetails");
+                builder.HasKey(u => new {u.Id});  
+                builder.Property(b => b.Count)
+                    .IsRequired();
+                builder.Property(b => b.ToPlace)
+                    .IsRequired();
+                builder.Property(b => b.FromPlace)
+                    .IsRequired();
+                builder.Property(b => b.ToUnitId)
+                    .IsRequired();
+                builder.HasOne(p => p.ToWarehouse)
+                    .WithMany(p => p.MoveToDetails)
+                    .OnDelete(DeleteBehavior.NoAction)
+                    .HasForeignKey(p => new {p.StorageItemId, p.ToUnitId, p.ToPlace});
+                builder.HasOne(p => p.FromWarehouse)
+                    .WithMany(p => p.MoveFromDetails)
+                    .OnDelete(DeleteBehavior.NoAction)
+                    .HasForeignKey(p => new {p.StorageItemId, p.FromUnitId, p.FromPlace});
+                builder.HasOne(p => p.Move)
+                    .WithMany()
+                    .OnDelete(DeleteBehavior.NoAction)
+                    .HasForeignKey(p => new {p.MoveId});
+            }
         }
     }
 }

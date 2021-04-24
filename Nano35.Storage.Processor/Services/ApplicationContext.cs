@@ -30,23 +30,23 @@ namespace Nano35.Storage.Processor.Services
             Database.EnsureCreated();
             Update();
         }
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            new ArticlesFluentContext().Configure(modelBuilder);
-            new CategoriesFluentContext().Configure(modelBuilder);
-            new ArticleSpecFluentContext().Configure(modelBuilder);
-            new StorageItemsFluentContext().Configure(modelBuilder);
-            new StorageItemConditionsFluentContext().Configure(modelBuilder);
-            new WarehousesFluentContext().Configure(modelBuilder);
-            new CancellationsFluentContext().Configure(modelBuilder);
-            new CancellationDetailFluentContext().Configure(modelBuilder);
-            new ComingFluentContext().Configure(modelBuilder);
-            new ComingDetailFluentContext().Configure(modelBuilder);
-            new MoveFluentContext().Configure(modelBuilder);
-            new MoveDetailFluentContext().Configure(modelBuilder);
-            new SelleFluentContext().Configure(modelBuilder);
-            new SelleDetailFluentContext().Configure(modelBuilder);
-            
+            modelBuilder.ApplyConfiguration(new Article.Configuration());
+            modelBuilder.ApplyConfiguration(new Spec.Configuration());
+            modelBuilder.ApplyConfiguration(new StorageItemCondition.Configuration());
+            modelBuilder.ApplyConfiguration(new StorageItem.Configuration());
+            modelBuilder.ApplyConfiguration(new WarehouseByItemOnStorage.Configuration());
+            modelBuilder.ApplyConfiguration(new Category.Configuration());
+            modelBuilder.ApplyConfiguration(new Coming.Configuration());
+            modelBuilder.ApplyConfiguration(new ComingDetail.Configuration());
+            modelBuilder.ApplyConfiguration(new Selle.Configuration());
+            modelBuilder.ApplyConfiguration(new SelleDetail.Configuration());
+            modelBuilder.ApplyConfiguration(new Move.Configuration());
+            modelBuilder.ApplyConfiguration(new MoveDetail.Configuration());
+            modelBuilder.ApplyConfiguration(new Cancellation.Configuration());
+            modelBuilder.ApplyConfiguration(new CancelationDetail.Configuration());
             base.OnModelCreating(modelBuilder);
         }
 
@@ -58,8 +58,8 @@ namespace Nano35.Storage.Processor.Services
             Moves.Load();
             MoveDetails.Load();
             
-            Cancellations.Load();
             CancellationsDetails.Load();
+            Cancellations.Load();
             
             Sells.Load();
             SelleDetails.Load();

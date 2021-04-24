@@ -16,10 +16,9 @@ namespace Nano35.Storage.Processor.UseCases.CreateSalle
         EndPointNodeBase<ICreateSelleRequestContract, ICreateSelleResultContract>
     {
         private readonly ApplicationContext _context;
-        private IBus _bus;
+        private readonly IBus _bus;
 
-        public CreateSelleRequest(
-            ApplicationContext context, IBus bus)
+        public CreateSelleRequest(ApplicationContext context, IBus bus)
         {
             _context = context;
             _bus = bus;
@@ -73,20 +72,15 @@ namespace Nano35.Storage.Processor.UseCases.CreateSalle
                 }
             }
             
-            var CreateSelleCashRequest = 
-                new CreateSelleCashOperation(
-                    _bus,
-                    new CreateSelleCashOperationRequestContract()
-                        {NewId = Guid.NewGuid(),
-                         CashboxId = input.UnitId,
-                         SelleId = input.NewId,
-                         Cash = input.Details.Select(a => a.Price * a.Count).Sum(),
-                         Description = "Оплата оприходования."})
-                    .GetResponse().Result switch 
-                    {
-                        ICreateSelleCashOperationSuccessResultContract success => success,
-                        _ => throw new Exception()
-                    };
+            
+            new CreateSelleCashOperation(_bus, 
+                new CreateSelleCashOperationRequestContract()
+                {NewId = Guid.NewGuid(),
+                    CashboxId = input.UnitId,
+                    SelleId = input.NewId,
+                    Cash = input.Details.Select(a => a.Price * a.Count).Sum(),
+                    Description = "Продажа"});
+
             await _context.Sells.AddAsync(selle, cancellationToken);
             await _context.SelleDetails.AddRangeAsync(selleDetails, cancellationToken);
             return new CreateSelleSuccessResultContract();

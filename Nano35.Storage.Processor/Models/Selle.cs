@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nano35.Contracts;
 
 namespace Nano35.Storage.Processor.Models
@@ -25,28 +26,20 @@ namespace Nano35.Storage.Processor.Models
         {
             Details = new List<SelleDetail>();
         }
-    }
-
-    public class SelleFluentContext
-    {
-        public void Configure(ModelBuilder modelBuilder)
+        
+        public class Configuration : IEntityTypeConfiguration<Selle>
         {
-            //Primary key
-            modelBuilder.Entity<Selle>()
-                .HasKey(u => new {u.Id});  
-            
-            //Data
-            modelBuilder.Entity<Selle>()
-                .Property(b => b.Number)
-                .IsRequired();
-            modelBuilder.Entity<Selle>()
-                .Property(b => b.CashOperationId)
-                .IsRequired();
-            modelBuilder.Entity<Selle>()
-                .Property(b => b.Date)
-                .IsRequired();
-            
-            //Foreign keys
+            public void Configure(EntityTypeBuilder<Selle> builder)
+            {
+                builder.ToTable("Sells");
+                builder.HasKey(u => new {u.Id}); 
+                builder.Property(b => b.Number)
+                       .IsRequired();
+                builder.Property(b => b.CashOperationId)
+                       .IsRequired();
+                builder.Property(b => b.Date)
+                       .IsRequired();
+            }
         }
     }
 }

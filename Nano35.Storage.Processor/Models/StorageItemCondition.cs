@@ -1,6 +1,7 @@
 ﻿using System;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nano35.Contracts;
 using Nano35.Contracts.Storage.Models;
 
@@ -9,45 +10,22 @@ namespace Nano35.Storage.Processor.Models
     public class StorageItemCondition :
         ICastable
     {
-        // Primary key
         public Guid Id { get; set; }
-        
-        //Data
         public string Name { get; set; }
         public bool IsDeleted { get; set; }
 
-        //Foreign keys
-    }
 
-    public class StorageItemConditionsFluentContext
-    {
-        public void Configure(ModelBuilder modelBuilder)
+        public class Configuration : IEntityTypeConfiguration<StorageItemCondition>
         {
-            //Primary key
-            modelBuilder.Entity<StorageItemCondition>()
-                .HasKey(u => u.Id);  
-            
-            //Data
-            modelBuilder.Entity<StorageItemCondition>()
-                .Property(b => b.Name)
-                .IsRequired();
-            modelBuilder.Entity<StorageItemCondition>()
-                .Property(b => b.IsDeleted)
-                .IsRequired();
-            
-            //Foreign keys
-        }
-    }
-
-    public class StorageItemConditionAutoMapperProfile : Profile
-    {
-        public StorageItemConditionAutoMapperProfile()
-        {
-            CreateMap<StorageItemCondition, StorageItemConditionViewModel>()
-                .ForMember(dest => dest.Id, source => source
-                    .MapFrom(source => source.Id))
-                .ForMember(dest => dest.Name, source => source
-                    .MapFrom(source => source.Name));
+            public void Configure(EntityTypeBuilder<StorageItemCondition> builder)
+            {
+                builder.ToTable("StorageItemConditions");
+                builder.HasKey(u => new {u.Id});
+                builder.Property(b => b.IsDeleted)
+                    .IsRequired();
+                builder.Property(b => b.Name)
+                    .IsRequired();
+            }
         }
     }
 }

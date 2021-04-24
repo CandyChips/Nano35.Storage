@@ -46,6 +46,9 @@ namespace Nano35.Storage.Processor.UseCases.CreateCancellation
                     Id = a.NewId,
                 });
             
+            if (input.NewId == Guid.Empty) return new CreateCancellationErrorResultContract();
+            if (input.InstanceId == Guid.Empty) return new CreateCancellationErrorResultContract();
+            
             foreach (var item in input.Details)
             {
                 if(_context.Warehouses

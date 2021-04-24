@@ -69,6 +69,15 @@ namespace Nano35.Storage.Processor.UseCases.CreateComing
                 }
             }
 
+            if (!comingDetails.Any())
+                return new CreateComingErrorResultContract();
+            if (coming.ClientId == Guid.Empty)
+                return new CreateComingErrorResultContract();
+            if (coming.InstanceId == Guid.Empty)
+                return new CreateComingErrorResultContract();
+            if (coming.Id == Guid.Empty)
+                return new CreateComingErrorResultContract();
+
             new CreateComingCashOperation(_bus, 
                 new CreateComingCashOperationRequestContract()
                 {
@@ -78,7 +87,7 @@ namespace Nano35.Storage.Processor.UseCases.CreateComing
                     Cash = input.Details.Select(a => a.Price * a.Count).Sum(),
                     Description = "Оплата оприходования."
                 });
-
+            
             await _context.Comings.AddAsync(coming, cancellationToken);
             
             await _context.ComingDetails.AddRangeAsync(comingDetails, cancellationToken);

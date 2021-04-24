@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nano35.Contracts;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Contracts.Storage.Models;
@@ -11,64 +12,36 @@ namespace Nano35.Storage.Processor.Models
     public class Coming :
         ICastable
     {
-        // Primary key
         public Guid Id { get; set; }
-        
-        // Data
         public Guid InstanceId { get; set; }
         public string Number { get; set; }
         public DateTime Date { get; set; }
         public Guid ClientId { get; set; }
         public Guid CashOperationId { get; set; }
-        
-        // Foreign keys
-        
         public ICollection<ComingDetail> Details { get; set; }
-
+        
         public Coming()
         {
             Details = new List<ComingDetail>();
         }
-    }
-
-    public class ComingFluentContext
-    {
-        public void Configure(ModelBuilder modelBuilder)
+        
+        public class Configuration : IEntityTypeConfiguration<Coming>
         {
-            //Primary key
-            modelBuilder.Entity<Coming>()
-                .HasKey(u => new {u.Id});  
-            
-            //Data
-            modelBuilder.Entity<Coming>()
-                .Property(b => b.Number)
-                .IsRequired();
-            modelBuilder.Entity<Coming>()
-                .Property(b => b.InstanceId)
-                .IsRequired();
-            modelBuilder.Entity<Coming>()
-                .Property(b => b.CashOperationId)
-                .IsRequired();
-            modelBuilder.Entity<Coming>()
-                .Property(b => b.ClientId)
-                .IsRequired();
-            modelBuilder.Entity<Coming>()
-                .Property(b => b.Date)
-                .IsRequired();
-            
-            //Foreign keys
-        }
-    }
-
-    public class ComingAutoMapperProfile : Profile
-    {
-        public ComingAutoMapperProfile()
-        {
-            CreateMap<Coming, ComingViewModel>()
-                .ForMember(dest => dest.Id, source => source
-                    .MapFrom(source => source.Id))
-                .ForMember(dest => dest.Number, source => source
-                    .MapFrom(source => source.Number));
+            public void Configure(EntityTypeBuilder<Coming> builder)
+            {
+                builder.ToTable("Comings");
+                builder.HasKey(u => new {u.Id}); 
+                builder.Property(b => b.Number)
+                       .IsRequired();
+                builder.Property(b => b.InstanceId)
+                       .IsRequired();
+                builder.Property(b => b.CashOperationId)
+                       .IsRequired();
+                builder.Property(b => b.ClientId)
+                       .IsRequired();
+                builder.Property(b => b.Date)
+                       .IsRequired();
+            }
         }
     }
 }

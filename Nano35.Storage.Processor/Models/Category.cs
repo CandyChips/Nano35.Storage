@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nano35.Contracts;
 using Nano35.Contracts.Storage.Models;
 
@@ -10,68 +11,35 @@ namespace Nano35.Storage.Processor.Models
     public class Category :
         ICastable
     {
-        // Primary key
         public Guid Id { get; set; }
         public Guid InstanceId { get; set; }
-        
-        //Data
         public string Name { get; set; }
         public bool IsDeleted { get; set; }
         public Guid? ParentCategoryId { get; set; }
-        
-        //Foreign keys
         public Category? ParentCategory { get; set; }
-
-        public override string ToString()
-        {
-            return ParentCategory != null ? $"{ParentCategory} {Name}" : Name;
-        }
-        
         public ICollection<Article> Articles { get; set; }
 
-        public Category()
-        {
-            Articles = new List<Article>();
-        }
-    }
+        public Category() { Articles = new List<Article>(); }
 
-    public class CategoriesFluentContext
-    {
-        public void Configure(ModelBuilder modelBuilder)
+        public override string ToString() => ParentCategory != null ? $"{ParentCategory} {Name}" : Name;
+        
+        public class Configuration : IEntityTypeConfiguration<Category>
         {
-            //Primary key
-            modelBuilder.Entity<Category>()
-                .HasKey(u => new {u.Id, u.InstanceId});  
-            
-            //Data
-            modelBuilder.Entity<Category>()
-                .Property(b => b.IsDeleted)
-                .IsRequired();
-            
-            modelBuilder.Entity<Category>()
-                .Property(b => b.Name)
-                .IsRequired();
-            
-            //Foreign keys
-            modelBuilder.Entity<Category>()
-                .HasOne(p => p.ParentCategory)
-                .WithMany()
-                .OnDelete(DeleteBehavior.NoAction)
-                .HasForeignKey(p => new {p.ParentCategoryId, p.InstanceId});
-        }
-    }
-
-    public class ArticlesCategoryAutoMapperProfile : Profile
-    {
-        public ArticlesCategoryAutoMapperProfile()
-        {
-            CreateMap<Category, CategoryViewModel>()
-                .ForMember(dest => dest.Id, source => source
-                    .MapFrom(source => source.Id))
-                .ForMember(dest => dest.Name, source => source
-                    .MapFrom(source => source.Name))
-                .ForMember(dest => dest.ParentCategoryId, source => source
-                    .MapFrom(source => source.ParentCategoryId));
+            public void Configure(EntityTypeBuilder<Category> builder)
+            {
+                builder.ToTable("Categories");
+                builder.HasKey(u => new {u.Id, u.InstanceId}); 
+                builder.Property(b => b.InstanceId)
+                    .IsRequired();
+                builder.Property(b => b.IsDeleted)
+                    .IsRequired();
+                builder.Property(b => b.Name)
+                    .IsRequired();
+                builder.HasOne(p => p.ParentCategory)
+                    .WithMany()
+                    .OnDelete(DeleteBehavior.NoAction)
+                    .HasForeignKey(p => new {p.ParentCategoryId, p.InstanceId});
+            }
         }
     }
 }

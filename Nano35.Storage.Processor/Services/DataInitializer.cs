@@ -13,30 +13,28 @@ namespace Nano35.Storage.Processor.Services
             if(!modelBuilder.StorageItemConditions.Any())
             {
 
-                modelBuilder.StorageItemConditions.Add(new StorageItemCondition()
+                await modelBuilder.StorageItemConditions.AddAsync(new StorageItemCondition()
                 {
                     Id = Guid.NewGuid(),
                     IsDeleted = false,
                     Name = "Новый"
                 });
 
-                modelBuilder.StorageItemConditions.Add(new StorageItemCondition()
+                await modelBuilder.StorageItemConditions.AddAsync(new StorageItemCondition()
                 {
                     Id = Guid.NewGuid(),
                     IsDeleted = false,
                     Name = "С разбора"
                 });
 
-                modelBuilder.StorageItemConditions.Add(new StorageItemCondition()
+                await modelBuilder.StorageItemConditions.AddAsync(new StorageItemCondition()
                 {
                     Id = Guid.NewGuid(),
                     IsDeleted = false,
                     Name = "Витринный образец"
                 });
                 
-                await modelBuilder
-                    .SaveChangesAsync()
-                    .ConfigureAwait(false);
+                await modelBuilder.SaveChangesAsync().ConfigureAwait(false);
             }
         }
     }
