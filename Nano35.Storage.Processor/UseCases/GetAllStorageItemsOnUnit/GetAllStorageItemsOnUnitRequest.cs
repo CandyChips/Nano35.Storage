@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
+using Nano35.Contracts.files;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Contracts.Storage.Models;
@@ -36,16 +37,15 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemsOnUnit
                 .ToListAsync(cancellationToken))
                 .Select(a =>
                     new StorageItemOnUnitViewModel
-                    {
-                        Count = a.Count,
-                        Item = new StorageItemWarehouseView()
-                        {
-                            Id = a.StorageItem.Id,
-                            Name = a.StorageItem.ToString(),
-                            PurchasePrice = (double) (a.StorageItem.PurchasePrice),
-                            RetailPrice = (double) (a.StorageItem.RetailPrice),
-                        },
-                    })
+                    {Count = a.Count,
+                     Item = 
+                         new StorageItemWarehouseView()
+                         {Id = a.StorageItem.Id,
+                          Name = a.StorageItem.ToString(),
+                          PurchasePrice = (double) (a.StorageItem.PurchasePrice),
+                          RetailPrice = (double) (a.StorageItem.RetailPrice),
+                          Images = (new GetImagesOfStorageItem(_bus,new GetImagesOfStorageItemRequestContract() { StorageItemId = a.StorageItem.Id }).GetResponse()
+                              .Result as IGetImagesOfStorageItemSuccessResultContract)?.Images}})
                 .ToList();
 
             return new GetAllStorageItemsOnUnitSuccessResultContract() {Contains = storageItems};

@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
+using Nano35.Contracts.files;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Contracts.Storage.Models;
@@ -40,15 +41,18 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemsOnInstance
                     new StorageItemOnInstanceViewModel
                     {
                         Count = a.Sum(s => s.Count),
-                        Item = new StorageItemWarehouseView()
-                        {
-                            Id = a.Key.Id,
-                            Name = a.Key.ToString(),
-                            PurchasePrice = (double) (a.Key.PurchasePrice),
-                            RetailPrice = (double) (a.Key.RetailPrice),
-                        },
-                        Unit = new GetUnitStringById(_bus, new GetUnitStringByIdRequestContract() {UnitId = a.First().UnitId}).GetResponse()
-                                .Result switch
+                        Item = 
+                            new StorageItemWarehouseView()
+                            {
+                                Id = a.Key.Id,
+                                Name = a.Key.ToString(),
+                                PurchasePrice = (double) (a.Key.PurchasePrice),
+                                RetailPrice = (double) (a.Key.RetailPrice),
+                                Images = (new GetImagesOfStorageItem(_bus,new GetImagesOfStorageItemRequestContract() {StorageItemId = a.Key.Id}).GetResponse()
+                                    .Result as IGetImagesOfStorageItemSuccessResultContract)?.Images
+                            },
+                        Unit = 
+                            new GetUnitStringById(_bus, new GetUnitStringByIdRequestContract() {UnitId = a.First().UnitId}).GetResponse().Result switch
                             {
                                 IGetUnitStringByIdSuccessResultContract success => success.Data,
                                 _ => throw new Exception()

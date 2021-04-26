@@ -12,8 +12,7 @@ namespace Nano35.Storage.Processor.UseCases.GetStorageItemById
     {
         private readonly IServiceProvider _services;
         
-        public GetStorageItemByIdConsumer(
-            IServiceProvider services)
+        public GetStorageItemByIdConsumer(IServiceProvider services)
         {
             _services = services;
         }
@@ -21,12 +20,12 @@ namespace Nano35.Storage.Processor.UseCases.GetStorageItemById
         public async Task Consume(
             ConsumeContext<IGetStorageItemByIdRequestContract> context)
         {
-            var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<IGetStorageItemByIdRequestContract>) _services.GetService(typeof(ILogger<IGetStorageItemByIdRequestContract>));
-            var message = context.Message;
-            var result =
-                await new LoggedPipeNode<IGetStorageItemByIdRequestContract, IGetStorageItemByIdResultContract>(logger,
-                    new GetStorageItemByIdRequest(dbContext)).Ask(message, context.CancellationToken);
+            var result = await new LoggedPipeNode<IGetStorageItemByIdRequestContract, IGetStorageItemByIdResultContract>(
+                _services.GetService(typeof(ILogger<IGetStorageItemByIdRequestContract>)) as ILogger<IGetStorageItemByIdRequestContract>,
+                new GetStorageItemByIdRequest(
+                    _services.GetService(typeof(ApplicationContext)) as ApplicationContext,
+                    _services.GetService(typeof(IBus)) as IBus))
+                .Ask(context.Message, context.CancellationToken);
             switch (result)
             {
                 case IGetStorageItemByIdSuccessResultContract:
