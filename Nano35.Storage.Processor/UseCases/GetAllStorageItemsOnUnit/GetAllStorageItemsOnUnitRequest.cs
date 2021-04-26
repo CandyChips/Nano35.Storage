@@ -44,8 +44,10 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemsOnUnit
                           Name = a.StorageItem.ToString(),
                           PurchasePrice = (double) (a.StorageItem.PurchasePrice),
                           RetailPrice = (double) (a.StorageItem.RetailPrice),
-                          Images = (new GetImagesOfStorageItem(_bus,new GetImagesOfStorageItemRequestContract() { StorageItemId = a.StorageItem.Id }).GetResponse()
-                              .Result as IGetImagesOfStorageItemSuccessResultContract)?.Images}})
+                          Images = (new GetImagesOfStorageItem(_bus,new GetImagesOfStorageItemRequestContract() { StorageItemId = a.StorageItem.Id })
+                              .GetResponse()
+                              .Result as IGetImagesOfStorageItemSuccessResultContract)?
+                              .Images}})
                 .ToList();
 
             return new GetAllStorageItemsOnUnitSuccessResultContract() {Contains = storageItems};

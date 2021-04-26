@@ -43,14 +43,14 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemsOnInstance
                         Count = a.Sum(s => s.Count),
                         Item = 
                             new StorageItemWarehouseView()
-                            {
-                                Id = a.Key.Id,
-                                Name = a.Key.ToString(),
-                                PurchasePrice = (double) (a.Key.PurchasePrice),
-                                RetailPrice = (double) (a.Key.RetailPrice),
-                                Images = (new GetImagesOfStorageItem(_bus,new GetImagesOfStorageItemRequestContract() {StorageItemId = a.Key.Id}).GetResponse()
-                                    .Result as IGetImagesOfStorageItemSuccessResultContract)?.Images
-                            },
+                            {Id = a.Key.Id,
+                             Name = a.Key.ToString(),
+                             PurchasePrice = (double) (a.Key.PurchasePrice),
+                             RetailPrice = (double) (a.Key.RetailPrice),
+                             Images = (new GetImagesOfStorageItem(_bus,new GetImagesOfStorageItemRequestContract() {StorageItemId = a.Key.Id})
+                                 .GetResponse()
+                                 .Result as IGetImagesOfStorageItemSuccessResultContract)?
+                                 .Images},
                         Unit = 
                             new GetUnitStringById(_bus, new GetUnitStringByIdRequestContract() {UnitId = a.First().UnitId}).GetResponse().Result switch
                             {

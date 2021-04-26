@@ -40,8 +40,10 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItems
                      HiddenComment = a.HiddenComment,
                      PurchasePrice = a.PurchasePrice,
                      RetailPrice = a.RetailPrice,
-                     Images = (new GetImagesOfStorageItem(_bus,new GetImagesOfStorageItemRequestContract() {StorageItemId = a.Id}).GetResponse()
-                         .Result as IGetImagesOfStorageItemSuccessResultContract).Images})
+                     Images = (new GetImagesOfStorageItem(_bus,new GetImagesOfStorageItemRequestContract() {StorageItemId = a.Id})
+                         .GetResponse()
+                         .Result as IGetImagesOfStorageItemSuccessResultContract)
+                         .Images})
                 .ToListAsync(cancellationToken: cancellationToken);
 
             return new GetAllStorageItemsSuccessResultContract() {Data = result};
