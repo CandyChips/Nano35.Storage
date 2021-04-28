@@ -12,8 +12,7 @@ namespace Nano35.Storage.Processor.UseCases.CreateCategory
     {
         private readonly ApplicationContext _context;
 
-        public CreateCategoryRequest(
-            ApplicationContext context)
+        public CreateCategoryRequest(ApplicationContext context)
         {
             _context = context;
         }
@@ -22,13 +21,15 @@ namespace Nano35.Storage.Processor.UseCases.CreateCategory
             ICreateCategoryRequestContract input,
             CancellationToken cancellationToken)
         {
-            var category = new Category(){
-                Id = input.NewId,
-                InstanceId = input.InstanceId,
-                ParentCategoryId = input.ParentCategoryId == Guid.Empty ? null : input.ParentCategoryId,
-                Name = input.Name,
-                IsDeleted = false
-            };
+            var category =
+                new Category()
+                    {Id = input.NewId,
+                     InstanceId = input.InstanceId,
+                     ParentCategoryId = input.ParentCategoryId == Guid.Empty ? 
+                         null : 
+                         input.ParentCategoryId,
+                     Name = input.Name,
+                     IsDeleted = false};
             await _context.AddAsync(category, cancellationToken);
                     
             return new CreateCategorySuccessResultContract();

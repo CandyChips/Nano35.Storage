@@ -12,25 +12,18 @@ namespace Nano35.Storage.Processor.UseCases.GetAllArticleBrands
         EndPointNodeBase<IGetAllArticlesBrandsRequestContract, IGetAllArticlesBrandsResultContract>
     {
         private readonly ApplicationContext _context;
-
-        public GetAllArticlesBrandsRequest(
-            ApplicationContext context)
+        public GetAllArticlesBrandsRequest(ApplicationContext context)
         {
             _context = context;
         }
         
-        public override async Task<IGetAllArticlesBrandsResultContract> Ask(
-            IGetAllArticlesBrandsRequestContract input, 
-            CancellationToken cancellationToken)
-        {
-            var result = await _context
-                .Articles
-                .Where(c => c.CategoryId == input.CategoryId && c.CategoryId == input.CategoryId)
-                .Select(a => a.Brand)
-                .Distinct()
-                .ToListAsync(cancellationToken: cancellationToken);
-
-            return new GetAllArticlesBrandsSuccessResultContract() {Data = result};
-        }
+        public override async Task<IGetAllArticlesBrandsResultContract> Ask(IGetAllArticlesBrandsRequestContract input, CancellationToken cancellationToken) =>
+            new GetAllArticlesBrandsSuccessResultContract() {Data = 
+                await _context
+                    .Articles
+                    .Where(c => c.CategoryId == input.CategoryId && c.CategoryId == input.CategoryId)
+                    .Select(a => a.Brand)
+                    .Distinct()
+                    .ToListAsync(cancellationToken: cancellationToken)};
     }   
 }

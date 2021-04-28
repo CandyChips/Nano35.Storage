@@ -31,13 +31,11 @@ namespace Nano35.Storage.Processor.UseCases.CreateSalle
             var cashOperationId = Guid.NewGuid();
             
             var selle = new Selle()
-            {
-                Id = input.NewId,
-                CashOperationId = cashOperationId,
-                Date = DateTime.Now,
-                Number = input.Number,
-                InstanceId = input.InstanceId
-            };
+                {Id = input.NewId,
+                 CashOperationId = cashOperationId,
+                 Date = DateTime.Now,
+                 Number = input.Number,
+                 InstanceId = input.InstanceId};
 
             var selleDetails = input
                 .Details

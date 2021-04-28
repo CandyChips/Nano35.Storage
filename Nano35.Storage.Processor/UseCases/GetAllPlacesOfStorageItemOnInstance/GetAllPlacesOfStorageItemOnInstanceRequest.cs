@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -30,33 +31,21 @@ namespace Nano35.Storage.Processor.UseCases.GetAllPlacesOfStorageItemOnInstance
             (IGetAllPlacesOfStorageItemOnInstanceContract input, 
             CancellationToken cancellationToken)
         {
-            var queue = await _context
+            var result = (await _context
                 .Warehouses
-                .Where(c =>
-                    c.StorageItemId == input.StorageItemId).ToListAsync(cancellationToken);
-
-
-            var result = queue
+                .Where(c => c.StorageItemId == input.StorageItemId)
+                .ToListAsync(cancellationToken))
                 .Select(a =>
-                {
-                    var res = new PlaceWithStorageItemOnInstance()
-                    {
-                        UnitId = a.UnitId,
-                        Name = a.Name,
-                        Count = a.Count
-                    };
-                    var getUnitStringById = new GetUnitStringById(_bus,
-                        new GetUnitStringByIdRequestContract() {UnitId = a.UnitId});
-                    res.Unit = getUnitStringById.GetResponse().Result switch
-                    {
-                        IGetUnitStringByIdSuccessResultContract success => success.Data,
-                        IGetUnitStringByIdErrorResultContract => "",
-                        _ => ""
-                    };
-
-                    return res;
-                }).ToList();
-            
+                    new PlaceWithStorageItemOnInstance()
+                        {UnitId = a.UnitId,
+                         Name = a.Name,
+                         Count = a.Count,
+                         Unit = new GetUnitStringById(_bus, new GetUnitStringByIdRequestContract() { UnitId = a.UnitId }).GetResponse().Result switch
+                         {
+                             IGetUnitStringByIdSuccessResultContract success => success.Data,
+                             _ => throw new Exception()
+                         }})
+                .ToList();
             return new GetAllPlacesOfStorageItemOnInstanceSuccessResultContract() {Contains = result};
         }
     }   

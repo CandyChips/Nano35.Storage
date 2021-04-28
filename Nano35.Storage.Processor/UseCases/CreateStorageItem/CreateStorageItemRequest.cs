@@ -16,17 +16,15 @@ namespace Nano35.Storage.Processor.UseCases.CreateStorageItem
             CancellationToken cancellationToken)
         {
             var item = new StorageItem()
-            {
-                Id = input.NewId,
-                Comment = input.Comment,
-                ArticleId = input.ArticleId,
-                ConditionId = input.ConditionId,
-                HiddenComment = input.HiddenComment,
-                InstanceId = input.InstanceId,
-                IsDeleted = false,
-                PurchasePrice = input.PurchasePrice,
-                RetailPrice = input.RetailPrice
-            };
+                {Id = input.NewId,
+                 Comment = input.Comment,
+                 ArticleId = input.ArticleId,
+                 ConditionId = input.ConditionId,
+                 HiddenComment = input.HiddenComment,
+                 InstanceId = input.InstanceId,
+                 IsDeleted = false,
+                 PurchasePrice = input.PurchasePrice,
+                 RetailPrice = input.RetailPrice};
             await _context.StorageItems.AddAsync(item, cancellationToken);
             return new CreateStorageItemSuccessResultContract();
         }

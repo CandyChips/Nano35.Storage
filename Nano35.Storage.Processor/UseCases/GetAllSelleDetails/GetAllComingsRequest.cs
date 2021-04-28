@@ -34,6 +34,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllSelleDetails
                 .Select(a =>
                     new SelleDetailViewModel()
                     {
+                        // ToDo !!!
                     })
                 .ToListAsync(cancellationToken: cancellationToken);
 

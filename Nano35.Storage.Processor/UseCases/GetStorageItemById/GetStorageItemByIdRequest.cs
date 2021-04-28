@@ -27,20 +27,19 @@ namespace Nano35.Storage.Processor.UseCases.GetStorageItemById
         {
             var result = await _context.StorageItems
                 .FirstOrDefaultAsync(c => c.Id == input.Id, cancellationToken: cancellationToken);
-
             return new GetStorageItemByIdSuccessResultContract()
             {
                 Data = 
                     new StorageItemViewModel()
-                    {Article = result.Article.ToString(),
-                     Comment = result.Comment,
-                     Condition = result.Condition.Name, 
-                     Id = result.Id,
-                     HiddenComment = result.HiddenComment,
-                     PurchasePrice = result.PurchasePrice,
-                     RetailPrice = result.RetailPrice,
-                     Images = (new GetImagesOfStorageItem(_bus,new GetImagesOfStorageItemRequestContract() {StorageItemId = result.Id}).GetResponse()
-                         .Result as IGetImagesOfStorageItemSuccessResultContract)?.Images}
+                        {Article = result.Article.ToString(),
+                         Comment = result.Comment,
+                         Condition = result.Condition.Name, 
+                         Id = result.Id,
+                         HiddenComment = result.HiddenComment,
+                         PurchasePrice = result.PurchasePrice,
+                         RetailPrice = result.RetailPrice,
+                         Images = (new GetImagesOfStorageItem(_bus,new GetImagesOfStorageItemRequestContract() {StorageItemId = result.Id}).GetResponse()
+                             .Result as IGetImagesOfStorageItemSuccessResultContract)?.Images}
             };
         }
     }   

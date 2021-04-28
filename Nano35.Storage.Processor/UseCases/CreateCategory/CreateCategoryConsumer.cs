@@ -17,15 +17,13 @@ namespace Nano35.Storage.Processor.UseCases.CreateCategory
             _services = services;
         }
         
-        public async Task Consume(
-            ConsumeContext<ICreateCategoryRequestContract> context)
+        public async Task Consume(ConsumeContext<ICreateCategoryRequestContract> context)
         {
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<ICreateCategoryRequestContract>) _services.GetService(typeof(ILogger<ICreateCategoryRequestContract>));
-            var message = context.Message;
-            var result = await new LoggedPipeNode<ICreateCategoryRequestContract, ICreateCategoryResultContract>(logger,
+            var result = await new LoggedPipeNode<ICreateCategoryRequestContract, ICreateCategoryResultContract>(
+                _services.GetService(typeof(ILogger<ICreateCategoryRequestContract>)) as ILogger<ICreateCategoryRequestContract>,
                 new TransactedPipeNode<ICreateCategoryRequestContract, ICreateCategoryResultContract>(dbContext,
-                    new CreateCategoryRequest(dbContext))).Ask(message, context.CancellationToken);
+                    new CreateCategoryRequest(dbContext))).Ask(context.Message, context.CancellationToken);
             switch (result)
             {
                 case ICreateCategorySuccessResultContract:

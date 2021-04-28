@@ -16,36 +16,29 @@ namespace Nano35.Storage.Processor.UseCases.GetAllComingDetails
         EndPointNodeBase<IGetAllComingDetailsRequestContract, IGetAllComingDetailsResultContract>
     {
         private readonly ApplicationContext _context;
-        private readonly IBus _bus;
 
-        public GetAllComingDetailsRequest(
-            ApplicationContext context, 
-            IBus bus)
+        public GetAllComingDetailsRequest(ApplicationContext context)
         {
             _context = context;
-            _bus = bus;
         }
 
         public override async Task<IGetAllComingDetailsResultContract> Ask(
             IGetAllComingDetailsRequestContract input, 
             CancellationToken cancellationToken)
         {
-            var result = (await _context
-                    .Comings
-                    .FirstOrDefaultAsync(
-                        f => f.Id == input.ComingId,
-                        cancellationToken: cancellationToken))
+            var result = 
+                (await _context
+                .Comings
+                .FirstOrDefaultAsync(f => f.Id == input.ComingId, cancellationToken: cancellationToken))
                 .Details
-                .Select(a => new ComingDetailViewModel()
-                {
-                    Count = a.Count,
-                    Price = a.Price,
-                    PlaceOnStorage = a.ToWarehouse.ToString(),
-                    StorageItem = a.ToWarehouse.StorageItem.ToString()
-                })
+                .Select(a => 
+                    new ComingDetailViewModel()
+                        {StorageItemId = a.StorageItemId,
+                         Count = a.Count,
+                         Price = a.Price,
+                         PlaceOnStorage = a.ToWarehouse.ToString(),
+                         StorageItem = a.ToWarehouse.StorageItem.ToString()})
                 .ToList();
-            
-                    
             return new GetAllComingDetailsSuccessResultContract() {Data = result};
         }
     }   

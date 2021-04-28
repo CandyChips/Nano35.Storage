@@ -24,17 +24,18 @@ namespace Nano35.Storage.Processor.UseCases.GetAllCancellationDetails
             IGetAllCancellationDetailsRequestContract input, 
             CancellationToken cancellationToken)
         {
-            var result = _context
+            var result = 
+                (await _context
                 .Cancellations
-                .FirstOrDefault(c => c.Id == input.CancellationId)
-                ?.Details
-                .Select(a => new CancellationDetailViewModel()
-                {
-                    Count = a.Count,
-                    StorageItem = a.FromWarehouse.StorageItem.ToString(), 
-                    PlaceOnStorage = a.FromPlace.ToString()
-                }).ToList();
-
+                .FirstAsync(c => c.Id == input.CancellationId, cancellationToken: cancellationToken))
+                .Details
+                .Select(a =>
+                    new CancellationDetailViewModel()
+                        {StorageItemId = a.FromWarehouse.StorageItemId,
+                         Count = a.Count,
+                         StorageItem = a.FromWarehouse.StorageItem.ToString(), 
+                         PlaceOnStorage = a.FromPlace.ToString()})
+                .ToList();
             return new GetAllCancellationDetailsSuccessResultContract() {Data = result};
         }
     }   

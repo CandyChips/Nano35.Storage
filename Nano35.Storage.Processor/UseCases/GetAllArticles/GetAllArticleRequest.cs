@@ -20,24 +20,22 @@ namespace Nano35.Storage.Processor.UseCases.GetAllArticles
             _context = context;
         }
         
-        public override async Task<IGetAllArticlesResultContract> Ask
-            (IGetAllArticlesRequestContract input, CancellationToken cancellationToken)
-        {
-            var result = await _context
-                .Articles
-                .Where(c => c.InstanceId == input.InstanceId)
-                .Select(a => 
-                    new ArticleViewModel()
-                    {
-                        Brand = a.Brand,
-                        Model = a.Model,
-                        Category = a.Category.Name,
-                        CategoryId = a.CategoryId,
-                        Id = a.Id,
-                        Info = a.Info
-                    })
-                .ToListAsync(cancellationToken: cancellationToken);
-            return new GetAllArticlesSuccessResultContract() {Data = result};
-        }
+        public override async Task<IGetAllArticlesResultContract> Ask(IGetAllArticlesRequestContract input, CancellationToken cancellationToken) =>
+            new GetAllArticlesSuccessResultContract()
+            {
+                Data = 
+                    await _context
+                        .Articles
+                        .Where(c => c.InstanceId == input.InstanceId)
+                        .Select(a => 
+                            new ArticleViewModel()
+                            {Brand = a.Brand,
+                                Model = a.Model,
+                                Category = a.Category.Name,
+                                CategoryId = a.CategoryId,
+                                Id = a.Id,
+                                Info = a.Info})
+                        .ToListAsync(cancellationToken: cancellationToken)
+            };
     }   
 }

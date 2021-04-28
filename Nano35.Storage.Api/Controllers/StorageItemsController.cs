@@ -56,7 +56,6 @@ namespace Nano35.Storage.Api.Controllers
                     .Ask(id);
         
         [HttpPost]
-        [Route("StorageItem")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateStorageItemSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateStorageItemErrorHttpResponse))] 

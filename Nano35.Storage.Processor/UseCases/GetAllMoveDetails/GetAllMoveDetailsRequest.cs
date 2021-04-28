@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MassTransit;
+using Microsoft.EntityFrameworkCore;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Contracts.Storage.Models;
 using Nano35.Storage.Processor.Services;
@@ -28,19 +29,18 @@ namespace Nano35.Storage.Processor.UseCases.GetAllMoveDetails
             IGetAllMoveDetailsRequestContract input, 
             CancellationToken cancellationToken)
         {
-            var result = _context
+            var result = await _context
                 .MoveDetails
                 .Where(f => f.MoveId == input.MoveId)
                 .Select(a => new MoveDetailViewModel()
-                {
-                    FromPlaceOnStorage = a.FromWarehouse.ToString(),
-                    ToPlaceOnStorage = a.ToWarehouse.ToString(),
-                    Count = a.Count,
-                    StorageItem = a.FromWarehouse.StorageItem.ToString()
-                })
-                .ToList();
+                    {StorageItemId = a.StorageItemId,
+                     FromPlaceOnStorage = a.FromWarehouse.ToString(),
+                     ToPlaceOnStorage = a.ToWarehouse.ToString(),
+                     Count = a.Count,
+                     StorageItem = a.FromWarehouse.StorageItem.ToString()})
+                .ToListAsync(cancellationToken: cancellationToken);
 
-            return new GetAllMoveDetailsSuccessResultContract() {Data = result};
+            return new GetAllMoveDetailsSuccessResultContract() { Data = result };
         }
     }   
 }

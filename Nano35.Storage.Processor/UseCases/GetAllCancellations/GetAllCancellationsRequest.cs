@@ -32,29 +32,24 @@ namespace Nano35.Storage.Processor.UseCases.GetAllCancellations
         {
             var queue = await _context
                 .Cancellations
-                .Where(w => w.InstanceId == input.InstanceId).ToListAsync(cancellationToken);
+                .Where(w => w.InstanceId == input.InstanceId)
+                .ToListAsync(cancellationToken);
 
 
             var result = queue
                 .Select(a =>
-                {
-                    var res = new CancellationViewModel()
-                    {
-                        Id = a.Id,
-                        Number = a.Number,
-                        Date = a.Date,
-                        Comment = a.Comment
-                    };
-                    var getUnitStringById = new GetUnitStringById(_bus,
-                        new GetUnitStringByIdRequestContract() {UnitId = input.UnitId});
-                    res.Unit = getUnitStringById.GetResponse().Result switch
-                    {
-                        IGetUnitStringByIdSuccessResultContract success => success.Data,
-                        _ => throw new Exception()
-                    };
-
-                    return res;
-                }).ToList();
+                    new CancellationViewModel()
+                        {Id = a.Id,
+                         Number = a.Number,
+                         Date = a.Date,
+                         Comment = a.Comment,
+                         Unit = 
+                             new GetUnitStringById(_bus, new GetUnitStringByIdRequestContract() {UnitId = input.UnitId}).GetResponse().Result switch
+                             {
+                                 IGetUnitStringByIdSuccessResultContract success => success.Data,
+                                 _ => throw new Exception()
+                             }})
+                .ToList();
             
             return new GetAllCancellationsSuccessResultContract() {Data = result};
         }

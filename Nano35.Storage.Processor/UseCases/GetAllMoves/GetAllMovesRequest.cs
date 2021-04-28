@@ -38,35 +38,32 @@ namespace Nano35.Storage.Processor.UseCases.GetAllMoves
             
             var result = moves
                 .Select(a =>
-                {
-                    var res = new MoveViewModel()
+                    new MoveViewModel()
                     {
                         Id = a.Id,
                         Number = a.Number,
-                        Date = a.Date
-                    };
-                    //.Details.FirstOrDefault(f => f.MoveId == a.Id).FromUnitId
-                    
-                    var getFromUnitStringRequest = new GetUnitStringById(_bus,
-                        new GetUnitStringByIdRequestContract() {UnitId = _context.MoveDetails.FirstOrDefault(h=> h.MoveId == a.Id).FromUnitId});
-                    res.FromUnit = getFromUnitStringRequest.GetResponse().Result switch
-                    {
-                        IGetUnitStringByIdSuccessResultContract success => success.Data,
-                        _ => throw new Exception()
+                        Date = a.Date,
+                        FromUnit = 
+                            new GetUnitStringById(_bus, new GetUnitStringByIdRequestContract()
+                                {
+                                    UnitId = _context.MoveDetails.FirstOrDefault(h=> h.MoveId == a.Id).FromUnitId
+                                }).GetResponse().Result switch
+                                {
+                                    IGetUnitStringByIdSuccessResultContract success => success.Data,
+                                    _ => throw new Exception()
                         
-                    };
-                    
-                    var getToUnitStringRequest = new GetUnitStringById(_bus,
-                        new GetUnitStringByIdRequestContract() {UnitId = _context.MoveDetails.FirstOrDefault(h=> h.MoveId == a.Id).ToUnitId});
-                    res.ToUnit = getToUnitStringRequest.GetResponse().Result switch
-                    {
-                        IGetUnitStringByIdSuccessResultContract success => success.Data,
-                        _ => throw new Exception()
+                                },
+                        ToUnit = 
+                            new GetUnitStringById(_bus, new GetUnitStringByIdRequestContract()
+                                {
+                                    UnitId = _context.MoveDetails.FirstOrDefault(h=> h.MoveId == a.Id).ToUnitId
+                                }).GetResponse().Result switch
+                                {
+                                    IGetUnitStringByIdSuccessResultContract success => success.Data,
+                                    _ => throw new Exception()
                         
-                    };
-
-                    return res;
-                })
+                                }
+                    })
                 .ToList();
 
             return new GetAllMovesSuccessResultContract() {Data = result};

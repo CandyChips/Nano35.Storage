@@ -29,6 +29,12 @@ namespace Nano35.Storage.Processor.UseCases
             try
             {
                 var response = await DoNext(input, cancellationToken);
+                switch (response)
+                {
+                    case IError:
+                        await transaction.RollbackAsync(cancellationToken).ConfigureAwait(false);
+                        return response;
+                }
                 await _context.SaveChangesAsync(cancellationToken);
                 await transaction.CommitAsync(cancellationToken);
                 return response;
@@ -36,7 +42,7 @@ namespace Nano35.Storage.Processor.UseCases
             catch
             {
                 await transaction.RollbackAsync(cancellationToken).ConfigureAwait(false);
-                return (TOut) (IResponse) new Error() { Message = "Транзакция отменена"};
+                throw;
             }
         }
     }

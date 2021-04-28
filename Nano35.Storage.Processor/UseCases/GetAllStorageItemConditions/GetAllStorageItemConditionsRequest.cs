@@ -27,10 +27,8 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemConditions
                 .StorageItemConditions
                 .Select(a =>
                     new StorageItemConditionViewModel()
-                    {
-                        Id = a.Id, 
-                        Name = a.Name
-                    })
+                        {Id = a.Id, 
+                         Name = a.Name})
                 .ToListAsync(cancellationToken: cancellationToken);
 
             return new GetAllStorageItemConditionsSuccessResultContract() {Data = result};
