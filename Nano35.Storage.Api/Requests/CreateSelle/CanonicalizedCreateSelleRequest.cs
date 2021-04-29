@@ -17,30 +17,26 @@ namespace Nano35.Storage.Api.Requests.CreateSelle
             ICreateSelleRequestContract, 
             ICreateSelleResultContract>
     {
-        public CanonicalizedCreateSelleRequest(IPipeNode<ICreateSelleRequestContract, ICreateSelleResultContract> next) :
-            base(next) {}
-
+        public CanonicalizedCreateSelleRequest(IPipeNode<ICreateSelleRequestContract, ICreateSelleResultContract> next) : base(next) {}
         public override async Task<IActionResult> Ask(CreateSelleHttpBody input)
         {
-            var converted = new CreateSelleRequestContract()
-            {
-                Details = input.Details.Select(a => new CreateSelleDetailViewModel()
-                { 
-                    NewId = a.NewId, 
-                    Count = a.Count, 
-                    Price = a.Price,
-                    PlaceOnStorage = a.PlaceOnStorage, 
-                    StorageItemId = a.StorageItemId
-                }).ToList(),
-                UnitId = input.UnitId,
-                InstanceId = input.InstanceId,
-                NewId = input.NewId,
-                Number = input.Number ?? "",
-            };
-
-            var response = await DoNext(converted);
-            
-            return response switch
+            var converted = 
+                new CreateSelleRequestContract()
+                    {Details = input
+                         .Details
+                         .Select(a => 
+                             new CreateSelleDetailViewModel()
+                                 {NewId = a.NewId, 
+                                  Count = a.Count, 
+                                  Price = a.Price,
+                                  PlaceOnStorage = a.PlaceOnStorage, 
+                                  StorageItemId = a.StorageItemId})
+                         .ToList(),
+                     UnitId = input.UnitId,
+                     InstanceId = input.InstanceId,
+                     NewId = input.NewId,
+                     Number = input.Number ?? ""};
+            return await DoNext(converted) switch
             {
                 ICreateSelleSuccessResultContract success => new OkObjectResult(success),
                 ICreateSelleErrorResultContract error => new BadRequestObjectResult(error),

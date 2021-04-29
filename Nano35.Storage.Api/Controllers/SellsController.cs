@@ -42,10 +42,8 @@ namespace Nano35.Storage.Api.Controllers
             await new CanonicalizedCreateSelleRequest(
                 new LoggedPipeNode<ICreateSelleRequestContract, ICreateSelleResultContract>(
                     _services.GetService(typeof(ILogger<ICreateSelleRequestContract>)) as ILogger<ICreateSelleRequestContract>,
-                    new ValidatedPipeNode<ICreateSelleRequestContract, ICreateSelleResultContract>(
-                        _services.GetService(typeof(IValidator<ICreateSelleRequestContract>)) as IValidator<ICreateSelleRequestContract>,
-                        new CreateSelleUseCase(
-                            _services.GetService(typeof(IBus)) as IBus))))
+                    new CreateSelleUseCase(
+                        _services.GetService(typeof(IBus)) as IBus)))
                 .Ask(body);
 
         [HttpGet]
@@ -55,10 +53,8 @@ namespace Nano35.Storage.Api.Controllers
             await new ConvertedGetAllSellsOnHttpContext(
                 new LoggedPipeNode<IGetAllSellsRequestContract, IGetAllSellsResultContract>(
                     _services.GetService(typeof(ILogger<IGetAllSellsRequestContract>)) as ILogger<IGetAllSellsRequestContract>,
-                    new ValidatedPipeNode<IGetAllSellsRequestContract, IGetAllSellsResultContract>(
-                        _services.GetService(typeof(IValidator<IGetAllSellsRequestContract>)) as IValidator<IGetAllSellsRequestContract>,
-                        new GetAllSellsUseCase(
-                            _services.GetService(typeof(IBus)) as IBus))))
+                    new GetAllSellsUseCase(
+                        _services.GetService(typeof(IBus)) as IBus)))
                 .Ask(body);
 
         
@@ -70,9 +66,8 @@ namespace Nano35.Storage.Api.Controllers
             await new CanonicalizedGetAllSelleDetailsRequest(
                 new LoggedPipeNode<IGetAllSelleDetailsRequestContract, IGetAllSelleDetailsResultContract>(
                     _services.GetService(typeof(ILogger<IGetAllSelleDetailsRequestContract>)) as ILogger<IGetAllSelleDetailsRequestContract>,
-                    new ValidatedPipeNode<IGetAllSelleDetailsRequestContract, IGetAllSelleDetailsResultContract>(
-                        _services.GetService(typeof(IValidator<IGetAllSelleDetailsRequestContract>)) as IValidator<IGetAllSelleDetailsRequestContract>,
-                        new GetAllSelleDetailsUseCase(_services.GetService(typeof(IBus)) as IBus))))
+                    new GetAllSelleDetailsUseCase(
+                        _services.GetService(typeof(IBus)) as IBus)))
                 .Ask(new GetAllSellDetailsHttpQuery() {SelleId = id});
         
     }

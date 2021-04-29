@@ -17,33 +17,27 @@ namespace Nano35.Storage.Api.Requests.CreateComing
             ICreateComingRequestContract, 
             ICreateComingResultContract>
     {
-        public CanonicalizedCreateComingRequest(IPipeNode<ICreateComingRequestContract, ICreateComingResultContract> next) :
-            base(next) {}
-
+        public CanonicalizedCreateComingRequest(IPipeNode<ICreateComingRequestContract, ICreateComingResultContract> next) : base(next) {}
         public override async Task<IActionResult> Ask(CreateComingHttpBody input)
         {
             var converted = new CreateComingRequestContract()
-            {
-                NewId = input.NewId,
-                InstanceId = input.InstanceId,
-                Number = input.Number ?? "",
-                UnitId = input.UnitId,
-                Comment = input.Comment ?? "",
-                Details = input.Details.Select(a => 
-                    new CreateComingDetailViewModel()
-                    {
-                        Count = a.Count,
-                        Price = a.Price,
-                        NewId = a.NewId,
-                        StorageItemId = a.StorageItemId,
-                        PlaceOnStorage = a.PlaceOnStorage
-                    }).ToList(),
-                ClientId = input.ClientId
-            };
-
-            var response = await DoNext(converted);
-            
-            return response switch
+                                {NewId = input.NewId,
+                                 InstanceId = input.InstanceId,
+                                 Number = input.Number ?? "",
+                                 UnitId = input.UnitId,
+                                 Comment = input.Comment ?? "",
+                                 Details = input
+                                     .Details
+                                     .Select(a => 
+                                         new CreateComingDetailViewModel()
+                                             {Count = a.Count,
+                                              Price = a.Price,
+                                              NewId = a.NewId,
+                                              StorageItemId = a.StorageItemId,
+                                              PlaceOnStorage = a.PlaceOnStorage})
+                                     .ToList(),
+                                 ClientId = input.ClientId};
+            return await DoNext(converted) switch
             {
                 ICreateComingSuccessResultContract success => new OkObjectResult(success),
                 ICreateComingErrorResultContract error => new BadRequestObjectResult(error),

@@ -6,23 +6,18 @@ using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.UseCases.UpdateArticleBrand
 {
-    public class UpdateArticleBrandRequest :
-        EndPointNodeBase<IUpdateArticleBrandRequestContract, IUpdateArticleBrandResultContract>
+    public class UpdateArticleBrandRequest : EndPointNodeBase<IUpdateArticleBrandRequestContract, IUpdateArticleBrandResultContract>
     {
         private readonly ApplicationContext _context;
-
-        public UpdateArticleBrandRequest(
-            ApplicationContext context)
+        public UpdateArticleBrandRequest(ApplicationContext context)
         {
             _context = context;
         }
-        
         public override async Task<IUpdateArticleBrandResultContract> Ask(
             IUpdateArticleBrandRequestContract input,
             CancellationToken cancellationToken)
         {
-            var result = await (_context.Articles
-                .FirstOrDefaultAsync(a => a.Id == input.Id, cancellationToken));
+            var result = await (_context.Articles.FirstOrDefaultAsync(a => a.Id == input.Id, cancellationToken));
             result.Brand = input.Brand;
             return new UpdateArticleBrandSuccessResultContract();
         }

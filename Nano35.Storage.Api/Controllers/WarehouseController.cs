@@ -44,10 +44,8 @@ namespace Nano35.Storage.Api.Controllers
             await new CanonicalizedGetAllPlacesOfStorageItemOnUnitRequest(
                 new LoggedPipeNode<IGetAllPlacesOfStorageItemOnUnitRequestContract, IGetAllPlacesOfStorageItemOnUnitResultContract>(
                     _services.GetService(typeof(ILogger<IGetAllPlacesOfStorageItemOnUnitRequestContract>)) as ILogger<IGetAllPlacesOfStorageItemOnUnitRequestContract>,
-                    new ValidatedPipeNode<IGetAllPlacesOfStorageItemOnUnitRequestContract, IGetAllPlacesOfStorageItemOnUnitResultContract>(
-                        _services.GetService(typeof(IValidator<IGetAllPlacesOfStorageItemOnUnitRequestContract>)) as IValidator<IGetAllPlacesOfStorageItemOnUnitRequestContract>,
-                        new GetAllPlacesOfStorageItemOnUnitUseCase(
-                            _services.GetService(typeof(IBus)) as IBus))))
+                    new GetAllPlacesOfStorageItemOnUnitUseCase(
+                        _services.GetService(typeof(IBus)) as IBus)))
                 .Ask(body);
         
         [HttpGet]
@@ -59,10 +57,8 @@ namespace Nano35.Storage.Api.Controllers
             await new CanonicalizedGetAllPlacesOfStorageItemOnInstanceRequest(
                     new LoggedPipeNode<IGetAllPlacesOfStorageItemOnInstanceContract, IGetAllPlacesOfStorageItemOnInstanceResultContract>(
                         _services.GetService(typeof(ILogger<IGetAllPlacesOfStorageItemOnInstanceContract>)) as ILogger<IGetAllPlacesOfStorageItemOnInstanceContract>,
-                        new ValidatedPipeNode<IGetAllPlacesOfStorageItemOnInstanceContract, IGetAllPlacesOfStorageItemOnInstanceResultContract>(
-                            _services.GetService(typeof(IValidator<IGetAllPlacesOfStorageItemOnInstanceContract>)) as IValidator<IGetAllPlacesOfStorageItemOnInstanceContract>,
-                            new GetAllPlacesOfStorageItemOnInstanceUseCase(
-                                _services.GetService(typeof(IBus)) as IBus))))
+                        new GetAllPlacesOfStorageItemOnInstanceUseCase(
+                            _services.GetService(typeof(IBus)) as IBus)))
                 .Ask(body);
         
         [HttpGet]
@@ -74,10 +70,8 @@ namespace Nano35.Storage.Api.Controllers
             await new CanonicalizedGetAllStorageItemsOnInstanceRequest(
                     new LoggedPipeNode<IGetAllStorageItemsOnInstanceContract, IGetAllStorageItemsOnInstanceResultContract>(
                         _services.GetService(typeof(ILogger<IGetAllStorageItemsOnInstanceContract>)) as ILogger<IGetAllStorageItemsOnInstanceContract>,
-                        new ValidatedPipeNode<IGetAllStorageItemsOnInstanceContract, IGetAllStorageItemsOnInstanceResultContract>(
-                            _services.GetService(typeof(IValidator<IGetAllStorageItemsOnInstanceContract>)) as IValidator<IGetAllStorageItemsOnInstanceContract>,
-                            new GetAllStorageItemsOnInstanceUseCase(
-                                _services.GetService(typeof(IBus)) as IBus))))
+                        new GetAllStorageItemsOnInstanceUseCase(
+                            _services.GetService(typeof(IBus)) as IBus)))
                 .Ask(body);
         
         [HttpGet]
@@ -89,10 +83,8 @@ namespace Nano35.Storage.Api.Controllers
             await new CanonicalizedGetAllStorageItemsOnUnitRequest(
                 new LoggedPipeNode<IGetAllStorageItemsOnUnitContract, IGetAllStorageItemsOnUnitResultContract>(
                     _services.GetService(typeof(ILogger<IGetAllStorageItemsOnUnitContract>)) as ILogger<IGetAllStorageItemsOnUnitContract>,
-                    new ValidatedPipeNode<IGetAllStorageItemsOnUnitContract, IGetAllStorageItemsOnUnitResultContract>(
-                        _services.GetService(typeof(IValidator<IGetAllStorageItemsOnUnitContract>)) as IValidator<IGetAllStorageItemsOnUnitContract>,
-                        new GetAllStorageItemsOnUnitUseCase(
-                            _services.GetService(typeof(IBus)) as IBus))))
+                    new GetAllStorageItemsOnUnitUseCase(
+                        _services.GetService(typeof(IBus)) as IBus)))
                 .Ask(body);
     }
 }

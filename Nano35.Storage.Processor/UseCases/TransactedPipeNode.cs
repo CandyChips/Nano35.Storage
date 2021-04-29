@@ -15,10 +15,7 @@ namespace Nano35.Storage.Processor.UseCases
         where TOut : IResponse
     {
         private readonly ApplicationContext _context;
-
-        public TransactedPipeNode(
-            ApplicationContext context,
-            IPipeNode<TIn, TOut> next) : base(next)
+        public TransactedPipeNode(ApplicationContext context, IPipeNode<TIn, TOut> next) : base(next)
         {
             _context = context;
         }

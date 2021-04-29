@@ -10,8 +10,8 @@ namespace Nano35.Storage.Processor.UseCases
         where TOut : IResponse
     {
         private readonly IPipeNode<TIn, TOut> _next;
-        protected PipeNodeBase(IPipeNode<TIn, TOut> next) { _next = next; }
-        protected Task<TOut> DoNext(TIn input, CancellationToken cancellationToken) { return _next.Ask(input, cancellationToken); }
+        protected PipeNodeBase(IPipeNode<TIn, TOut> next) => _next = next;
+        protected Task<TOut> DoNext(TIn input, CancellationToken cancellationToken) => _next.Ask(input, cancellationToken);
         public abstract Task<TOut> Ask(TIn input, CancellationToken cancellationToken);
     }
 }

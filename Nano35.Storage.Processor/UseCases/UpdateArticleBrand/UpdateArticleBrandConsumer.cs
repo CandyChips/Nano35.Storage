@@ -11,23 +11,18 @@ namespace Nano35.Storage.Processor.UseCases.UpdateArticleBrand
         IConsumer<IUpdateArticleBrandRequestContract>
     {
         private readonly IServiceProvider _services;
-        
-        public UpdateArticleBrandConsumer(
-            IServiceProvider services)
+        public UpdateArticleBrandConsumer(IServiceProvider services)
         {
             _services = services;
         }
-        
-        public async Task Consume(
-            ConsumeContext<IUpdateArticleBrandRequestContract> context)
+        public async Task Consume(ConsumeContext<IUpdateArticleBrandRequestContract> context)
         {
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<IUpdateArticleBrandRequestContract>) _services.GetService(typeof(ILogger<IUpdateArticleBrandRequestContract>));
-            var message = context.Message;
-            var result =
-                await new LoggedPipeNode<IUpdateArticleBrandRequestContract, IUpdateArticleBrandResultContract>(logger,
-                    new TransactedPipeNode<IUpdateArticleBrandRequestContract, IUpdateArticleBrandResultContract>(dbContext,
-                        new UpdateArticleBrandRequest(dbContext))).Ask(message, context.CancellationToken);
+            var result = await new LoggedPipeNode<IUpdateArticleBrandRequestContract, IUpdateArticleBrandResultContract>(
+                _services.GetService(typeof(ILogger<IUpdateArticleBrandRequestContract>)) as ILogger<IUpdateArticleBrandRequestContract>,
+                new TransactedPipeNode<IUpdateArticleBrandRequestContract, IUpdateArticleBrandResultContract>(dbContext,
+                    new UpdateArticleBrandRequest(dbContext)))
+                .Ask(context.Message, context.CancellationToken);
             switch (result)
             {
                 case IUpdateArticleBrandSuccessResultContract:

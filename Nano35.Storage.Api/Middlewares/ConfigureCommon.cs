@@ -8,7 +8,6 @@ namespace Nano35.Storage.Api.Middlewares
         {
             app.UseDeveloperExceptionPage();
             app.UseCors("Cors");
-            app.UseMiddleware<UseAuthMiddleware>();
             app.UseRouting(); 
             app.UseAuthentication();
             app.UseAuthorization();

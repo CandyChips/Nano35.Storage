@@ -21,24 +21,22 @@ namespace Nano35.Storage.Api.Requests.CreateArticle
 
         public override async Task<IActionResult> Ask(CreateArticleHttpBody input)
         {
-            var converted = new CreateArticleRequestContract()
-            {
-                Brand = input.Brand,
-                CategoryId = input.CategoryId,
-                Info = input.Info ?? "",
-                InstanceId = input.InstanceId,
-                Model = input.Model,
-                NewId = input.NewId,
-                Specs = input.Specs.Select(a => new SpecViewModel()
-                {
-                    Key = a.Key,
-                    Value = a.Value
-                }).ToList()
-            };
-
-            var response = await DoNext(converted);
-            
-            return response switch
+            var converted = 
+                new CreateArticleRequestContract()
+                    {Brand = input.Brand,
+                     CategoryId = input.CategoryId,
+                     Info = input.Info ?? "",
+                     InstanceId = input.InstanceId,
+                     Model = input.Model,
+                     NewId = input.NewId,
+                     Specs = input
+                         .Specs
+                         .Select(a => 
+                             new SpecViewModel()
+                                 {Key = a.Key,
+                                  Value = a.Value})
+                         .ToList()};
+            return await DoNext(converted) switch
             {
                 ICreateArticleSuccessResultContract success => new OkObjectResult(success),
                 ICreateArticleErrorResultContract error => new BadRequestObjectResult(error),

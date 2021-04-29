@@ -16,22 +16,16 @@ namespace Nano35.Storage.Api.Requests.CreateCategory
             ICreateCategoryRequestContract, 
             ICreateCategoryResultContract>
     {
-        public CanonicalizedCreateCategoryRequest(IPipeNode<ICreateCategoryRequestContract, ICreateCategoryResultContract> next) :
-            base(next) {}
-
+        public CanonicalizedCreateCategoryRequest(IPipeNode<ICreateCategoryRequestContract, ICreateCategoryResultContract> next) : base(next) {}
         public override async Task<IActionResult> Ask(CreateCategoryHttpBody input)
         {
-            var converted = new CreateCategoryRequestContract()
-            {
-                InstanceId = input.InstanceId,
-                NewId = input.NewId,
-                Name = input.Name,
-                ParentCategoryId = input.ParentCategoryId
-            };
-
-            var response = await DoNext(converted);
-            
-            return response switch
+            var converted = 
+                new CreateCategoryRequestContract()
+                    {InstanceId = input.InstanceId,
+                     NewId = input.NewId,
+                     Name = input.Name,
+                     ParentCategoryId = input.ParentCategoryId};
+            return await DoNext(converted) switch
             {
                 ICreateCategorySuccessResultContract success => new OkObjectResult(success),
                 ICreateCategoryErrorResultContract error => new BadRequestObjectResult(error),

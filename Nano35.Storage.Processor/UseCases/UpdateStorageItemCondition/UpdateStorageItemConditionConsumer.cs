@@ -22,12 +22,11 @@ namespace Nano35.Storage.Processor.UseCases.UpdateStorageItemCondition
             ConsumeContext<IUpdateStorageItemConditionRequestContract> context)
         {
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<IUpdateStorageItemConditionRequestContract>) _services.GetService(typeof(ILogger<IUpdateStorageItemConditionRequestContract>));
-            var message = context.Message;
-            var result =
-                await new LoggedPipeNode<IUpdateStorageItemConditionRequestContract, IUpdateStorageItemConditionResultContract>(logger,
-                    new TransactedPipeNode<IUpdateStorageItemConditionRequestContract, IUpdateStorageItemConditionResultContract>(dbContext, 
-                        new UpdateStorageItemConditionRequest(dbContext))).Ask(message, context.CancellationToken);
+            var result = await new LoggedPipeNode<IUpdateStorageItemConditionRequestContract, IUpdateStorageItemConditionResultContract>(
+                _services.GetService(typeof(ILogger<IUpdateStorageItemConditionRequestContract>)) as ILogger<IUpdateStorageItemConditionRequestContract>,
+                new TransactedPipeNode<IUpdateStorageItemConditionRequestContract, IUpdateStorageItemConditionResultContract>(dbContext, 
+                    new UpdateStorageItemConditionRequest(dbContext)))
+                .Ask(context.Message, context.CancellationToken);
             switch (result)
             {
                 case IUpdateStorageItemConditionSuccessResultContract:

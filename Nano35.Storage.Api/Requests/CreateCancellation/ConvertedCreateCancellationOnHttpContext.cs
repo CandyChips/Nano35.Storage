@@ -17,31 +17,26 @@ namespace Nano35.Storage.Api.Requests.CreateCancellation
             ICreateCancellationRequestContract,
             ICreateCancellationResultContract>
     {
-        public ConvertedCreateCancellationOnHttpContext(
-            IPipeNode<ICreateCancellationRequestContract, ICreateCancellationResultContract> next) :
-            base(next) {}
-
+        public ConvertedCreateCancellationOnHttpContext(IPipeNode<ICreateCancellationRequestContract, ICreateCancellationResultContract> next) : base(next) {}
         public override async Task<IActionResult> Ask(CreateCancellationHttpBody input)
         {
-            var converted = new CreateCancellationRequestContract()
-            {
-                Comment = input.Comment ?? "",
-                InstanceId = input.InstanceId,
-                NewId = input.NewId,
-                Number = input.Number ?? "",
-                UnitId = input.UnitId,
-                Details = input.Details.Select(a => new CreateCancellationDetailViewModel()
-                {
-                    NewId = a.NewId,
-                    Count = a.Count,
-                    PlaceOnStorage = a.PlaceOnStorage ?? "",
-                    StorageItemId = a.StorageItemId
-                }).ToList()
-            };
-
-            var response = await DoNext(converted);
-            
-            return response switch
+            var converted = 
+                new CreateCancellationRequestContract()
+                    {Comment = input.Comment ?? "",
+                     InstanceId = input.InstanceId,
+                     NewId = input.NewId,
+                     Number = input.Number ?? "",
+                     UnitId = input.UnitId,
+                     Details = input
+                         .Details
+                         .Select(a =>
+                             new CreateCancellationDetailViewModel()
+                                 {NewId = a.NewId,
+                                  Count = a.Count,
+                                  PlaceOnStorage = a.PlaceOnStorage ?? "",
+                                  StorageItemId = a.StorageItemId})
+                         .ToList()};
+            return await DoNext(converted) switch
             {
                 ICreateCancellationSuccessResultContract success => new OkObjectResult(success),
                 ICreateCancellationErrorResultContract error => new BadRequestObjectResult(error),

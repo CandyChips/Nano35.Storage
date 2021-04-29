@@ -10,17 +10,12 @@ namespace Nano35.Storage.Api.Requests
         Task<TOut> Ask(TIn input);
     }
     
-    public interface IPipelineNode<in TIn, TOut>
-    {
-        Task<TOut> Ask(TIn input);
-    }
-    
-    public abstract class PipeInConvert <TFrom, TTo, In, TOut> : 
+    public abstract class PipeInConvert <TFrom, TTo, TIn, TOut> : 
         IPipeNode<TFrom, TTo>
     {
-        private readonly IPipeNode<In, TOut> _next;
-        protected PipeInConvert(IPipeNode<In, TOut> next) { _next = next; }
-        protected Task<TOut> DoNext(In input) { return _next.Ask(input); }
+        private readonly IPipeNode<TIn, TOut> _next;
+        protected PipeInConvert(IPipeNode<TIn, TOut> next) => _next = next;
+        protected Task<TOut> DoNext(TIn input) => _next.Ask(input);
         public abstract Task<TTo> Ask(TFrom input);
     }
 
@@ -28,8 +23,8 @@ namespace Nano35.Storage.Api.Requests
         IPipeNode<TIn, TOut>
     {
         private readonly IPipeNode<TIn, TOut> _next;
-        protected PipeNodeBase(IPipeNode<TIn, TOut> next) { _next = next; }
-        protected Task<TOut> DoNext(TIn input) { return _next.Ask(input); }
+        protected PipeNodeBase(IPipeNode<TIn, TOut> next) => _next = next;
+        protected Task<TOut> DoNext(TIn input) => _next.Ask(input);
         public abstract Task<TOut> Ask(TIn input);
     }
 
@@ -71,17 +66,5 @@ namespace Nano35.Storage.Api.Requests
                 return errorResponse.Message;
             throw new Exception();
         }
-    }
-
-    public abstract class EndPointRequestNodeBase<TMessage, TResponse, TSuccess, TError>  : 
-        MasstransitRequest<TMessage, TResponse, TSuccess, TError>,
-        IPipeNode<TMessage, TResponse>
-        where TMessage : class, IRequest
-        where TResponse : class, IResponse
-        where TSuccess : class, ISuccess, TResponse
-        where TError : class, IError, TResponse
-    {
-        protected EndPointRequestNodeBase(IBus bus) : base(bus) {}
-        public async Task<TResponse> Ask(TMessage input) => await GetResponse(input);
     }
 }

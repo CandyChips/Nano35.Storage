@@ -9,15 +9,11 @@ namespace Nano35.Storage.Api.Middlewares
     {    
         private readonly RequestDelegate _next;
         private readonly ILogger<UseAuthMiddleware> _logger;
- 
-        public UseAuthMiddleware(
-            RequestDelegate next, 
-            ILogger<UseAuthMiddleware> logger)
+        public UseAuthMiddleware(RequestDelegate next, ILogger<UseAuthMiddleware> logger)
         {
             _next = next;
             _logger = logger;
         }
- 
         public async Task InvokeAsync(Microsoft.AspNetCore.Http.HttpContext context)
         {
             var token = context.Request.Headers["Authorization"]!.ToString().Split(' ').Last();

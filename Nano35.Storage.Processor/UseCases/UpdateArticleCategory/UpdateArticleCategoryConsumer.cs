@@ -11,24 +11,18 @@ namespace Nano35.Storage.Processor.UseCases.UpdateArticleCategory
         IConsumer<IUpdateArticleCategoryRequestContract>
     {
         private readonly IServiceProvider _services;
-        
-        public UpdateArticleCategoryConsumer(
-            IServiceProvider services)
+        public UpdateArticleCategoryConsumer(IServiceProvider services)
         {
             _services = services;
         }
-        
-        public async Task Consume(
-            ConsumeContext<IUpdateArticleCategoryRequestContract> context)
+        public async Task Consume(ConsumeContext<IUpdateArticleCategoryRequestContract> context)
         {
             var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<IUpdateArticleCategoryRequestContract>) _services
-                .GetService(typeof(ILogger<IUpdateArticleCategoryRequestContract>));
-            var message = context.Message;
-            var result =
-                await new LoggedPipeNode<IUpdateArticleCategoryRequestContract, IUpdateArticleCategoryResultContract>(logger,
-                    new TransactedPipeNode<IUpdateArticleCategoryRequestContract, IUpdateArticleCategoryResultContract>(dbContext,
-                        new UpdateArticleCategoryRequest(dbContext))).Ask(message, context.CancellationToken);
+            var result = await new LoggedPipeNode<IUpdateArticleCategoryRequestContract, IUpdateArticleCategoryResultContract>(
+                _services.GetService(typeof(ILogger<IUpdateArticleCategoryRequestContract>)) as ILogger<IUpdateArticleCategoryRequestContract>,
+                new TransactedPipeNode<IUpdateArticleCategoryRequestContract, IUpdateArticleCategoryResultContract>(dbContext,
+                    new UpdateArticleCategoryRequest(dbContext)))
+                .Ask(context.Message, context.CancellationToken);
             switch (result)
             {
                 case IUpdateArticleCategorySuccessResultContract:
