@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Contracts.Storage.Models;
 using Nano35.Storage.Processor.Services;
@@ -10,7 +11,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.GetAllCancellationDetails
 {
     public class GetAllCancellationDetailsRequest :
-        EndPointNodeBase<IGetAllCancellationDetailsRequestContract, IGetAllCancellationDetailsResultContract>
+        UseCaseEndPointNodeBase<IGetAllCancellationDetailsRequestContract, IGetAllCancellationDetailsResultContract>
     {
         private readonly ApplicationContext _context;
 
@@ -20,7 +21,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllCancellationDetails
             _context = context;
         }
         
-        public override async Task<IGetAllCancellationDetailsResultContract> Ask(
+        public override async Task<UseCaseResponse<IGetAllCancellationDetailsResultContract>> Ask(
             IGetAllCancellationDetailsRequestContract input, 
             CancellationToken cancellationToken)
         {
@@ -36,7 +37,8 @@ namespace Nano35.Storage.Processor.UseCases.GetAllCancellationDetails
                          StorageItem = a.FromWarehouse.StorageItem.ToString(), 
                          PlaceOnStorage = a.FromPlace.ToString()})
                 .ToList();
-            return new GetAllCancellationDetailsSuccessResultContract() {Data = result};
+            return new UseCaseResponse<IGetAllCancellationDetailsResultContract>(
+                new GetAllCancellationDetailsResultContract() {Data = result});
         }
     }   
 }

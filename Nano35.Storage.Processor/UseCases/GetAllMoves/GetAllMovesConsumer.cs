@@ -21,23 +21,14 @@ namespace Nano35.Storage.Processor.UseCases.GetAllMoves
         public async Task Consume(
             ConsumeContext<IGetAllMovesRequestContract> context)
         {
-            var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<IGetAllMovesRequestContract>) _services
-                .GetService(typeof(ILogger<IGetAllMovesRequestContract>));
-            var message = context.Message;
             var result =
-                await new LoggedPipeNode<IGetAllMovesRequestContract, IGetAllMovesResultContract>(logger,
-                    new GetAllMovesRequest(dbContext, bus)).Ask(message, context.CancellationToken);
-            switch (result)
-            {
-                case IGetAllMovesSuccessResultContract:
-                    await context.RespondAsync<IGetAllMovesSuccessResultContract>(result);
-                    break;
-                case IGetAllMovesErrorResultContract:
-                    await context.RespondAsync<IGetAllMovesErrorResultContract>(result);
-                    break;
-            }
+                await new LoggedUseCasePipeNode<IGetAllMovesRequestContract, IGetAllMovesResultContract>(
+                        _services.GetService(typeof(ILogger<IGetAllMovesRequestContract>)) as ILogger<IGetAllMovesRequestContract>,
+                        new GetAllMovesRequest(                            
+                            _services.GetService(typeof(ApplicationContext)) as ApplicationContext,
+                            _services.GetService(typeof(IBus)) as IBus))
+                    .Ask(context.Message, context.CancellationToken);
+            await context.RespondAsync(result);
         }
     }
 }

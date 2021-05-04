@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Storage.Processor.Models;
 using Nano35.Storage.Processor.Services;
@@ -10,7 +11,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.CreateCancellation
 {
     public class CreateCancellationRequest :
-        EndPointNodeBase<ICreateCancellationRequestContract, ICreateCancellationResultContract>
+        UseCaseEndPointNodeBase<ICreateCancellationRequestContract, ICreateCancellationResultContract>
     {
         private readonly ApplicationContext _context;
 
@@ -20,7 +21,7 @@ namespace Nano35.Storage.Processor.UseCases.CreateCancellation
             _context = context;
         }
         
-        public override async Task<ICreateCancellationResultContract> Ask(
+        public override async Task<UseCaseResponse<ICreateCancellationResultContract>> Ask(
             ICreateCancellationRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -45,9 +46,9 @@ namespace Nano35.Storage.Processor.UseCases.CreateCancellation
                     FromUnitId = input.UnitId,
                     Id = a.NewId,
                 });
-            
-            if (input.NewId == Guid.Empty) return new CreateCancellationErrorResultContract();
-            if (input.InstanceId == Guid.Empty) return new CreateCancellationErrorResultContract();
+
+            if (input.NewId == Guid.Empty) return new UseCaseResponse<ICreateCancellationResultContract>("");
+            if (input.InstanceId == Guid.Empty) return new UseCaseResponse<ICreateCancellationResultContract>("");
             
             foreach (var item in input.Details)
             {
@@ -73,8 +74,8 @@ namespace Nano35.Storage.Processor.UseCases.CreateCancellation
             await _context.Cancellations.AddAsync(cancellation, cancellationToken);
             
             await _context.CancellationsDetails.AddRangeAsync(cancellationDetails, cancellationToken);
-                    
-            return new CreateCancellationSuccessResultContract();
+
+            return new UseCaseResponse<ICreateCancellationResultContract>(new CreateCancellationResultContract());
         }
     }
 }

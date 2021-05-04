@@ -21,24 +21,18 @@ namespace Nano35.Storage.Processor.UseCases.CreateSalle
         public async Task Consume(
             ConsumeContext<ICreateSelleRequestContract> context)
         {
-            var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var result = await new LoggedPipeNode<ICreateSelleRequestContract, ICreateSelleResultContract>(
-                _services.GetService(typeof(ILogger<ICreateSelleRequestContract>)) as ILogger<ICreateSelleRequestContract>,
-                new TransactedPipeNode<ICreateSelleRequestContract, ICreateSelleResultContract>(
-                    dbContext,
-                    new CreateSelleRequest(
-                        dbContext,
-                        _services.GetService(typeof(IBus)) as IBus)))
-                .Ask(context.Message, context.CancellationToken);
-            switch (result)
-            {
-                case ICreateSelleSuccessResultContract:
-                    await context.RespondAsync<ICreateSelleSuccessResultContract>(result);
-                    break;
-                case ICreateSelleErrorResultContract:
-                    await context.RespondAsync<ICreateSelleErrorResultContract>(result);
-                    break;
-            }
+            var result =
+                await new LoggedUseCasePipeNode<ICreateSelleRequestContract, ICreateSelleResultContract>(
+                        _services.GetService(typeof(ILogger<ICreateSelleRequestContract>)) as
+                            ILogger<ICreateSelleRequestContract>,
+                        new TransactedUseCasePipeNode<ICreateSelleRequestContract,
+                            ICreateSelleResultContract>(
+                            _services.GetService(typeof(ApplicationContext)) as ApplicationContext,
+                            new CreateSelleRequest(
+                                _services.GetService(typeof(ApplicationContext)) as ApplicationContext,
+                                _services.GetService(typeof(IBus)) as IBus)))
+                    .Ask(context.Message, context.CancellationToken);
+            await context.RespondAsync(result);
         }
     }
 }

@@ -21,21 +21,14 @@ namespace Nano35.Storage.Processor.UseCases.GetCancellationById
         public async Task Consume(
             ConsumeContext<IGetCancellationByIdRequestContract> context)
         {
-            var result = await new LoggedPipeNode<IGetCancellationByIdRequestContract, IGetCancellationByIdResultContract>(
-                _services.GetService(typeof(ILogger<IGetCancellationByIdRequestContract>)) as ILogger<IGetCancellationByIdRequestContract>,
-                new GetCancellationByIdRequest(
-                    _services.GetService(typeof(ApplicationContext)) as ApplicationContext,
-                    _services.GetService(typeof(IBus)) as IBus))
-                .Ask(context.Message, context.CancellationToken);
-            switch (result)
-            {
-                case IGetCancellationByIdSuccessResultContract:
-                    await context.RespondAsync<IGetCancellationByIdSuccessResultContract>(result);
-                    break;
-                case IGetCancellationByIdErrorResultContract:
-                    await context.RespondAsync<IGetCancellationByIdErrorResultContract>(result);
-                    break;
-            }
+            var result =
+                await new LoggedUseCasePipeNode<IGetCancellationByIdRequestContract, IGetCancellationByIdResultContract>(
+                        _services.GetService(typeof(ILogger<IGetCancellationByIdRequestContract>)) as ILogger<IGetCancellationByIdRequestContract>,
+                        new GetCancellationByIdRequest(                            
+                            _services.GetService(typeof(ApplicationContext)) as ApplicationContext,
+                            _services.GetService(typeof(IBus)) as IBus))
+                    .Ask(context.Message, context.CancellationToken);
+            await context.RespondAsync(result);
         }
     }
 }

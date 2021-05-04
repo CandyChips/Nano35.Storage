@@ -9,8 +9,7 @@ using Nano35.Contracts.Storage.Models;
 
 namespace Nano35.Storage.Processor.Models
 {
-    public class Coming :
-        ICastable
+    public class Coming 
     {
         public Guid Id { get; set; }
         public Guid InstanceId { get; set; }

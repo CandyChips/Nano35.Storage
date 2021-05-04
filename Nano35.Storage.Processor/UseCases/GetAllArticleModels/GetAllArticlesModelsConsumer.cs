@@ -17,20 +17,13 @@ namespace Nano35.Storage.Processor.UseCases.GetAllArticleModels
         public async Task Consume(
             ConsumeContext<IGetAllArticlesModelsRequestContract> context)
         {
-            var result = await new LoggedPipeNode<IGetAllArticlesModelsRequestContract, IGetAllArticlesModelsResultContract>(
-                _services.GetService(typeof(ILogger<IGetAllArticlesModelsRequestContract>)) as ILogger<IGetAllArticlesModelsRequestContract>,
-                new GetAllArticlesModelsRequest(
-                    _services.GetService(typeof(ApplicationContext)) as ApplicationContext))
-                .Ask(context.Message, context.CancellationToken);
-            switch (result)
-            {
-                case IGetAllArticlesModelsSuccessResultContract:
-                    await context.RespondAsync<IGetAllArticlesModelsSuccessResultContract>(result);
-                    break;
-                case IGetAllArticlesModelsErrorResultContract:
-                    await context.RespondAsync<IGetAllArticlesModelsErrorResultContract>(result);
-                    break;
+                var result =
+                    await new LoggedUseCasePipeNode<IGetAllArticlesModelsRequestContract, IGetAllArticlesModelsResultContract>(
+                            _services.GetService(typeof(ILogger<IGetAllArticlesModelsRequestContract>)) as ILogger<IGetAllArticlesModelsRequestContract>,
+                            new GetAllArticlesModelsRequest(                            
+                                _services.GetService(typeof(ApplicationContext)) as ApplicationContext))
+                        .Ask(context.Message, context.CancellationToken);
+                await context.RespondAsync(result);
             }
-        }
     }
 }

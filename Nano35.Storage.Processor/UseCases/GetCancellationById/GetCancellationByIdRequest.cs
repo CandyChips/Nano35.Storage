@@ -13,7 +13,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.GetCancellationById
 {
     public class GetCancellationByIdRequest :
-        EndPointNodeBase<IGetCancellationByIdRequestContract, IGetCancellationByIdResultContract>
+        UseCaseEndPointNodeBase<IGetCancellationByIdRequestContract, IGetCancellationByIdResultContract>
     {
         private readonly ApplicationContext _context;
         private readonly IBus _bus;
@@ -25,7 +25,7 @@ namespace Nano35.Storage.Processor.UseCases.GetCancellationById
             _bus = bus;
         }
         
-        public override async Task<IGetCancellationByIdResultContract> Ask(
+        public override async Task<UseCaseResponse<IGetCancellationByIdResultContract>> Ask(
             IGetCancellationByIdRequestContract input, 
             CancellationToken cancellationToken)
         {
@@ -48,7 +48,7 @@ namespace Nano35.Storage.Processor.UseCases.GetCancellationById
                 _ => throw new Exception()
             };
 
-            return new GetCancellationByIdSuccessResultContract() {Cancellation = cancellation};
+            return new UseCaseResponse<IGetCancellationByIdResultContract>(new GetCancellationByIdResultContract(){Cancellation = cancellation});
         }
     }   
 }

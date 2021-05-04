@@ -37,35 +37,66 @@ namespace Nano35.Storage.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllStorageItemsSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllStorageItemsErrorHttpResponse))] 
         public async Task<IActionResult> GetAllStorageItems(
-            [FromQuery] GetAllStorageItemsQuery header) => 
-            await new CanonicalizedGetAllStorageItemsRequest(
-                    new LoggedPipeNode<IGetAllStorageItemsRequestContract, IGetAllStorageItemsResultContract>(
+            [FromQuery] GetAllStorageItemsQuery header) 
+        {
+            var result =
+                await new LoggedUseCasePipeNode<IGetAllStorageItemsRequestContract, IGetAllStorageItemsResultContract>(
                         _services.GetService(typeof(ILogger<IGetAllStorageItemsRequestContract>)) as ILogger<IGetAllStorageItemsRequestContract>,
-                        new GetAllStorageItemsUseCase(_services.GetService(typeof(IBus)) as IBus)))
-                .Ask(header);
+                        new GetAllStorageItemsUseCase(
+                            _services.GetService((typeof(IBus))) as IBus))
+                    .Ask(new GetAllStorageItemsRequestContract()
+                    {
+                        InstanceId = header.InstanceId
+                    });
+            
+            return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
+        }
 
         [HttpGet("{id}")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetStorageItemByIdSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetStorageItemByIdErrorHttpResponse))] 
-        public async Task<IActionResult> GetStorageItemById(Guid id) => 
-            await new CanonicalizedGetStorageItemByIdRequest(
-                    new LoggedPipeNode<IGetStorageItemByIdRequestContract, IGetStorageItemByIdResultContract>(
+        public async Task<IActionResult> GetStorageItemById(Guid id) 
+        {
+            var result =
+                await new LoggedUseCasePipeNode<IGetStorageItemByIdRequestContract, IGetStorageItemByIdResultContract>(
                         _services.GetService(typeof(ILogger<IGetStorageItemByIdRequestContract>)) as ILogger<IGetStorageItemByIdRequestContract>,
-                            new GetStorageItemByIdUseCase(_services.GetService(typeof(IBus)) as IBus)))
-                    .Ask(id);
+                        new GetStorageItemByIdUseCase(
+                            _services.GetService((typeof(IBus))) as IBus))
+                    .Ask(new GetStorageItemByIdRequestContract()
+                    {
+                        Id = id
+                    });
+            
+            return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
+        }
         
         [HttpPost]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateStorageItemSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateStorageItemErrorHttpResponse))] 
         public async Task<IActionResult> CreateStorageItem(
-            [FromBody] CreateStorageItemHttpBody body) =>
-            await new CanonicalizedCreateStorageItemRequest(
-                    new LoggedPipeNode<ICreateStorageItemRequestContract, ICreateStorageItemResultContract>(
+            [FromBody] CreateStorageItemHttpBody body) 
+        {
+            var result =
+                await new LoggedUseCasePipeNode<ICreateStorageItemRequestContract, ICreateStorageItemResultContract>(
                         _services.GetService(typeof(ILogger<ICreateStorageItemRequestContract>)) as ILogger<ICreateStorageItemRequestContract>,
-                        new CreateStorageItemUseCase(_services.GetService(typeof(IBus)) as IBus)))
-                .Ask(body);
+                        new CreateStorageItemUseCase(
+                            _services.GetService((typeof(IBus))) as IBus))
+                    .Ask(new CreateStorageItemRequestContract()
+                    {
+                        NewId = body.NewId,
+                        InstanceId = body.InstanceId,
+                        Comment = body.Comment,
+                        HiddenComment = body.HiddenComment,
+                        RetailPrice = body.RetailPrice,
+                        PurchasePrice = body.PurchasePrice,
+                        ArticleId = body.ArticleId,
+                        ConditionId = body.ConditionId
+                    });
+            
+            return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
+        }
         
         [HttpPatch]
         [Route("Article")]

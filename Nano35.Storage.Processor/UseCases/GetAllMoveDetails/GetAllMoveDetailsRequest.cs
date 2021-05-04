@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
+using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Contracts.Storage.Models;
 using Nano35.Storage.Processor.Services;
@@ -12,7 +13,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.GetAllMoveDetails
 {
     public class GetAllMoveDetailsRequest :
-        EndPointNodeBase<IGetAllMoveDetailsRequestContract, IGetAllMoveDetailsResultContract>
+        UseCaseEndPointNodeBase<IGetAllMoveDetailsRequestContract, IGetAllMoveDetailsResultContract>
     {
         private readonly ApplicationContext _context;
         private readonly IBus _bus;
@@ -25,7 +26,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllMoveDetails
             _bus = bus;
         }
 
-        public override async Task<IGetAllMoveDetailsResultContract> Ask(
+        public override async Task<UseCaseResponse<IGetAllMoveDetailsResultContract>> Ask(
             IGetAllMoveDetailsRequestContract input, 
             CancellationToken cancellationToken)
         {
@@ -40,7 +41,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllMoveDetails
                      StorageItem = a.FromWarehouse.StorageItem.ToString()})
                 .ToListAsync(cancellationToken: cancellationToken);
 
-            return new GetAllMoveDetailsSuccessResultContract() { Data = result };
+            return new UseCaseResponse<IGetAllMoveDetailsResultContract>(new GetAllMoveDetailsResultContract(){Data = result});
         }
     }   
 }

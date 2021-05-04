@@ -7,8 +7,7 @@ using Nano35.Contracts.Storage.Models;
 
 namespace Nano35.Storage.Processor.Models
 {
-    public class StorageItemCondition :
-        ICastable
+    public class StorageItemCondition 
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

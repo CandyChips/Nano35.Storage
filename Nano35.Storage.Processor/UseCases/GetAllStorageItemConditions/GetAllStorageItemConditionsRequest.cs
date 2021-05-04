@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Contracts.Storage.Models;
 using Nano35.Storage.Processor.Services;
@@ -9,7 +10,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemConditions
 {
     public class GetAllStorageItemConditionsRequest :
-        EndPointNodeBase<IGetAllStorageItemConditionsRequestContract, IGetAllStorageItemConditionsResultContract>
+        UseCaseEndPointNodeBase<IGetAllStorageItemConditionsRequestContract, IGetAllStorageItemConditionsResultContract>
     {
         private readonly ApplicationContext _context;
 
@@ -19,7 +20,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemConditions
             _context = context;
         }
         
-        public override async Task<IGetAllStorageItemConditionsResultContract> Ask
+        public override async Task<UseCaseResponse<IGetAllStorageItemConditionsResultContract>> Ask
             (IGetAllStorageItemConditionsRequestContract input, 
             CancellationToken cancellationToken)
         {
@@ -31,7 +32,8 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemConditions
                          Name = a.Name})
                 .ToListAsync(cancellationToken: cancellationToken);
 
-            return new GetAllStorageItemConditionsSuccessResultContract() {Data = result};
+            return new UseCaseResponse<IGetAllStorageItemConditionsResultContract>(
+                new GetAllStorageItemConditionsResultContract() {Data = result});
         }
     }   
 }

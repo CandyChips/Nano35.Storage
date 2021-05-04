@@ -38,53 +38,73 @@ namespace Nano35.Storage.Api.Controllers
         [HttpGet]
         [Route("PlacesOfStorageItemOnUnit")]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllPlacesOfStorageItemOnUnitSuccessResultContract))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllPlacesOfStorageItemOnUnitErrorResultContract))] 
-        public async Task<IActionResult> GetAllPlacesOfStorageItemOnUnit([FromQuery] GetAllPlacesOfStorageItemOnUnitHttpQuery body) =>
-            await new CanonicalizedGetAllPlacesOfStorageItemOnUnitRequest(
-                new LoggedPipeNode<IGetAllPlacesOfStorageItemOnUnitRequestContract, IGetAllPlacesOfStorageItemOnUnitResultContract>(
-                    _services.GetService(typeof(ILogger<IGetAllPlacesOfStorageItemOnUnitRequestContract>)) as ILogger<IGetAllPlacesOfStorageItemOnUnitRequestContract>,
-                    new GetAllPlacesOfStorageItemOnUnitUseCase(
-                        _services.GetService(typeof(IBus)) as IBus)))
-                .Ask(body);
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllPlacesOfStorageItemOnUnitSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllPlacesOfStorageItemOnUnitErrorHttpResponse))] 
+        public async Task<IActionResult> GetAllPlacesOfStorageItemOnUnit([FromQuery] GetAllPlacesOfStorageItemOnUnitHttpQuery body) 
+        {
+            var result =
+                await new LoggedUseCasePipeNode<IGetAllPlacesOfStorageItemOnUnitRequestContract, IGetAllPlacesOfStorageItemOnUnitResultContract>(
+                        _services.GetService(typeof(ILogger<IGetAllPlacesOfStorageItemOnUnitRequestContract>)) as ILogger<IGetAllPlacesOfStorageItemOnUnitRequestContract>,
+                        new GetAllPlacesOfStorageItemOnUnitUseCase(
+                            _services.GetService((typeof(IBus))) as IBus))
+                    .Ask(new GetAllPlacesOfStorageItemOnUnitRequestContract()
+                    {
+                        StorageItemId = body.StorageItemId,
+                        UnitContainsStorageItemId = body.UnitContainsStorageItemId
+                    });
+            
+            return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
+        }
         
         [HttpGet]
         [Route("PlacesOfStorageItemOnInstance")]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllPlacesOfStorageItemOnInstanceSuccessResultContract))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllPlacesOfStorageItemOnInstanceErrorResultContract))] 
-        public async Task<IActionResult> GetAllPlacesOfStorageItemOnInstance([FromQuery] GetAllPlacesOfStorageItemOnInstanceHttpQuery body) =>
-            await new CanonicalizedGetAllPlacesOfStorageItemOnInstanceRequest(
-                    new LoggedPipeNode<IGetAllPlacesOfStorageItemOnInstanceContract, IGetAllPlacesOfStorageItemOnInstanceResultContract>(
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllPlacesOfStorageItemOnInstanceSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllPlacesOfStorageItemOnInstanceErrorHttpResponse))] 
+        public async Task<IActionResult> GetAllPlacesOfStorageItemOnInstance([FromQuery] GetAllPlacesOfStorageItemOnInstanceHttpQuery body) 
+        {
+            var result =
+                await new LoggedUseCasePipeNode<IGetAllPlacesOfStorageItemOnInstanceContract, IGetAllPlacesOfStorageItemOnInstanceResultContract>(
                         _services.GetService(typeof(ILogger<IGetAllPlacesOfStorageItemOnInstanceContract>)) as ILogger<IGetAllPlacesOfStorageItemOnInstanceContract>,
                         new GetAllPlacesOfStorageItemOnInstanceUseCase(
-                            _services.GetService(typeof(IBus)) as IBus)))
-                .Ask(body);
+                            _services.GetService((typeof(IBus))) as IBus))
+                    .Ask(new GetAllPlacesOfStorageItemOnInstanceContract(){StorageItemId = body.StorageItemId});
+            
+            return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
+        }
         
         [HttpGet]
         [Route("StorageItemsOnInstance")]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllStorageItemsOnInstanceSuccessResultContract))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllStorageItemsOnInstanceErrorResultContract))] 
-        public async Task<IActionResult> GetAllStorageItemsOnInstance([FromQuery] GetAllStorageItemsOnInstanceHttpQuery body) =>
-            await new CanonicalizedGetAllStorageItemsOnInstanceRequest(
-                    new LoggedPipeNode<IGetAllStorageItemsOnInstanceContract, IGetAllStorageItemsOnInstanceResultContract>(
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllStorageItemsOnInstanceSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllStorageItemsOnInstanceErrorHttpResponse))] 
+        public async Task<IActionResult> GetAllStorageItemsOnInstance([FromQuery] GetAllStorageItemsOnInstanceHttpQuery body) 
+        {
+            var result =
+                await new LoggedUseCasePipeNode<IGetAllStorageItemsOnInstanceContract, IGetAllStorageItemsOnInstanceResultContract>(
                         _services.GetService(typeof(ILogger<IGetAllStorageItemsOnInstanceContract>)) as ILogger<IGetAllStorageItemsOnInstanceContract>,
                         new GetAllStorageItemsOnInstanceUseCase(
-                            _services.GetService(typeof(IBus)) as IBus)))
-                .Ask(body);
+                            _services.GetService((typeof(IBus))) as IBus))
+                    .Ask(new GetAllStorageItemsOnInstanceContract(){InstanceId = body.InstanceId});
+            
+            return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
+        }
         
         [HttpGet]
         [Route("StorageItemsOnUnit")]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllStorageItemsOnUnitSuccessResultContract))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllStorageItemsOnUnitErrorResultContract))] 
-        public async Task<IActionResult> GetAllStorageItemsOnUnit([FromQuery] GetAllStorageItemsOnUnitHttpQuery body) =>
-            await new CanonicalizedGetAllStorageItemsOnUnitRequest(
-                new LoggedPipeNode<IGetAllStorageItemsOnUnitContract, IGetAllStorageItemsOnUnitResultContract>(
-                    _services.GetService(typeof(ILogger<IGetAllStorageItemsOnUnitContract>)) as ILogger<IGetAllStorageItemsOnUnitContract>,
-                    new GetAllStorageItemsOnUnitUseCase(
-                        _services.GetService(typeof(IBus)) as IBus)))
-                .Ask(body);
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllStorageItemsOnUnitSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllStorageItemsOnUnitErrorHttpResponse))] 
+        public async Task<IActionResult> GetAllStorageItemsOnUnit([FromQuery] GetAllStorageItemsOnUnitHttpQuery body) 
+        {
+            var result =
+                await new LoggedUseCasePipeNode<IGetAllStorageItemsOnUnitContract, IGetAllStorageItemsOnUnitResultContract>(
+                        _services.GetService(typeof(ILogger<IGetAllStorageItemsOnUnitContract>)) as ILogger<IGetAllStorageItemsOnUnitContract>,
+                        new GetAllStorageItemsOnUnitUseCase(
+                            _services.GetService((typeof(IBus))) as IBus))
+                    .Ask(new GetAllStorageItemsOnUnitContract(){UnitId = body.UnitId});
+            
+            return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
+        }
     }
 }

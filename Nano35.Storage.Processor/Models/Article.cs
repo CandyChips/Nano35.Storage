@@ -8,8 +8,7 @@ using Nano35.Contracts.Storage.Models;
 
 namespace Nano35.Storage.Processor.Models
 {
-    public class Article :
-        ICastable
+    public class Article 
     {
         public Guid Id { get; init; }
         public Guid InstanceId { get; init; }

@@ -21,24 +21,14 @@ namespace Nano35.Storage.Processor.UseCases.GetAllPlacesOfStorageItemOnInstance
         public async Task Consume(
             ConsumeContext<IGetAllPlacesOfStorageItemOnInstanceContract> context)
         {
-            var bus = (IBus) _services.GetService(typeof(IBus));
-            var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<IGetAllPlacesOfStorageItemOnInstanceContract>) _services
-                .GetService(typeof(ILogger<IGetAllPlacesOfStorageItemOnInstanceContract>));
-            var message = context.Message;
             var result =
-                await new LoggedPipeNode<IGetAllPlacesOfStorageItemOnInstanceContract, IGetAllPlacesOfStorageItemOnInstanceResultContract>(logger,
-                    new GetAllPlacesOfStorageItemOnInstanceRequest(dbContext, bus)
-                ).Ask(message, context.CancellationToken);
-            switch (result)
-            {
-                case IGetAllPlacesOfStorageItemOnInstanceSuccessResultContract:
-                    await context.RespondAsync<IGetAllPlacesOfStorageItemOnInstanceSuccessResultContract>(result);
-                    break;
-                case IGetAllPlacesOfStorageItemOnInstanceErrorResultContract:
-                    await context.RespondAsync<IGetAllPlacesOfStorageItemOnInstanceErrorResultContract>(result);
-                    break;
-            }
+                await new LoggedUseCasePipeNode<IGetAllPlacesOfStorageItemOnInstanceContract, IGetAllPlacesOfStorageItemOnInstanceResultContract>(
+                        _services.GetService(typeof(ILogger<IGetAllPlacesOfStorageItemOnInstanceContract>)) as ILogger<IGetAllPlacesOfStorageItemOnInstanceContract>,
+                        new GetAllPlacesOfStorageItemOnInstanceRequest(                            
+                            _services.GetService(typeof(ApplicationContext)) as ApplicationContext,
+                            _services.GetService(typeof(IBus)) as IBus))
+                    .Ask(context.Message, context.CancellationToken);
+            await context.RespondAsync(result);
         }
     }
 }

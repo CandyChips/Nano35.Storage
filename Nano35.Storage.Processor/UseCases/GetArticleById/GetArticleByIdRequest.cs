@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Contracts.Storage.Models;
 using Nano35.Storage.Processor.Services;
@@ -9,7 +10,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.GetArticleById
 {
     public class GetArticleByIdRequest :
-        EndPointNodeBase<IGetArticleByIdRequestContract, IGetArticleByIdResultContract>
+        UseCaseEndPointNodeBase<IGetArticleByIdRequestContract, IGetArticleByIdResultContract>
     {
         private readonly ApplicationContext _context;
 
@@ -19,7 +20,7 @@ namespace Nano35.Storage.Processor.UseCases.GetArticleById
             _context = context;
         }
         
-        public override async Task<IGetArticleByIdResultContract> Ask(
+        public override async Task<UseCaseResponse<IGetArticleByIdResultContract>> Ask(
             IGetArticleByIdRequestContract input, 
             CancellationToken cancellationToken)
         {
@@ -36,7 +37,8 @@ namespace Nano35.Storage.Processor.UseCases.GetArticleById
                 Info = result.Info
             };
 
-            return new GetArticleByIdSuccessResultContract() {Data = article};
+            return new UseCaseResponse<IGetArticleByIdResultContract>(
+                new GetArticleByIdResultContract() {Data = article});
         }
     }   
 }

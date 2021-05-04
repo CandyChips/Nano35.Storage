@@ -17,20 +17,13 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemConditions
         public async Task Consume(
             ConsumeContext<IGetAllStorageItemConditionsRequestContract> context)
         {
-            var result = await new LoggedPipeNode<IGetAllStorageItemConditionsRequestContract, IGetAllStorageItemConditionsResultContract>(
-                _services.GetService(typeof(ILogger<IGetAllStorageItemConditionsRequestContract>)) as ILogger<IGetAllStorageItemConditionsRequestContract>,
-                new GetAllStorageItemConditionsRequest(
-                    _services.GetService(typeof(ApplicationContext)) as ApplicationContext))
-                .Ask(context.Message, context.CancellationToken);
-            switch (result)
-            {
-                case IGetAllStorageItemConditionsSuccessResultContract:
-                    await context.RespondAsync<IGetAllStorageItemConditionsSuccessResultContract>(result);
-                    break;
-                case IGetAllStorageItemConditionsErrorResultContract:
-                    await context.RespondAsync<IGetAllStorageItemConditionsErrorResultContract>(result);
-                    break;
-            }
+            var result =
+                await new LoggedUseCasePipeNode<IGetAllStorageItemConditionsRequestContract, IGetAllStorageItemConditionsResultContract>(
+                        _services.GetService(typeof(ILogger<IGetAllStorageItemConditionsRequestContract>)) as ILogger<IGetAllStorageItemConditionsRequestContract>,
+                        new GetAllStorageItemConditionsRequest(                            
+                            _services.GetService(typeof(ApplicationContext)) as ApplicationContext))
+                    .Ask(context.Message, context.CancellationToken);
+            await context.RespondAsync(result);
         }
     }
 }

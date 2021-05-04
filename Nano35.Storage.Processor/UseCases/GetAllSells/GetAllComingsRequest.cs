@@ -14,7 +14,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.GetAllSells
 {
     public class GetAllSellsRequest :
-        EndPointNodeBase<IGetAllSellsRequestContract, IGetAllSellsResultContract>
+        UseCaseEndPointNodeBase<IGetAllSellsRequestContract, IGetAllSellsResultContract>
     {
         private readonly ApplicationContext _context;
         private readonly IBus _bus;
@@ -27,7 +27,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllSells
             _bus = bus;
         }
 
-        public override async Task<IGetAllSellsResultContract> Ask
+        public override async Task<UseCaseResponse<IGetAllSellsResultContract>> Ask
             (IGetAllSellsRequestContract input, CancellationToken cancellationToken)
         {
             var sells = (await _context
@@ -51,8 +51,8 @@ namespace Nano35.Storage.Processor.UseCases.GetAllSells
                         }
                     })
                 .ToList();
-            
-            return new GetAllSellsSuccessResultContract() {Data = sells};
+
+            return new UseCaseResponse<IGetAllSellsResultContract>(new GetAllSellsResultContract() {Data = sells});
         }
     }   
 }

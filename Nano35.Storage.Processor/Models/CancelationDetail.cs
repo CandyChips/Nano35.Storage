@@ -5,8 +5,7 @@ using Nano35.Contracts;
 
 namespace Nano35.Storage.Processor.Models
 {
-    public class CancelationDetail :
-        ICastable
+    public class CancelationDetail 
     {
         public Guid Id { get; set; }
         public int Count { get; set; }

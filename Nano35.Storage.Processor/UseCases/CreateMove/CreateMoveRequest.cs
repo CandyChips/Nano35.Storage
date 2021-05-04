@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Storage.Processor.Models;
 using Nano35.Storage.Processor.Services;
@@ -10,14 +11,14 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.CreateMove
 {
     public class CreateMoveRequest :
-        EndPointNodeBase<ICreateMoveRequestContract, ICreateMoveResultContract>
+        UseCaseEndPointNodeBase<ICreateMoveRequestContract, ICreateMoveResultContract>
     {
         private readonly ApplicationContext _context;
         public CreateMoveRequest(ApplicationContext context)
         {
             _context = context;
         }
-        public override async Task<ICreateMoveResultContract> Ask(
+        public override async Task<UseCaseResponse<ICreateMoveResultContract>> Ask(
             ICreateMoveRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -75,7 +76,7 @@ namespace Nano35.Storage.Processor.UseCases.CreateMove
             }
             await _context.Moves.AddAsync(move, cancellationToken);
             await _context.MoveDetails.AddRangeAsync(moveDetails, cancellationToken);
-            return new CreateMoveSuccessResultContract();
+            return new UseCaseResponse<ICreateMoveResultContract>(new CreateMoveResultContract());
         }
     }
 }

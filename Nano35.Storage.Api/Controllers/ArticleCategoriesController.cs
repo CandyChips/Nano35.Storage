@@ -30,12 +30,17 @@ namespace Nano35.Storage.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllArticleCategoriesSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllArticleCategoriesErrorHttpResponse))]
         public async Task<IActionResult> GetAllArticleCategories(
-            [FromQuery] GetAllArticlesCategoriesHttpQuery query) =>
-            await new CanonicalizedGetAllArticleCategoriesRequest(
-                    new LoggedPipeNode<IGetAllArticlesCategoriesRequestContract, IGetAllArticlesCategoriesResultContract>(
-                        _services.GetService(typeof(ILogger<IGetAllArticlesCategoriesRequestContract>)) as ILogger<IGetAllArticlesCategoriesRequestContract>,
-                        new GetAllArticleCategoriesUseCase(
-                            _services.GetService(typeof(IBus)) as IBus)))
-                .Ask(query);
+            [FromQuery] GetAllArticlesCategoriesHttpQuery query)
+        {
+
+            var result =
+                await new LoggedUseCasePipeNode<IGetAllArticlesCategoriesRequestContract,
+                        IGetAllArticlesCategoriesResultContract>(
+                        _services.GetService(typeof(ILogger<IGetAllArticlesCategoriesRequestContract>)) as
+                            ILogger<IGetAllArticlesCategoriesRequestContract>,
+                        new GetAllArticleCategoriesUseCase(_services.GetService(typeof(IBus)) as IBus))
+                    .Ask(new GetAllArticlesCategoriesRequestContract() { ParentId= query.ParentId, InstanceId = query.InstanceId});
+            return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
+        }
     }
 }

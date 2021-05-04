@@ -14,7 +14,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.CreateComing
 {
     public class CreateComingRequest :
-        EndPointNodeBase<ICreateComingRequestContract, ICreateComingResultContract>
+        UseCaseEndPointNodeBase<ICreateComingRequestContract, ICreateComingResultContract>
     {
         private readonly ApplicationContext _context;
         private readonly IBus _bus;
@@ -26,7 +26,7 @@ namespace Nano35.Storage.Processor.UseCases.CreateComing
             _bus = bus;
         }
         
-        public override async Task<ICreateComingResultContract> Ask(
+        public override async Task<UseCaseResponse<ICreateComingResultContract>> Ask(
             ICreateComingRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -70,15 +70,16 @@ namespace Nano35.Storage.Processor.UseCases.CreateComing
             }
 
             if (!comingDetails.Any())
-                return new CreateComingErrorResultContract();
+                return new UseCaseResponse<ICreateComingResultContract>("");
             if (coming.ClientId == Guid.Empty)
-                return new CreateComingErrorResultContract();
+                return new UseCaseResponse<ICreateComingResultContract>("");
             if (coming.InstanceId == Guid.Empty)
-                return new CreateComingErrorResultContract();
+                return new UseCaseResponse<ICreateComingResultContract>("");
             if (coming.Id == Guid.Empty)
-                return new CreateComingErrorResultContract();
+                return new UseCaseResponse<ICreateComingResultContract>("");
 
-            new CreateComingCashOperation(_bus, 
+            await new MasstransitUseCaseRequest<ICreateComingCashOperationRequestContract,
+                ICreateComingCashOperationResultContract>(_bus,
                 new CreateComingCashOperationRequestContract()
                 {
                     NewId = Guid.NewGuid(),
@@ -86,13 +87,13 @@ namespace Nano35.Storage.Processor.UseCases.CreateComing
                     ComingId = input.NewId,
                     Cash = input.Details.Select(a => a.Price * a.Count).Sum(),
                     Description = "Оплата оприходования."
-                });
+                }).GetResponse();
             
             await _context.Comings.AddAsync(coming, cancellationToken);
             
             await _context.ComingDetails.AddRangeAsync(comingDetails, cancellationToken);
-                    
-            return new CreateComingSuccessResultContract();
+
+            return new UseCaseResponse<ICreateComingResultContract>(new CreateComingResultContract());
         }
     }
 }

@@ -21,20 +21,13 @@ namespace Nano35.Storage.Processor.UseCases.GetAllComingDetails
         public async Task Consume(
             ConsumeContext<IGetAllComingDetailsRequestContract> context)
         {
-            var result = await new LoggedPipeNode<IGetAllComingDetailsRequestContract, IGetAllComingDetailsResultContract>(
-                _services.GetService(typeof(ILogger<IGetAllComingDetailsRequestContract>)) as ILogger<IGetAllComingDetailsRequestContract>,
-                new GetAllComingDetailsRequest(
-                    _services.GetService(typeof(ApplicationContext)) as ApplicationContext))
-                .Ask(context.Message, context.CancellationToken);
-            switch (result)
-            {
-                case IGetAllComingDetailsSuccessResultContract:
-                    await context.RespondAsync<IGetAllComingDetailsSuccessResultContract>(result);
-                    break;
-                case IGetAllComingDetailsErrorResultContract:
-                    await context.RespondAsync<IGetAllComingDetailsErrorResultContract>(result);
-                    break;
-            }
+            var result =
+                await new LoggedUseCasePipeNode<IGetAllComingDetailsRequestContract, IGetAllComingDetailsResultContract>(
+                        _services.GetService(typeof(ILogger<IGetAllComingDetailsRequestContract>)) as ILogger<IGetAllComingDetailsRequestContract>,
+                        new GetAllComingDetailsRequest(                            
+                            _services.GetService(typeof(ApplicationContext)) as ApplicationContext))
+                    .Ask(context.Message, context.CancellationToken);
+            await context.RespondAsync(result);
         }
     }
 }

@@ -7,8 +7,7 @@ using Nano35.Contracts.Storage.Models;
 
 namespace Nano35.Storage.Processor.Models
 {
-    public class Spec :
-        ICastable
+    public class Spec 
     {
         public string Key { get; set; }
         public string Value { get; set; }

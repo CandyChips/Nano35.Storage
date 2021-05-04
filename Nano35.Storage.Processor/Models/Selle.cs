@@ -6,8 +6,7 @@ using Nano35.Contracts;
 
 namespace Nano35.Storage.Processor.Models
 {
-    public class Selle :
-        ICastable
+    public class Selle 
     {
         // Primary key
         public Guid Id { get; set; }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Contracts.Storage.Models;
 using Nano35.Storage.Processor.Services;
@@ -11,7 +12,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.GetAllArticleCategories
 {
     public class GetAllArticlesCategoriesRequest :
-        EndPointNodeBase<IGetAllArticlesCategoriesRequestContract, IGetAllArticlesCategoriesResultContract>
+        UseCaseEndPointNodeBase<IGetAllArticlesCategoriesRequestContract, IGetAllArticlesCategoriesResultContract>
     {
         private readonly ApplicationContext _context;
 
@@ -21,7 +22,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllArticleCategories
             _context = context;
         }
         
-        public override async Task<IGetAllArticlesCategoriesResultContract> Ask(
+        public override async Task<UseCaseResponse<IGetAllArticlesCategoriesResultContract>> Ask(
             IGetAllArticlesCategoriesRequestContract input, CancellationToken cancellationToken)
         {
             List<CategoryViewModel> result;
@@ -51,7 +52,9 @@ namespace Nano35.Storage.Processor.UseCases.GetAllArticleCategories
                         })
                     .ToListAsync(cancellationToken: cancellationToken);
             }
-            return new GetAllArticlesCategoriesSuccessResultContract() {Data = result};
+
+            return new UseCaseResponse<IGetAllArticlesCategoriesResultContract>(
+                new GetAllArticlesCategoriesResultContract() {Data = result});
         }
     }   
 }

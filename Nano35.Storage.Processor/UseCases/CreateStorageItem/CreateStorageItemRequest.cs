@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Storage.Processor.Models;
 using Nano35.Storage.Processor.Services;
@@ -7,11 +8,11 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.CreateStorageItem
 {
     public class CreateStorageItemRequest :
-        EndPointNodeBase<ICreateStorageItemRequestContract, ICreateStorageItemResultContract>
+        UseCaseEndPointNodeBase<ICreateStorageItemRequestContract, ICreateStorageItemResultContract>
     {
         private readonly ApplicationContext _context;
         public CreateStorageItemRequest(ApplicationContext context) { _context = context; }
-        public override async Task<ICreateStorageItemResultContract> Ask(
+        public override async Task<UseCaseResponse<ICreateStorageItemResultContract>> Ask(
             ICreateStorageItemRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -26,7 +27,7 @@ namespace Nano35.Storage.Processor.UseCases.CreateStorageItem
                  PurchasePrice = input.PurchasePrice,
                  RetailPrice = input.RetailPrice};
             await _context.StorageItems.AddAsync(item, cancellationToken);
-            return new CreateStorageItemSuccessResultContract();
+            return new UseCaseResponse<ICreateStorageItemResultContract>(new CreateStorageItemResultContract());
         }
     }
 }

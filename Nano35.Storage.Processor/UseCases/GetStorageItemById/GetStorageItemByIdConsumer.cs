@@ -20,21 +20,14 @@ namespace Nano35.Storage.Processor.UseCases.GetStorageItemById
         public async Task Consume(
             ConsumeContext<IGetStorageItemByIdRequestContract> context)
         {
-            var result = await new LoggedPipeNode<IGetStorageItemByIdRequestContract, IGetStorageItemByIdResultContract>(
-                _services.GetService(typeof(ILogger<IGetStorageItemByIdRequestContract>)) as ILogger<IGetStorageItemByIdRequestContract>,
-                new GetStorageItemByIdRequest(
-                    _services.GetService(typeof(ApplicationContext)) as ApplicationContext,
-                    _services.GetService(typeof(IBus)) as IBus))
-                .Ask(context.Message, context.CancellationToken);
-            switch (result)
-            {
-                case IGetStorageItemByIdSuccessResultContract:
-                    await context.RespondAsync<IGetStorageItemByIdSuccessResultContract>(result);
-                    break;
-                case IGetStorageItemByIdErrorResultContract:
-                    await context.RespondAsync<IGetStorageItemByIdErrorResultContract>(result);
-                    break;
-            }
+            var result =
+                await new LoggedUseCasePipeNode<IGetStorageItemByIdRequestContract, IGetStorageItemByIdResultContract>(
+                        _services.GetService(typeof(ILogger<IGetStorageItemByIdRequestContract>)) as ILogger<IGetStorageItemByIdRequestContract>,
+                        new GetStorageItemByIdRequest(                            
+                            _services.GetService(typeof(ApplicationContext)) as ApplicationContext,
+                            _services.GetService(typeof(IBus)) as IBus))
+                    .Ask(context.Message, context.CancellationToken);
+            await context.RespondAsync(result);
         }
     }
 }

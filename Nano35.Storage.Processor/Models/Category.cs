@@ -8,8 +8,7 @@ using Nano35.Contracts.Storage.Models;
 
 namespace Nano35.Storage.Processor.Models
 {
-    public class Category :
-        ICastable
+    public class Category 
     {
         public Guid Id { get; set; }
         public Guid InstanceId { get; set; }

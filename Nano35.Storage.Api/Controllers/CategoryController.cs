@@ -30,13 +30,23 @@ namespace Nano35.Storage.Api.Controllers
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateCategorySuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateCategoryErrorHttpResponse))] 
-        public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryHttpBody body) =>
-            await new CanonicalizedCreateCategoryRequest(
-                    new LoggedPipeNode<ICreateCategoryRequestContract, ICreateCategoryResultContract>(
+        public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryHttpBody body) 
+        {
+            var result =
+                await new LoggedUseCasePipeNode<ICreateCategoryRequestContract, ICreateCategoryResultContract>(
                         _services.GetService(typeof(ILogger<ICreateCategoryRequestContract>)) as ILogger<ICreateCategoryRequestContract>,
                         new CreateCategoryUseCase(
-                            _services.GetService(typeof(IBus)) as IBus)))
-                .Ask(body);
+                            _services.GetService((typeof(IBus))) as IBus))
+                    .Ask(new CreateCategoryRequestContract()
+                    {
+                        NewId = body.NewId,
+                        InstanceId = body.InstanceId,
+                        Name = body.Name,
+                        ParentCategoryId = body.ParentCategoryId
+                    });
+            
+            return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
+        }
         
         [HttpPatch]
         [Route("Name")]

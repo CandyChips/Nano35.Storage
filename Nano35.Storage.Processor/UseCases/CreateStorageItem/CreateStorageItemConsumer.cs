@@ -14,23 +14,17 @@ namespace Nano35.Storage.Processor.UseCases.CreateStorageItem
         public CreateStorageItemConsumer(IServiceProvider services) { _services = services; }
         public async Task Consume(ConsumeContext<ICreateStorageItemRequestContract> context)
         {
-            var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var result = await new LoggedPipeNode<ICreateStorageItemRequestContract, ICreateStorageItemResultContract>(
-                _services.GetService(typeof(ILogger<ICreateStorageItemRequestContract>)) as ILogger<ICreateStorageItemRequestContract>,
-                new TransactedPipeNode<ICreateStorageItemRequestContract, ICreateStorageItemResultContract>(
-                    dbContext,
-                    new CreateStorageItemRequest(
-                        dbContext)))
-                .Ask(context.Message, context.CancellationToken);
-            switch (result)
-            {
-                case ICreateStorageItemSuccessResultContract:
-                    await context.RespondAsync<ICreateStorageItemSuccessResultContract>(result);
-                    break;
-                case ICreateStorageItemErrorResultContract:
-                    await context.RespondAsync<ICreateStorageItemErrorResultContract>(result);
-                    break;
-            }
+            var result =
+                await new LoggedUseCasePipeNode<ICreateStorageItemRequestContract, ICreateStorageItemResultContract>(
+                        _services.GetService(typeof(ILogger<ICreateStorageItemRequestContract>)) as
+                            ILogger<ICreateStorageItemRequestContract>,
+                        new TransactedUseCasePipeNode<ICreateStorageItemRequestContract,
+                            ICreateStorageItemResultContract>(
+                            _services.GetService(typeof(ApplicationContext)) as ApplicationContext,
+                            new CreateStorageItemRequest(
+                                _services.GetService(typeof(ApplicationContext)) as ApplicationContext)))
+                    .Ask(context.Message, context.CancellationToken);
+            await context.RespondAsync(result);
         }
     }
 }

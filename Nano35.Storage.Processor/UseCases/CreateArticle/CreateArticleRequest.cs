@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Storage.Processor.Models;
 using Nano35.Storage.Processor.Services;
@@ -8,7 +9,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.CreateArticle
 {
     public class CreateArticleRequest :
-        EndPointNodeBase<ICreateArticleRequestContract, ICreateArticleResultContract>
+        UseCaseEndPointNodeBase<ICreateArticleRequestContract, ICreateArticleResultContract>
     {
         private readonly ApplicationContext _context;
 
@@ -18,7 +19,7 @@ namespace Nano35.Storage.Processor.UseCases.CreateArticle
             _context = context;
         }
         
-        public override async Task<ICreateArticleResultContract> Ask(
+        public override async Task<UseCaseResponse<ICreateArticleResultContract>> Ask(
             ICreateArticleRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -49,7 +50,7 @@ namespace Nano35.Storage.Processor.UseCases.CreateArticle
                 await _context.Specs.AddRangeAsync(specs, cancellationToken);
             }
 
-            return new CreateArticleSuccessResultContract();
+            return new UseCaseResponse<ICreateArticleResultContract>(new CreateArticleResultContract());
         }
     }
 }

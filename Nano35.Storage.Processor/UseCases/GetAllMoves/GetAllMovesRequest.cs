@@ -15,7 +15,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.GetAllMoves
 {
     public class GetAllMovesRequest :
-        EndPointNodeBase<IGetAllMovesRequestContract, IGetAllMovesResultContract>
+        UseCaseEndPointNodeBase<IGetAllMovesRequestContract, IGetAllMovesResultContract>
     {
         private readonly ApplicationContext _context;
         private readonly IBus _bus;
@@ -28,7 +28,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllMoves
             _bus = bus;
         }
         
-        public override async Task<IGetAllMovesResultContract> Ask
+        public override async Task<UseCaseResponse<IGetAllMovesResultContract>> Ask
             (IGetAllMovesRequestContract input, CancellationToken cancellationToken)
         {
             var moves = await _context
@@ -66,7 +66,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllMoves
                     })
                 .ToList();
 
-            return new GetAllMovesSuccessResultContract() {Data = result};
+            return new UseCaseResponse<IGetAllMovesResultContract>(new GetAllMovesResultContract() {Data = result});
         }
     }   
 }

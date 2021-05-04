@@ -21,21 +21,14 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemsOnInstance
         public async Task Consume(
             ConsumeContext<IGetAllStorageItemsOnInstanceContract> context)
         {
-            var bus = (IBus) _services.GetService(typeof(IBus));
-            var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<IGetAllStorageItemsOnInstanceContract>) _services.GetService(typeof(ILogger<IGetAllStorageItemsOnInstanceContract>));
-            var message = context.Message;
-            var result = await new LoggedPipeNode<IGetAllStorageItemsOnInstanceContract, IGetAllStorageItemsOnInstanceResultContract>(logger,
-                new GetAllStorageItemsOnInstanceRequest(dbContext, bus)).Ask(message, context.CancellationToken);
-            switch (result)
-            {
-                case IGetAllStorageItemsOnInstanceSuccessResultContract:
-                    await context.RespondAsync<IGetAllStorageItemsOnInstanceSuccessResultContract>(result);
-                    break;
-                case IGetAllStorageItemsOnInstanceErrorResultContract:
-                    await context.RespondAsync<IGetAllStorageItemsOnInstanceErrorResultContract>(result);
-                    break;
-            }
+            var result =
+                await new LoggedUseCasePipeNode<IGetAllStorageItemsOnInstanceContract, IGetAllStorageItemsOnInstanceResultContract>(
+                        _services.GetService(typeof(ILogger<IGetAllStorageItemsOnInstanceContract>)) as ILogger<IGetAllStorageItemsOnInstanceContract>,
+                        new GetAllStorageItemsOnInstanceRequest(                            
+                            _services.GetService(typeof(ApplicationContext)) as ApplicationContext,
+                            _services.GetService(typeof(IBus)) as IBus))
+                    .Ask(context.Message, context.CancellationToken);
+            await context.RespondAsync(result);
         }
     }
 }

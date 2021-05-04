@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentValidation;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Storage.Artifacts;
+using Nano35.Contracts.Storage.Models;
 using Nano35.HttpContext.storage;
 using Nano35.Storage.Api.Requests;
 using Nano35.Storage.Api.Requests.CreateArticle;
@@ -35,43 +37,19 @@ namespace Nano35.Storage.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllArticlesErrorHttpResponse))] 
         public async Task<IActionResult> GetAllArticles([FromQuery] GetAllArticlesHttpQuery query)
         {
-            return await new CanonicalizedGetAllArticlesRequest(
-                new LoggedPipeNode<IGetAllArticlesRequestContract, IGetAllArticlesResultContract>(
-                    _services.GetService(typeof(ILogger<IGetAllArticlesRequestContract>)) as ILogger<IGetAllArticlesRequestContract>,
-                    new GetAllArticlesUseCase(
-                        _services.GetService(typeof(IBus)) as IBus)))
-                .Ask(query);
+            var result =
+                await new LoggedUseCasePipeNode<IGetAllArticlesRequestContract, IGetAllArticlesResultContract>(
+                        _services.GetService(typeof(ILogger<IGetAllArticlesRequestContract>)) as ILogger<IGetAllArticlesRequestContract>,
+                        new GetAllArticlesUseCase(
+                            _services.GetService((typeof(IBus))) as IBus))
+                    .Ask(new GetAllArticlesRequestContract()
+                    {
+                        InstanceId = query.InstanceId
+                    });
             
+            return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
         }
-         
-        [HttpGet]
-        [Route("Models")]
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllArticleModelsSuccessHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllArticleModelsErrorHttpResponse))] 
-        public async Task<IActionResult> GetAllArticleModels([FromQuery] GetAllArticleModelsHttpQuery query)
-        {
-            return await new CanonicalizedGetAllArticleModelsRequest(
-                new LoggedPipeNode<IGetAllArticlesModelsRequestContract, IGetAllArticlesModelsResultContract>(
-                    _services.GetService(typeof(ILogger<IGetAllArticlesModelsRequestContract>)) as ILogger<IGetAllArticlesModelsRequestContract>,
-                    new GetAllArticlesModelsUseCase(
-                        _services.GetService(typeof(IBus)) as IBus))).Ask(query);
-        }
-    
-        [HttpGet]
-        [Route("Brands")]
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllArticleBrandsSuccessHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllArticleBrandsErrorHttpResponse))] 
-        public async Task<IActionResult> GetAllArticleBrands([FromQuery] GetAllArticlesBrandsHttpQuery query)
-        {
-            return await new CanonicalizedGetAllArticleBrandsRequest(
-                new LoggedPipeNode<IGetAllArticlesBrandsRequestContract, IGetAllArticlesBrandsResultContract>(
-                    _services.GetService(typeof(ILogger<IGetAllArticlesBrandsRequestContract>)) as ILogger<IGetAllArticlesBrandsRequestContract>,
-                    new GetAllArticleBrandsUseCase(
-                        _services.GetService(typeof(IBus)) as IBus)))
-                .Ask(query);
-        }
+        
     
         [HttpGet("{id}")]
         [Produces("application/json")]
@@ -79,12 +57,17 @@ namespace Nano35.Storage.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetArticleByIdErrorHttpResponse))] 
         public async Task<IActionResult> GetArticleById(Guid id)
         {
-            return await new CanonicalizedGetArticleByIdRequest(
-                new LoggedPipeNode<IGetArticleByIdRequestContract, IGetArticleByIdResultContract>(
-                    _services.GetService(typeof(ILogger<IGetArticleByIdRequestContract>)) as ILogger<IGetArticleByIdRequestContract>,
-                    new GetArticleByIdUseCase(
-                        _services.GetService(typeof(IBus)) as IBus)))
-                .Ask(new GetArticleByIdHttpQuery() {Id = id});
+            var result =
+                await new LoggedUseCasePipeNode<IGetArticleByIdRequestContract, IGetArticleByIdResultContract>(
+                        _services.GetService(typeof(ILogger<IGetArticleByIdRequestContract>)) as ILogger<IGetArticleByIdRequestContract>,
+                        new GetArticleByIdUseCase(
+                            _services.GetService((typeof(IBus))) as IBus))
+                    .Ask(new GetArticleByIdRequestContract()
+                    {
+                        Id = id
+                    });
+            
+            return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
         }
         
         [HttpPost]
@@ -93,12 +76,30 @@ namespace Nano35.Storage.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateArticleErrorHttpResponse))] 
         public async Task<IActionResult> CreateArticle([FromBody] CreateArticleHttpBody body)
         {
-            return await new CanonicalizedCreateArticleRequest(
-                new LoggedPipeNode<ICreateArticleRequestContract, ICreateArticleResultContract>(
-                    _services.GetService(typeof(ILogger<ICreateArticleRequestContract>)) as ILogger<ICreateArticleRequestContract>,
-                    new CreateArticleUseCase(
-                        _services.GetService(typeof(IBus)) as IBus)))
-                .Ask(body);
+            var result =
+                await new LoggedUseCasePipeNode<ICreateArticleRequestContract, ICreateArticleResultContract>(
+                        _services.GetService(typeof(ILogger<ICreateArticleRequestContract>)) as ILogger<ICreateArticleRequestContract>,
+                        new CreateArticleUseCase(
+                            _services.GetService((typeof(IBus))) as IBus))
+                    .Ask(new CreateArticleRequestContract()
+                    {
+                        NewId = body.NewId,
+                        InstanceId = body.InstanceId,
+                        Model = body.Model,
+                        Brand = body.Brand,
+                        CategoryId = body.CategoryId,
+                        Info = body.Info,
+                        Specs = body
+                            .Specs
+                            .Select(a =>
+                                new SpecViewModel()
+                                {
+                                    Key = a.Key,
+                                    Value = a.Value
+                                }).ToList()
+                    });
+            
+            return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
         }
         
         [HttpPatch]

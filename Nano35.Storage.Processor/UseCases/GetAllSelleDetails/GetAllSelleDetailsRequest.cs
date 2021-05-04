@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
+using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Contracts.Storage.Models;
 using Nano35.Storage.Processor.Services;
@@ -12,7 +13,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.GetAllSelleDetails
 {
     public class GetAllSelleDetailsRequest :
-        EndPointNodeBase<IGetAllSelleDetailsRequestContract, IGetAllSelleDetailsResultContract>
+        UseCaseEndPointNodeBase<IGetAllSelleDetailsRequestContract, IGetAllSelleDetailsResultContract>
     {
         private readonly ApplicationContext _context;
         private readonly IBus _bus;
@@ -25,7 +26,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllSelleDetails
             _bus = bus;
         }
 
-        public override async Task<IGetAllSelleDetailsResultContract> Ask
+        public override async Task<UseCaseResponse<IGetAllSelleDetailsResultContract>>Ask
             (IGetAllSelleDetailsRequestContract input, CancellationToken cancellationToken)
         {
             var result = await _context
@@ -38,7 +39,8 @@ namespace Nano35.Storage.Processor.UseCases.GetAllSelleDetails
                     })
                 .ToListAsync(cancellationToken: cancellationToken);
 
-            return new GetAllSelleDetailsSuccessResultContract() {Data = result};
+            return new UseCaseResponse<IGetAllSelleDetailsResultContract>(new GetAllSelleDetailsResultContract()
+                {Data = result});
         }
     }   
 }

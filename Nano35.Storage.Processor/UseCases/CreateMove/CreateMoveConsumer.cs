@@ -21,20 +21,17 @@ namespace Nano35.Storage.Processor.UseCases.CreateMove
         public async Task Consume(
             ConsumeContext<ICreateMoveRequestContract> context)
         {
-            var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var result = await new LoggedPipeNode<ICreateMoveRequestContract, ICreateMoveResultContract>(
-                _services.GetService(typeof(ILogger<ICreateMoveRequestContract>)) as ILogger<ICreateMoveRequestContract>,
-                new TransactedPipeNode<ICreateMoveRequestContract, ICreateMoveResultContract>(dbContext,
-                    new CreateMoveRequest(dbContext))).Ask(context.Message, context.CancellationToken);
-            switch (result)
-            {
-                case ICreateMoveSuccessResultContract:
-                    await context.RespondAsync<ICreateMoveSuccessResultContract>(result);
-                    break;
-                case ICreateMoveErrorResultContract:
-                    await context.RespondAsync<ICreateMoveErrorResultContract>(result);
-                    break;
-            }
+            var result =
+                await new LoggedUseCasePipeNode<ICreateMoveRequestContract, ICreateMoveResultContract>(
+                        _services.GetService(typeof(ILogger<ICreateMoveRequestContract>)) as
+                            ILogger<ICreateMoveRequestContract>,
+                        new TransactedUseCasePipeNode<ICreateMoveRequestContract,
+                            ICreateMoveResultContract>(
+                            _services.GetService(typeof(ApplicationContext)) as ApplicationContext,
+                            new CreateMoveRequest(
+                                _services.GetService(typeof(ApplicationContext)) as ApplicationContext)))
+                    .Ask(context.Message, context.CancellationToken);
+            await context.RespondAsync(result);
         }
     }
 }

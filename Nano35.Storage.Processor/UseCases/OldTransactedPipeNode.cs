@@ -1,27 +1,36 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Nano35.Contracts;
-using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.UseCases
 {
-    public class TransactedUseCasePipeNode<TIn, TOut> : UseCasePipeNodeBase<TIn, TOut>
-        where TIn : class, IRequest
-        where TOut : class, IResult
+    public class Error : IError
+    {
+        public string Message { get; set; }
+    }
+    
+    public class TransactedPipeNode<TIn, TOut> : PipeNodeBase<TIn, TOut>
+        where TIn : IRequest
+        where TOut : IResponse
     {
         private readonly ApplicationContext _context;
-        public TransactedUseCasePipeNode(ApplicationContext context, IUseCasePipeNode<TIn, TOut> next) : base(next) => _context = context;
-        public override async Task<UseCaseResponse<TOut>> Ask(TIn input, CancellationToken cancellationToken)
+        public TransactedPipeNode(ApplicationContext context, IPipeNode<TIn, TOut> next) : base(next)
+        {
+            _context = context;
+        }
+
+        public override async Task<TOut> Ask(TIn input, CancellationToken cancellationToken)
         {
             var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
             try
             {
                 var response = await DoNext(input, cancellationToken);
-                if (!response.IsSuccess())
+                switch (response)
                 {
-                    await transaction.RollbackAsync(cancellationToken).ConfigureAwait(false);
-                    return response;
+                    case IError:
+                        await transaction.RollbackAsync(cancellationToken).ConfigureAwait(false);
+                        return response;
                 }
                 await _context.SaveChangesAsync(cancellationToken);
                 await transaction.CommitAsync(cancellationToken);
@@ -30,7 +39,7 @@ namespace Nano35.Storage.Processor.UseCases
             catch
             {
                 await transaction.RollbackAsync(cancellationToken).ConfigureAwait(false);
-                return new UseCaseResponse<TOut>($"{typeof(TIn)} transaction refused.");
+                throw;
             }
         }
     }

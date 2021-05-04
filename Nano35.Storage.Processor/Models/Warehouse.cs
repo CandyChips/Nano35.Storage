@@ -9,8 +9,8 @@ using Nano35.Contracts.Storage.Models;
 
 namespace Nano35.Storage.Processor.Models
 {
-    public class WarehouseByItemOnStorage :
-        ICastable
+    public class WarehouseByItemOnStorage 
+        
     {
         public Guid UnitId { get; set; }
         public Guid InstanceId { get; set; }

@@ -13,7 +13,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.GetSelleById
 {
     public class GetSelleByIdRequest :
-        EndPointNodeBase<IGetSelleByIdRequestContract, IGetSelleByIdResultContract>
+        UseCaseEndPointNodeBase<IGetSelleByIdRequestContract, IGetSelleByIdResultContract>
     {
         private readonly ApplicationContext _context;
         private readonly IBus _bus;
@@ -25,7 +25,7 @@ namespace Nano35.Storage.Processor.UseCases.GetSelleById
             _bus = bus;
         }
         
-        public override async Task<IGetSelleByIdResultContract> Ask(
+        public override async Task<UseCaseResponse<IGetSelleByIdResultContract>> Ask(
             IGetSelleByIdRequestContract input, 
             CancellationToken cancellationToken)
         {
@@ -47,9 +47,9 @@ namespace Nano35.Storage.Processor.UseCases.GetSelleById
                 IGetUnitStringByIdSuccessResultContract success => success.Data,
                 _ => throw new Exception()
             };
-                    
 
-            return new GetSelleByIdSuccessResultContract() {Selle = selle};
+
+            return new UseCaseResponse<IGetSelleByIdResultContract>(new GetSelleByIdResultContract(){Selle = selle});
         }
     }   
 }

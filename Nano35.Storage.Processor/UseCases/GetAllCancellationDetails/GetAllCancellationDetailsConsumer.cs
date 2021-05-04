@@ -21,20 +21,13 @@ namespace Nano35.Storage.Processor.UseCases.GetAllCancellationDetails
         public async Task Consume(
             ConsumeContext<IGetAllCancellationDetailsRequestContract> context)
         {
-            var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<IGetAllCancellationDetailsRequestContract>) _services.GetService(typeof(ILogger<IGetAllCancellationDetailsRequestContract>));
-            var message = context.Message;
-            var result = await new LoggedPipeNode<IGetAllCancellationDetailsRequestContract, IGetAllCancellationDetailsResultContract>(logger,
-                new GetAllCancellationDetailsRequest(dbContext)).Ask(message, context.CancellationToken);
-            switch (result)
-            {
-                case IGetAllCancellationDetailsSuccessResultContract:
-                    await context.RespondAsync<IGetAllCancellationDetailsSuccessResultContract>(result);
-                    break;
-                case IGetAllCancellationDetailsErrorResultContract:
-                    await context.RespondAsync<IGetAllCancellationDetailsErrorResultContract>(result);
-                    break;
-            }
+            var result =
+                await new LoggedUseCasePipeNode<IGetAllCancellationDetailsRequestContract, IGetAllCancellationDetailsResultContract>(
+                        _services.GetService(typeof(ILogger<IGetAllCancellationDetailsRequestContract>)) as ILogger<IGetAllCancellationDetailsRequestContract>,
+                        new GetAllCancellationDetailsRequest(                            
+                            _services.GetService(typeof(ApplicationContext)) as ApplicationContext))
+                    .Ask(context.Message, context.CancellationToken);
+            await context.RespondAsync(result);
         }
     }
 }

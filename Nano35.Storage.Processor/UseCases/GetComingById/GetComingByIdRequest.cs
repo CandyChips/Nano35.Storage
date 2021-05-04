@@ -13,7 +13,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.GetComingById
 {
     public class GetComingByIdRequest :
-        EndPointNodeBase<IGetComingByIdRequestContract, IGetComingByIdResultContract>
+        UseCaseEndPointNodeBase<IGetComingByIdRequestContract, IGetComingByIdResultContract>
     {
         private readonly ApplicationContext _context;
         private readonly IBus _bus;
@@ -25,7 +25,7 @@ namespace Nano35.Storage.Processor.UseCases.GetComingById
             _bus = bus;
         }
         
-        public override async Task<IGetComingByIdResultContract> Ask(
+        public override async Task<UseCaseResponse<IGetComingByIdResultContract>> Ask(
             IGetComingByIdRequestContract input, 
             CancellationToken cancellationToken)
         {
@@ -57,7 +57,8 @@ namespace Nano35.Storage.Processor.UseCases.GetComingById
                 _ => throw new Exception()
             };
 
-            return new GetComingByIdSuccessResultContract() {Coming = coming};
+            return new UseCaseResponse<IGetComingByIdResultContract>(
+                new GetComingByIdResultContract() {Coming = coming});
         }
     }   
 }

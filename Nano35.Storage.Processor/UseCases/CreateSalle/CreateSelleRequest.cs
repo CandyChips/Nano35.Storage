@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Nano35.Contracts.Cashbox.Artifacts;
+using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Storage.Processor.Models;
 using Nano35.Storage.Processor.Requests;
@@ -13,7 +14,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.CreateSalle
 {
     public class CreateSelleRequest :
-        EndPointNodeBase<ICreateSelleRequestContract, ICreateSelleResultContract>
+        UseCaseEndPointNodeBase<ICreateSelleRequestContract, ICreateSelleResultContract>
     {
         private readonly ApplicationContext _context;
         private readonly IBus _bus;
@@ -24,7 +25,7 @@ namespace Nano35.Storage.Processor.UseCases.CreateSalle
             _bus = bus;
         }
         
-        public override async Task<ICreateSelleResultContract> Ask(
+        public override async Task<UseCaseResponse<ICreateSelleResultContract>> Ask(
             ICreateSelleRequestContract input,
             CancellationToken cancellationToken)
         {
@@ -69,19 +70,22 @@ namespace Nano35.Storage.Processor.UseCases.CreateSalle
                     throw new NotImplementedException();
                 }
             }
-            
-            
-            new CreateSelleCashOperation(_bus, 
+
+
+            await new MasstransitUseCaseRequest<ICreateSelleCashOperationRequestContract,
+                ICreateSelleCashOperationResultContract>(_bus,
                 new CreateSelleCashOperationRequestContract()
-                {NewId = Guid.NewGuid(),
+                {
+                    NewId = Guid.NewGuid(),
                     CashboxId = input.UnitId,
                     SelleId = input.NewId,
                     Cash = input.Details.Select(a => a.Price * a.Count).Sum(),
-                    Description = "Продажа"});
+                    Description = "Продажа"
+                }).GetResponse();
 
             await _context.Sells.AddAsync(selle, cancellationToken);
             await _context.SelleDetails.AddRangeAsync(selleDetails, cancellationToken);
-            return new CreateSelleSuccessResultContract();
+            return new UseCaseResponse<ICreateSelleResultContract>(new CreateSelleResultContract());
         }
     }
 }

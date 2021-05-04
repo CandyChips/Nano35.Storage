@@ -15,20 +15,13 @@ namespace Nano35.Storage.Processor.UseCases.GetAllArticleBrands
         public async Task Consume(
             ConsumeContext<IGetAllArticlesBrandsRequestContract> context)
         {
-            var result = await new LoggedPipeNode<IGetAllArticlesBrandsRequestContract, IGetAllArticlesBrandsResultContract>(
-                _services.GetService(typeof(ILogger<IGetAllArticlesBrandsRequestContract>)) as ILogger<IGetAllArticlesBrandsRequestContract>,
-                new GetAllArticlesBrandsRequest(
-                    _services.GetService(typeof(ApplicationContext)) as ApplicationContext))
-                .Ask(context.Message, context.CancellationToken);
-            switch (result)
-            {
-                case IGetAllArticlesBrandsSuccessResultContract:
-                    await context.RespondAsync<IGetAllArticlesBrandsSuccessResultContract>(result);
-                    break;
-                case IGetAllArticlesBrandsErrorResultContract:
-                    await context.RespondAsync<IGetAllArticlesBrandsErrorResultContract>(result);
-                    break;
-            }
+            var result =
+                await new LoggedUseCasePipeNode<IGetAllArticlesBrandsRequestContract, IGetAllArticlesBrandsResultContract>(
+                        _services.GetService(typeof(ILogger<IGetAllArticlesBrandsRequestContract>)) as ILogger<IGetAllArticlesBrandsRequestContract>,
+                        new GetAllArticlesBrandsRequest(                            
+                            _services.GetService(typeof(ApplicationContext)) as ApplicationContext))
+                    .Ask(context.Message, context.CancellationToken);
+            await context.RespondAsync(result);
         }
     }
 }

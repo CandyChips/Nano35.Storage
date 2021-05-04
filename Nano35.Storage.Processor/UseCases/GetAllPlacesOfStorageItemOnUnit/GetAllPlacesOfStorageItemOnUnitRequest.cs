@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
+using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Contracts.Storage.Models;
 using Nano35.Storage.Processor.Services;
@@ -10,7 +11,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.GetAllPlacesOfStorageItemOnUnit
 {
     public class GetAllPlacesOfStorageItemOnUnitRequest :
-        EndPointNodeBase<IGetAllPlacesOfStorageItemOnUnitRequestContract, IGetAllPlacesOfStorageItemOnUnitResultContract>
+        UseCaseEndPointNodeBase<IGetAllPlacesOfStorageItemOnUnitRequestContract, IGetAllPlacesOfStorageItemOnUnitResultContract>
     {
         private readonly ApplicationContext _context;
         private readonly IBus _bus;
@@ -23,7 +24,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllPlacesOfStorageItemOnUnit
             _bus = bus;
         }
 
-        public override async Task<IGetAllPlacesOfStorageItemOnUnitResultContract> Ask(
+        public override async Task<UseCaseResponse<IGetAllPlacesOfStorageItemOnUnitResultContract>> Ask(
             IGetAllPlacesOfStorageItemOnUnitRequestContract input, 
             CancellationToken cancellationToken)
         {
@@ -40,8 +41,9 @@ namespace Nano35.Storage.Processor.UseCases.GetAllPlacesOfStorageItemOnUnit
                     Count = a.Count,
                 })
                 .ToListAsync(cancellationToken);
-                    
-            return new GetAllPlacesOfStorageItemOnUnitSuccessResultContract() {Contains = result};
+
+            return new UseCaseResponse<IGetAllPlacesOfStorageItemOnUnitResultContract>(
+                new GetAllPlacesOfStorageItemOnUnitResultContract() {Contains = result});
         }
     }   
 }

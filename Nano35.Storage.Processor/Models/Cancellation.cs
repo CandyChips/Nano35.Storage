@@ -6,8 +6,7 @@ using Nano35.Contracts;
 
 namespace Nano35.Storage.Processor.Models
 {
-    public class Cancellation :
-        ICastable
+    public class Cancellation 
     {
         public Guid Id { get; set; }
         public Guid InstanceId { get; set; }

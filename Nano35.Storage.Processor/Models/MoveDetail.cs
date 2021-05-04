@@ -5,8 +5,7 @@ using Nano35.Contracts;
 
 namespace Nano35.Storage.Processor.Models
 {
-    public class MoveDetail :
-        ICastable
+    public class MoveDetail 
     {
         // Primary key
         public Guid Id { get; set; }

@@ -7,57 +7,26 @@ using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.UseCases.CreateArticle
 {
-    /// <summary>
-    /// Consumer accept a request contract type
-    /// All consumers actions works by pipelines
-    /// Implementation works with 3 steps
-    /// 1. Setup DI services from IServiceProvider;
-    /// 2. Explore message of request;
-    /// 3. Building pipeline like a onion
-    ///     '(PipeNode1(PipeNode2(PipeNode3(...).Ask()).Ask()).Ask()).Ask()';
-    /// 4. Response pattern match of pipeline response;
-    /// </summary>
     public class CreateArticleConsumer : 
         IConsumer<ICreateArticleRequestContract>
     {
         private readonly IServiceProvider _services;
-        
-        /// <summary>
-        /// Consumer provide IServiceProvider from asp net core DI
-        /// for registration services to pipe nodes
-        /// </summary>
-        public CreateArticleConsumer(
-            IServiceProvider services)
-        {
-            _services = services;
-        }
+        public CreateArticleConsumer(IServiceProvider services) { _services = services; }
         
         public async Task Consume(
             ConsumeContext<ICreateArticleRequestContract> context)
         {
-            // Setup configuration of pipeline
-            var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<ICreateArticleRequestContract>) _services
-                .GetService(typeof(ILogger<ICreateArticleRequestContract>));
-
-            // Explore message of request
-            var message = context.Message;
-
-            // Send request to pipeline
-            var result = await new LoggedPipeNode<ICreateArticleRequestContract, ICreateArticleResultContract>(logger,
-                new TransactedPipeNode<ICreateArticleRequestContract, ICreateArticleResultContract>(dbContext,
-                    new CreateArticleRequest(dbContext))).Ask(message, context.CancellationToken);
-            
-            // Check response of create article request
-            switch (result)
-            {
-                case ICreateArticleSuccessResultContract:
-                    await context.RespondAsync<ICreateArticleSuccessResultContract>(result);
-                    break;
-                case ICreateArticleErrorResultContract:
-                    await context.RespondAsync<ICreateArticleErrorResultContract>(result);
-                    break;
-            }
+            var result =
+                await new LoggedUseCasePipeNode<ICreateArticleRequestContract, ICreateArticleResultContract>(
+                        _services.GetService(typeof(ILogger<ICreateArticleRequestContract>)) as
+                            ILogger<ICreateArticleRequestContract>,
+                        new TransactedUseCasePipeNode<ICreateArticleRequestContract,
+                            ICreateArticleResultContract>(
+                            _services.GetService(typeof(ApplicationContext)) as ApplicationContext,
+                            new CreateArticleRequest(
+                                _services.GetService(typeof(ApplicationContext)) as ApplicationContext)))
+                    .Ask(context.Message, context.CancellationToken);
+            await context.RespondAsync(result);
         }
     }
 }

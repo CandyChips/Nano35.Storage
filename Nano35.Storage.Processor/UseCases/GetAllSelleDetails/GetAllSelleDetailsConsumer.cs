@@ -21,23 +21,14 @@ namespace Nano35.Storage.Processor.UseCases.GetAllSelleDetails
         public async Task Consume(
             ConsumeContext<IGetAllSelleDetailsRequestContract> context)
         {
-            var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var bus = (IBus) _services.GetService(typeof(IBus));
-            var logger = (ILogger<IGetAllSelleDetailsRequestContract>) _services.GetService(typeof(ILogger<IGetAllSelleDetailsRequestContract>));
-
-            var message = context.Message;
             var result =
-                await new LoggedPipeNode<IGetAllSelleDetailsRequestContract, IGetAllSelleDetailsResultContract>(logger,
-                    new GetAllSelleDetailsRequest(dbContext, bus)).Ask(message, context.CancellationToken);
-            switch (result)
-            {
-                case IGetAllSelleDetailsSuccessResultContract:
-                    await context.RespondAsync<IGetAllSelleDetailsSuccessResultContract>(result);
-                    break;
-                case IGetAllSelleDetailsErrorResultContract:
-                    await context.RespondAsync<IGetAllSelleDetailsErrorResultContract>(result);
-                    break;
-            }
+                await new LoggedUseCasePipeNode<IGetAllSelleDetailsRequestContract, IGetAllSelleDetailsResultContract>(
+                        _services.GetService(typeof(ILogger<IGetAllSelleDetailsRequestContract>)) as ILogger<IGetAllSelleDetailsRequestContract>,
+                        new GetAllSelleDetailsRequest(                            
+                            _services.GetService(typeof(ApplicationContext)) as ApplicationContext,
+                            _services.GetService(typeof(IBus)) as IBus))
+                    .Ask(context.Message, context.CancellationToken);
+            await context.RespondAsync(result);
         }
     }
 }

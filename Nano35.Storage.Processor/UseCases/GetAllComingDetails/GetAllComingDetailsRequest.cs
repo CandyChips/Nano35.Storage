@@ -13,7 +13,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.GetAllComingDetails
 {
     public class GetAllComingDetailsRequest :
-        EndPointNodeBase<IGetAllComingDetailsRequestContract, IGetAllComingDetailsResultContract>
+        UseCaseEndPointNodeBase<IGetAllComingDetailsRequestContract, IGetAllComingDetailsResultContract>
     {
         private readonly ApplicationContext _context;
 
@@ -22,7 +22,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllComingDetails
             _context = context;
         }
 
-        public override async Task<IGetAllComingDetailsResultContract> Ask(
+        public override async Task<UseCaseResponse<IGetAllComingDetailsResultContract>> Ask(
             IGetAllComingDetailsRequestContract input, 
             CancellationToken cancellationToken)
         {
@@ -39,7 +39,8 @@ namespace Nano35.Storage.Processor.UseCases.GetAllComingDetails
                          PlaceOnStorage = a.ToWarehouse.ToString(),
                          StorageItem = a.ToWarehouse.StorageItem.ToString()})
                 .ToList();
-            return new GetAllComingDetailsSuccessResultContract() {Data = result};
+            return new UseCaseResponse<IGetAllComingDetailsResultContract>(new GetAllComingDetailsResultContract()
+                {Data = result});
         }
     }   
 }
