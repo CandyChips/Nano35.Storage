@@ -18,6 +18,7 @@ namespace Nano35.Storage.Processor.UseCases.UpdateArticleBrand
             CancellationToken cancellationToken)
         {
             var result = await (_context.Articles.FirstOrDefaultAsync(a => a.Id == input.Id, cancellationToken));
+            
             result.Brand = input.Brand;
             return new UpdateArticleBrandSuccessResultContract();
         }

@@ -7,6 +7,8 @@ using Microsoft.Extensions.Logging;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.HttpContext.storage;
 using Nano35.Storage.Api.Requests;
+using Nano35.Storage.Api.Requests.CheckExistArticle;
+using Nano35.Storage.Api.Requests.CheckExistStorageItem;
 using Nano35.Storage.Api.Requests.CreateStorageItem;
 using Nano35.Storage.Api.Requests.GetAllStorageItems;
 using Nano35.Storage.Api.Requests.GetStorageItemById;
@@ -175,5 +177,26 @@ namespace Nano35.Storage.Api.Controllers
                         _services.GetService(typeof(ILogger<IUpdateStorageItemRetailPriceRequestContract>)) as ILogger<IUpdateStorageItemRetailPriceRequestContract>,
                             new UpdateStorageItemRetailPriceUseCase(_services.GetService(typeof(IBus)) as IBus)))
                     .Ask(body);
+        
+        [HttpGet]
+        [Route("ExistStorageItem")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllStorageItemsSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllStorageItemsErrorHttpResponse))] 
+        public async Task<IActionResult> CheckExistStorageItem(Guid id) 
+        {
+            var result =
+                await new LoggedUseCasePipeNode<ICheckExistStorageItemRequestContract, ICheckExistStorageItemResultContract>(
+                        _services.GetService(typeof(ILogger<ICheckExistStorageItemRequestContract>)) as ILogger<ICheckExistStorageItemRequestContract>,
+                        new CheckExistStorageItemUseCase(
+                            _services.GetService((typeof(IBus))) as IBus))
+                    .Ask(new CheckExistStorageItemRequestContract()
+                    {
+                        StorageItemId = id
+                    });
+            
+            return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
+        }
+        
     }
 }

@@ -8,7 +8,6 @@ using Nano35.Contracts.Cashbox.Artifacts;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Storage.Processor.Models;
-using Nano35.Storage.Processor.Requests;
 using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.UseCases.CreateSalle
@@ -29,6 +28,13 @@ namespace Nano35.Storage.Processor.UseCases.CreateSalle
             ICreateSelleRequestContract input,
             CancellationToken cancellationToken)
         {
+            if (!input.Details.Any())
+                return new UseCaseResponse<ICreateSelleResultContract>("Нет деталей продажи");
+            if (input.InstanceId == Guid.Empty)
+                return new UseCaseResponse<ICreateSelleResultContract>("Обновите страницу и попробуйте еще раз");
+            if (input.NewId == Guid.Empty)
+                return new UseCaseResponse<ICreateSelleResultContract>("Обновите страницу и попробуйте еще раз");
+            
             var cashOperationId = Guid.NewGuid();
             
             var selle = new Selle()
@@ -70,7 +76,7 @@ namespace Nano35.Storage.Processor.UseCases.CreateSalle
                     throw new NotImplementedException();
                 }
             }
-
+            
 
             await new MasstransitUseCaseRequest<ICreateSelleCashOperationRequestContract,
                 ICreateSelleCashOperationResultContract>(_bus,

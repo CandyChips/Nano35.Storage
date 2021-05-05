@@ -22,7 +22,8 @@ namespace Nano35.Storage.Processor.UseCases.CreateStorageItem
                             ICreateStorageItemResultContract>(
                             _services.GetService(typeof(ApplicationContext)) as ApplicationContext,
                             new CreateStorageItemRequest(
-                                _services.GetService(typeof(ApplicationContext)) as ApplicationContext)))
+                                _services.GetService(typeof(ApplicationContext)) as ApplicationContext,
+                                _services.GetService(typeof(IBus)) as IBus)))
                     .Ask(context.Message, context.CancellationToken);
             await context.RespondAsync(result);
         }

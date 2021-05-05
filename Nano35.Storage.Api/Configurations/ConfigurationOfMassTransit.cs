@@ -107,6 +107,11 @@ namespace Nano35.Storage.Api.Configurations
                     new Uri($"{ContractBase.RabbitMqLocation}/IGetAllCancellationsRequestContract"));
                 x.AddRequestClient<IGetAllCancellationDetailsRequestContract>(
                     new Uri($"{ContractBase.RabbitMqLocation}/IGetAllCancellationDetailsRequestContract"));
+                
+                x.AddRequestClient<ICheckExistArticleRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/ICheckExistArticleRequestContract"));
+                x.AddRequestClient<ICheckExistStorageItemRequestContract>(
+                    new Uri($"{ContractBase.RabbitMqLocation}/ICheckExistStorageItemRequestContract"));
 
             });
             services.AddMassTransitHostedService();

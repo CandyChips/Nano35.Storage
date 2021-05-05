@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Nano35.Contracts.Instance.Artifacts;
@@ -23,6 +24,19 @@ namespace Nano35.Storage.Processor.UseCases.CreateArticle
             ICreateArticleRequestContract input,
             CancellationToken cancellationToken)
         {
+            if (input.NewId == Guid.Empty)
+                return new UseCaseResponse<ICreateArticleResultContract>("Обновите страницу и попробуйте еще раз");
+            if (input.InstanceId == Guid.Empty)
+                return new UseCaseResponse<ICreateArticleResultContract>("Обновите страницу и попробуйте еще раз");
+            if (input.CategoryId == Guid.Empty)
+                return new UseCaseResponse<ICreateArticleResultContract>("Не выбрана категория устройства");
+            if (input.Specs.Any())
+                return new UseCaseResponse<ICreateArticleResultContract>("Нет спецификаций устройства");
+            if (string.IsNullOrEmpty(input.Brand))
+                return new UseCaseResponse<ICreateArticleResultContract>("Нет бренда устройства-");
+            if (string.IsNullOrEmpty(input.Model))
+                return new UseCaseResponse<ICreateArticleResultContract>("Нет модели устройства");
+            
             var article = new Article(){
                 Id = input.NewId,
                 InstanceId = input.InstanceId,

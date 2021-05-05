@@ -27,6 +27,9 @@ namespace Nano35.Storage.Processor.UseCases.GetArticleById
             var result = await _context.Articles
                 .FirstAsync(c => c.Id == input.Id, cancellationToken: cancellationToken);
 
+            if (result == null)
+                return new UseCaseResponse<IGetArticleByIdResultContract>("Не найдено");
+            
             var article = new ArticleViewModel()
             {
                 Brand = result.Brand,

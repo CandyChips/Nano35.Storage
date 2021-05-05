@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Contracts.Storage.Models;
-using Nano35.Storage.Processor.Requests;
 using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.UseCases.GetAllSells
@@ -35,21 +33,22 @@ namespace Nano35.Storage.Processor.UseCases.GetAllSells
                 .Where(c => c.InstanceId == input.InstanceId)
                 .ToListAsync(cancellationToken))
                 .Select(a =>
-                    new SelleViewModel
+                {
+                    var r = new SelleViewModel
                     {
                         Id = a.Id,
                         Number = a.Number,
                         Date = a.Date,
                         Cash = a.Details
                             .Select(f => f.Price * f.Count)
-                            .Sum(),
-                        Unit = new GetUnitStringById(_bus, new GetUnitStringByIdRequestContract() {UnitId = a.Details.First().FromUnitId}).GetResponse()
-                                .Result switch
-                        {
-                            IGetUnitStringByIdSuccessResultContract success => success.Data,
-                            _ => throw new Exception()
-                        }
-                    })
+                            .Sum()
+                    };
+                    var getUnitStringByIdRequestContract = 
+                        new MasstransitUseCaseRequest<IGetUnitStringByIdRequestContract, IGetUnitStringByIdResultContract>(_bus, new GetUnitStringByIdRequestContract() {UnitId = a.Details.First().FromUnitId}).GetResponse().Result;
+                    r.Unit = getUnitStringByIdRequestContract.IsSuccess() ? getUnitStringByIdRequestContract.Success.Data : throw new Exception();
+
+                    return r;
+                })
                 .ToList();
 
             return new UseCaseResponse<IGetAllSellsResultContract>(new GetAllSellsResultContract() {Data = sells});

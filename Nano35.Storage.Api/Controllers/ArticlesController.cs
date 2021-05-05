@@ -11,6 +11,7 @@ using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Contracts.Storage.Models;
 using Nano35.HttpContext.storage;
 using Nano35.Storage.Api.Requests;
+using Nano35.Storage.Api.Requests.CheckExistArticle;
 using Nano35.Storage.Api.Requests.CreateArticle;
 using Nano35.Storage.Api.Requests.GetAllArticleBrands;
 using Nano35.Storage.Api.Requests.GetAllArticleModels;
@@ -145,6 +146,26 @@ namespace Nano35.Storage.Api.Controllers
                     new UpdateArticleModelUseCase(
                         _services.GetService(typeof(IBus)) as IBus)))
                 .Ask(body);
+        }
+        
+        [HttpGet]
+        [Route("ExistArticle")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllStorageItemsSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllStorageItemsErrorHttpResponse))] 
+        public async Task<IActionResult> CheckExistArticle(Guid id) 
+        {
+            var result =
+                await new LoggedUseCasePipeNode<ICheckExistArticleRequestContract, ICheckExistArticleResultContract>(
+                        _services.GetService(typeof(ILogger<ICheckExistArticleRequestContract>)) as ILogger<ICheckExistArticleRequestContract>,
+                        new CheckExistArticleUseCase(
+                            _services.GetService((typeof(IBus))) as IBus))
+                    .Ask(new CheckExistArticleRequestContract()
+                    {
+                        ArticleId = id
+                    });
+            
+            return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
         }
     }
 }

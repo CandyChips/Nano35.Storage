@@ -22,6 +22,13 @@ namespace Nano35.Storage.Processor.UseCases.CreateMove
             ICreateMoveRequestContract input,
             CancellationToken cancellationToken)
         {
+            if (!input.Details.Any())
+                return new UseCaseResponse<ICreateMoveResultContract>("Нет деталей перемещения");
+            if (input.InstanceId == Guid.Empty)
+                return new UseCaseResponse<ICreateMoveResultContract>("Обновите страницу и попробуйте еще раз");
+            if (input.NewId == Guid.Empty)
+                return new UseCaseResponse<ICreateMoveResultContract>("Обновите страницу и попробуйте еще раз");
+            
             var move = new Move()
                 {Id = input.NewId, 
                  Number = input.Number, 
@@ -74,6 +81,7 @@ namespace Nano35.Storage.Processor.UseCases.CreateMove
                     await _context.Warehouses.AddAsync(warehouse, cancellationToken);
                 }
             }
+            
             await _context.Moves.AddAsync(move, cancellationToken);
             await _context.MoveDetails.AddRangeAsync(moveDetails, cancellationToken);
             return new UseCaseResponse<ICreateMoveResultContract>(new CreateMoveResultContract());

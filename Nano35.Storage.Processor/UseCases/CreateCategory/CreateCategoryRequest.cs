@@ -22,6 +22,11 @@ namespace Nano35.Storage.Processor.UseCases.CreateCategory
             ICreateCategoryRequestContract input,
             CancellationToken cancellationToken)
         {
+            if (input.NewId == Guid.Empty)
+                return new UseCaseResponse<ICreateCategoryResultContract>("Обновите страницу и попробуйте еще раз");
+            if (input.InstanceId == Guid.Empty)
+                return new UseCaseResponse<ICreateCategoryResultContract>("Обновите страницу и попробуйте еще раз");
+
             var category =
                 new Category()
                     {Id = input.NewId,

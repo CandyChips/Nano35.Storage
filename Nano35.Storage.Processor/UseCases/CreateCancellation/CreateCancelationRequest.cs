@@ -25,6 +25,14 @@ namespace Nano35.Storage.Processor.UseCases.CreateCancellation
             ICreateCancellationRequestContract input,
             CancellationToken cancellationToken)
         {
+            if (input.NewId == Guid.Empty)
+                return new UseCaseResponse<ICreateCancellationResultContract>("Обновите страницу и попробуйте еще раз");
+            if (input.InstanceId == Guid.Empty)
+                return new UseCaseResponse<ICreateCancellationResultContract>("Обновите страницу и попробуйте еще раз");
+            if (input.Details.Any())
+                return new UseCaseResponse<ICreateCancellationResultContract>("Нет деталей списания");
+            if (input.UnitId == Guid.Empty)
+                return new UseCaseResponse<ICreateCancellationResultContract>("Обновите страницу и попробуйте еще раз");
 
             var cancellation = new Cancellation()
             {

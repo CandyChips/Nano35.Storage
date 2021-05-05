@@ -8,7 +8,6 @@ using Nano35.Contracts.Cashbox.Artifacts;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Storage.Processor.Models;
-using Nano35.Storage.Processor.Requests;
 using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.UseCases.CreateComing
@@ -30,6 +29,15 @@ namespace Nano35.Storage.Processor.UseCases.CreateComing
             ICreateComingRequestContract input,
             CancellationToken cancellationToken)
         {
+            if (!input.Details.Any())
+                return new UseCaseResponse<ICreateComingResultContract>("Нет деталей оприходования");
+            if (input.ClientId == Guid.Empty)
+                return new UseCaseResponse<ICreateComingResultContract>("Не выбран клиент");
+            if (input.InstanceId == Guid.Empty)
+                return new UseCaseResponse<ICreateComingResultContract>("Обновите страницу и попробуйте еще раз");
+            if (input.NewId == Guid.Empty)
+                return new UseCaseResponse<ICreateComingResultContract>("Обновите страницу и попробуйте еще раз");
+            
             var coming = new Coming()
                 {Id = input.NewId,
                  ClientId = input.ClientId,
@@ -69,14 +77,7 @@ namespace Nano35.Storage.Processor.UseCases.CreateComing
                 }
             }
 
-            if (!comingDetails.Any())
-                return new UseCaseResponse<ICreateComingResultContract>("");
-            if (coming.ClientId == Guid.Empty)
-                return new UseCaseResponse<ICreateComingResultContract>("");
-            if (coming.InstanceId == Guid.Empty)
-                return new UseCaseResponse<ICreateComingResultContract>("");
-            if (coming.Id == Guid.Empty)
-                return new UseCaseResponse<ICreateComingResultContract>("");
+            
 
             await new MasstransitUseCaseRequest<ICreateComingCashOperationRequestContract,
                 ICreateComingCashOperationResultContract>(_bus,

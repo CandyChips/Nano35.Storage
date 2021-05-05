@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MassTransit;
-using MassTransit.Initializers;
 using Microsoft.EntityFrameworkCore;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Contracts.Storage.Models;
-using Nano35.Storage.Processor.Requests;
 using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.UseCases.GetAllMoves
@@ -38,32 +35,22 @@ namespace Nano35.Storage.Processor.UseCases.GetAllMoves
             
             var result = moves
                 .Select(a =>
-                    new MoveViewModel()
+                {
+                    var r = new MoveViewModel()
                     {
                         Id = a.Id,
                         Number = a.Number,
-                        Date = a.Date,
-                        FromUnit = 
-                            new GetUnitStringById(_bus, new GetUnitStringByIdRequestContract()
-                                {
-                                    UnitId = _context.MoveDetails.FirstOrDefault(h=> h.MoveId == a.Id).FromUnitId
-                                }).GetResponse().Result switch
-                                {
-                                    IGetUnitStringByIdSuccessResultContract success => success.Data,
-                                    _ => throw new Exception()
-                        
-                                },
-                        ToUnit = 
-                            new GetUnitStringById(_bus, new GetUnitStringByIdRequestContract()
-                                {
-                                    UnitId = _context.MoveDetails.FirstOrDefault(h=> h.MoveId == a.Id).ToUnitId
-                                }).GetResponse().Result switch
-                                {
-                                    IGetUnitStringByIdSuccessResultContract success => success.Data,
-                                    _ => throw new Exception()
-                        
-                                }
-                    })
+                        Date = a.Date
+                    };
+                    var getToUnitStringByIdRequestContract = 
+                        new MasstransitUseCaseRequest<IGetUnitStringByIdRequestContract, IGetUnitStringByIdResultContract>(_bus, new GetUnitStringByIdRequestContract() {UnitId = _context.MoveDetails.FirstOrDefault(h => h.MoveId == a.Id).FromUnitId}).GetResponse().Result;
+                    r.ToUnit = getToUnitStringByIdRequestContract.IsSuccess() ? getToUnitStringByIdRequestContract.Success.Data : throw new Exception();
+                    var getFromUnitStringByIdRequestContract = 
+                        new MasstransitUseCaseRequest<IGetUnitStringByIdRequestContract, IGetUnitStringByIdResultContract>(_bus, new GetUnitStringByIdRequestContract() {UnitId = _context.MoveDetails.FirstOrDefault(h => h.MoveId == a.Id).ToUnitId}).GetResponse().Result;
+                    r.FromUnit = getFromUnitStringByIdRequestContract.IsSuccess() ? getFromUnitStringByIdRequestContract.Success.Data : throw new Exception();
+
+                    return r;
+                })
                 .ToList();
 
             return new UseCaseResponse<IGetAllMovesResultContract>(new GetAllMovesResultContract() {Data = result});

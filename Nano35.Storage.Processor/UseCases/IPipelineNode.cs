@@ -41,25 +41,6 @@ namespace Nano35.Storage.Processor.UseCases
     {
         Task<TOut> Ask(TIn input, CancellationToken cancellationToken);
     }
-
-    public class GetClientStringById : 
-        MasstransitRequest
-        <IGetClientStringByIdRequestContract, 
-            IGetClientStringByIdResultContract,
-            IGetClientStringByIdSuccessResultContract, 
-            IGetClientStringByIdErrorResultContract>
-    {
-        public GetClientStringById(IBus bus, IGetClientStringByIdRequestContract request) : base(bus, request) {}
-    }
-    public class GetWorkerStringById : 
-        MasstransitRequest
-        <IGetWorkerStringByIdRequestContract, 
-            IGetWorkerStringByIdResultContract,
-            IGetWorkerStringByIdSuccessResultContract, 
-            IGetWorkerStringByIdErrorResultContract>
-    {
-        public GetWorkerStringById(IBus bus, IGetWorkerStringByIdRequestContract request) : base(bus, request) {}
-    }
     public class GetImagesOfStorageItem : 
         MasstransitRequest
         <IGetImagesOfStorageItemRequestContract, 
@@ -70,13 +51,4 @@ namespace Nano35.Storage.Processor.UseCases
         public GetImagesOfStorageItem(IBus bus, IGetImagesOfStorageItemRequestContract request) : base(bus, request) {}
     }
     
-    public class GetInstanceStringById : 
-        MasstransitRequest
-        <IGetInstanceStringByIdRequestContract, 
-         IGetInstanceStringByIdResultContract,
-         IGetInstanceStringByIdSuccessResultContract, 
-         IGetInstanceStringByIdErrorResultContract>
-    {
-        public GetInstanceStringById(IBus bus, IGetInstanceStringByIdRequestContract request) : base(bus, request) {}
-    }
 }

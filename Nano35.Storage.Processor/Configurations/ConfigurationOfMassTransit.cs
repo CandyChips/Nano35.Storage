@@ -6,6 +6,8 @@ using Nano35.Contracts.Cashbox.Artifacts;
 using Nano35.Contracts.files;
 using Nano35.Contracts.Identity.Artifacts;
 using Nano35.Contracts.Instance.Artifacts;
+using Nano35.Storage.Processor.UseCases.CheckExistArticle;
+using Nano35.Storage.Processor.UseCases.CheckExistStorageItem;
 using Nano35.Storage.Processor.UseCases.CreateArticle;
 using Nano35.Storage.Processor.UseCases.CreateCancellation;
 using Nano35.Storage.Processor.UseCases.CreateCategory;
@@ -122,6 +124,9 @@ namespace Nano35.Storage.Processor.Configurations
                     cfg.ReceiveEndpoint("IPresentationGetAllCategoriesRequestContract", e => { e.Consumer<PresentationGetAllCategoriesConsumer>(provider); });
                     cfg.ReceiveEndpoint("IPresentationGetAllStorageItemsRequestContract", e => { e.Consumer<PresentationGetAllStorageItemsConsumer>(provider); });
                     
+                    cfg.ReceiveEndpoint("ICheckExistArticleRequestContract", e => { e.Consumer<CheckExistArticleConsumer>(provider); });
+                    cfg.ReceiveEndpoint("ICheckExistStorageItemRequestContract", e => { e.Consumer<CheckExistStorageItemConsumer>(provider); });
+                    
                 }));
                 x.AddConsumer<PresentationGetAllArticlesConsumer>();
                 x.AddConsumer<PresentationGetAllCategoriesConsumer>();
@@ -175,6 +180,9 @@ namespace Nano35.Storage.Processor.Configurations
                 x.AddConsumer<UpdateArticleInfoConsumer>();
                 x.AddConsumer<UpdateArticleCategoryConsumer>();
                 x.AddConsumer<UpdateArticleBrandConsumer>();
+                
+                x.AddConsumer<CheckExistArticleConsumer>();
+                x.AddConsumer<CheckExistStorageItemConsumer>();
                 
                 x.AddRequestClient<IGetClientByIdRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IGetClientByIdRequestContract"));
                 x.AddRequestClient<IGetUnitByIdRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IGetUnitByIdRequestContract"));

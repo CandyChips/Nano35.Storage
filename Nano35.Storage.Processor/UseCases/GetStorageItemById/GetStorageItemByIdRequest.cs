@@ -28,6 +28,10 @@ namespace Nano35.Storage.Processor.UseCases.GetStorageItemById
         {
             var result = await _context.StorageItems
                 .FirstOrDefaultAsync(c => c.Id == input.Id, cancellationToken: cancellationToken);
+
+            if (result == null)
+                return new UseCaseResponse<IGetStorageItemByIdResultContract>("Не найдено");
+            
             return new UseCaseResponse<IGetStorageItemByIdResultContract>(new GetStorageItemByIdResultContract()
             {
                 Data =
