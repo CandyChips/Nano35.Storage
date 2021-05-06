@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MassTransit;
+using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Contracts.Storage.Models;
 
 namespace Nano35.Storage.Api.Requests.UpdateArticleBrand
 {
     public class UpdateArticleBrandUseCase :
-        EndPointNodeBase<IUpdateArticleBrandRequestContract, IUpdateArticleBrandResultContract>
+        UseCaseEndPointNodeBase<IUpdateArticleBrandRequestContract, IUpdateArticleBrandResultContract>
     {
         private readonly IBus _bus;
         
@@ -18,8 +19,8 @@ namespace Nano35.Storage.Api.Requests.UpdateArticleBrand
             _bus = bus;
         }
         
-        public override async Task<IUpdateArticleBrandResultContract> Ask(
-            IUpdateArticleBrandRequestContract input) => 
-            (await (new UpdateArticleBrandRequest(_bus)).GetResponse(input));
+        public override async Task<UseCaseResponse<IUpdateArticleBrandResultContract>> Ask(IUpdateArticleBrandRequestContract input) =>
+            await new MasstransitUseCaseRequest<IUpdateArticleBrandRequestContract, IUpdateArticleBrandResultContract>(_bus, input)
+                .GetResponse();
     }
 }

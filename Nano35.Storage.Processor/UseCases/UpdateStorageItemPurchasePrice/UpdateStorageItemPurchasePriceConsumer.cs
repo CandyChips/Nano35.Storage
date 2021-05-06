@@ -21,20 +21,17 @@ namespace Nano35.Storage.Processor.UseCases.UpdateStorageItemPurchasePrice
         public async Task Consume(
             ConsumeContext<IUpdateStorageItemPurchasePriceRequestContract> context)
         {
-            var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var result = await new LoggedPipeNode<IUpdateStorageItemPurchasePriceRequestContract, IUpdateStorageItemPurchasePriceResultContract>(
-                _services.GetService(typeof(ILogger<IUpdateStorageItemPurchasePriceRequestContract>)) as ILogger<IUpdateStorageItemPurchasePriceRequestContract>,
-                new TransactedPipeNode<IUpdateStorageItemPurchasePriceRequestContract, IUpdateStorageItemPurchasePriceResultContract>(dbContext, 
-                    new UpdateStorageItemPurchasePriceRequest(dbContext))).Ask(context.Message, context.CancellationToken);
-            switch (result)
-            {
-                case IUpdateStorageItemPurchasePriceSuccessResultContract:
-                    await context.RespondAsync<IUpdateStorageItemPurchasePriceSuccessResultContract>(result);
-                    break;
-                case IUpdateStorageItemPurchasePriceErrorResultContract:
-                    await context.RespondAsync<IUpdateStorageItemPurchasePriceErrorResultContract>(result);
-                    break;
-            }
+            var result =
+                await new LoggedUseCasePipeNode<IUpdateStorageItemPurchasePriceRequestContract, IUpdateStorageItemPurchasePriceResultContract>(
+                        _services.GetService(typeof(ILogger<IUpdateStorageItemPurchasePriceRequestContract>)) as
+                            ILogger<IUpdateStorageItemPurchasePriceRequestContract>,
+                        new TransactedUseCasePipeNode<IUpdateStorageItemPurchasePriceRequestContract,
+                            IUpdateStorageItemPurchasePriceResultContract>(
+                            _services.GetService(typeof(ApplicationContext)) as ApplicationContext,
+                            new UpdateStorageItemPurchasePriceRequest(
+                                _services.GetService(typeof(ApplicationContext)) as ApplicationContext)))
+                    .Ask(context.Message, context.CancellationToken);
+            await context.RespondAsync(result);
         }
     }
 }

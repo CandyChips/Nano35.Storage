@@ -21,20 +21,14 @@ namespace Nano35.Storage.Processor.UseCases.PresentationGetAllCategories
         public async Task Consume(
             ConsumeContext<IPresentationGetAllCategoriesRequestContract> context)
         {
-            var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<IPresentationGetAllCategoriesRequestContract>) _services.GetService(typeof(ILogger<IPresentationGetAllCategoriesRequestContract>));
-            var message = context.Message;
-            var result = await new LoggedPipeNode<IPresentationGetAllCategoriesRequestContract, IPresentationGetAllCategoriesResultContract>(logger,
-                new PresentationGetAllCategoriesRequest(dbContext)).Ask(message, context.CancellationToken);
-            switch (result)
-            {
-                case IPresentationGetAllCategoriesSuccessResultContract:
-                    await context.RespondAsync<IPresentationGetAllCategoriesSuccessResultContract>(result);
-                    break;
-                case IPresentationGetAllCategoriesErrorResultContract:
-                    await context.RespondAsync<IPresentationGetAllCategoriesErrorResultContract>(result);
-                    break;
-            }
+            var result =
+                await new LoggedUseCasePipeNode<IPresentationGetAllCategoriesRequestContract, IPresentationGetAllCategoriesResultContract>(
+                        _services.GetService(typeof(ILogger<IPresentationGetAllCategoriesRequestContract>)) as
+                            ILogger<IPresentationGetAllCategoriesRequestContract>,
+                        new PresentationGetAllCategoriesRequest(
+                                _services.GetService(typeof(ApplicationContext)) as ApplicationContext))
+                    .Ask(context.Message, context.CancellationToken);
+            await context.RespondAsync(result);
         }
     }
 }

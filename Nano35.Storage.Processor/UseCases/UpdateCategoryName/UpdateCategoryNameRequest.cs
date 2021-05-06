@@ -1,13 +1,14 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.UseCases.UpdateCategoryName
 {
     public class UpdateCategoryNameRequest :
-        EndPointNodeBase<IUpdateCategoryNameRequestContract, IUpdateCategoryNameResultContract>
+        UseCaseEndPointNodeBase<IUpdateCategoryNameRequestContract, IUpdateCategoryNameResultContract>
     {
         private readonly ApplicationContext _context;
 
@@ -17,14 +18,18 @@ namespace Nano35.Storage.Processor.UseCases.UpdateCategoryName
             _context = context;
         }
         
-        public override async Task<IUpdateCategoryNameResultContract> Ask(
+        public override async Task<UseCaseResponse<IUpdateCategoryNameResultContract>> Ask(
             IUpdateCategoryNameRequestContract input,
             CancellationToken cancellationToken)
         {
             var result = await _context.Categories.FirstOrDefaultAsync(a => a.Id == input.Id, cancellationToken);
-            result.Name = input.Name;
             
-            return new UpdateCategoryNameSuccessResultContract();
+            if (result != null)
+                return Pass("Не найдено");
+            
+            result.Name = input.Name;
+
+            return Pass(new UpdateCategoryNameResultContract());
         }
     }
 }

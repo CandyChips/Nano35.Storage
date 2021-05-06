@@ -84,7 +84,7 @@ namespace Nano35.Storage.Processor.Configurations
                     cfg.ReceiveEndpoint("IGetAllStorageItemConditionsRequestContract", e => { e.Consumer<GetAllStorageItemConditionsConsumer>(provider); });
                     cfg.ReceiveEndpoint("IGetAllStorageItemsOnInstanceRequestContract", e => { e.Consumer<GetAllStorageItemsOnInstanceConsumer>(provider); });
                     cfg.ReceiveEndpoint("IGetAllPlacesOfStorageItemOnUnitRequestContract", e => { e.Consumer<GetAllPlacesOfStorageItemOnUnitConsumer>(provider); });
-                    cfg.ReceiveEndpoint("IGetAllStorageItemsOnUnitRequestContract", e => { e.Consumer<GetAllStorageItemsOnUnitConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IGetAllStorageItemsOnUnitContract", e => { e.Consumer<GetAllStorageItemsOnUnitConsumer>(provider); });
                     cfg.ReceiveEndpoint("IUpdateArticleBrandRequestContract", e => { e.Consumer<UpdateArticleBrandConsumer>(provider); });
                     cfg.ReceiveEndpoint("IUpdateArticleCategoryRequestContract", e => { e.Consumer<UpdateArticleCategoryConsumer>(provider); });
                     cfg.ReceiveEndpoint("IUpdateArticleInfoRequestContract", e => { e.Consumer<UpdateArticleInfoConsumer>(provider); });

@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MassTransit;
+using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Contracts.Storage.Models;
 
 namespace Nano35.Storage.Api.Requests.UpdateStorageItemHiddenComment
 {
     public class UpdateStorageItemHiddenCommentUseCase :
-        EndPointNodeBase<IUpdateStorageItemHiddenCommentRequestContract, IUpdateStorageItemHiddenCommentResultContract>
+        UseCaseEndPointNodeBase<IUpdateStorageItemHiddenCommentRequestContract, IUpdateStorageItemHiddenCommentResultContract>
     {
         private readonly IBus _bus;
         
@@ -18,8 +19,8 @@ namespace Nano35.Storage.Api.Requests.UpdateStorageItemHiddenComment
             _bus = bus;
         }
         
-        public override async Task<IUpdateStorageItemHiddenCommentResultContract> Ask
-            (IUpdateStorageItemHiddenCommentRequestContract input) => 
-            (await (new UpdateStorageItemHiddenCommentRequest(_bus)).GetResponse(input));
+        public override async Task<UseCaseResponse<IUpdateStorageItemHiddenCommentResultContract>> Ask(IUpdateStorageItemHiddenCommentRequestContract input) => 
+            await new MasstransitUseCaseRequest<IUpdateStorageItemHiddenCommentRequestContract, IUpdateStorageItemHiddenCommentResultContract>(_bus, input)
+                .GetResponse();
     }
 }

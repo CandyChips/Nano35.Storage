@@ -1,11 +1,12 @@
 ﻿using System.Threading.Tasks;
 using MassTransit;
+using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Storage.Artifacts;
 
 namespace Nano35.Storage.Api.Requests.UpdateStorageItemArticle
 {
     public class UpdateStorageItemArticleUseCase :
-        EndPointNodeBase<IUpdateStorageItemArticleRequestContract, IUpdateStorageItemArticleResultContract>
+        UseCaseEndPointNodeBase<IUpdateStorageItemArticleRequestContract, IUpdateStorageItemArticleResultContract>
     {
         private readonly IBus _bus;
         
@@ -15,8 +16,8 @@ namespace Nano35.Storage.Api.Requests.UpdateStorageItemArticle
             _bus = bus;
         }
         
-        public override async Task<IUpdateStorageItemArticleResultContract> Ask
-            (IUpdateStorageItemArticleRequestContract input) => 
-            (await (new UpdateStorageItemArticleRequest(_bus)).GetResponse(input));
+        public override async Task<UseCaseResponse<IUpdateStorageItemArticleResultContract>> Ask(IUpdateStorageItemArticleRequestContract input) => 
+            await new MasstransitUseCaseRequest<IUpdateStorageItemArticleRequestContract, IUpdateStorageItemArticleResultContract>(_bus, input)
+                .GetResponse();
     }
 }

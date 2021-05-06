@@ -21,22 +21,17 @@ namespace Nano35.Storage.Processor.UseCases.UpdateCategoryName
         public async Task Consume(
             ConsumeContext<IUpdateCategoryNameRequestContract> context)
         {
-            var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<IUpdateCategoryNameRequestContract>) _services.GetService(typeof(ILogger<IUpdateCategoryNameRequestContract>));
-            var message = context.Message;
             var result =
-                await new LoggedPipeNode<IUpdateCategoryNameRequestContract, IUpdateCategoryNameResultContract>(logger,
-                    new TransactedPipeNode<IUpdateCategoryNameRequestContract, IUpdateCategoryNameResultContract>(dbContext, 
-                        new UpdateCategoryNameRequest(dbContext))).Ask(message, context.CancellationToken);
-            switch (result)
-            {
-                case IUpdateCategoryNameSuccessResultContract:
-                    await context.RespondAsync<IUpdateCategoryNameSuccessResultContract>(result);
-                    break;
-                case IUpdateCategoryNameErrorResultContract:
-                    await context.RespondAsync<IUpdateCategoryNameErrorResultContract>(result);
-                    break;
-            }
+                await new LoggedUseCasePipeNode<IUpdateCategoryNameRequestContract, IUpdateCategoryNameResultContract>(
+                        _services.GetService(typeof(ILogger<IUpdateCategoryNameRequestContract>)) as
+                            ILogger<IUpdateCategoryNameRequestContract>,
+                        new TransactedUseCasePipeNode<IUpdateCategoryNameRequestContract,
+                            IUpdateCategoryNameResultContract>(
+                            _services.GetService(typeof(ApplicationContext)) as ApplicationContext,
+                            new UpdateCategoryNameRequest(
+                                _services.GetService(typeof(ApplicationContext)) as ApplicationContext)))
+                    .Ask(context.Message, context.CancellationToken);
+            await context.RespondAsync(result);
         }
     }
 }

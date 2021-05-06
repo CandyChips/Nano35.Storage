@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MassTransit;
+using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Contracts.Storage.Models;
 
 namespace Nano35.Storage.Api.Requests.UpdateStorageItemPurchasePrice
 {
     public class UpdateStorageItemPurchasePriceUseCase :
-        EndPointNodeBase<IUpdateStorageItemPurchasePriceRequestContract, IUpdateStorageItemPurchasePriceResultContract>
+        UseCaseEndPointNodeBase<IUpdateStorageItemPurchasePriceRequestContract, IUpdateStorageItemPurchasePriceResultContract>
     {
         private readonly IBus _bus;
         
@@ -18,9 +19,9 @@ namespace Nano35.Storage.Api.Requests.UpdateStorageItemPurchasePrice
             _bus = bus;
         }
         
-        public override async Task<IUpdateStorageItemPurchasePriceResultContract> Ask
-            (IUpdateStorageItemPurchasePriceRequestContract input) => 
-            (await (new UpdateStorageItemPurchasePriceRequest(_bus)).GetResponse(input));
+        public override async Task<UseCaseResponse<IUpdateStorageItemPurchasePriceResultContract>> Ask(IUpdateStorageItemPurchasePriceRequestContract input) => 
+            await new MasstransitUseCaseRequest<IUpdateStorageItemPurchasePriceRequestContract, IUpdateStorageItemPurchasePriceResultContract>(_bus, input)
+                .GetResponse();
         
     }
 }

@@ -15,7 +15,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.PresentationGetAllStorageItems
 {
     public class PresentationGetAllStorageItemsRequest :
-        EndPointNodeBase<IPresentationGetAllStorageItemsRequestContract, IPresentationGetAllStorageItemsResultContract>
+        UseCaseEndPointNodeBase<IPresentationGetAllStorageItemsRequestContract, IPresentationGetAllStorageItemsResultContract>
     {
         private readonly ApplicationContext _context;
         private readonly IBus _bus;
@@ -27,7 +27,7 @@ namespace Nano35.Storage.Processor.UseCases.PresentationGetAllStorageItems
             _bus = bus;
         }
         
-        public override async Task<IPresentationGetAllStorageItemsResultContract> Ask(
+        public override async Task<UseCaseResponse<IPresentationGetAllStorageItemsResultContract>> Ask(
             IPresentationGetAllStorageItemsRequestContract input, 
             CancellationToken cancellationToken)
         {
@@ -51,7 +51,7 @@ namespace Nano35.Storage.Processor.UseCases.PresentationGetAllStorageItems
                     _ => throw new Exception()
                 };
             });
-            return new PresentationGetAllStorageItemsSuccessResultContract() {StorageItems = result};
+            return Pass(new PresentationGetAllStorageItemsResultContract() {StorageItems = result});
         }
     }   
 }

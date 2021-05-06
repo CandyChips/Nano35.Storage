@@ -21,21 +21,17 @@ namespace Nano35.Storage.Processor.UseCases.UpdateStorageItemCondition
         public async Task Consume(
             ConsumeContext<IUpdateStorageItemConditionRequestContract> context)
         {
-            var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var result = await new LoggedPipeNode<IUpdateStorageItemConditionRequestContract, IUpdateStorageItemConditionResultContract>(
-                _services.GetService(typeof(ILogger<IUpdateStorageItemConditionRequestContract>)) as ILogger<IUpdateStorageItemConditionRequestContract>,
-                new TransactedPipeNode<IUpdateStorageItemConditionRequestContract, IUpdateStorageItemConditionResultContract>(dbContext, 
-                    new UpdateStorageItemConditionRequest(dbContext)))
-                .Ask(context.Message, context.CancellationToken);
-            switch (result)
-            {
-                case IUpdateStorageItemConditionSuccessResultContract:
-                    await context.RespondAsync<IUpdateStorageItemConditionSuccessResultContract>(result);
-                    break;
-                case IUpdateStorageItemConditionErrorResultContract:
-                    await context.RespondAsync<IUpdateStorageItemConditionErrorResultContract>(result);
-                    break;
-            }
+            var result =
+                await new LoggedUseCasePipeNode<IUpdateStorageItemConditionRequestContract, IUpdateStorageItemConditionResultContract>(
+                        _services.GetService(typeof(ILogger<IUpdateStorageItemConditionRequestContract>)) as
+                            ILogger<IUpdateStorageItemConditionRequestContract>,
+                        new TransactedUseCasePipeNode<IUpdateStorageItemConditionRequestContract,
+                            IUpdateStorageItemConditionResultContract>(
+                            _services.GetService(typeof(ApplicationContext)) as ApplicationContext,
+                            new UpdateStorageItemConditionRequest(
+                                _services.GetService(typeof(ApplicationContext)) as ApplicationContext)))
+                    .Ask(context.Message, context.CancellationToken);
+            await context.RespondAsync(result);
         }
     }
 }

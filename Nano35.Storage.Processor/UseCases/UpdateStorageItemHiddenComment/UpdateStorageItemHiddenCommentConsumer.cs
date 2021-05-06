@@ -21,22 +21,17 @@ namespace Nano35.Storage.Processor.UseCases.UpdateStorageItemHiddenComment
         public async Task Consume(
             ConsumeContext<IUpdateStorageItemHiddenCommentRequestContract> context)
         {
-            var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<IUpdateStorageItemHiddenCommentRequestContract>) _services.GetService(typeof(ILogger<IUpdateStorageItemHiddenCommentRequestContract>));
-            var message = context.Message;
             var result =
-                await new LoggedPipeNode<IUpdateStorageItemHiddenCommentRequestContract, IUpdateStorageItemHiddenCommentResultContract>(logger,
-                    new TransactedPipeNode<IUpdateStorageItemHiddenCommentRequestContract, IUpdateStorageItemHiddenCommentResultContract>(dbContext, 
-                        new UpdateStorageItemHiddenCommentRequest(dbContext))).Ask(message, context.CancellationToken);
-            switch (result)
-            {
-                case IUpdateStorageItemHiddenCommentSuccessResultContract:
-                    await context.RespondAsync<IUpdateStorageItemHiddenCommentSuccessResultContract>(result);
-                    break;
-                case IUpdateStorageItemHiddenCommentErrorResultContract:
-                    await context.RespondAsync<IUpdateStorageItemHiddenCommentErrorResultContract>(result);
-                    break;
-            }
+                await new LoggedUseCasePipeNode<IUpdateStorageItemHiddenCommentRequestContract, IUpdateStorageItemHiddenCommentResultContract>(
+                        _services.GetService(typeof(ILogger<IUpdateStorageItemHiddenCommentRequestContract>)) as
+                            ILogger<IUpdateStorageItemHiddenCommentRequestContract>,
+                        new TransactedUseCasePipeNode<IUpdateStorageItemHiddenCommentRequestContract,
+                            IUpdateStorageItemHiddenCommentResultContract>(
+                            _services.GetService(typeof(ApplicationContext)) as ApplicationContext,
+                            new UpdateStorageItemHiddenCommentRequest(
+                                _services.GetService(typeof(ApplicationContext)) as ApplicationContext)))
+                    .Ask(context.Message, context.CancellationToken);
+            await context.RespondAsync(result);
         }
     }
 }

@@ -21,21 +21,15 @@ namespace Nano35.Storage.Processor.UseCases.PresentationGetAllStorageItems
         public async Task Consume(
             ConsumeContext<IPresentationGetAllStorageItemsRequestContract> context)
         {
-            var result = await new LoggedPipeNode<IPresentationGetAllStorageItemsRequestContract, IPresentationGetAllStorageItemsResultContract>(
-                    _services.GetService(typeof(ILogger<IPresentationGetAllStorageItemsRequestContract>)) as ILogger<IPresentationGetAllStorageItemsRequestContract>,
-                new PresentationGetAllStorageItemsRequest(
-                    _services.GetService(typeof(ApplicationContext)) as ApplicationContext,
-                    _services.GetService(typeof(IBus)) as IBus))
-                .Ask(context.Message, context.CancellationToken);
-            switch (result)
-            {
-                case IPresentationGetAllStorageItemsSuccessResultContract:
-                    await context.RespondAsync<IPresentationGetAllStorageItemsSuccessResultContract>(result);
-                    break;
-                case IPresentationGetAllStorageItemsErrorResultContract:
-                    await context.RespondAsync<IPresentationGetAllStorageItemsErrorResultContract>(result);
-                    break;
-            }
+            var result =
+                await new LoggedUseCasePipeNode<IPresentationGetAllStorageItemsRequestContract, IPresentationGetAllStorageItemsResultContract>(
+                        _services.GetService(typeof(ILogger<IPresentationGetAllStorageItemsRequestContract>)) as
+                            ILogger<IPresentationGetAllStorageItemsRequestContract>,
+                        new PresentationGetAllStorageItemsRequest(
+                                _services.GetService(typeof(ApplicationContext)) as ApplicationContext,
+                                _services.GetService(typeof(IBus)) as IBus))
+                    .Ask(context.Message, context.CancellationToken);
+            await context.RespondAsync(result);
         }
     }
 }

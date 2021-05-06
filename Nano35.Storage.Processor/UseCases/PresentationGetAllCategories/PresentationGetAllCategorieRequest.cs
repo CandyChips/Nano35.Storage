@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MassTransit.Initializers;
 using Microsoft.EntityFrameworkCore;
+using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Contracts.Storage.Models;
 using Nano35.Storage.Processor.Services;
@@ -12,7 +13,7 @@ using Nano35.Storage.Processor.Services;
 namespace Nano35.Storage.Processor.UseCases.PresentationGetAllCategories
 {
     public class PresentationGetAllCategoriesRequest :
-        EndPointNodeBase<IPresentationGetAllCategoriesRequestContract, IPresentationGetAllCategoriesResultContract>
+        UseCaseEndPointNodeBase<IPresentationGetAllCategoriesRequestContract, IPresentationGetAllCategoriesResultContract>
     {
         private readonly ApplicationContext _context;
 
@@ -22,7 +23,7 @@ namespace Nano35.Storage.Processor.UseCases.PresentationGetAllCategories
             _context = context;
         }
         
-        public override async Task<IPresentationGetAllCategoriesResultContract> Ask(
+        public override async Task<UseCaseResponse<IPresentationGetAllCategoriesResultContract>> Ask(
             IPresentationGetAllCategoriesRequestContract input, 
             CancellationToken cancellationToken)
         {
@@ -37,7 +38,7 @@ namespace Nano35.Storage.Processor.UseCases.PresentationGetAllCategories
                 })
                 .ToListAsync(cancellationToken: cancellationToken);
 
-            return new PresentationGetAllCategoriesSuccessResultContract() {Categories = result};
+            return Pass(new PresentationGetAllCategoriesSuccessResultContract() {Categories = result});
         }
     }   
 }

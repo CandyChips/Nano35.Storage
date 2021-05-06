@@ -21,22 +21,17 @@ namespace Nano35.Storage.Processor.UseCases.UpdateCategoryParentCategoryId
         public async Task Consume(
             ConsumeContext<IUpdateCategoryParentCategoryIdRequestContract> context)
         {
-            var dbContext = (ApplicationContext) _services.GetService(typeof(ApplicationContext));
-            var logger = (ILogger<IUpdateCategoryParentCategoryIdRequestContract>) _services.GetService(typeof(ILogger<IUpdateCategoryParentCategoryIdRequestContract>));
-            var message = context.Message;
             var result =
-                await new LoggedPipeNode<IUpdateCategoryParentCategoryIdRequestContract, IUpdateCategoryParentCategoryIdResultContract>(logger,
-                    new TransactedPipeNode<IUpdateCategoryParentCategoryIdRequestContract, IUpdateCategoryParentCategoryIdResultContract>(dbContext, 
-                        new UpdateCategoryParentCategoryIdRequest(dbContext))).Ask(message, context.CancellationToken);
-            switch (result)
-            {
-                case IUpdateCategoryParentCategoryIdSuccessResultContract:
-                    await context.RespondAsync<IUpdateCategoryParentCategoryIdSuccessResultContract>(result);
-                    break;
-                case IUpdateCategoryParentCategoryIdErrorResultContract:
-                    await context.RespondAsync<IUpdateCategoryParentCategoryIdErrorResultContract>(result);
-                    break;
-            }
+                await new LoggedUseCasePipeNode<IUpdateCategoryParentCategoryIdRequestContract, IUpdateCategoryParentCategoryIdResultContract>(
+                        _services.GetService(typeof(ILogger<IUpdateCategoryParentCategoryIdRequestContract>)) as
+                            ILogger<IUpdateCategoryParentCategoryIdRequestContract>,
+                        new TransactedUseCasePipeNode<IUpdateCategoryParentCategoryIdRequestContract,
+                            IUpdateCategoryParentCategoryIdResultContract>(
+                            _services.GetService(typeof(ApplicationContext)) as ApplicationContext,
+                            new UpdateCategoryParentCategoryIdRequest(
+                                _services.GetService(typeof(ApplicationContext)) as ApplicationContext)))
+                    .Ask(context.Message, context.CancellationToken);
+            await context.RespondAsync(result);
         }
     }
 }

@@ -110,12 +110,14 @@ namespace Nano35.Storage.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateArticleCategoryErrorHttpResponse))] 
         public async Task<IActionResult> UpdateArticleCategory([FromBody] UpdateArticleCategoryHttpBody body)
         {
-            return await new CanonicalizedUpdateArticleCategoryRequest(
-                new LoggedPipeNode<IUpdateArticleCategoryRequestContract, IUpdateArticleCategoryResultContract>(
-                    _services.GetService(typeof(ILogger<IUpdateArticleCategoryRequestContract>)) as ILogger<IUpdateArticleCategoryRequestContract>,  
-                    new UpdateArticleCategoryUseCase(
-                        _services.GetService(typeof(IBus)) as IBus)))
-                .Ask(body);
+            var result =
+                await new LoggedUseCasePipeNode<IUpdateArticleCategoryRequestContract, IUpdateArticleCategoryResultContract>(
+                        _services.GetService(typeof(ILogger<IUpdateArticleCategoryRequestContract>)) as
+                            ILogger<IUpdateArticleCategoryRequestContract>,
+                        new UpdateArticleCategoryUseCase(
+                            _services.GetService(typeof(IBus)) as IBus))
+                    .Ask(new UpdateArticleCategoryRequestContract() {Id = body.Id, CategoryId = body.CategoryId});
+            return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
         }
         
         [HttpPatch]
@@ -125,12 +127,14 @@ namespace Nano35.Storage.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateArticleInfoErrorHttpResponse))] 
         public async Task<IActionResult> UpdateArticleInfo([FromBody] UpdateArticleInfoHttpBody body)
         {
-            return await new CanonicalizedUpdateArticleInfoRequest(
-                new LoggedPipeNode<IUpdateArticleInfoRequestContract, IUpdateArticleInfoResultContract>(
-                    _services.GetService(typeof(ILogger<IUpdateArticleInfoRequestContract>)) as ILogger<IUpdateArticleInfoRequestContract>,  
-                    new UpdateArticleInfoUseCase(
-                        _services.GetService(typeof(IBus)) as IBus)))
-                .Ask(body);
+            var result =
+                await new LoggedUseCasePipeNode<IUpdateArticleInfoRequestContract, IUpdateArticleInfoResultContract>(
+                        _services.GetService(typeof(ILogger<IUpdateArticleInfoRequestContract>)) as
+                            ILogger<IUpdateArticleInfoRequestContract>,
+                        new UpdateArticleInfoUseCase(
+                            _services.GetService(typeof(IBus)) as IBus))
+                    .Ask(new UpdateArticleInfoRequestContract() {Id = body.Id, Info = body.Info});
+            return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
         }
         
         [HttpPatch]
@@ -140,12 +144,14 @@ namespace Nano35.Storage.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateArticleModelErrorHttpResponse))] 
         public async Task<IActionResult> UpdateArticleModel([FromBody] UpdateArticleModelHttpBody body)
         {
-            return await new CanonicalizedUpdateArticleModelRequest(
-                new LoggedPipeNode<IUpdateArticleModelRequestContract, IUpdateArticleModelResultContract>(
-                    _services.GetService(typeof(ILogger<IUpdateArticleModelRequestContract>)) as ILogger<IUpdateArticleModelRequestContract>,  
-                    new UpdateArticleModelUseCase(
-                        _services.GetService(typeof(IBus)) as IBus)))
-                .Ask(body);
+            var result =
+                await new LoggedUseCasePipeNode<IUpdateArticleModelRequestContract, IUpdateArticleModelResultContract>(
+                        _services.GetService(typeof(ILogger<IUpdateArticleModelRequestContract>)) as
+                            ILogger<IUpdateArticleModelRequestContract>,
+                        new UpdateArticleModelUseCase(
+                            _services.GetService(typeof(IBus)) as IBus))
+                    .Ask(new UpdateArticleModelRequestContract() {Id = body.Id, Model = body.Model});
+            return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
         }
         
         [HttpGet]

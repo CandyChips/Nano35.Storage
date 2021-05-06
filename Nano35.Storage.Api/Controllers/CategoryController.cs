@@ -26,7 +26,6 @@ namespace Nano35.Storage.Api.Controllers
         public CategoryController(IServiceProvider services) { _services = services; }
 
         [HttpPost]
-        [Route("Category")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateCategorySuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateCategoryErrorHttpResponse))] 
@@ -53,25 +52,33 @@ namespace Nano35.Storage.Api.Controllers
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateCategoryNameSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateCategoryNameErrorHttpResponse))] 
-        public async Task<IActionResult> UpdateCategoryName([FromBody] UpdateCategoryNameHttpBody body) =>
-            await new CanonicalizedUpdateCategoryNameRequest(
-                    new LoggedPipeNode<IUpdateCategoryNameRequestContract, IUpdateCategoryNameResultContract>(
-                        _services.GetService(typeof(ILogger<IUpdateCategoryNameRequestContract>)) as ILogger<IUpdateCategoryNameRequestContract>,
+        public async Task<IActionResult> UpdateCategoryName([FromBody] UpdateCategoryNameHttpBody body) 
+        {
+            var result =
+                await new LoggedUseCasePipeNode<IUpdateCategoryNameRequestContract, IUpdateCategoryNameResultContract>(
+                        _services.GetService(typeof(ILogger<IUpdateCategoryNameRequestContract>)) as
+                            ILogger<IUpdateCategoryNameRequestContract>,
                         new UpdateCategoryNameUseCase(
-                            _services.GetService(typeof(IBus)) as IBus)))
-                .Ask(body);
+                            _services.GetService(typeof(IBus)) as IBus))
+                    .Ask(new UpdateCategoryNameRequestContract() {Id = body.Id, Name = body.Name});
+            return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
+        }
         
         [HttpPatch]
         [Route("ParentCategoryId")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateCategoryParentCategoryIdSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateCategoryParentCategoryIdErrorHttpResponse))] 
-        public async Task<IActionResult> UpdateCategoryParentCategoryId([FromBody] UpdateCategoryParentCategoryHttpBody body) =>
-            await new CanonicalizedUpdateCategoryParentCategoryIdRequest(
-                    new LoggedPipeNode<IUpdateCategoryParentCategoryIdRequestContract, IUpdateCategoryParentCategoryIdResultContract>(
-                        _services.GetService(typeof(ILogger<IUpdateCategoryParentCategoryIdRequestContract>)) as ILogger<IUpdateCategoryParentCategoryIdRequestContract>,
+        public async Task<IActionResult> UpdateCategoryParentCategoryId([FromBody] UpdateCategoryParentCategoryHttpBody body) 
+        {
+            var result =
+                await new LoggedUseCasePipeNode<IUpdateCategoryParentCategoryIdRequestContract, IUpdateCategoryParentCategoryIdResultContract>(
+                        _services.GetService(typeof(ILogger<IUpdateCategoryParentCategoryIdRequestContract>)) as
+                            ILogger<IUpdateCategoryParentCategoryIdRequestContract>,
                         new UpdateCategoryParentCategoryIdUseCase(
-                            _services.GetService(typeof(IBus)) as IBus)))
-                .Ask(body);
+                            _services.GetService(typeof(IBus)) as IBus))
+                    .Ask(new UpdateCategoryParentCategoryIdRequestContract() {Id = body.Id, ParentCategoryId = body.ParentCategoryId});
+            return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
+        }
     }
 }

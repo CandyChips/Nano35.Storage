@@ -24,18 +24,12 @@ namespace Nano35.Storage.Processor.UseCases.CreateArticle
             ICreateArticleRequestContract input,
             CancellationToken cancellationToken)
         {
-            if (input.NewId == Guid.Empty)
-                return new UseCaseResponse<ICreateArticleResultContract>("Обновите страницу и попробуйте еще раз");
-            if (input.InstanceId == Guid.Empty)
-                return new UseCaseResponse<ICreateArticleResultContract>("Обновите страницу и попробуйте еще раз");
-            if (input.CategoryId == Guid.Empty)
-                return new UseCaseResponse<ICreateArticleResultContract>("Не выбрана категория устройства");
-            if (input.Specs.Any())
-                return new UseCaseResponse<ICreateArticleResultContract>("Нет спецификаций устройства");
-            if (string.IsNullOrEmpty(input.Brand))
-                return new UseCaseResponse<ICreateArticleResultContract>("Нет бренда устройства-");
-            if (string.IsNullOrEmpty(input.Model))
-                return new UseCaseResponse<ICreateArticleResultContract>("Нет модели устройства");
+            if (input.NewId == Guid.Empty) return Pass("Обновите страницу и попробуйте еще раз");
+            if (input.InstanceId == Guid.Empty) return Pass("Обновите страницу и попробуйте еще раз");
+            if (input.CategoryId == Guid.Empty) return Pass("Не выбрана категория устройства");
+            if (input.Specs.Any()) return Pass("Нет спецификаций устройства");
+            if (string.IsNullOrEmpty(input.Brand)) return Pass("Нет бренда устройства-");
+            if (string.IsNullOrEmpty(input.Model)) return Pass("Нет модели устройства");
             
             var article = new Article(){
                 Id = input.NewId,
@@ -64,7 +58,7 @@ namespace Nano35.Storage.Processor.UseCases.CreateArticle
                 await _context.Specs.AddRangeAsync(specs, cancellationToken);
             }
 
-            return new UseCaseResponse<ICreateArticleResultContract>(new CreateArticleResultContract());
+            return Pass(new CreateArticleResultContract());
         }
     }
 }

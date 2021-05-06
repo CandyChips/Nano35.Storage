@@ -32,23 +32,30 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemsOnUnit
                 .Warehouses
                 .Where(c => c.UnitId == input.UnitId)
                 .ToListAsync(cancellationToken))
+                .GroupBy(e => e.StorageItem)
                 .Select(a =>
-                    new StorageItemOnUnitViewModel
-                    {Count = a.Count,
-                     Item = 
-                         new StorageItemWarehouseView()
-                         {Id = a.StorageItem.Id,
-                          Name = a.StorageItem.ToString(),
-                          PurchasePrice = (double) a.StorageItem.PurchasePrice,
-                          RetailPrice = (double) a.StorageItem.RetailPrice,
-                          Images = (new GetImagesOfStorageItem(_bus,new GetImagesOfStorageItemRequestContract() { StorageItemId = a.StorageItem.Id })
-                              .GetResponse()
-                              .Result as IGetImagesOfStorageItemSuccessResultContract)?
-                              .Images}})
+                {
+                    var r = new StorageItemOnUnitViewModel
+                    {
+                        Count = a.Sum(s => s.Count),
+                        Item =
+                            new StorageItemWarehouseView()
+                            {
+                                Id = a.Key.Id,
+                                Name = a.Key.ToString(),
+                                PurchasePrice = (double) a.Key.PurchasePrice,
+                                RetailPrice = (double) a.Key.RetailPrice,
+                                //Images = (new GetImagesOfStorageItem(_bus,new GetImagesOfStorageItemRequestContract() { StorageItemId = a.StorageItem.Id })
+                                //    .GetResponse()
+                                //    .Result as IGetImagesOfStorageItemSuccessResultContract)?
+                                //    .Images
+                            }
+                    };
+                    return r;
+                })
                 .ToList();
 
-            return new UseCaseResponse<IGetAllStorageItemsOnUnitResultContract>(
-                new GetAllStorageItemsOnUnitResultContract() {Contains = storageItems});
+            return Pass(new GetAllStorageItemsOnUnitResultContract() {Contains = storageItems});
         }
     }   
 }

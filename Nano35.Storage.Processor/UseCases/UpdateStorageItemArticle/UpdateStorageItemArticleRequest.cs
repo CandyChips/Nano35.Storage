@@ -1,13 +1,14 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Storage.Artifacts;
 using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.UseCases.UpdateStorageItemArticle
 {
     public class UpdateStorageItemArticleRequest :
-        EndPointNodeBase<IUpdateStorageItemArticleRequestContract, IUpdateStorageItemArticleResultContract>
+        UseCaseEndPointNodeBase<IUpdateStorageItemArticleRequestContract, IUpdateStorageItemArticleResultContract>
     {
         private readonly ApplicationContext _context;
 
@@ -17,14 +18,18 @@ namespace Nano35.Storage.Processor.UseCases.UpdateStorageItemArticle
             _context = context;
         }
         
-        public override async Task<IUpdateStorageItemArticleResultContract> Ask(
+        public override async Task<UseCaseResponse<IUpdateStorageItemArticleResultContract>> Ask(
             IUpdateStorageItemArticleRequestContract input,
             CancellationToken cancellationToken)
         {
             var result = await _context.StorageItems.FirstOrDefaultAsync(a => a.Id == input.Id, cancellationToken);
-            result.ArticleId = input.ArticleId;
             
-            return new UpdateStorageItemArticleSuccessResultContract();
+            if (result != null)
+                return Pass("Не найдено");
+            
+            result.ArticleId = input.ArticleId;
+
+            return Pass(new UpdateStorageItemArticleResultContract());
         }
     }
 }
