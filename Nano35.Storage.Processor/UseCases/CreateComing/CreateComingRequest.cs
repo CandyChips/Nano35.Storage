@@ -38,11 +38,15 @@ namespace Nano35.Storage.Processor.UseCases.CreateComing
             if (input.NewId == Guid.Empty)
                 return new UseCaseResponse<ICreateComingResultContract>("Обновите страницу и попробуйте еще раз");
             
+            var unitString = new MasstransitUseCaseRequest<IGetUnitStringByIdRequestContract, IGetUnitStringByIdResultContract>(_bus, new GetUnitStringByIdRequestContract() {UnitId = input.UnitId}).GetResponse().Result;
+            var countNumber = await _context.Comings.Where(c => c.Date.Year == DateTime.Today.Year).CountAsync(cancellationToken);
+            var number = $@"{unitString.Success.Data.Substring(0, 1)}{countNumber}";
+            
             var coming = new Coming()
                 {Id = input.NewId,
                  ClientId = input.ClientId,
                  Date = DateTime.Now,
-                 Number = input.Number,
+                 Number = number,
                  InstanceId = input.InstanceId};
             
             var comingDetails = input.Details

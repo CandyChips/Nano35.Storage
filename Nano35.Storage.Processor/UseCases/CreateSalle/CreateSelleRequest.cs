@@ -17,13 +17,7 @@ namespace Nano35.Storage.Processor.UseCases.CreateSalle
     {
         private readonly ApplicationContext _context;
         private readonly IBus _bus;
-
-        public CreateSelleRequest(ApplicationContext context, IBus bus)
-        {
-            _context = context;
-            _bus = bus;
-        }
-        
+        public CreateSelleRequest(ApplicationContext context, IBus bus) { _context = context; _bus = bus; }
         public override async Task<UseCaseResponse<ICreateSelleResultContract>> Ask(
             ICreateSelleRequestContract input,
             CancellationToken cancellationToken)
@@ -35,13 +29,14 @@ namespace Nano35.Storage.Processor.UseCases.CreateSalle
             if (input.NewId == Guid.Empty)
                 return new UseCaseResponse<ICreateSelleResultContract>("Обновите страницу и попробуйте еще раз");
             
-            var cashOperationId = Guid.NewGuid();
+            var unitString = new MasstransitUseCaseRequest<IGetUnitStringByIdRequestContract, IGetUnitStringByIdResultContract>(_bus, new GetUnitStringByIdRequestContract() {UnitId = input.UnitId}).GetResponse().Result;
+            var countNumber = await _context.Sells.Where(c => c.Date.Year == DateTime.Today.Year).CountAsync(cancellationToken);
+            var number = $@"{unitString.Success.Data.Substring(0, 1)}{countNumber}";
             
             var selle = new Selle()
                 {Id = input.NewId,
-                 CashOperationId = cashOperationId,
                  Date = DateTime.Now,
-                 Number = input.Number,
+                 Number = number,
                  InstanceId = input.InstanceId};
 
             var selleDetails = input
@@ -81,16 +76,16 @@ namespace Nano35.Storage.Processor.UseCases.CreateSalle
             await new MasstransitUseCaseRequest<ICreateSelleCashOperationRequestContract,
                 ICreateSelleCashOperationResultContract>(_bus,
                 new CreateSelleCashOperationRequestContract()
-                {
-                    NewId = Guid.NewGuid(),
-                    CashboxId = input.UnitId,
-                    SelleId = input.NewId,
-                    Cash = input.Details.Select(a => a.Price * a.Count).Sum(),
-                    Description = "Продажа"
-                }).GetResponse();
+                    {NewId = Guid.NewGuid(),
+                     CashboxId = input.UnitId,
+                     SelleId = input.NewId,
+                     Cash = input.Details.Select(a => a.Price * a.Count).Sum(),
+                     Description = "Продажа"}).GetResponse();
 
             await _context.Sells.AddAsync(selle, cancellationToken);
+            
             await _context.SelleDetails.AddRangeAsync(selleDetails, cancellationToken);
+            
             return new UseCaseResponse<ICreateSelleResultContract>(new CreateSelleResultContract());
         }
     }

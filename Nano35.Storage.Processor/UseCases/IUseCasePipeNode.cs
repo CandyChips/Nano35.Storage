@@ -23,6 +23,8 @@ namespace Nano35.Storage.Processor.UseCases
         protected UseCasePipeNodeBase(IUseCasePipeNode<TIn, TOut> next) => _next = next;
         protected Task<UseCaseResponse<TOut>> DoNext(TIn input, CancellationToken cancellationToken) => _next.Ask(input, cancellationToken);
         public abstract Task<UseCaseResponse<TOut>> Ask(TIn input, CancellationToken cancellationToken);
+        protected UseCaseResponse<TOut> Pass(string error) => new(error);
+        protected UseCaseResponse<TOut> Pass(TOut success) => new(success);
     }
 
     public abstract class UseCaseEndPointNodeBase<TIn, TOut> : 

@@ -20,13 +20,13 @@ namespace Nano35.Storage.Processor.UseCases
             switch (result)
             {
                 case ISuccess:
-                    _logger.LogInformation($"{typeof(TIn)} ends by: {time} with success.");
+                    _logger.LogInformation($"Ends by: {time} with success.");
                     break;
                 case IError error:
-                    _logger.LogInformation($"{typeof(TIn)} ends by: {time} with error: {error}.");
+                    _logger.LogInformation($"Ends by: {time} with error: {error}.");
                     break;
                 default:
-                    _logger.LogInformation($"{typeof(TIn)} ends by: {time} with strange error!!!");
+                    _logger.LogInformation($"Ends by: {time} with strange error!!!");
                     break;
             }
             return result;

@@ -26,8 +26,9 @@ namespace Nano35.Storage.Processor.UseCases.GetAllComings
             _bus = bus;
         }
         
-        public override async Task<UseCaseResponse<IGetAllComingsResultContract>> Ask
-            (IGetAllComingsRequestContract input, CancellationToken cancellationToken)
+        public override async Task<UseCaseResponse<IGetAllComingsResultContract>> Ask(
+            IGetAllComingsRequestContract input, 
+            CancellationToken cancellationToken)
         {
             var result = (await _context
                 .Comings

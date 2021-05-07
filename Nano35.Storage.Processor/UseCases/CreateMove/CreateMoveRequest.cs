@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Storage.Artifacts;
@@ -14,10 +15,8 @@ namespace Nano35.Storage.Processor.UseCases.CreateMove
         UseCaseEndPointNodeBase<ICreateMoveRequestContract, ICreateMoveResultContract>
     {
         private readonly ApplicationContext _context;
-        public CreateMoveRequest(ApplicationContext context)
-        {
-            _context = context;
-        }
+        private readonly IBus _bus;
+        public CreateMoveRequest(ApplicationContext context, IBus bus) { _context = context; _bus = bus; }
         public override async Task<UseCaseResponse<ICreateMoveResultContract>> Ask(
             ICreateMoveRequestContract input,
             CancellationToken cancellationToken)
@@ -29,9 +28,13 @@ namespace Nano35.Storage.Processor.UseCases.CreateMove
             if (input.NewId == Guid.Empty)
                 return new UseCaseResponse<ICreateMoveResultContract>("Обновите страницу и попробуйте еще раз");
             
+            var unitString = new MasstransitUseCaseRequest<IGetUnitStringByIdRequestContract, IGetUnitStringByIdResultContract>(_bus, new GetUnitStringByIdRequestContract() {UnitId = input.FromUnitId}).GetResponse().Result;
+            var countNumber = await _context.Moves.Where(c => c.Date.Year == DateTime.Today.Year).CountAsync(cancellationToken);
+            var number = $@"{unitString.Success.Data.Substring(0, 1)}{countNumber}";
+            
             var move = new Move()
                 {Id = input.NewId, 
-                 Number = input.Number, 
+                 Number = number, 
                  Date = DateTime.Now,
                  InstanceId = input.InstanceId};
 

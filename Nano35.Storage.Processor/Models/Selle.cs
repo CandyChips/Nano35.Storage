@@ -15,7 +15,6 @@ namespace Nano35.Storage.Processor.Models
         public Guid InstanceId { get; set; }
         public string Number { get; set; }
         public DateTime Date { get; set; }
-        public Guid CashOperationId { get; set; }
         
         //Foreign keys
 
@@ -33,8 +32,6 @@ namespace Nano35.Storage.Processor.Models
                 builder.ToTable("Sells");
                 builder.HasKey(u => new {u.Id}); 
                 builder.Property(b => b.Number)
-                       .IsRequired();
-                builder.Property(b => b.CashOperationId)
                        .IsRequired();
                 builder.Property(b => b.Date)
                        .IsRequired();

@@ -10,10 +10,7 @@ namespace Nano35.Storage.Processor.UseCases.UpdateStorageItemCondition
     public class UpdateStorageItemConditionRequest : UseCaseEndPointNodeBase<IUpdateStorageItemConditionRequestContract, IUpdateStorageItemConditionResultContract>
     {
         private readonly ApplicationContext _context;
-        public UpdateStorageItemConditionRequest(ApplicationContext context)
-        {
-            _context = context;
-        }
+        public UpdateStorageItemConditionRequest(ApplicationContext context) => _context = context;
         public override async Task<UseCaseResponse<IUpdateStorageItemConditionResultContract>> Ask(
             IUpdateStorageItemConditionRequestContract input,
             CancellationToken cancellationToken)

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Nano35.Contracts.Instance.Artifacts;
 using Nano35.Contracts.Storage.Artifacts;
@@ -14,26 +15,27 @@ namespace Nano35.Storage.Processor.UseCases.CreateCancellation
         UseCaseEndPointNodeBase<ICreateCancellationRequestContract, ICreateCancellationResultContract>
     {
         private readonly ApplicationContext _context;
+        private readonly IBus _bus;
 
-        public CreateCancellationRequest(
-            ApplicationContext context)
+        public CreateCancellationRequest(ApplicationContext context, IBus bus)
         {
             _context = context;
+            _bus = bus;
         }
         
         public override async Task<UseCaseResponse<ICreateCancellationResultContract>> Ask(
             ICreateCancellationRequestContract input,
             CancellationToken cancellationToken)
         {
-            if (input.NewId == Guid.Empty)
-                return new UseCaseResponse<ICreateCancellationResultContract>("Обновите страницу и попробуйте еще раз");
-            if (input.InstanceId == Guid.Empty)
-                return new UseCaseResponse<ICreateCancellationResultContract>("Обновите страницу и попробуйте еще раз");
-            if (input.Details.Any())
-                return new UseCaseResponse<ICreateCancellationResultContract>("Нет деталей списания");
-            if (input.UnitId == Guid.Empty)
-                return new UseCaseResponse<ICreateCancellationResultContract>("Обновите страницу и попробуйте еще раз");
+            if (input.NewId == Guid.Empty) return Pass("Обновите страницу и попробуйте еще раз");
+            if (input.InstanceId == Guid.Empty) return Pass("Обновите страницу и попробуйте еще раз");
+            if (input.Details.Any()) return Pass("Нет деталей списания");
+            if (input.UnitId == Guid.Empty) return Pass("Обновите страницу и попробуйте еще раз");
 
+            var unitString = new MasstransitUseCaseRequest<IGetUnitStringByIdRequestContract, IGetUnitStringByIdResultContract>(_bus, new GetUnitStringByIdRequestContract() {UnitId = input.UnitId}).GetResponse().Result;
+            var countNumber = await _context.Cancellations.Where(c => c.Date.Year == DateTime.Today.Year).CountAsync(cancellationToken);
+            var number = $@"{unitString.Success.Data.Substring(0, 1)}{countNumber}";
+            
             var cancellation = new Cancellation()
             {
                 Id = input.NewId,

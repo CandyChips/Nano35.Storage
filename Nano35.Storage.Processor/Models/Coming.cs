@@ -16,7 +16,6 @@ namespace Nano35.Storage.Processor.Models
         public string Number { get; set; }
         public DateTime Date { get; set; }
         public Guid ClientId { get; set; }
-        public Guid CashOperationId { get; set; }
         public ICollection<ComingDetail> Details { get; set; }
         
         public Coming()
@@ -33,8 +32,6 @@ namespace Nano35.Storage.Processor.Models
                 builder.Property(b => b.Number)
                        .IsRequired();
                 builder.Property(b => b.InstanceId)
-                       .IsRequired();
-                builder.Property(b => b.CashOperationId)
                        .IsRequired();
                 builder.Property(b => b.ClientId)
                        .IsRequired();
