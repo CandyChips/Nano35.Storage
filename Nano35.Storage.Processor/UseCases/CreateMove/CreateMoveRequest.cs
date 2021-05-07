@@ -21,13 +21,6 @@ namespace Nano35.Storage.Processor.UseCases.CreateMove
             ICreateMoveRequestContract input,
             CancellationToken cancellationToken)
         {
-            if (!input.Details.Any())
-                return new UseCaseResponse<ICreateMoveResultContract>("Нет деталей перемещения");
-            if (input.InstanceId == Guid.Empty)
-                return new UseCaseResponse<ICreateMoveResultContract>("Обновите страницу и попробуйте еще раз");
-            if (input.NewId == Guid.Empty)
-                return new UseCaseResponse<ICreateMoveResultContract>("Обновите страницу и попробуйте еще раз");
-            
             var unitString = new MasstransitUseCaseRequest<IGetUnitStringByIdRequestContract, IGetUnitStringByIdResultContract>(_bus, new GetUnitStringByIdRequestContract() {UnitId = input.FromUnitId}).GetResponse().Result;
             var countNumber = await _context.Moves.Where(c => c.Date.Year == DateTime.Today.Year).CountAsync(cancellationToken);
             var number = $@"{unitString.Success.Data.Substring(0, 1)}{countNumber}";
@@ -87,7 +80,7 @@ namespace Nano35.Storage.Processor.UseCases.CreateMove
             
             await _context.Moves.AddAsync(move, cancellationToken);
             await _context.MoveDetails.AddRangeAsync(moveDetails, cancellationToken);
-            return new UseCaseResponse<ICreateMoveResultContract>(new CreateMoveResultContract());
+            return Pass(new CreateMoveResultContract());
         }
     }
 }

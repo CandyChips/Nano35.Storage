@@ -74,7 +74,11 @@ namespace Nano35.Storage.Api.Controllers
                         _services.GetService(typeof(ILogger<IGetAllMovesRequestContract>)) as ILogger<IGetAllMovesRequestContract>,
                         new GetAllMovesUseCase(
                             _services.GetService((typeof(IBus))) as IBus))
-                    .Ask(new GetAllMovesRequestContract());
+                    .Ask(new GetAllMovesRequestContract()
+                    {
+                        InstanceId = body.InstanceId,
+                        UnitId = body.UnitId
+                    });
             
             return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
         }

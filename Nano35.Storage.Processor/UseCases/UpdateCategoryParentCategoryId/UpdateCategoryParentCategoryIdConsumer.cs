@@ -7,12 +7,12 @@ using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.UseCases.UpdateCategoryParentCategoryId
 {
-    public class UpdateParentCategoryConsumer : 
+    public class UpdateCategoryParentCategoryIdConsumer : 
         IConsumer<IUpdateCategoryParentCategoryIdRequestContract>
     {
         private readonly IServiceProvider _services;
         
-        public UpdateParentCategoryConsumer(
+        public UpdateCategoryParentCategoryIdConsumer(
             IServiceProvider services)
         {
             _services = services;

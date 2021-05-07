@@ -29,15 +29,6 @@ namespace Nano35.Storage.Processor.UseCases.CreateComing
             ICreateComingRequestContract input,
             CancellationToken cancellationToken)
         {
-            if (!input.Details.Any())
-                return new UseCaseResponse<ICreateComingResultContract>("Нет деталей оприходования");
-            if (input.ClientId == Guid.Empty)
-                return new UseCaseResponse<ICreateComingResultContract>("Не выбран клиент");
-            if (input.InstanceId == Guid.Empty)
-                return new UseCaseResponse<ICreateComingResultContract>("Обновите страницу и попробуйте еще раз");
-            if (input.NewId == Guid.Empty)
-                return new UseCaseResponse<ICreateComingResultContract>("Обновите страницу и попробуйте еще раз");
-            
             var unitString = new MasstransitUseCaseRequest<IGetUnitStringByIdRequestContract, IGetUnitStringByIdResultContract>(_bus, new GetUnitStringByIdRequestContract() {UnitId = input.UnitId}).GetResponse().Result;
             var countNumber = await _context.Comings.Where(c => c.Date.Year == DateTime.Today.Year).CountAsync(cancellationToken);
             var number = $@"{unitString.Success.Data.Substring(0, 1)}{countNumber}";
@@ -81,8 +72,6 @@ namespace Nano35.Storage.Processor.UseCases.CreateComing
                 }
             }
 
-            
-
             await new MasstransitUseCaseRequest<ICreateComingCashOperationRequestContract,
                 ICreateComingCashOperationResultContract>(_bus,
                 new CreateComingCashOperationRequestContract()
@@ -98,7 +87,7 @@ namespace Nano35.Storage.Processor.UseCases.CreateComing
             
             await _context.ComingDetails.AddRangeAsync(comingDetails, cancellationToken);
 
-            return new UseCaseResponse<ICreateComingResultContract>(new CreateComingResultContract());
+            return Pass(new CreateComingResultContract());
         }
     }
 }

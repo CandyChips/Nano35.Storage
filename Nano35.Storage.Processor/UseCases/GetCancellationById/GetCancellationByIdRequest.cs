@@ -32,7 +32,7 @@ namespace Nano35.Storage.Processor.UseCases.GetCancellationById
                 .FirstAsync(c => c.Id == input.Id, cancellationToken: cancellationToken);
             
             if (result == null)
-                return new UseCaseResponse<IGetCancellationByIdResultContract>("Не найдено");
+                return Pass("Не найдено");
             
             var cancellation = new CancellationViewModel()
             {

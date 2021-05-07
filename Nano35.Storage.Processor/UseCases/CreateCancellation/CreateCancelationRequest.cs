@@ -27,11 +27,6 @@ namespace Nano35.Storage.Processor.UseCases.CreateCancellation
             ICreateCancellationRequestContract input,
             CancellationToken cancellationToken)
         {
-            if (input.NewId == Guid.Empty) return Pass("Обновите страницу и попробуйте еще раз");
-            if (input.InstanceId == Guid.Empty) return Pass("Обновите страницу и попробуйте еще раз");
-            if (input.Details.Any()) return Pass("Нет деталей списания");
-            if (input.UnitId == Guid.Empty) return Pass("Обновите страницу и попробуйте еще раз");
-
             var unitString = new MasstransitUseCaseRequest<IGetUnitStringByIdRequestContract, IGetUnitStringByIdResultContract>(_bus, new GetUnitStringByIdRequestContract() {UnitId = input.UnitId}).GetResponse().Result;
             var countNumber = await _context.Cancellations.Where(c => c.Date.Year == DateTime.Today.Year).CountAsync(cancellationToken);
             var number = $@"{unitString.Success.Data.Substring(0, 1)}{countNumber}";
@@ -57,8 +52,8 @@ namespace Nano35.Storage.Processor.UseCases.CreateCancellation
                     Id = a.NewId,
                 });
 
-            if (input.NewId == Guid.Empty) return new UseCaseResponse<ICreateCancellationResultContract>("");
-            if (input.InstanceId == Guid.Empty) return new UseCaseResponse<ICreateCancellationResultContract>("");
+            if (input.NewId == Guid.Empty) return Pass("");
+            if (input.InstanceId == Guid.Empty) return Pass("");
             
             foreach (var item in input.Details)
             {
@@ -85,7 +80,7 @@ namespace Nano35.Storage.Processor.UseCases.CreateCancellation
             
             await _context.CancellationsDetails.AddRangeAsync(cancellationDetails, cancellationToken);
 
-            return new UseCaseResponse<ICreateCancellationResultContract>(new CreateCancellationResultContract());
+            return Pass(new CreateCancellationResultContract());
         }
     }
 }

@@ -9,8 +9,12 @@ namespace Nano35.Storage.Api.Requests.CheckExistArticle
     {
         private readonly IBus _bus;
         public CheckExistArticleUseCase(IBus bus) => _bus = bus;
-        public override async Task<UseCaseResponse<ICheckExistArticleResultContract>> Ask(ICheckExistArticleRequestContract input) => 
-            await new MasstransitUseCaseRequest<ICheckExistArticleRequestContract, ICheckExistArticleResultContract>(_bus, input)
+        public override async Task<UseCaseResponse<ICheckExistArticleResultContract>> Ask(ICheckExistArticleRequestContract input)
+        {
+            
+           return await new MasstransitUseCaseRequest<ICheckExistArticleRequestContract, ICheckExistArticleResultContract>(
+                    _bus, input)
                 .GetResponse();
+        }
     }
 }

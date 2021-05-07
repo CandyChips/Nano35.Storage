@@ -27,9 +27,9 @@ namespace Nano35.Storage.Processor.UseCases.CheckExistStorageItem
                 .FirstAsync(c => c.Id == input.StorageItemId, cancellationToken: cancellationToken);
             
             if (result == null)
-                return new UseCaseResponse<ICheckExistStorageItemResultContract>(new CheckExistStorageItemResultContract()
+                return Pass(new CheckExistStorageItemResultContract()
                     {Exist = false});
-            return new UseCaseResponse<ICheckExistStorageItemResultContract>(new CheckExistStorageItemResultContract()
+            return Pass(new CheckExistStorageItemResultContract()
                 {Exist = true});
         }
     }   

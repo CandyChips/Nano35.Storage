@@ -32,7 +32,7 @@ namespace Nano35.Storage.Processor.UseCases.GetSelleById
                 .FirstAsync(c => c.Id == input.Id, cancellationToken: cancellationToken);
 
             if (result == null)
-                return new UseCaseResponse<IGetSelleByIdResultContract>("Не найдено");
+                return Pass("Не найдено");
             var selle = new SelleViewModel()
             {
                 Id = result.Id,

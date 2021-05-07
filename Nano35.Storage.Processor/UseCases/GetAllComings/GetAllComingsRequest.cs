@@ -46,11 +46,11 @@ namespace Nano35.Storage.Processor.UseCases.GetAllComings
                             .Sum()
                     };
                     var getClientStringByIdRequestContract = 
-                        new MasstransitUseCaseRequest<IGetClientStringByIdRequestContract, IGetClientStringByIdResultContract>(_bus, new GetClientStringByIdRequestContract() {ClientId = a.ClientId}).GetResponse().Result;
-                    r.Client = getClientStringByIdRequestContract.IsSuccess() ? getClientStringByIdRequestContract.Success.Data : throw new Exception();
+                        new MasstransitUseCaseRequest<IGetClientStringByIdRequestContract, IGetClientStringByIdResultContract>(_bus, new GetClientStringByIdRequestContract() {ClientId = a.ClientId, InstanceId = a.InstanceId}).GetResponse().Result;
+                    r.Client = getClientStringByIdRequestContract.IsSuccess() ? getClientStringByIdRequestContract.Success.Data : throw new Exception(getClientStringByIdRequestContract.Error);
                     var getUnitStringByIdRequestContract = 
                         new MasstransitUseCaseRequest<IGetUnitStringByIdRequestContract, IGetUnitStringByIdResultContract>(_bus, new GetUnitStringByIdRequestContract() {UnitId = input.UnitId}).GetResponse().Result;
-                    r.Unit = getUnitStringByIdRequestContract.IsSuccess() ? getUnitStringByIdRequestContract.Success.Data : throw new Exception();
+                    r.Unit = getUnitStringByIdRequestContract.IsSuccess() ? getUnitStringByIdRequestContract.Success.Data : throw new Exception(getUnitStringByIdRequestContract.Error);
 
                     return r;
                 })

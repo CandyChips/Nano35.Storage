@@ -9,8 +9,12 @@ namespace Nano35.Storage.Api.Requests.CheckExistStorageItem
     {
         private readonly IBus _bus;
         public CheckExistStorageItemUseCase(IBus bus) => _bus = bus;
-        public override async Task<UseCaseResponse<ICheckExistStorageItemResultContract>> Ask(ICheckExistStorageItemRequestContract input) => 
-            await new MasstransitUseCaseRequest<ICheckExistStorageItemRequestContract, ICheckExistStorageItemResultContract>(_bus, input)
+        public override async Task<UseCaseResponse<ICheckExistStorageItemResultContract>> Ask(ICheckExistStorageItemRequestContract input)
+        {
+            
+            return await new MasstransitUseCaseRequest<ICheckExistStorageItemRequestContract,
+                    ICheckExistStorageItemResultContract>(_bus, input)
                 .GetResponse();
+        }
     }
 }

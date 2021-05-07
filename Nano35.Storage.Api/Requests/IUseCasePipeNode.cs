@@ -27,5 +27,7 @@ namespace Nano35.Storage.Api.Requests
         where TOut : IResult
     {
         public abstract Task<UseCaseResponse<TOut>> Ask(TIn input);
+        public UseCaseResponse<TOut> Pass(string error) => new UseCaseResponse<TOut>(error);
+        public UseCaseResponse<TOut> Pass(TOut success) => new UseCaseResponse<TOut>(success);
     }
 }

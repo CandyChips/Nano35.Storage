@@ -99,7 +99,7 @@ namespace Nano35.Storage.Processor.Configurations
                     cfg.ReceiveEndpoint("IGetAllArticlesCategoriesRequestContract", e => { e.Consumer<GetAllArticlesCategoriesConsumer>(provider); });
                     cfg.ReceiveEndpoint("ICreateCategoryRequestContract", e => { e.Consumer<CreateCategoryConsumer>(provider); });
                     cfg.ReceiveEndpoint("IUpdateCategoryNameRequestContract", e => { e.Consumer<UpdateCategoryNameConsumer>(provider); });
-                    cfg.ReceiveEndpoint("IUpdateCategoryParentCategoryIdRequestContract", e => { e.Consumer<UpdateParentCategoryConsumer>(provider); });
+                    cfg.ReceiveEndpoint("IUpdateCategoryParentCategoryIdRequestContract", e => { e.Consumer<UpdateCategoryParentCategoryIdConsumer>(provider); });
                     
                     cfg.ReceiveEndpoint("ICreateSelleRequestContract", e => { e.Consumer<CreateSelleConsumer>(provider); });
                     cfg.ReceiveEndpoint("IGetAllSellsRequestContract", e => { e.Consumer<GetAllSellsConsumer>(provider); });
@@ -168,7 +168,7 @@ namespace Nano35.Storage.Processor.Configurations
                 
                 x.AddConsumer<GetAllArticlesCategoriesConsumer>();
                 x.AddConsumer<CreateCategoryConsumer>();
-                x.AddConsumer<UpdateParentCategoryConsumer>();
+                x.AddConsumer<UpdateCategoryParentCategoryIdConsumer>();
                 x.AddConsumer<UpdateCategoryNameConsumer>();
                 
                 x.AddConsumer<GetArticleByIdConsumer>();

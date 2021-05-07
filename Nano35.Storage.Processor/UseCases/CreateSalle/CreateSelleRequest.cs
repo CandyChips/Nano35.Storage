@@ -22,13 +22,6 @@ namespace Nano35.Storage.Processor.UseCases.CreateSalle
             ICreateSelleRequestContract input,
             CancellationToken cancellationToken)
         {
-            if (!input.Details.Any())
-                return new UseCaseResponse<ICreateSelleResultContract>("Нет деталей продажи");
-            if (input.InstanceId == Guid.Empty)
-                return new UseCaseResponse<ICreateSelleResultContract>("Обновите страницу и попробуйте еще раз");
-            if (input.NewId == Guid.Empty)
-                return new UseCaseResponse<ICreateSelleResultContract>("Обновите страницу и попробуйте еще раз");
-            
             var unitString = new MasstransitUseCaseRequest<IGetUnitStringByIdRequestContract, IGetUnitStringByIdResultContract>(_bus, new GetUnitStringByIdRequestContract() {UnitId = input.UnitId}).GetResponse().Result;
             var countNumber = await _context.Sells.Where(c => c.Date.Year == DateTime.Today.Year).CountAsync(cancellationToken);
             var number = $@"{unitString.Success.Data.Substring(0, 1)}{countNumber}";
@@ -86,7 +79,7 @@ namespace Nano35.Storage.Processor.UseCases.CreateSalle
             
             await _context.SelleDetails.AddRangeAsync(selleDetails, cancellationToken);
             
-            return new UseCaseResponse<ICreateSelleResultContract>(new CreateSelleResultContract());
+            return Pass(new CreateSelleResultContract());
         }
     }
 }

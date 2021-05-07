@@ -11,7 +11,17 @@ namespace Nano35.Storage.Api.Requests.CreateCategory
         private readonly IBus _bus;
         public CreateCategoryUseCase(IBus bus) => _bus = bus;
 
-        public override async Task<UseCaseResponse<ICreateCategoryResultContract>> Ask(ICreateCategoryRequestContract input) => 
-            await new MasstransitUseCaseRequest<ICreateCategoryRequestContract, ICreateCategoryResultContract>(_bus, input)
-                .GetResponse();    }
+        public override async Task<UseCaseResponse<ICreateCategoryResultContract>> Ask(ICreateCategoryRequestContract input)
+        {
+            
+            if (input.NewId == Guid.Empty)
+                return Pass("Обновите страницу и попробуйте еще раз");
+            if (input.InstanceId == Guid.Empty)
+                return Pass("Обновите страницу и попробуйте еще раз");
+
+            return await new MasstransitUseCaseRequest<ICreateCategoryRequestContract, ICreateCategoryResultContract>(_bus,
+                    input)
+                .GetResponse();
+        }
+    }
 }

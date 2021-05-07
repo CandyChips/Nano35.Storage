@@ -32,7 +32,7 @@ namespace Nano35.Storage.Processor.UseCases.GetComingById
                 .FirstAsync(c => c.Id == input.Id, cancellationToken: cancellationToken);
 
             if (result == null)
-                return new UseCaseResponse<IGetComingByIdResultContract>("не найдено");
+                return Pass("не найдено");
 
             var coming = new ComingViewModel()
             {

@@ -19,22 +19,6 @@ namespace Nano35.Storage.Processor.UseCases.CreateStorageItem
             ICreateStorageItemRequestContract input,
             CancellationToken cancellationToken)
         {
-            if (input.NewId == Guid.Empty)
-                return new UseCaseResponse<ICreateStorageItemResultContract>("Обновите страницу и попробуйте еще раз");
-            if (input.InstanceId == Guid.Empty)
-                return new UseCaseResponse<ICreateStorageItemResultContract>("Обновите страницу и попробуйте еще раз");
-            if (input.ArticleId == Guid.Empty)
-                return new UseCaseResponse<ICreateStorageItemResultContract>("Не выбрано название предмета");
-            
-            var checkExistArticleRequestContract = 
-                new MasstransitUseCaseRequest<ICheckExistArticleRequestContract, ICheckExistArticleResultContract>(_bus, new CheckExistArticleRequestContract() {ArticleId = input.ArticleId}).GetResponse().Result;
-            if (checkExistArticleRequestContract.IsSuccess())
-                if (!checkExistArticleRequestContract.Success.Exist)
-                    return new UseCaseResponse<ICreateStorageItemResultContract>("Не верное название устройства");
-            
-            if (input.ConditionId == Guid.Empty)
-                return new UseCaseResponse<ICreateStorageItemResultContract>("Не выбрано состояние предмета");
-            
             var item = new StorageItem()
                 {Id = input.NewId,
                  Comment = input.Comment,
@@ -46,7 +30,7 @@ namespace Nano35.Storage.Processor.UseCases.CreateStorageItem
                  PurchasePrice = input.PurchasePrice,
                  RetailPrice = input.RetailPrice};
             await _context.StorageItems.AddAsync(item, cancellationToken);
-            return new UseCaseResponse<ICreateStorageItemResultContract>(new CreateStorageItemResultContract());
+            return Pass(new CreateStorageItemResultContract());
         }
     }
 }

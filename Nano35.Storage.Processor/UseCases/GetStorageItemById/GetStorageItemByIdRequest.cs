@@ -30,7 +30,7 @@ namespace Nano35.Storage.Processor.UseCases.GetStorageItemById
                 .FirstOrDefaultAsync(c => c.Id == input.Id, cancellationToken: cancellationToken);
 
             if (result == null)
-                return new UseCaseResponse<IGetStorageItemByIdResultContract>("Не найдено");
+                return Pass("Не найдено");
             
             return new UseCaseResponse<IGetStorageItemByIdResultContract>(new GetStorageItemByIdResultContract()
             {
