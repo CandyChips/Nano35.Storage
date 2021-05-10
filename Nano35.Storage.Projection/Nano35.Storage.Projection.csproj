@@ -15,7 +15,7 @@
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.2" />
         <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.7.1" />
         <PackageReference Include="Nano35.Contracts" Version="3.0.0" />
-        <PackageReference Include="Nano35.HttpContext" Version="2.1.8" />
+        <PackageReference Include="Nano35.HttpContext" Version="2.2.7" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
     </ItemGroup>
 

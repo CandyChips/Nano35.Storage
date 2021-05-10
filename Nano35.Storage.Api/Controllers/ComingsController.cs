@@ -46,7 +46,6 @@ namespace Nano35.Storage.Api.Controllers
                         NewId = body.NewId,
                         InstanceId = body.InstanceId,
                         UnitId = body.UnitId,
-                        Number = body.Number,
                         Comment = body.Comment,
                         ClientId = body.ClientId,
                         Details = body

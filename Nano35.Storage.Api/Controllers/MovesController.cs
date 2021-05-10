@@ -46,7 +46,6 @@ namespace Nano35.Storage.Api.Controllers
                         InstanceId = body.InstanceId,
                         FromUnitId = body.FromUnitId,
                         ToUnitId = body.ToUnitId,
-                        Number = body.Number,
                         Details = body
                             .Details
                             .Select(a=> 

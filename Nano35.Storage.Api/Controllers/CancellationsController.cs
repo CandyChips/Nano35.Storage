@@ -35,8 +35,7 @@ namespace Nano35.Storage.Api.Controllers
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateCancellationSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateCancellationErrorHttpResponse))] 
-        public async Task<IActionResult> CreateCancellation(
-            [FromBody] CreateCancellationHttpBody body) 
+        public async Task<IActionResult> CreateCancellation([FromBody] CreateCancellationHttpBody body) 
         {
             var result =
                 await new LoggedUseCasePipeNode<ICreateCancellationRequestContract, ICreateCancellationResultContract>(
@@ -47,26 +46,22 @@ namespace Nano35.Storage.Api.Controllers
                         NewId = body.NewId,
                         InstanceId = body.InstanceId,
                         UnitId = body.UnitId,
-                        Number = body.Number,
                         Comment = body.Comment,
                         Details = body
                             .Details
                             .Select(a=> 
                                 new CreateCancellationDetailViewModel()
-                                {
-                                    NewId = a.NewId,
-                                    Count = a.Count,
-                                    PlaceOnStorage = a.PlaceOnStorage,
-                                    StorageItemId = a.StorageItemId
-                                })
+                                    {NewId = a.NewId,
+                                     Count = a.Count,
+                                     PlaceOnStorage = a.PlaceOnStorage,
+                                     StorageItemId = a.StorageItemId})
                             .ToList()
                     });
             return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllCancellations(
-            [FromQuery] GetAllCancellationsHttpQuery body) {
+        public async Task<IActionResult> GetAllCancellations([FromQuery] GetAllCancellationsHttpQuery body) {
             var result =
                 await new LoggedUseCasePipeNode<IGetAllCancellationsRequestContract, IGetAllCancellationsResultContract>(
                         _services.GetService(typeof(ILogger<IGetAllCancellationsRequestContract>)) as ILogger<IGetAllCancellationsRequestContract>,
