@@ -35,9 +35,9 @@ namespace Nano35.Storage.Processor.UseCases.CreateCancellation
             {
                 Id = input.NewId,
                 Date = DateTime.Now,
-                Number = input.Number,
+                Number = number,
                 InstanceId = input.InstanceId,
-                Comment = input.Comment
+                Comment = input.Comment ?? ""
             };
 
             var cancellationDetails = input.Details
