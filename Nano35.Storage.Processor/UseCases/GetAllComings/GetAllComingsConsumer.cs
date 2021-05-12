@@ -7,19 +7,11 @@ using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.UseCases.GetAllComings
 {
-    public class GetAllComingsConsumer : 
-        IConsumer<IGetAllComingsRequestContract>
+    public class GetAllComingsConsumer : IConsumer<IGetAllComingsRequestContract>
     {
         private readonly IServiceProvider _services;
-        
-        public GetAllComingsConsumer(
-            IServiceProvider services)
-        {
-            _services = services;
-        }
-        
-        public async Task Consume(
-            ConsumeContext<IGetAllComingsRequestContract> context)
+        public GetAllComingsConsumer(IServiceProvider services) => _services = services;
+        public async Task Consume(ConsumeContext<IGetAllComingsRequestContract> context)
         {
             var result =
                 await new LoggedUseCasePipeNode<IGetAllComingsRequestContract, IGetAllComingsResultContract>(

@@ -7,19 +7,11 @@ using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.UseCases.CreateCancellation
 {
-    public class CreateCancellationConsumer : 
-        IConsumer<ICreateCancellationRequestContract>
+    public class CreateCancellationConsumer : IConsumer<ICreateCancellationRequestContract>
     {
         private readonly IServiceProvider _services;
-        
-        public CreateCancellationConsumer(
-            IServiceProvider services)
-        {
-            _services = services;
-        }
-        
-        public async Task Consume(
-            ConsumeContext<ICreateCancellationRequestContract> context)
+        public CreateCancellationConsumer(IServiceProvider services) => _services = services;
+        public async Task Consume(ConsumeContext<ICreateCancellationRequestContract> context)
         {
             var result =
                 await new LoggedUseCasePipeNode<ICreateCancellationRequestContract, ICreateCancellationResultContract>(

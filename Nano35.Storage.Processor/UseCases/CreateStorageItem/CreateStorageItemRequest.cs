@@ -9,8 +9,7 @@ using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.UseCases.CreateStorageItem
 {
-    public class CreateStorageItemRequest :
-        UseCaseEndPointNodeBase<ICreateStorageItemRequestContract, ICreateStorageItemResultContract>
+    public class CreateStorageItemRequest : UseCaseEndPointNodeBase<ICreateStorageItemRequestContract, ICreateStorageItemResultContract>
     {
         private readonly IBus _bus;
         private readonly ApplicationContext _context;
