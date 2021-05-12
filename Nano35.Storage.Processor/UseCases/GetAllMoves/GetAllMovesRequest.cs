@@ -11,22 +11,14 @@ using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.UseCases.GetAllMoves
 {
-    public class GetAllMovesRequest :
-        UseCaseEndPointNodeBase<IGetAllMovesRequestContract, IGetAllMovesResultContract>
+    public class GetAllMovesRequest : UseCaseEndPointNodeBase<IGetAllMovesRequestContract, IGetAllMovesResultContract>
     {
         private readonly ApplicationContext _context;
         private readonly IBus _bus;
-
-        public GetAllMovesRequest(
-            ApplicationContext context, 
-            IBus bus)
-        {
-            _context = context;
-            _bus = bus;
-        }
-        
-        public override async Task<UseCaseResponse<IGetAllMovesResultContract>> Ask
-            (IGetAllMovesRequestContract input, CancellationToken cancellationToken)
+        public GetAllMovesRequest(ApplicationContext context, IBus bus) { _context = context; _bus = bus; }
+        public override async Task<UseCaseResponse<IGetAllMovesResultContract>> Ask(
+            IGetAllMovesRequestContract input, 
+            CancellationToken cancellationToken)
         {
             var moves = await _context
                 .Moves

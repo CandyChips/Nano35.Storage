@@ -61,19 +61,17 @@ namespace Nano35.Storage.Processor.UseCases.CreateSalle
                 }
                 else
                 {
-                    throw new NotImplementedException();
+                    return Pass("");
                 }
             }
             
 
-            await new MasstransitUseCaseRequest<ICreateSelleCashOperationRequestContract,
-                ICreateSelleCashOperationResultContract>(_bus,
-                new CreateSelleCashOperationRequestContract()
+            await new MasstransitUseCaseRequest<ICreateSelleCashOperationRequestContract, ICreateSelleCashOperationResultContract>(_bus, new CreateSelleCashOperationRequestContract()
                     {NewId = Guid.NewGuid(),
                      CashboxId = input.UnitId,
                      SelleId = input.NewId,
                      Cash = input.Details.Select(a => a.Price * a.Count).Sum(),
-                     Description = "Продажа"}).GetResponse();
+                     Description = $"Оплата продажи №{selle.Number}"}).GetResponse();
 
             await _context.Sells.AddAsync(selle, cancellationToken);
             

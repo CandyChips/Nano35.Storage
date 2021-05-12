@@ -8,16 +8,10 @@ using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.UseCases.CreateCategory
 {
-    public class CreateCategoryRequest :
-        UseCaseEndPointNodeBase<ICreateCategoryRequestContract, ICreateCategoryResultContract>
+    public class CreateCategoryRequest : UseCaseEndPointNodeBase<ICreateCategoryRequestContract, ICreateCategoryResultContract>
     {
         private readonly ApplicationContext _context;
-
-        public CreateCategoryRequest(ApplicationContext context)
-        {
-            _context = context;
-        }
-        
+        public CreateCategoryRequest(ApplicationContext context) => _context = context;
         public override async Task<UseCaseResponse<ICreateCategoryResultContract>> Ask(
             ICreateCategoryRequestContract input,
             CancellationToken cancellationToken)
@@ -26,13 +20,10 @@ namespace Nano35.Storage.Processor.UseCases.CreateCategory
                 new Category()
                     {Id = input.NewId,
                      InstanceId = input.InstanceId,
-                     ParentCategoryId = input.ParentCategoryId == Guid.Empty ? 
-                         null : 
-                         input.ParentCategoryId,
+                     ParentCategoryId = input.ParentCategoryId == Guid.Empty ? null : input.ParentCategoryId,
                      Name = input.Name,
                      IsDeleted = false};
             await _context.AddAsync(category, cancellationToken);
-
             return Pass(new CreateCategorySuccessResultContract());
         }
     }

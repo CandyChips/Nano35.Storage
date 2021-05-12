@@ -15,13 +15,10 @@ namespace Nano35.Storage.Processor.UseCases.CreateComing
         {
             var result =
                 await new LoggedUseCasePipeNode<ICreateComingRequestContract, ICreateComingResultContract>(
-                        _services.GetService(typeof(ILogger<ICreateComingRequestContract>)) as
-                            ILogger<ICreateComingRequestContract>,
-                        new TransactedUseCasePipeNode<ICreateComingRequestContract,
-                            ICreateComingResultContract>(
+                        _services.GetService(typeof(ILogger<ICreateComingRequestContract>)) as ILogger<ICreateComingRequestContract>,
+                        new TransactedUseCasePipeNode<ICreateComingRequestContract, ICreateComingResultContract>(
                             _services.GetService(typeof(ApplicationContext)) as ApplicationContext,
-                            new CreateComingRequest(
-                                _services.GetService(typeof(ApplicationContext)) as ApplicationContext,
+                            new CreateComingRequest(_services.GetService(typeof(ApplicationContext)) as ApplicationContext,
                             _services.GetService(typeof(IBus)) as IBus)))
                     .Ask(context.Message, context.CancellationToken);
             await context.RespondAsync(result);

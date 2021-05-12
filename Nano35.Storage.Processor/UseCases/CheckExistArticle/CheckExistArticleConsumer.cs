@@ -19,14 +19,9 @@ namespace Nano35.Storage.Processor.UseCases.CheckExistArticle
         {
             var result =
                 await new LoggedUseCasePipeNode<ICheckExistArticleRequestContract, ICheckExistArticleResultContract>(
-                        _services.GetService(typeof(ILogger<ICheckExistArticleRequestContract>)) as
-                            ILogger<ICheckExistArticleRequestContract>,
-                        new TransactedUseCasePipeNode<ICheckExistArticleRequestContract,
-                            ICheckExistArticleResultContract>(
-                            _services.GetService(typeof(ApplicationContext)) as ApplicationContext,
-                            new CheckExistArticleRequest(
-                                _services.GetService(typeof(ApplicationContext)) as ApplicationContext)))
-                    .Ask(context.Message, context.CancellationToken);
+                    _services.GetService(typeof(ILogger<ICheckExistArticleRequestContract>)) as ILogger<ICheckExistArticleRequestContract>,
+                    new CheckExistArticleRequest(_services.GetService(typeof(ApplicationContext)) as ApplicationContext))
+                .Ask(context.Message, context.CancellationToken);
             await context.RespondAsync(result);
         }
     }

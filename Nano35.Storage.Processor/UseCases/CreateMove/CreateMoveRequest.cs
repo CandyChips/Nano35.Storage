@@ -11,8 +11,7 @@ using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.UseCases.CreateMove
 {
-    public class CreateMoveRequest :
-        UseCaseEndPointNodeBase<ICreateMoveRequestContract, ICreateMoveResultContract>
+    public class CreateMoveRequest : UseCaseEndPointNodeBase<ICreateMoveRequestContract, ICreateMoveResultContract>
     {
         private readonly ApplicationContext _context;
         private readonly IBus _bus;
@@ -25,23 +24,25 @@ namespace Nano35.Storage.Processor.UseCases.CreateMove
             var countNumber = await _context.Moves.Where(c => c.Date.Year == DateTime.Today.Year).CountAsync(cancellationToken);
             var number = $@"{unitString.Success.Data.Substring(0, 1)}{countNumber}";
             
-            var move = new Move()
-                {Id = input.NewId, 
-                 Number = number, 
-                 Date = DateTime.Now,
-                 InstanceId = input.InstanceId};
+            var move = 
+                new Move()
+                    {Id = input.NewId, 
+                     Number = number, 
+                     Date = DateTime.Now,
+                     InstanceId = input.InstanceId};
 
             var moveDetails = input
                 .Details
-                .Select(a => new MoveDetail()
-                    {Id = a.NewId,
-                     Count = a.Count,
-                     FromPlace = a.FromPlaceOnStorage,
-                     FromUnitId = input.FromUnitId,
-                     MoveId = input.NewId,
-                     StorageItemId = a.StorageItemId,
-                     ToPlace = a.ToPlaceOnStorage,
-                     ToUnitId = input.ToUnitId})
+                .Select(a => 
+                    new MoveDetail()
+                        {Id = a.NewId,
+                         Count = a.Count,
+                         FromPlace = a.FromPlaceOnStorage,
+                         FromUnitId = input.FromUnitId,
+                         MoveId = input.NewId,
+                         StorageItemId = a.StorageItemId,
+                         ToPlace = a.ToPlaceOnStorage,
+                         ToUnitId = input.ToUnitId})
                 .ToList();
             foreach (var item in input.Details)
             {
@@ -55,14 +56,14 @@ namespace Nano35.Storage.Processor.UseCases.CreateMove
                         .FirstOrDefaultAsync(a =>
                             a.Name == item.FromPlaceOnStorage &&
                             a.StorageItemId == item.StorageItemId &&
-                            a.UnitId == input.FromUnitId, cancellationToken: cancellationToken));
+                            a.UnitId == input.FromUnitId, cancellationToken));
                     fromWh.Count -= item.Count;
                     
                     var toWh = (await _context.Warehouses
                         .FirstOrDefaultAsync(a =>
                             a.Name == item.ToPlaceOnStorage &&
                             a.StorageItemId == item.StorageItemId &&
-                            a.UnitId == input.ToUnitId, cancellationToken: cancellationToken));
+                            a.UnitId == input.ToUnitId, cancellationToken));
                     toWh.Count += item.Count;
                 }
                 else
@@ -79,7 +80,9 @@ namespace Nano35.Storage.Processor.UseCases.CreateMove
             }
             
             await _context.Moves.AddAsync(move, cancellationToken);
+            
             await _context.MoveDetails.AddRangeAsync(moveDetails, cancellationToken);
+            
             return Pass(new CreateMoveResultContract());
         }
     }

@@ -7,13 +7,10 @@ using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.UseCases.GetAllMoves
 {
-    public class GetAllMovesConsumer : 
-        IConsumer<IGetAllMovesRequestContract>
+    public class GetAllMovesConsumer : IConsumer<IGetAllMovesRequestContract>
     {
         private readonly IServiceProvider _services;
-        
-        public GetAllMovesConsumer(
-            IServiceProvider services)
+        public GetAllMovesConsumer(IServiceProvider services)
         {
             _services = services;
         }
