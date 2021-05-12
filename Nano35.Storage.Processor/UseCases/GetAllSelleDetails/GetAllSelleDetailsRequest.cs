@@ -29,15 +29,31 @@ namespace Nano35.Storage.Processor.UseCases.GetAllSelleDetails
         public override async Task<UseCaseResponse<IGetAllSelleDetailsResultContract>>Ask
             (IGetAllSelleDetailsRequestContract input, CancellationToken cancellationToken)
         {
-            var result = await _context
-                .Sells
-                .Where(c => c.InstanceId == input.SelleId)
+            var selleDetails = await _context
+                .SelleDetails
+                .Where(c => c.SelleId == input.SelleId)
+                .ToListAsync(cancellationToken);
+            var result    = selleDetails
                 .Select(a =>
-                    new SelleDetailViewModel()
+                {
+                    var r = new SelleDetailViewModel()
                     {
-                        // ToDo !!!
-                    })
-                .ToListAsync(cancellationToken: cancellationToken);
+                        StorageItemId = a.StorageItemId,
+                        Count = a.Count,
+                        PlaceOnStorage = a.FromPlace,
+                        Price = a.Price
+                    };
+                    var getStorageItemByIdRequestContract =
+                        new MasstransitUseCaseRequest<IGetStorageItemByIdRequestContract,
+                            IGetStorageItemByIdResultContract>(_bus,
+                            new GetStorageItemByIdRequestContract() {Id = a.StorageItemId}).GetResponse().Result;
+                    r.StorageItem = getStorageItemByIdRequestContract.IsSuccess()
+                        ? getStorageItemByIdRequestContract.Success.Data.Article
+                        : throw new Exception();
+
+                    return r;
+                })
+                .ToList();
 
             return new UseCaseResponse<IGetAllSelleDetailsResultContract>(new GetAllSelleDetailsResultContract()
                 {Data = result});
