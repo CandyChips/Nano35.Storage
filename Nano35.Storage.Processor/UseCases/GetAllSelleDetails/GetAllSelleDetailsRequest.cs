@@ -17,30 +17,28 @@ namespace Nano35.Storage.Processor.UseCases.GetAllSelleDetails
     {
         private readonly ApplicationContext _context;
         private readonly IBus _bus;
-
-        public GetAllSelleDetailsRequest(
-            ApplicationContext context, 
-            IBus bus)
+        public GetAllSelleDetailsRequest(ApplicationContext context, IBus bus) { _context = context; _bus = bus; }
+        public override async Task<UseCaseResponse<IGetAllSelleDetailsResultContract>>Ask(
+            IGetAllSelleDetailsRequestContract input, 
+            CancellationToken cancellationToken)
         {
-            _context = context;
-            _bus = bus;
-        }
-
-        public override async Task<UseCaseResponse<IGetAllSelleDetailsResultContract>>Ask
-            (IGetAllSelleDetailsRequestContract input, CancellationToken cancellationToken)
-        {
-            var result = await _context
+            var selle = await _context
                 .Sells
-                .Where(c => c.InstanceId == input.SelleId)
+                .FirstOrDefaultAsync(c => c.Id == input.SelleId, cancellationToken: cancellationToken);
+            var details = selle.Details
                 .Select(a =>
                     new SelleDetailViewModel()
                     {
-                        // ToDo !!!
+                        StorageItem = _context.StorageItems.FirstOrDefault(e => a.StorageItemId == e.Id)?.ToString(), 
+                        Count = a.Count,
+                        Price = a.Price, 
+                        PlaceOnStorage = a.FromPlace, 
+                        StorageItemId = a.StorageItemId
                     })
-                .ToListAsync(cancellationToken: cancellationToken);
+                .ToList();
 
-            return new UseCaseResponse<IGetAllSelleDetailsResultContract>(new GetAllSelleDetailsResultContract()
-                {Data = result});
+
+            return new UseCaseResponse<IGetAllSelleDetailsResultContract>(new GetAllSelleDetailsResultContract() {Data = details});
         }
     }   
 }

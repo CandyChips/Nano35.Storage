@@ -7,8 +7,7 @@ namespace Nano35.Storage.Processor.Services
 {
     public static class DataInitializer
     {
-        public static async Task InitializeRolesAsync(
-            ApplicationContext modelBuilder)
+        public static async Task InitializeRolesAsync(ApplicationContext modelBuilder)
         {
             if(!modelBuilder.StorageItemConditions.Any())
             {
@@ -36,6 +35,11 @@ namespace Nano35.Storage.Processor.Services
                 
                 await modelBuilder.SaveChangesAsync().ConfigureAwait(false);
             }
+        }
+
+        public static async Task InitializeCategoriesAsync(ApplicationContext modelBuilder)
+        {
+            
         }
     }
 }

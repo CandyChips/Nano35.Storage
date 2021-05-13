@@ -26,13 +26,13 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemsOnInstance
             _bus = bus;
         }
         
-        public override async Task<UseCaseResponse<IGetAllStorageItemsOnInstanceResultContract>> Ask
-            (IGetAllStorageItemsOnInstanceContract input, 
+        public override async Task<UseCaseResponse<IGetAllStorageItemsOnInstanceResultContract>> Ask(
+            IGetAllStorageItemsOnInstanceContract input, 
             CancellationToken cancellationToken)
         {
             var storageItem = (await _context
                 .Warehouses
-                .Where(c => c.InstanceId == input.InstanceId)
+                .Where(c => c.InstanceId == input.InstanceId && c.IsDeleted == false)
                 .ToListAsync(cancellationToken))
                 .GroupBy(g => g.StorageItem, e => e)
                 .Select(a =>
@@ -60,6 +60,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemsOnInstance
 
                     return r;
                 })
+                .Where(e => e.Count > 0)
                 .ToList();
 
             return new UseCaseResponse<IGetAllStorageItemsOnInstanceResultContract>(
