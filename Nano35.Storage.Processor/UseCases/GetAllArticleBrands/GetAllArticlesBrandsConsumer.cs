@@ -18,7 +18,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllArticleBrands
             var result =
                 await new LoggedUseCasePipeNode<IGetAllArticlesBrandsRequestContract, IGetAllArticlesBrandsResultContract>(
                         _services.GetService(typeof(ILogger<IGetAllArticlesBrandsRequestContract>)) as ILogger<IGetAllArticlesBrandsRequestContract>,
-                        new GetAllArticlesBrandsRequest(                            
+                        new GetAllArticlesBrands(                            
                             _services.GetService(typeof(ApplicationContext)) as ApplicationContext))
                     .Ask(context.Message, context.CancellationToken);
             await context.RespondAsync(result);
