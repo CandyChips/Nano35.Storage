@@ -17,7 +17,7 @@ namespace Nano35.Storage.Processor.UseCases.UpdateStorageItemCondition
         {
             var result = await _context.StorageItems.FirstOrDefaultAsync(a => a.Id == input.Id, cancellationToken);
             
-            if (result != null)
+            if (result == null)
                 return Pass("Не найдено");
             
             result.ConditionId = input.ConditionId;

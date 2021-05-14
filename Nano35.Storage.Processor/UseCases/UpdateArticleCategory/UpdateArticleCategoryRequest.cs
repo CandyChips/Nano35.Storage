@@ -20,7 +20,7 @@ namespace Nano35.Storage.Processor.UseCases.UpdateArticleCategory
         {
             var result = await (_context.Articles.FirstOrDefaultAsync(a => a.Id == input.Id, cancellationToken));
             
-            if (result != null)
+            if (result == null)
                 return Pass("Не найдено");
             
             result.CategoryId = input.CategoryId;

@@ -24,7 +24,7 @@ namespace Nano35.Storage.Processor.UseCases.UpdateCategoryParentCategoryId
         {
             var result = await _context.Categories.FirstOrDefaultAsync(a => a.Id == input.Id, cancellationToken);
             
-            if (result != null)
+            if (result == null)
                 return Pass("Не найдено");
             
             result.ParentCategoryId = input.ParentCategoryId;
