@@ -25,10 +25,12 @@ namespace Nano35.Storage.Processor.Models
         }
 
         public ICollection<StorageItem> StorageItems { get; set; }
+        public ICollection<Spec> Specs { get; set; }
 
         public Article()
         {
             StorageItems = new List<StorageItem>();
+            Specs = new List<Spec>();
         }
 
 

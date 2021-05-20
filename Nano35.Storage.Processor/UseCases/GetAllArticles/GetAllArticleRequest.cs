@@ -32,7 +32,11 @@ namespace Nano35.Storage.Processor.UseCases.GetAllArticles
                                 Category = a.Category.Name,
                                 CategoryId = a.CategoryId,
                                 Id = a.Id,
-                                Info = a.Info
+                                Info = a.Info,
+                                Specs = a
+                                    .Specs
+                                    .Select(e => new SpecViewModel() {Key = e.Key, Value = e.Value})
+                                    .ToList()
                             })
                         .ToListAsync(cancellationToken: cancellationToken)
             });

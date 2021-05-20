@@ -15,29 +15,22 @@ namespace Nano35.Storage.Projection.Controllers
     
     [ApiController]
     [Route("[controller]")]
-    public class ArticlesController :
-        ControllerBase
+    public class ArticlesController : ControllerBase
     {
         private readonly IServiceProvider _services;
-        
-        public ArticlesController(IServiceProvider services) { _services = services; }
+        public ArticlesController(IServiceProvider services) => _services = services;
         
         [HttpGet]
-        [Route("GetAllArticles")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(PresentationGetAllArticlesSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(PresentationGetAllArticlesErrorHttpResponse))] 
-        public async Task<IActionResult> GetAllArticles(
-            [FromQuery] PresentationGetAllArticlesHttpQuery query)
+        public async Task<IActionResult> GetAllArticles(Guid instanceId)
         {
-            return await new CanonicalizedPresentationGetAllArticlesRequestRequest(
-                new LoggedPipeNode<IPresentationGetAllArticlesRequestContract, IPresentationGetAllArticlesResultContract>(
+            var result = await new LoggedPipeNode<IPresentationGetAllArticlesRequestContract, IPresentationGetAllArticlesResultContract>(
                     _services.GetService(typeof(ILogger<IPresentationGetAllArticlesRequestContract>)) as ILogger<IPresentationGetAllArticlesRequestContract>,
-                    new ValidatedPipeNode<IPresentationGetAllArticlesRequestContract, IPresentationGetAllArticlesResultContract>(
-                        _services.GetService(typeof(IValidator<IPresentationGetAllArticlesRequestContract>)) as IValidator<IPresentationGetAllArticlesRequestContract>,
-                        new PresentationGetAllArticlesUseCase(
-                            _services.GetService(typeof(IBus)) as IBus))))
-                .Ask(query);
+                    new PresentationGetAllArticles(_services.GetService(typeof(IBus)) as IBus))
+                .Ask(new PresentationGetAllArticlesRequestContract() { InstanceId = instanceId });
+            return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
         }
     }
 }

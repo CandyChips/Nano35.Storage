@@ -27,8 +27,8 @@ namespace Nano35.Storage.Processor.UseCases
             }
             catch (Exception e)
             {
-                _logger.LogInformation($"{typeof(TIn)} ends by: {DateTime.Now} with exception!!!");
-                return new UseCaseResponse<TOut>($"{typeof(TIn)} ends by: {DateTime.Now} with exception!!!");
+                _logger.LogInformation($"{typeof(TIn)} ends by: {DateTime.Now} with exception: {e.Message}!!!");
+                return new UseCaseResponse<TOut>($"{typeof(TIn)} ends by: {DateTime.Now} with exception: {e.Message}!!!");
             }
         }
     }

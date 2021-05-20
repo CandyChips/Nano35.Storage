@@ -23,14 +23,10 @@ namespace Nano35.Storage.Projection.Configurations
                         h.Password(ContractBase.RabbitMqPassword);
                     });
                 }));
-                x.AddRequestClient<IGetAllStorageItemConditionsRequestContract>(
-                    new Uri($"{ContractBase.RabbitMqLocation}/IGetAllStorageItemConditionsRequestContract"));
-                x.AddRequestClient<IPresentationGetAllArticlesRequestContract>(
-                    new Uri($"{ContractBase.RabbitMqLocation}/IPresentationGetAllArticlesRequestContract"));
-                x.AddRequestClient<IPresentationGetAllCategoriesRequestContract>(
-                    new Uri($"{ContractBase.RabbitMqLocation}/IPresentationGetAllCategoriesRequestContract"));
-                x.AddRequestClient<IPresentationGetAllStorageItemsRequestContract>(
-                    new Uri($"{ContractBase.RabbitMqLocation}/IPresentationGetAllStorageItemsRequestContract"));
+                x.AddRequestClient<IGetAllStorageItemConditionsRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IGetAllStorageItemConditionsRequestContract"));
+                x.AddRequestClient<IPresentationGetAllArticlesRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IPresentationGetAllArticlesRequestContract"));
+                x.AddRequestClient<IPresentationGetAllCategoriesRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IPresentationGetAllCategoriesRequestContract"));
+                x.AddRequestClient<IPresentationGetAllStorageItemsRequestContract>(new Uri($"{ContractBase.RabbitMqLocation}/IPresentationGetAllStorageItemsRequestContract"));
 
             });
             services.AddMassTransitHostedService();

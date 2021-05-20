@@ -24,7 +24,7 @@ namespace Nano35.Storage.Processor.Models
                 builder.Property(b => b.Value)
                     .IsRequired();
                 builder.HasOne(p => p.Article)
-                    .WithMany()
+                    .WithMany(p => p.Specs)
                     .OnDelete(DeleteBehavior.NoAction)
                     .HasForeignKey(p => new {p.ArticleId, p.InstanceId});
             }

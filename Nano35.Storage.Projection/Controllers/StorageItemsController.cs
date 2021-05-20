@@ -23,38 +23,29 @@ namespace Nano35.Storage.Projection.Controllers
         public StorageItemsController(IServiceProvider services) { _services = services; }
         
         [HttpGet]
-        [Route("GetAllStorageItems")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(PresentationGetAllStorageItemsSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(PresentationGetAllStorageItemsErrorHttpResponse))] 
-        public async Task<IActionResult> GetAllStorageItems(
-            [FromQuery] PresentationGetAllStorageItemsHttpQuery query)
+        public async Task<IActionResult> GetAllStorageItems(Guid instanceId)
         {
-            return await new CanonicalizedPresentationGetAllStorageItemsRequest(
-                    new LoggedPipeNode<IPresentationGetAllStorageItemsRequestContract, IPresentationGetAllStorageItemsResultContract>(
-                        _services.GetService(typeof(ILogger<IPresentationGetAllStorageItemsRequestContract>)) as ILogger<IPresentationGetAllStorageItemsRequestContract>,
-                        new ValidatedPipeNode<IPresentationGetAllStorageItemsRequestContract, IPresentationGetAllStorageItemsResultContract>(
-                            _services.GetService(typeof(IValidator<IPresentationGetAllStorageItemsRequestContract>)) as IValidator<IPresentationGetAllStorageItemsRequestContract>,
-                            new PresentationGetAllStorageItemsUseCase(
-                                _services.GetService(typeof(IBus)) as IBus))))
-                .Ask(query);
+            var result = await 
+                    new LoggedPipeNode<IPresentationGetAllStorageItemsRequestContract, IPresentationGetAllStorageItemsResultContract>(_services.GetService(typeof(ILogger<IPresentationGetAllStorageItemsRequestContract>)) as ILogger<IPresentationGetAllStorageItemsRequestContract>,
+                        new PresentationGetAllStorageItems(_services.GetService(typeof(IBus)) as IBus))
+                .Ask(new PresentationGetAllStorageItemsRequestContract() { InstanceId = instanceId });
+            return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
         }
     
-        [HttpGet]
-        [Route("GetAllStorageItemConditions")]
+        [HttpGet("Conditions")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllStorageItemConditionsSuccessHttpResponse))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllStorageItemConditionsErrorHttpResponse))] 
         public async Task<IActionResult> GetAllStorageItemConditions()
         {
-            return await new CanonicalizedGetAllStorageItemConditionsRequest(
-                    new LoggedPipeNode<IGetAllStorageItemConditionsRequestContract, IGetAllStorageItemConditionsResultContract>(
-                        _services.GetService(typeof(ILogger<IGetAllStorageItemConditionsRequestContract>)) as ILogger<IGetAllStorageItemConditionsRequestContract>,
-                        new ValidatedPipeNode<IGetAllStorageItemConditionsRequestContract, IGetAllStorageItemConditionsResultContract>(
-                            _services.GetService(typeof(IValidator<IGetAllStorageItemConditionsRequestContract>)) as IValidator<IGetAllStorageItemConditionsRequestContract>,
-                            new GetAllStorageItemConditionsUseCase(
-                                _services.GetService(typeof(IBus)) as IBus))))
-                .Ask(new GetAllStorageItemConditionsHttpQuery());
+            var result = await new LoggedPipeNode<IGetAllStorageItemConditionsRequestContract, IGetAllStorageItemConditionsResultContract>(
+                    _services.GetService(typeof(ILogger<IGetAllStorageItemConditionsRequestContract>)) as ILogger<IGetAllStorageItemConditionsRequestContract>,
+                    new GetAllStorageItemConditions(_services.GetService(typeof(IBus)) as IBus))
+                .Ask(new GetAllStorageItemConditionsRequestContract());
+            return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
         }
     }
 }
