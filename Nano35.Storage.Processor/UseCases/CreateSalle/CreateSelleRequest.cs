@@ -70,7 +70,6 @@ namespace Nano35.Storage.Processor.UseCases.CreateSalle
                     {NewId = Guid.NewGuid(),
                      CashboxId = input.UnitId,
                      SelleId = input.NewId,
-                     Cash = input.Details.Select(a => a.Price * a.Count).Sum(),
                      Description = $"Оплата продажи №{selle.Number}"}).GetResponse();
 
             await _context.Sells.AddAsync(selle, cancellationToken);

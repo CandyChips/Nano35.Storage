@@ -35,14 +35,11 @@ namespace Nano35.Storage.Api.Controllers
         [HttpGet]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetAllArticlesSuccessHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetAllArticlesErrorHttpResponse))] 
         public async Task<IActionResult> GetAllArticles([FromQuery] GetAllArticlesHttpQuery query)
         {
             var result =
-                await new LoggedUseCasePipeNode<IGetAllArticlesRequestContract, IGetAllArticlesResultContract>(
-                        _services.GetService(typeof(ILogger<IGetAllArticlesRequestContract>)) as ILogger<IGetAllArticlesRequestContract>,
-                        new GetAllArticlesUseCase(
-                            _services.GetService((typeof(IBus))) as IBus))
+                await new LoggedUseCasePipeNode<IGetAllArticlesRequestContract, IGetAllArticlesResultContract>(_services.GetService(typeof(ILogger<IGetAllArticlesRequestContract>)) as ILogger<IGetAllArticlesRequestContract>,
+                        new GetAllArticlesUseCase(_services.GetService((typeof(IBus))) as IBus))
                     .Ask(new GetAllArticlesRequestContract()
                     {
                         InstanceId = query.InstanceId
@@ -55,7 +52,6 @@ namespace Nano35.Storage.Api.Controllers
         [HttpGet("{id}")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(GetArticleByIdSuccessHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GetArticleByIdErrorHttpResponse))] 
         public async Task<IActionResult> GetArticleById(Guid id)
         {
             var result =
@@ -74,7 +70,6 @@ namespace Nano35.Storage.Api.Controllers
         [HttpPost]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateArticleSuccessHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(CreateArticleErrorHttpResponse))] 
         public async Task<IActionResult> CreateArticle([FromBody] CreateArticleHttpBody body)
         {
             var result =
@@ -89,17 +84,9 @@ namespace Nano35.Storage.Api.Controllers
                         Model = body.Model,
                         Brand = body.Brand,
                         CategoryId = body.CategoryId,
-                        Info = body.Info,
-                        Specs = body
-                            .Specs
-                            .Select(a =>
-                                new SpecViewModel()
-                                {
-                                    Key = a.Key,
-                                    Value = a.Value
-                                }).ToList()
+                        Info = body.Info ?? "",
+                        Specs = body.Specs == null ? new List<SpecViewModel>() : body.Specs.Select(a => new SpecViewModel() {Key = a.Key, Value = a.Value}).ToList()
                     });
-            
             return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
         }
         
@@ -107,7 +94,6 @@ namespace Nano35.Storage.Api.Controllers
         [Route("Category")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateArticleCategorySuccessHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateArticleCategoryErrorHttpResponse))] 
         public async Task<IActionResult> UpdateArticleCategory([FromBody] UpdateArticleCategoryHttpBody body)
         {
             var result =

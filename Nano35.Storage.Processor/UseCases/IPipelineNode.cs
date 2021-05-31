@@ -41,14 +41,4 @@ namespace Nano35.Storage.Processor.UseCases
     {
         Task<TOut> Ask(TIn input, CancellationToken cancellationToken);
     }
-    public class GetImagesOfStorageItem : 
-        MasstransitRequest
-        <IGetImagesOfStorageItemRequestContract, 
-            IGetImagesOfStorageItemResultContract,
-            IGetImagesOfStorageItemSuccessResultContract, 
-            IGetImagesOfStorageItemErrorResultContract>
-    {
-        public GetImagesOfStorageItem(IBus bus, IGetImagesOfStorageItemRequestContract request) : base(bus, request) {}
-    }
-    
 }

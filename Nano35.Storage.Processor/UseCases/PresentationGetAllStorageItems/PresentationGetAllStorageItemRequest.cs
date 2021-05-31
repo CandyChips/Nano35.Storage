@@ -44,12 +44,7 @@ namespace Nano35.Storage.Processor.UseCases.PresentationGetAllStorageItems
                 .ToListAsync(cancellationToken);
             result.ForEach(e =>
             {
-                var getClientStringRequest = new GetImagesOfStorageItem(_bus, new GetImagesOfStorageItemRequestContract() { StorageItemId = e.Id });
-                e.Images = getClientStringRequest.GetResponse().Result switch
-                {
-                    IGetImagesOfStorageItemSuccessResultContract success => success.Images,
-                    _ => throw new Exception()
-                };
+                e.Images = new MasstransitUseCaseRequest<IGetImagesOfStorageItemRequestContract, IGetImagesOfStorageItemResultContract>(_bus, new GetImagesOfStorageItemRequestContract() { StorageItemId = e.Id }).GetResponse().Result.Success.Images;
             });
             return Pass(new PresentationGetAllStorageItemsResultContract() {StorageItems = result});
         }

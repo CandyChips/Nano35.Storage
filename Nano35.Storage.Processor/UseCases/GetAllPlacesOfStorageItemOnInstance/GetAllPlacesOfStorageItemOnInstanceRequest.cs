@@ -25,8 +25,8 @@ namespace Nano35.Storage.Processor.UseCases.GetAllPlacesOfStorageItemOnInstance
             _bus = bus;
         }
         
-        public override async Task<UseCaseResponse<IGetAllPlacesOfStorageItemOnInstanceResultContract>> Ask
-            (IGetAllPlacesOfStorageItemOnInstanceContract input, 
+        public override async Task<UseCaseResponse<IGetAllPlacesOfStorageItemOnInstanceResultContract>> Ask(
+            IGetAllPlacesOfStorageItemOnInstanceContract input, 
             CancellationToken cancellationToken)
         {
             var result = (await _context

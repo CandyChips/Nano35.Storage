@@ -12,15 +12,12 @@ using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemsOnInstance
 {
-    public class GetAllStorageItemsOnInstanceRequest :
-        UseCaseEndPointNodeBase<IGetAllStorageItemsOnInstanceContract, IGetAllStorageItemsOnInstanceResultContract>
+    public class GetAllStorageItemsOnInstanceRequest : UseCaseEndPointNodeBase<IGetAllStorageItemsOnInstanceContract, IGetAllStorageItemsOnInstanceResultContract>
     {
         private readonly ApplicationContext _context;
         private readonly IBus _bus;
 
-        public GetAllStorageItemsOnInstanceRequest(
-            ApplicationContext context,
-            IBus bus)
+        public GetAllStorageItemsOnInstanceRequest(ApplicationContext context, IBus bus)
         {
             _context = context;
             _bus = bus;
@@ -47,11 +44,7 @@ namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemsOnInstance
                                 Name = a.Key.ToString(),
                                 PurchasePrice = (double) (a.Key.PurchasePrice),
                                 RetailPrice = (double) (a.Key.RetailPrice),
-                                Images = (new GetImagesOfStorageItem(_bus,
-                                            new GetImagesOfStorageItemRequestContract() {StorageItemId = a.Key.Id})
-                                        .GetResponse()
-                                        .Result as IGetImagesOfStorageItemSuccessResultContract)?
-                                    .Images
+                                Images = new MasstransitUseCaseRequest<IGetImagesOfStorageItemRequestContract, IGetImagesOfStorageItemResultContract>(_bus, new GetImagesOfStorageItemRequestContract() { StorageItemId = a.Key.Id }).GetResponse().Result.Success.Images
                             },
                     };
                     var getUnitStringByIdRequestContract = 

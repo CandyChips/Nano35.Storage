@@ -21,8 +21,7 @@ namespace Nano35.Storage.Api.Requests.CreateCancellation
             if (!input.Details.Any()) return Pass("Нет деталей списания");
             if (input.UnitId == Guid.Empty) return Pass("Обновите страницу и попробуйте еще раз");
             
-            return await new MasstransitUseCaseRequest<ICreateCancellationRequestContract, ICreateCancellationResultContract>(
-                    _bus, input)
+            return await new MasstransitUseCaseRequest<ICreateCancellationRequestContract, ICreateCancellationResultContract>(_bus, input)
                 .GetResponse();
         }
     }

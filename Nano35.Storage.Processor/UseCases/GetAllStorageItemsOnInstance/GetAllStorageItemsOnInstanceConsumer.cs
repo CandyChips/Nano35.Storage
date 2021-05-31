@@ -7,19 +7,11 @@ using Nano35.Storage.Processor.Services;
 
 namespace Nano35.Storage.Processor.UseCases.GetAllStorageItemsOnInstance
 {
-    public class GetAllStorageItemsOnInstanceConsumer : 
-        IConsumer<IGetAllStorageItemsOnInstanceContract>
+    public class GetAllStorageItemsOnInstanceConsumer : IConsumer<IGetAllStorageItemsOnInstanceContract>
     {
         private readonly IServiceProvider _services;
-        
-        public GetAllStorageItemsOnInstanceConsumer(
-            IServiceProvider services)
-        {
-            _services = services;
-        }
-        
-        public async Task Consume(
-            ConsumeContext<IGetAllStorageItemsOnInstanceContract> context)
+        public GetAllStorageItemsOnInstanceConsumer(IServiceProvider services) { _services = services; }
+        public async Task Consume(ConsumeContext<IGetAllStorageItemsOnInstanceContract> context)
         {
             var result =
                 await new LoggedUseCasePipeNode<IGetAllStorageItemsOnInstanceContract, IGetAllStorageItemsOnInstanceResultContract>(

@@ -44,9 +44,7 @@ namespace Nano35.Storage.Processor.UseCases.GetStorageItemById
                         HiddenComment = result.HiddenComment,
                         PurchasePrice = result.PurchasePrice,
                         RetailPrice = result.RetailPrice,
-                        Images = (new GetImagesOfStorageItem(_bus,
-                                new GetImagesOfStorageItemRequestContract() {StorageItemId = result.Id}).GetResponse()
-                            .Result as IGetImagesOfStorageItemSuccessResultContract)?.Images
+                        Images = new MasstransitUseCaseRequest<IGetImagesOfStorageItemRequestContract, IGetImagesOfStorageItemResultContract>(_bus, new GetImagesOfStorageItemRequestContract() { StorageItemId = result.Id }).GetResponse().Result.Success.Images
                     }
             });
         }
