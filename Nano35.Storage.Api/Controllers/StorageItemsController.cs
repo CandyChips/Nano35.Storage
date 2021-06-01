@@ -76,7 +76,6 @@ namespace Nano35.Storage.Api.Controllers
         [HttpPost]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateStorageItemSuccessHttpResponse))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)] 
         public async Task<IActionResult> CreateStorageItem(
             [FromBody] CreateStorageItemHttpBody body) 
         {
@@ -89,8 +88,8 @@ namespace Nano35.Storage.Api.Controllers
                     {
                         NewId = body.NewId,
                         InstanceId = body.InstanceId,
-                        Comment = body.Comment,
-                        HiddenComment = body.HiddenComment,
+                        Comment = body.Comment ?? "",
+                        HiddenComment = body.HiddenComment ?? "",
                         RetailPrice = body.RetailPrice,
                         PurchasePrice = body.PurchasePrice,
                         ArticleId = body.ArticleId,
