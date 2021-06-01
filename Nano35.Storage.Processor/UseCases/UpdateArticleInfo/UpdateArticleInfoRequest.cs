@@ -28,11 +28,9 @@ namespace Nano35.Storage.Processor.UseCases.UpdateArticleInfo
             
             if (result == null)
                 return Pass("Не найдено");
+
+            result.Info = input.Info;
             
-            result = new Article()
-            {
-                Info = input.Info
-            };
             _context.Update(result);
             return Pass(new UpdateArticleInfoResultContract());
         }

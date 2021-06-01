@@ -32,21 +32,19 @@ namespace Nano35.Storage.Processor.UseCases.GetStorageItemById
             if (result == null)
                 return Pass("Не найдено");
             
-            return new UseCaseResponse<IGetStorageItemByIdResultContract>(new GetStorageItemByIdResultContract()
-            {
-                Data =
-                    new StorageItemViewModel()
-                    {
-                        Article = result.Article.ToString(),
-                        Comment = result.Comment,
-                        Condition = result.Condition.Name,
-                        Id = result.Id,
-                        HiddenComment = result.HiddenComment,
-                        PurchasePrice = result.PurchasePrice,
-                        RetailPrice = result.RetailPrice,
-                        Images = new MasstransitUseCaseRequest<IGetImagesOfStorageItemRequestContract, IGetImagesOfStorageItemResultContract>(_bus, new GetImagesOfStorageItemRequestContract() { StorageItemId = result.Id }).GetResponse().Result.Success.Images
-                    }
-            });
+            var data = new StorageItemViewModel()
+                {
+                    Article = result.Article.ToString(),
+                    Comment = result.Comment,
+                    Condition = result.Condition.Name,
+                    Id = result.Id,
+                    HiddenComment = result.HiddenComment,
+                    PurchasePrice = result.PurchasePrice,
+                    RetailPrice = result.RetailPrice,
+                    //Images = new MasstransitUseCaseRequest<IGetImagesOfStorageItemRequestContract, IGetImagesOfStorageItemResultContract>(_bus, new GetImagesOfStorageItemRequestContract() {StorageItemId = result.Id}).GetResponse().Result.Success.Images
+                };
+
+            return new UseCaseResponse<IGetStorageItemByIdResultContract>(new GetStorageItemByIdResultContract() { Data = data });
         }
     }   
 }

@@ -124,6 +124,23 @@ namespace Nano35.Storage.Api.Controllers
         }
         
         [HttpPatch]
+        [Route("Brand")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateArticleBrandSuccessHttpResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UpdateArticleBrandErrorHttpResponse))] 
+        public async Task<IActionResult> UpdateArticleBrand([FromBody] UpdateArticleBrandHttpBody body)
+        {
+            var result =
+                await new LoggedUseCasePipeNode<IUpdateArticleBrandRequestContract, IUpdateArticleBrandResultContract>(
+                        _services.GetService(typeof(ILogger<IUpdateArticleBrandRequestContract>)) as
+                            ILogger<IUpdateArticleBrandRequestContract>,
+                        new UpdateArticleBrandUseCase(
+                            _services.GetService(typeof(IBus)) as IBus))
+                    .Ask(new UpdateArticleBrandRequestContract() {Id = body.Id, Brand = body.Brand});
+            return result.IsSuccess() ? (IActionResult) Ok(result.Success) : BadRequest(result.Error);
+        }
+        
+        [HttpPatch]
         [Route("Model")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UpdateArticleModelSuccessHttpResponse))]
